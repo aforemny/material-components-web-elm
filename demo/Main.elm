@@ -3,6 +3,7 @@ module Main exposing (main)
 import Html exposing (Html, text)
 import Material.Button exposing (button, buttonConfig)
 import Material.Card
+import Material.Checkbox exposing (checkbox, checkboxConfig)
 import Material.Icon
 
 
@@ -24,21 +25,8 @@ main =
                 "Click me"
             ]
         , Html.div []
-            [ button
-                denseConfig
-                "Click me"
-            , button
-                { denseConfig | variant = Material.Button.Raised }
-                "Click me"
-            , button
-                { denseConfig | variant = Material.Button.Unelevated }
-                "Click me"
-            , button
-                { denseConfig | variant = Material.Button.Outlined }
-                "Click me"
+            [ checkbox checkboxConfig
+            , checkbox { checkboxConfig | state = Material.Checkbox.Checked }
+            , checkbox { checkboxConfig | state = Material.Checkbox.Indeterminate }
             ]
         ]
-
-
-denseConfig =
-    { buttonConfig | dense = True }

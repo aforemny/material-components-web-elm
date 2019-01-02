@@ -20,6 +20,7 @@
     "@material/icon-toggle": "^0.42.0",
     "@material/linear-progress": "^0.41.0",
     "@material/list": "^0.42.0",
+    "@material/menu": "^0.42.1",
     "@material/ripple": "^0.42.0"
   }
 }

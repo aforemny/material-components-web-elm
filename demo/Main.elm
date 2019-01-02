@@ -13,6 +13,7 @@ import Material.Icon
 import Material.IconToggle exposing (iconToggle, iconToggleConfig)
 import Material.LinearProgress exposing (linearProgress, linearProgressConfig)
 import Material.List exposing (list, listConfig, listItem, listItemConfig)
+import Material.Menu exposing (menu, menuConfig)
 
 
 main : Html msg
@@ -56,6 +57,14 @@ main =
             [ list listConfig
                 [ listItem listItemConfig [ text "foo" ]
                 , listItem listItemConfig [ text "bar" ]
+                ]
+            ]
+        , Html.div []
+            [ menu { menuConfig | open = True }
+                [ list listConfig
+                    [ listItem listItemConfig [ text "foo" ]
+                    , listItem listItemConfig [ text "bar" ]
+                    ]
                 ]
             ]
         ]

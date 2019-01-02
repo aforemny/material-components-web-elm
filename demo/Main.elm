@@ -14,6 +14,7 @@ import Material.IconToggle exposing (iconToggle, iconToggleConfig)
 import Material.LinearProgress exposing (linearProgress, linearProgressConfig)
 import Material.List exposing (list, listConfig, listItem, listItemConfig)
 import Material.Menu exposing (menu, menuConfig)
+import Material.Radio exposing (radio, radioConfig)
 
 
 main : Html msg
@@ -60,11 +61,15 @@ main =
                 ]
             ]
         , Html.div []
-            [ menu { menuConfig | open = True }
+            [ menu menuConfig
                 [ list listConfig
                     [ listItem listItemConfig [ text "foo" ]
                     , listItem listItemConfig [ text "bar" ]
                     ]
                 ]
+            ]
+        , Html.div []
+            [ radio radioConfig
+            , radio { radioConfig | checked = True }
             ]
         ]

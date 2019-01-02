@@ -86,6 +86,18 @@ module.exports = [
     }
   },
   {
+    entry: './src/list.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-list-progress.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
+  },
+  {
     entry: './src/linear-progress.js',
     output: {
       path: path.resolve(__dirname, "dist"),

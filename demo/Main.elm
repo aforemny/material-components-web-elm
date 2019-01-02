@@ -12,6 +12,7 @@ import Material.FormField exposing (formField, formFieldConfig)
 import Material.Icon
 import Material.IconToggle exposing (iconToggle, iconToggleConfig)
 import Material.LinearProgress exposing (linearProgress, linearProgressConfig)
+import Material.List exposing (list, listConfig, listItem, listItemConfig)
 
 
 main : Html msg
@@ -51,4 +52,10 @@ main =
             [ iconToggle iconToggleConfig "favorite" ]
         , Html.div []
             [ linearProgress linearProgressConfig ]
+        , Html.div []
+            [ list listConfig
+                [ listItem listItemConfig [ text "foo" ]
+                , listItem listItemConfig [ text "bar" ]
+                ]
+            ]
         ]

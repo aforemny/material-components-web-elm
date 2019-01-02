@@ -10,6 +10,7 @@ import Material.Dialog exposing (dialog, dialogConfig)
 import Material.Fab exposing (fab, fabConfig)
 import Material.FormField exposing (formField, formFieldConfig)
 import Material.Icon
+import Material.IconToggle exposing (iconToggle, iconToggleConfig)
 
 
 main : Html msg
@@ -51,7 +52,8 @@ main =
             [ fab fabConfig "favorite"
             , fab { fabConfig | mini = True } "favorite"
             ]
-        , Html.div
-            []
+        , Html.div []
             [ formField formFieldConfig [] ]
+        , Html.div []
+            [ iconToggle iconToggleConfig "favorite" ]
         ]

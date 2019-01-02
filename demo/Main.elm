@@ -11,24 +11,17 @@ import Material.Fab exposing (fab, fabConfig)
 import Material.FormField exposing (formField, formFieldConfig)
 import Material.Icon
 import Material.IconToggle exposing (iconToggle, iconToggleConfig)
+import Material.LinearProgress exposing (linearProgress, linearProgressConfig)
 
 
 main : Html msg
 main =
     Html.div []
         [ Html.div []
-            [ button
-                buttonConfig
-                "Click me"
-            , button
-                { buttonConfig | variant = Material.Button.Raised }
-                "Click me"
-            , button
-                { buttonConfig | variant = Material.Button.Unelevated }
-                "Click me"
-            , button
-                { buttonConfig | variant = Material.Button.Outlined }
-                "Click me"
+            [ button buttonConfig "Click me"
+            , button { buttonConfig | variant = Material.Button.Raised } "Click me"
+            , button { buttonConfig | variant = Material.Button.Unelevated } "Click me"
+            , button { buttonConfig | variant = Material.Button.Outlined } "Click me"
             ]
         , Html.div []
             [ checkbox checkboxConfig
@@ -56,4 +49,6 @@ main =
             [ formField formFieldConfig [] ]
         , Html.div []
             [ iconToggle iconToggleConfig "favorite" ]
+        , Html.div []
+            [ linearProgress linearProgressConfig ]
         ]

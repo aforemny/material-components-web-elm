@@ -6,6 +6,7 @@ import Material.Card
 import Material.Checkbox exposing (checkbox, checkboxConfig)
 import Material.Chip exposing (chip, chipConfig)
 import Material.ChipSet exposing (chipSet, chipSetConfig)
+import Material.Dialog exposing (dialog, dialogConfig)
 import Material.Icon
 
 
@@ -37,5 +38,13 @@ main =
                 [ chip chipConfig "foo"
                 , chip chipConfig "bar"
                 ]
+            ]
+        , Html.div
+            []
+            [ dialog dialogConfig
+                { title = "Simple dialog"
+                , content = [ text "Hello" ]
+                , actions = []
+                }
             ]
         ]

@@ -48,5 +48,17 @@ module.exports = [
         { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
       ]
     }
+  },
+  {
+    entry: './src/dialog.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-dialog.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
   }
 ];

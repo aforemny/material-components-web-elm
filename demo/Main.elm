@@ -17,6 +17,7 @@ import Material.Menu exposing (menu, menuConfig)
 import Material.Radio exposing (radio, radioConfig)
 import Material.Ripple exposing (ripple, rippleConfig)
 import Material.Select exposing (option, optionConfig, select, selectConfig)
+import Material.Slider exposing (slider, sliderConfig)
 
 
 main : Html msg
@@ -82,4 +83,6 @@ main =
                 , option optionConfig [ text "bar" ]
                 ]
             ]
+        , Html.div []
+            [ slider { sliderConfig | value = 0.5 } ]
         ]

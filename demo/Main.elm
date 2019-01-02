@@ -15,6 +15,7 @@ import Material.LinearProgress exposing (linearProgress, linearProgressConfig)
 import Material.List exposing (list, listConfig, listItem, listItemConfig)
 import Material.Menu exposing (menu, menuConfig)
 import Material.Radio exposing (radio, radioConfig)
+import Material.Ripple exposing (ripple, rippleConfig)
 
 
 main : Html msg
@@ -72,4 +73,6 @@ main =
             [ radio radioConfig
             , radio { radioConfig | checked = True }
             ]
+        , Html.div []
+            [ ripple rippleConfig ]
         ]

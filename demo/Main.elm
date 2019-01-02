@@ -8,6 +8,7 @@ import Material.Chip exposing (chip, chipConfig)
 import Material.ChipSet exposing (chipSet, chipSetConfig)
 import Material.Dialog exposing (dialog, dialogConfig)
 import Material.Fab exposing (fab, fabConfig)
+import Material.FormField exposing (formField, formFieldConfig)
 import Material.Icon
 
 
@@ -33,24 +34,24 @@ main =
             , checkbox { checkboxConfig | state = Material.Checkbox.Checked }
             , checkbox { checkboxConfig | state = Material.Checkbox.Indeterminate }
             ]
-        , Html.div
-            []
+        , Html.div []
             [ chipSet chipSetConfig
                 [ chip chipConfig "foo"
                 , chip chipConfig "bar"
                 ]
             ]
-        , Html.div
-            []
+        , Html.div []
             [ dialog dialogConfig
                 { title = "Simple dialog"
                 , content = [ text "Hello" ]
                 , actions = []
                 }
             ]
-        , Html.div
-            []
+        , Html.div []
             [ fab fabConfig "favorite"
             , fab { fabConfig | mini = True } "favorite"
             ]
+        , Html.div
+            []
+            [ formField formFieldConfig [] ]
         ]

@@ -16,6 +16,7 @@
     "@material/chips": "^0.42.0",
     "@material/dialog": "^0.42.0",
     "@material/fab": "^0.42.0",
+    "@material/form-field": "^0.42.0",
     "@material/ripple": "^0.42.0"
   }
 }

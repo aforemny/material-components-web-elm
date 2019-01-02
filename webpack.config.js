@@ -144,5 +144,17 @@ module.exports = [
         { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
       ]
     }
+  },
+  {
+    entry: './src/select.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-select.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
   }
 ];

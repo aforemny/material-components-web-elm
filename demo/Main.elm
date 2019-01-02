@@ -16,6 +16,7 @@ import Material.List exposing (list, listConfig, listItem, listItemConfig)
 import Material.Menu exposing (menu, menuConfig)
 import Material.Radio exposing (radio, radioConfig)
 import Material.Ripple exposing (ripple, rippleConfig)
+import Material.Select exposing (option, optionConfig, select, selectConfig)
 
 
 main : Html msg
@@ -75,4 +76,10 @@ main =
             ]
         , Html.div []
             [ ripple rippleConfig ]
+        , Html.div []
+            [ select selectConfig
+                [ option optionConfig [ text "foo" ]
+                , option optionConfig [ text "bar" ]
+                ]
+            ]
         ]

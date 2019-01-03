@@ -9,7 +9,7 @@ import Material.ChipSet exposing (chipSet, chipSetConfig)
 import Material.Dialog exposing (dialog, dialogConfig)
 import Material.Fab exposing (fab, fabConfig)
 import Material.FormField exposing (formField, formFieldConfig)
-import Material.Icon
+import Material.Icon exposing (icon, iconConfig)
 import Material.IconToggle exposing (iconToggle, iconToggleConfig)
 import Material.LinearProgress exposing (linearProgress, linearProgressConfig)
 import Material.List exposing (list, listConfig, listItem, listItemConfig)
@@ -19,6 +19,7 @@ import Material.Ripple exposing (ripple, rippleConfig)
 import Material.Select exposing (option, optionConfig, select, selectConfig)
 import Material.Slider exposing (slider, sliderConfig)
 import Material.Snackbar exposing (snackbar, snackbarConfig)
+import Material.Switch exposing (switch, switchConfig)
 
 
 main : Html msg
@@ -88,4 +89,9 @@ main =
             [ slider { sliderConfig | value = 0.5 } ]
         , Html.div []
             [ snackbar snackbarConfig Nothing ]
+        , Html.div []
+            [ switch switchConfig
+            , switch { switchConfig | checked = True }
+            , switch { switchConfig | disabled = True }
+            ]
         ]

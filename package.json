@@ -29,6 +29,7 @@
     "@material/switch": "^0.42.0",
     "@material/tab": "^0.42.0",
     "@material/tab-bar": "^0.42.0",
-    "@material/tab-scroller": "^0.42.0"
+    "@material/tab-scroller": "^0.42.0",
+    "@material/textfield": "^0.42.1"
   }
 }

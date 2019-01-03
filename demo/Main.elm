@@ -22,6 +22,7 @@ import Material.Snackbar exposing (snackbar, snackbarConfig)
 import Material.Switch exposing (switch, switchConfig)
 import Material.Tab exposing (tab, tabConfig)
 import Material.TabBar exposing (tabBar, tabBarConfig)
+import Material.TextField exposing (textField, textFieldConfig)
 
 
 main : Html msg
@@ -101,5 +102,17 @@ main =
                 [ tab { tabConfig | active = True } { label = "foo", icon = Nothing }
                 , tab tabConfig { label = "bar", icon = Nothing }
                 ]
+            ]
+        , Html.div []
+            [ textField textFieldConfig
+            , textField { textFieldConfig | label = "First name" }
+            , textField { textFieldConfig | fullwidth = True }
+            , textField { textFieldConfig | label = "First name", textarea = True }
+            , textField
+                { textFieldConfig
+                    | label = "First name"
+                    , textarea = True
+                    , fullwidth = True
+                }
             ]
         ]

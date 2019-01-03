@@ -20,6 +20,8 @@ import Material.Select exposing (option, optionConfig, select, selectConfig)
 import Material.Slider exposing (slider, sliderConfig)
 import Material.Snackbar exposing (snackbar, snackbarConfig)
 import Material.Switch exposing (switch, switchConfig)
+import Material.Tab exposing (tab, tabConfig)
+import Material.TabBar exposing (tabBar, tabBarConfig)
 
 
 main : Html msg
@@ -93,5 +95,11 @@ main =
             [ switch switchConfig
             , switch { switchConfig | checked = True }
             , switch { switchConfig | disabled = True }
+            ]
+        , Html.div []
+            [ tabBar tabBarConfig
+                [ tab { tabConfig | active = True } { label = "foo", icon = Nothing }
+                , tab tabConfig { label = "bar", icon = Nothing }
+                ]
             ]
         ]

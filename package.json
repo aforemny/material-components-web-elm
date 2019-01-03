@@ -26,6 +26,9 @@
     "@material/select": "^0.42.1",
     "@material/slider": "^0.42.1",
     "@material/snackbar": "^0.42.0",
-    "@material/switch": "^0.42.0"
+    "@material/switch": "^0.42.0",
+    "@material/tab": "^0.42.0",
+    "@material/tab-bar": "^0.42.0",
+    "@material/tab-scroller": "^0.42.0"
   }
 }

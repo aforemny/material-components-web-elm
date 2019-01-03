@@ -192,5 +192,41 @@ module.exports = [
         { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
       ]
     }
+  },
+  {
+    entry: './src/tab-bar.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-tab-bar.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
+  },
+  {
+    entry: './src/tab.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-tab.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
+  },
+  {
+    entry: './src/tab-scroller.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-tab-scroller.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
   }
 ];

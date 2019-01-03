@@ -23,6 +23,7 @@ import Material.Switch exposing (switch, switchConfig)
 import Material.Tab exposing (tab, tabConfig)
 import Material.TabBar exposing (tabBar, tabBarConfig)
 import Material.TextField exposing (textField, textFieldConfig)
+import Material.Typography
 
 
 main : Html msg

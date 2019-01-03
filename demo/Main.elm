@@ -18,6 +18,7 @@ import Material.Radio exposing (radio, radioConfig)
 import Material.Ripple exposing (ripple, rippleConfig)
 import Material.Select exposing (option, optionConfig, select, selectConfig)
 import Material.Slider exposing (slider, sliderConfig)
+import Material.Snackbar exposing (snackbar, snackbarConfig)
 
 
 main : Html msg
@@ -85,4 +86,6 @@ main =
             ]
         , Html.div []
             [ slider { sliderConfig | value = 0.5 } ]
+        , Html.div []
+            [ snackbar snackbarConfig Nothing ]
         ]

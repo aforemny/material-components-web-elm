@@ -168,5 +168,17 @@ module.exports = [
         { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
       ]
     }
+  },
+  {
+    entry: './src/snackbar.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-snackbar.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
   }
 ];

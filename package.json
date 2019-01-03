@@ -24,6 +24,7 @@
     "@material/radio": "^0.42.0",
     "@material/ripple": "^0.42.0",
     "@material/select": "^0.42.1",
-    "@material/slider": "^0.42.1"
+    "@material/slider": "^0.42.1",
+    "@material/snackbar": "^0.42.0"
   }
 }

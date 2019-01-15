@@ -25,6 +25,7 @@ import Material.Tab exposing (tab, tabConfig)
 import Material.TabBar exposing (tabBar, tabBarConfig)
 import Material.TextField exposing (textField, textFieldConfig)
 import Material.Theme
+import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 import Material.Typography
 
 
@@ -117,5 +118,38 @@ main =
                     , textarea = True
                     , fullwidth = True
                 }
+            ]
+        , Html.div []
+            [ topAppBar { topAppBarConfig | fixed = True }
+                [ TopAppBar.row []
+                    [ TopAppBar.section
+                        [ TopAppBar.alignStart ]
+                        [ icon
+                            { iconConfig
+                                | additionalAttributes = [ TopAppBar.navigationIcon ]
+                            }
+                            "menu"
+                        , Html.span [ TopAppBar.title ] [ text "Title" ]
+                        ]
+                    , TopAppBar.section
+                        [ TopAppBar.alignEnd ]
+                        [ icon
+                            { iconConfig
+                                | additionalAttributes = [ TopAppBar.actionItem ]
+                            }
+                            "file_download"
+                        , icon
+                            { iconConfig
+                                | additionalAttributes = [ TopAppBar.actionItem ]
+                            }
+                            "print"
+                        , icon
+                            { iconConfig
+                                | additionalAttributes = [ TopAppBar.actionItem ]
+                            }
+                            "bookmark"
+                        ]
+                    ]
+                ]
             ]
         ]

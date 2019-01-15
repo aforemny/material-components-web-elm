@@ -12,6 +12,7 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "@material/card": "^0.42.0",
     "@material/checkbox": "^0.42.0",
     "@material/chips": "^0.42.0",
     "@material/dialog": "^0.42.0",
@@ -30,6 +31,7 @@
     "@material/tab": "^0.42.0",
     "@material/tab-bar": "^0.42.0",
     "@material/tab-scroller": "^0.42.0",
-    "@material/textfield": "^0.42.1"
+    "@material/textfield": "^0.42.1",
+    "@material/top-app-bar": "^0.42.0"
   }
 }

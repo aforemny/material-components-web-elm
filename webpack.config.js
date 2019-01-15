@@ -276,5 +276,17 @@ module.exports = [
         { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
       ]
     }
+  },
+  {
+    entry: './src/top-app-bar.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-top-app-bar.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
   }
 ];

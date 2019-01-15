@@ -1,7 +1,8 @@
-module Material.Checkbox exposing (Config, State(..), checkbox, checkboxConfig)
+module Material.Checkbox exposing (Config, State(..), checkbox, checkboxConfig, toggle)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
+import Html.Events
 import Json.Encode
 import Svg
 import Svg.Attributes
@@ -11,6 +12,7 @@ type alias Config msg =
     { state : State
     , disabled : Bool
     , additionalAttributes : List (Html.Attribute msg)
+    , onClick : Maybe msg
     }
 
 
@@ -25,22 +27,50 @@ checkboxConfig =
     { state = Unchecked
     , disabled = False
     , additionalAttributes = []
+    , onClick = Nothing
     }
 
 
 checkbox : Config msg -> Html msg
 checkbox config =
     Html.node "mdc-checkbox"
-        ([ rootCs
-         , checkedAttr config
-         , indeterminateAttr config
-         , disabledAttr config
-         ]
+        (List.filterMap identity
+            [ rootCs
+            , checkedAttr config
+            , indeterminateAttr config
+            , disabledAttr config
+            , clickHandler config
+            ]
             ++ config.additionalAttributes
         )
         [ nativeControlElt config
         , backgroundElt
         ]
+
+
+rootCs : Maybe (Html.Attribute msg)
+rootCs =
+    Just (class "mdc-checkbox")
+
+
+disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr { disabled } =
+    Just (Html.Attributes.disabled disabled)
+
+
+checkedAttr : Config msg -> Maybe (Html.Attribute msg)
+checkedAttr { state } =
+    Just (Html.Attributes.checked (state == Checked))
+
+
+indeterminateAttr : Config msg -> Maybe (Html.Attribute msg)
+indeterminateAttr { state } =
+    Just (Html.Attributes.property "indeterminate" (Json.Encode.bool (state == Indeterminate)))
+
+
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler { onClick } =
+    Maybe.map Html.Events.onClick onClick
 
 
 nativeControlElt : Config msg -> Html msg
@@ -71,21 +101,14 @@ backgroundElt =
         ]
 
 
-rootCs : Html.Attribute msg
-rootCs =
-    class "mdc-checkbox"
+toggle : State -> State
+toggle state =
+    case state of
+        Checked ->
+            Unchecked
 
+        Unchecked ->
+            Checked
 
-disabledAttr : Config msg -> Html.Attribute msg
-disabledAttr { disabled } =
-    Html.Attributes.disabled disabled
-
-
-checkedAttr : Config msg -> Html.Attribute msg
-checkedAttr { state } =
-    Html.Attributes.checked (state == Checked)
-
-
-indeterminateAttr : Config msg -> Html.Attribute msg
-indeterminateAttr { state } =
-    Html.Attributes.property "indeterminate" (Json.Encode.bool (state == Indeterminate))
+        Indeterminate ->
+            Checked

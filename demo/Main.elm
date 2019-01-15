@@ -1,5 +1,7 @@
 module Main exposing (main)
 
+import Browser
+import Demo.Checkbox
 import Html exposing (Html, text)
 import Material.Button exposing (button, buttonConfig)
 import Material.Card
@@ -30,129 +32,187 @@ import Material.TextField exposing (textField, textFieldConfig)
 import Material.Theme
 import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 import Material.Typography
+import Url
 
 
-main : Html msg
 main =
-    Html.div []
-        [ Html.div []
-            [ button buttonConfig "Click me"
-            , button { buttonConfig | variant = Material.Button.Raised } "Click me"
-            , button { buttonConfig | variant = Material.Button.Unelevated } "Click me"
-            , button { buttonConfig | variant = Material.Button.Outlined } "Click me"
-            ]
-        , Html.div []
-            [ checkbox checkboxConfig
-            , checkbox { checkboxConfig | state = Material.Checkbox.Checked }
-            , checkbox { checkboxConfig | state = Material.Checkbox.Indeterminate }
-            ]
-        , Html.div []
-            [ chipSet chipSetConfig
-                [ chip chipConfig "foo"
-                , chip chipConfig "bar"
-                ]
-            ]
-        , Html.div []
-            [ dialog dialogConfig
-                { title = "Simple dialog"
-                , content = [ text "Hello" ]
-                , actions = []
-                }
-            ]
-        , Html.div []
-            [ fab fabConfig "favorite"
-            , fab { fabConfig | mini = True } "favorite"
-            ]
-        , Html.div []
-            [ formField formFieldConfig [] ]
-        , Html.div []
-            [ iconToggle iconToggleConfig "favorite" ]
-        , Html.div []
-            [ linearProgress linearProgressConfig ]
-        , Html.div []
-            [ list listConfig
-                [ listItem listItemConfig [ text "foo" ]
-                , listItem listItemConfig [ text "bar" ]
-                ]
-            ]
-        , Html.div []
-            [ menu menuConfig
-                [ list listConfig
-                    [ listItem listItemConfig [ text "foo" ]
-                    , listItem listItemConfig [ text "bar" ]
-                    ]
-                ]
-            ]
-        , Html.div []
-            [ radio radioConfig
-            , radio { radioConfig | checked = True }
-            ]
-        , Html.div []
-            [ ripple rippleConfig ]
-        , Html.div []
-            [ select selectConfig
-                [ option optionConfig [ text "foo" ]
-                , option optionConfig [ text "bar" ]
-                ]
-            ]
-        , Html.div []
-            [ slider { sliderConfig | value = 0.5 } ]
-        , Html.div []
-            [ snackbar snackbarConfig Nothing ]
-        , Html.div []
-            [ switch switchConfig
-            , switch { switchConfig | checked = True }
-            , switch { switchConfig | disabled = True }
-            ]
-        , Html.div []
-            [ tabBar tabBarConfig
-                [ tab { tabConfig | active = True } { label = "foo", icon = Nothing }
-                , tab tabConfig { label = "bar", icon = Nothing }
-                ]
-            ]
-        , Html.div []
-            [ textField textFieldConfig
-            , textField { textFieldConfig | label = "First name" }
-            , textField { textFieldConfig | fullwidth = True }
-            , textField { textFieldConfig | label = "First name", textarea = True }
-            , textField
-                { textFieldConfig
-                    | label = "First name"
-                    , textarea = True
-                    , fullwidth = True
-                }
-            ]
-        , Html.div []
-            [ topAppBar { topAppBarConfig | fixed = True }
-                [ TopAppBar.row []
-                    [ TopAppBar.section
-                        [ TopAppBar.alignStart ]
-                        [ icon
-                            { iconConfig
-                                | additionalAttributes = [ TopAppBar.navigationIcon ]
-                            }
-                            "menu"
-                        , Html.span [ TopAppBar.title ] [ text "Title" ]
-                        ]
-                    , TopAppBar.section
-                        [ TopAppBar.alignEnd ]
-                        [ icon
-                            { iconConfig
-                                | additionalAttributes = [ TopAppBar.actionItem ]
-                            }
-                            "file_download"
-                        , icon
-                            { iconConfig
-                                | additionalAttributes = [ TopAppBar.actionItem ]
-                            }
-                            "print"
-                        , icon
-                            { iconConfig
-                                | additionalAttributes = [ TopAppBar.actionItem ]
-                            }
-                            "bookmark"
-                        ]
-                    ]
-                ]
-            ]
+    Browser.application
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        , onUrlRequest = onUrlRequest
+        , onUrlChange = onUrlChange
+        }
+
+
+defaultModel key =
+    { key = key
+    , checkbox = Demo.Checkbox.defaultModel
+    }
+
+
+type Msg
+    = UrlRequested Browser.UrlRequest
+    | UrlChanged Url.Url
+    | CheckboxMsg Demo.Checkbox.Msg
+
+
+init () url key =
+    ( defaultModel key, Cmd.none )
+
+
+view model =
+    { title = "Material Components for Elm"
+    , body =
+        [ Html.map CheckboxMsg (Demo.Checkbox.view model.checkbox)
         ]
+
+    --        [
+    --          Html.div []
+    --            [ button buttonConfig "Click me"
+    --            , button { buttonConfig | variant = Material.Button.Raised } "Click me"
+    --            , button { buttonConfig | variant = Material.Button.Unelevated } "Click me"
+    --            , button { buttonConfig | variant = Material.Button.Outlined } "Click me"
+    --            ]
+    --        , Html.div []
+    --            [ checkbox checkboxConfig
+    --            , checkbox { checkboxConfig | state = Material.Checkbox.Checked }
+    --            , checkbox { checkboxConfig | state = Material.Checkbox.Indeterminate }
+    --            ]
+    --        , Html.div []
+    --            [ chipSet chipSetConfig
+    --                [ chip chipConfig "foo"
+    --                , chip chipConfig "bar"
+    --                ]
+    --            ]
+    --        , Html.div []
+    --            [ dialog dialogConfig
+    --                { title = "Simple dialog"
+    --                , content = [ text "Hello" ]
+    --                , actions = []
+    --                }
+    --            ]
+    --        , Html.div []
+    --            [ fab fabConfig "favorite"
+    --            , fab { fabConfig | mini = True } "favorite"
+    --            ]
+    --        , Html.div []
+    --            [ formField formFieldConfig [] ]
+    --        , Html.div []
+    --            [ iconToggle iconToggleConfig "favorite" ]
+    --        , Html.div []
+    --            [ linearProgress linearProgressConfig ]
+    --        , Html.div []
+    --            [ list listConfig
+    --                [ listItem listItemConfig [ text "foo" ]
+    --                , listItem listItemConfig [ text "bar" ]
+    --                ]
+    --            ]
+    --        , Html.div []
+    --            [ menu menuConfig
+    --                [ list listConfig
+    --                    [ listItem listItemConfig [ text "foo" ]
+    --                    , listItem listItemConfig [ text "bar" ]
+    --                    ]
+    --                ]
+    --            ]
+    --        , Html.div []
+    --            [ radio radioConfig
+    --            , radio { radioConfig | checked = True }
+    --            ]
+    --        , Html.div []
+    --            [ ripple rippleConfig ]
+    --        , Html.div []
+    --            [ select selectConfig
+    --                [ option optionConfig [ text "foo" ]
+    --                , option optionConfig [ text "bar" ]
+    --                ]
+    --            ]
+    --        , Html.div []
+    --            [ slider { sliderConfig | value = 0.5 } ]
+    --        , Html.div []
+    --            [ snackbar snackbarConfig Nothing ]
+    --        , Html.div []
+    --            [ switch switchConfig
+    --            , switch { switchConfig | checked = True }
+    --            , switch { switchConfig | disabled = True }
+    --            ]
+    --        , Html.div []
+    --            [ tabBar tabBarConfig
+    --                [ tab { tabConfig | active = True } { label = "foo", icon = Nothing }
+    --                , tab tabConfig { label = "bar", icon = Nothing }
+    --                ]
+    --            ]
+    --        , Html.div []
+    --            [ textField textFieldConfig
+    --            , textField { textFieldConfig | label = "First name" }
+    --            , textField { textFieldConfig | fullwidth = True }
+    --            , textField { textFieldConfig | label = "First name", textarea = True }
+    --            , textField
+    --                { textFieldConfig
+    --                    | label = "First name"
+    --                    , textarea = True
+    --                    , fullwidth = True
+    --                }
+    --            ]
+    --        , Html.div []
+    --            [ topAppBar { topAppBarConfig | fixed = True }
+    --                [ TopAppBar.row []
+    --                    [ TopAppBar.section
+    --                        [ TopAppBar.alignStart ]
+    --                        [ icon
+    --                            { iconConfig
+    --                                | additionalAttributes = [ TopAppBar.navigationIcon ]
+    --                            }
+    --                            "menu"
+    --                        , Html.span [ TopAppBar.title ] [ text "Title" ]
+    --                        ]
+    --                    , TopAppBar.section
+    --                        [ TopAppBar.alignEnd ]
+    --                        [ icon
+    --                            { iconConfig
+    --                                | additionalAttributes = [ TopAppBar.actionItem ]
+    --                            }
+    --                            "file_download"
+    --                        , icon
+    --                            { iconConfig
+    --                                | additionalAttributes = [ TopAppBar.actionItem ]
+    --                            }
+    --                            "print"
+    --                        , icon
+    --                            { iconConfig
+    --                                | additionalAttributes = [ TopAppBar.actionItem ]
+    --                            }
+    --                            "bookmark"
+    --                        ]
+    --                    ]
+    --                ]
+    --            ]
+    --        ]
+    }
+
+
+update msg model =
+    case msg of
+        CheckboxMsg msg_ ->
+            let
+                ( newCheckbox, cmds ) =
+                    Demo.Checkbox.update msg_ model.checkbox
+            in
+            ( { model | checkbox = newCheckbox }, Cmd.map CheckboxMsg cmds )
+
+        _ ->
+            ( model, Cmd.none )
+
+
+subscriptions model =
+    Sub.none
+
+
+onUrlRequest urlRequest =
+    UrlRequested urlRequest
+
+
+onUrlChange url =
+    UrlChanged url

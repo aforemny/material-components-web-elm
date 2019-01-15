@@ -14,6 +14,18 @@ module.exports = [
     }
   },
   {
+    entry: './src/card.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-card.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
+  },
+  {
     entry: './src/checkbox.js',
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -90,6 +102,30 @@ module.exports = [
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "mdc-list-progress.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
+  },
+  {
+    entry: './src/icon.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-icon.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
+  },
+  {
+    entry: './src/icon-toggle.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-icon-toggle.min.js"
     },
     module: {
       rules: [

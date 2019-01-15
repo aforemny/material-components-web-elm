@@ -26,6 +26,18 @@ module.exports = [
     }
   },
   {
+    entry: './src/layout-grid.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-layout-grid.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
+  },
+  {
     entry: './src/checkbox.js',
     output: {
       path: path.resolve(__dirname, "dist"),

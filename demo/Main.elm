@@ -7,6 +7,7 @@ import Material.Checkbox exposing (checkbox, checkboxConfig)
 import Material.Chip exposing (chip, chipConfig)
 import Material.ChipSet exposing (chipSet, chipSetConfig)
 import Material.Dialog exposing (dialog, dialogConfig)
+import Material.Drawer as Drawer exposing (drawer, drawerConfig)
 import Material.Elevation
 import Material.Fab exposing (fab, fabConfig)
 import Material.FormField exposing (formField, formFieldConfig)

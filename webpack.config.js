@@ -74,6 +74,18 @@ module.exports = [
     }
   },
   {
+    entry: './src/drawer.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-drawer.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
+  },
+  {
     entry: './src/fab.js',
     output: {
       path: path.resolve(__dirname, "dist"),

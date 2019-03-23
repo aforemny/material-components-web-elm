@@ -314,6 +314,18 @@ module.exports = [
     }
   },
   {
+    entry: './src/helper-text.js',
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: "mdc-helper-text.min.js"
+    },
+    module: {
+      rules: [
+        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      ]
+    }
+  },
+  {
     entry: './src/top-app-bar.js',
     output: {
       path: path.resolve(__dirname, "dist"),

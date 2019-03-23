@@ -2,12 +2,14 @@ module Material.Chip exposing (Config, Icon(..), chip, chipConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
+import Html.Events
 
 
 type alias Config msg =
     { icon : Maybe Icon
     , active : Bool
     , additionalAttributes : List (Html.Attribute msg)
+    , onClick : Maybe msg
     }
 
 
@@ -21,6 +23,7 @@ chipConfig =
     { icon = Nothing
     , active = False
     , additionalAttributes = []
+    , onClick = Nothing
     }
 
 
@@ -30,6 +33,7 @@ chip config label =
         (List.filterMap identity
             [ rootCs
             , activeCs config
+            , clickHandler config
             ]
         )
         (List.filterMap identity
@@ -52,6 +56,11 @@ activeCs { active } =
 
     else
         Nothing
+
+
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler config =
+    Maybe.map Html.Events.onClick config.onClick
 
 
 labelElt : String -> Maybe (Html msg)

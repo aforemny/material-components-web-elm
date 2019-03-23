@@ -14,10 +14,10 @@ import Html.Attributes
 import Html.Events
 import Json.Decode as Json
 import Material.Button as Button
-import Material.Drawer as Drawer
-import Material.Icon as Icon
+import Material.Drawer as Drawer exposing (drawer, drawerConfig)
+import Material.Icon as Icon exposing (icon, iconConfig)
 import Material.Theme as Theme
-import Material.TopAppBar as TopAppBar
+import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -56,28 +56,30 @@ view lift page model =
         , Html.Attributes.style "display" "flex"
         , Html.Attributes.style "height" "100vh"
         ]
-        [ Drawer.view lift
-            "modal-drawer-drawer"
-            model.mdc
-            [ Drawer.open |> when model.drawerOpen
-            , Drawer.onClose (lift CloseDrawer)
-            ]
+        [ drawer
+            { drawerConfig
+                | open = model.drawerOpen
+            }
             [ Demo.PermanentDrawer.drawerHeader
             , Demo.PermanentDrawer.drawerItems
             ]
-        , Drawer.scrim [ Html.Events.onClick (lift CloseDrawer) ] []
+
+        -- TODO: Drawer.scrim [ Html.Events.onClick (lift CloseDrawer) ] []
         , Html.div
             [ Html.Attributes.class "drawer-frame-app-content" ]
-            [ TopAppBar.view lift
-                "modal-drawer-top-app-bar"
-                model.mdc
-                []
+            [ topAppBar topAppBarConfig
                 [ TopAppBar.section
                     [ TopAppBar.alignStart
                     ]
-                    [ TopAppBar.navigationIcon [ Html.Events.onClick (lift OpenDrawer) ]
+                    [ icon
+                        { iconConfig
+                            | additionalAttributes =
+                                [ TopAppBar.navigationIcon
+                                , Html.Events.onClick (lift OpenDrawer)
+                                ]
+                        }
                         "menu"
-                    , TopAppBar.title [] [ text "Modal Drawer" ]
+                    , Html.span [ TopAppBar.title ] [ text "Modal Drawer" ]
                     ]
                 ]
             , Demo.PermanentDrawer.mainContent model lift

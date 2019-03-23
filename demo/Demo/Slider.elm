@@ -8,7 +8,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Json exposing (Decoder)
-import Material.Slider as Slider
+import Material.Slider as Slider exposing (slider, sliderConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -52,13 +52,11 @@ heroSlider lift model =
         index =
             "slider-hero-slider"
     in
-    Slider.view lift
-        index
-        model.mdc
-        [ Slider.value (Maybe.withDefault 0 (Dict.get index model.sliders))
-        , Slider.onChange (lift << Change index)
-        ]
-        []
+    slider
+        { sliderConfig
+            | value = Maybe.withDefault 0 (Dict.get index model.sliders)
+            , onChange = Just (lift << Change index)
+        }
 
 
 continuousSlider : (Msg -> m) -> Model -> Html m
@@ -67,15 +65,13 @@ continuousSlider lift model =
         index =
             "slider-continuous-slider"
     in
-    Slider.view lift
-        index
-        model.mdc
-        [ Slider.value (Maybe.withDefault 0 (Dict.get index model.sliders))
-        , Slider.onChange (lift << Change index)
-        , Slider.min 0
-        , Slider.max 100
-        ]
-        []
+    slider
+        { sliderConfig
+            | value = Maybe.withDefault 0 (Dict.get index model.sliders)
+            , onChange = Just (lift << Change index)
+            , min = 0
+            , max = 100
+        }
 
 
 discreteSlider : (Msg -> m) -> Model -> Html m
@@ -84,17 +80,15 @@ discreteSlider lift model =
         index =
             "slider-discrete-slider"
     in
-    Slider.view lift
-        index
-        model.mdc
-        [ Slider.value (Maybe.withDefault 0 (Dict.get index model.sliders))
-        , Slider.onChange (lift << Change index)
-        , Slider.discrete
-        , Slider.min 0
-        , Slider.max 100
-        , Slider.step 1
-        ]
-        []
+    slider
+        { sliderConfig
+            | value = Maybe.withDefault 0 (Dict.get index model.sliders)
+            , onChange = Just (lift << Change index)
+            , discrete = True
+            , min = 0
+            , max = 100
+            , step = 1
+        }
 
 
 discreteSliderWithTickMarks : (Msg -> m) -> Model -> Html m
@@ -103,18 +97,17 @@ discreteSliderWithTickMarks lift model =
         index =
             "slider-discrete-slider-with-tick-marks"
     in
-    Slider.view lift
-        index
-        model.mdc
-        [ Slider.value (Maybe.withDefault 0 (Dict.get index model.sliders))
-        , Slider.onChange (lift << Change index)
-        , Slider.discrete
-        , Slider.min 0
-        , Slider.max 100
-        , Slider.step 1
-        , Slider.trackMarkers
-        ]
-        []
+    slider
+        { sliderConfig
+            | value = Maybe.withDefault 0 (Dict.get index model.sliders)
+            , onChange = Just (lift << Change index)
+            , discrete = True
+            , min = 0
+            , max = 100
+            , step = 1
+
+            -- TODO: , trackMarkers = True
+        }
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m

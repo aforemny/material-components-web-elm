@@ -2,12 +2,18 @@ module Material.Radio exposing (Config, radio, radioConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
+import Html.Events
+
+
+
+-- TODO: Rename checked to selected?
 
 
 type alias Config msg =
     { checked : Bool
     , disabled : Bool
     , additionalAttributes : List (Html.Attribute msg)
+    , onClick : Maybe msg
     }
 
 
@@ -16,6 +22,7 @@ radioConfig =
     { checked = False
     , disabled = False
     , additionalAttributes = []
+    , onClick = Nothing
     }
 
 
@@ -25,6 +32,7 @@ radio config =
         (List.filterMap identity
             [ rootCs
             , disabledCs config
+            , clickHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -45,6 +53,11 @@ disabledCs { disabled } =
 
     else
         Nothing
+
+
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler config =
+    Maybe.map Html.Events.onClick config.onClick
 
 
 nativeControlElt : Config msg -> Html msg

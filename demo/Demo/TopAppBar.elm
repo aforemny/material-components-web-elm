@@ -6,8 +6,8 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.Button as Button
-import Material.TopAppBar as TopAppBar
+import Material.Icon as Icon exposing (icon, iconConfig)
+import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 
 
 type alias Model =
@@ -90,23 +90,40 @@ view lift page topAppBarPage model =
                         [ Html.Attributes.style "width" "480px"
                         , Html.Attributes.style "height" "72px"
                         ]
-                        [ TopAppBar.view lift
-                            "top-app-bar-default-top-app-bar"
-                            model.mdc
-                            [ Html.Attributes.style "position" "static"
-                            ]
+                        [ topAppBar
+                            { topAppBarConfig
+                                | additionalAttributes =
+                                    [ Html.Attributes.style "position" "static" ]
+                            }
                             [ TopAppBar.section
                                 [ TopAppBar.alignStart
                                 ]
-                                [ TopAppBar.navigationIcon [] "menu"
-                                , TopAppBar.title [] [ text "Title" ]
+                                [ icon
+                                    { iconConfig
+                                        | additionalAttributes =
+                                            [ TopAppBar.navigationIcon ]
+                                    }
+                                    "menu"
+                                , Html.span [ TopAppBar.title ] [ text "Title" ]
                                 ]
                             , TopAppBar.section
                                 [ TopAppBar.alignEnd
                                 ]
-                                [ TopAppBar.actionItem [] "file_download"
-                                , TopAppBar.actionItem [] "print"
-                                , TopAppBar.actionItem [] "more_vert"
+                                [ icon
+                                    { iconConfig
+                                        | additionalAttributes = [ TopAppBar.actionItem ]
+                                    }
+                                    "file_download"
+                                , icon
+                                    { iconConfig
+                                        | additionalAttributes = [ TopAppBar.actionItem ]
+                                    }
+                                    "print"
+                                , icon
+                                    { iconConfig
+                                        | additionalAttributes = [ TopAppBar.actionItem ]
+                                    }
+                                    "more_vert"
                                 ]
                             ]
                         ]
@@ -206,24 +223,31 @@ standardTopAppBar lift index model =
     topAppBarWrapper lift
         index
         model
-        [ TopAppBar.fixedAdjust
+        [-- TODO: TopAppBar.fixedAdjust
         ]
-        (TopAppBar.view lift
-            index
-            model.mdc
-            []
+        (topAppBar topAppBarConfig
             [ TopAppBar.section
                 [ TopAppBar.alignStart
                 ]
-                [ TopAppBar.navigationIcon [] "menu"
-                , TopAppBar.title [] [ text "Title" ]
+                [ icon
+                    { iconConfig
+                        | additionalAttributes = [ TopAppBar.navigationIcon ]
+                    }
+                    "menu"
+                , Html.span [ TopAppBar.title ] [ text "Title" ]
                 ]
             , TopAppBar.section
                 [ TopAppBar.alignEnd
                 ]
-                [ TopAppBar.actionItem [] "file_download"
-                , TopAppBar.actionItem [] "print"
-                , TopAppBar.actionItem [] "bookmark"
+                [ icon
+                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "file_download"
+                , icon
+                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "print"
+                , icon
+                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "bookmark"
                 ]
             ]
         )
@@ -234,25 +258,31 @@ fixedTopAppBar lift index model =
     topAppBarWrapper lift
         index
         model
-        [ TopAppBar.fixedAdjust
+        [-- TODO: TopAppBar.fixedAdjust
         ]
-        (TopAppBar.view lift
-            index
-            model.mdc
-            [ TopAppBar.fixed
-            ]
+        (topAppBar { topAppBarConfig | fixed = True }
             [ TopAppBar.section
                 [ TopAppBar.alignStart
                 ]
-                [ TopAppBar.navigationIcon [] "menu"
-                , TopAppBar.title [] [ text "Title" ]
+                [ icon
+                    { iconConfig
+                        | additionalAttributes = [ TopAppBar.navigationIcon ]
+                    }
+                    "menu"
+                , Html.span [ TopAppBar.title ] [ text "Title" ]
                 ]
             , TopAppBar.section
                 [ TopAppBar.alignEnd
                 ]
-                [ TopAppBar.actionItem [] "file_download"
-                , TopAppBar.actionItem [] "print"
-                , TopAppBar.actionItem [] "bookmark"
+                [ icon
+                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "file_download"
+                , icon
+                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "print"
+                , icon
+                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "bookmark"
                 ]
             ]
         )
@@ -263,25 +293,28 @@ menuTopAppBar lift index model =
     topAppBarWrapper lift
         index
         model
-        [ TopAppBar.fixedAdjust
+        [-- TODO: TopAppBar.fixedAdjust
         ]
-        (TopAppBar.view lift
-            index
-            model.mdc
-            [ TopAppBar.fixed
-            ]
+        (topAppBar { topAppBarConfig | fixed = True }
             [ TopAppBar.section
                 [ TopAppBar.alignStart
                 ]
-                [ TopAppBar.navigationIcon [] "menu"
-                , TopAppBar.title [] [ text "Title" ]
+                [ icon
+                    { iconConfig
+                        | additionalAttributes = [ TopAppBar.navigationIcon ]
+                    }
+                    "menu"
+                , Html.span [ TopAppBar.title ] [ text "Title" ]
                 ]
             , TopAppBar.section
                 [ TopAppBar.alignEnd
                 ]
-                [ TopAppBar.actionItem [] "file_download"
-                , TopAppBar.actionItem [] "print"
-                , TopAppBar.actionItem [] "bookmark"
+                [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "file_download"
+                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "print"
+                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "bookmark"
                 ]
             ]
         )
@@ -296,25 +329,28 @@ denseTopAppBar lift index model =
     topAppBarWrapper lift
         index
         model
-        [ TopAppBar.denseFixedAdjust
+        [-- TODO: TopAppBar.fixedAdjust
         ]
-        (TopAppBar.view lift
-            index
-            model.mdc
-            [ TopAppBar.dense
-            ]
+        (topAppBar { topAppBarConfig | dense = True }
             [ TopAppBar.section
                 [ TopAppBar.alignStart
                 ]
-                [ TopAppBar.navigationIcon [] "menu"
-                , TopAppBar.title [] [ text "Title" ]
+                [ icon
+                    { iconConfig
+                        | additionalAttributes = [ TopAppBar.navigationIcon ]
+                    }
+                    "menu"
+                , Html.span [ TopAppBar.title ] [ text "Title" ]
                 ]
             , TopAppBar.section
                 [ TopAppBar.alignEnd
                 ]
-                [ TopAppBar.actionItem [] "file_download"
-                , TopAppBar.actionItem [] "print"
-                , TopAppBar.actionItem [] "bookmark"
+                [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "file_download"
+                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "print"
+                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "bookmark"
                 ]
             ]
         )
@@ -325,25 +361,28 @@ prominentTopAppBar lift index model =
     topAppBarWrapper lift
         index
         model
-        [ TopAppBar.prominentFixedAdjust
+        [-- TODO: TopAppBar.prominentFixedAdjust
         ]
-        (TopAppBar.view lift
-            index
-            model.mdc
-            [ TopAppBar.prominent
-            ]
+        (topAppBar { topAppBarConfig | variant = TopAppBar.Prominent }
             [ TopAppBar.section
                 [ TopAppBar.alignStart
                 ]
-                [ TopAppBar.navigationIcon [] "menu"
-                , TopAppBar.title [] [ text "Title" ]
+                [ icon
+                    { iconConfig
+                        | additionalAttributes = [ TopAppBar.navigationIcon ]
+                    }
+                    "menu"
+                , Html.span [ TopAppBar.title ] [ text "Title" ]
                 ]
             , TopAppBar.section
                 [ TopAppBar.alignEnd
                 ]
-                [ TopAppBar.actionItem [] "file_download"
-                , TopAppBar.actionItem [] "print"
-                , TopAppBar.actionItem [] "bookmark"
+                [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "file_download"
+                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "print"
+                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "bookmark"
                 ]
             ]
         )
@@ -354,24 +393,24 @@ shortTopAppBar lift index model =
     topAppBarWrapper lift
         index
         model
-        [ TopAppBar.fixedAdjust
+        [-- TODO: TopAppBar.fixedAdjust
         ]
-        (TopAppBar.view lift
-            index
-            model.mdc
-            [ TopAppBar.short
-            , TopAppBar.hasActionItem
-            ]
+        (topAppBar { topAppBarConfig | variant = TopAppBar.Short }
             [ TopAppBar.section
                 [ TopAppBar.alignStart
                 ]
-                [ TopAppBar.navigationIcon [] "menu"
-                , TopAppBar.title [] [ text "Title" ]
+                [ icon
+                    { iconConfig
+                        | additionalAttributes = [ TopAppBar.navigationIcon ]
+                    }
+                    "menu"
+                , Html.span [ TopAppBar.title ] [ text "Title" ]
                 ]
             , TopAppBar.section
                 [ TopAppBar.alignEnd
                 ]
-                [ TopAppBar.actionItem [] "file_download"
+                [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "file_download"
                 ]
             ]
         )
@@ -382,25 +421,24 @@ shortCollapsedTopAppBar lift index model =
     topAppBarWrapper lift
         index
         model
-        [ TopAppBar.fixedAdjust
+        [-- TODO: TopAppBar.fixedAdjust
         ]
-        (TopAppBar.view lift
-            index
-            model.mdc
-            [ TopAppBar.short
-            , TopAppBar.collapsed
-            , TopAppBar.hasActionItem
-            ]
+        (topAppBar { topAppBarConfig | variant = TopAppBar.ShortCollapsed }
             [ TopAppBar.section
                 [ TopAppBar.alignStart
                 ]
-                [ TopAppBar.navigationIcon [] "menu"
-                , TopAppBar.title [] [ text "Title" ]
+                [ icon
+                    { iconConfig
+                        | additionalAttributes = [ TopAppBar.navigationIcon ]
+                    }
+                    "menu"
+                , Html.span [ TopAppBar.title ] [ text "Title" ]
                 ]
             , TopAppBar.section
                 [ TopAppBar.alignEnd
                 ]
-                [ TopAppBar.actionItem [] "file_download"
+                [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                    "file_download"
                 ]
             ]
         )

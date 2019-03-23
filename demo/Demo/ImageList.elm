@@ -5,7 +5,7 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.ImageList as ImageList
+import Material.ImageList as ImageList exposing (imageList, imageListConfig)
 import Material.Typography as Typography
 
 
@@ -31,57 +31,69 @@ update lift msg model =
 
 standardImageList : Html m
 standardImageList =
-    ImageList.view
-        [ ImageList.withTextProtection
-        , Html.Attributes.style "max-width" "900px"
-        ]
+    imageList
+        { imageListConfig
+            | withTextProtection = True
+            , additionalAttributes =
+                [ Html.Attributes.style "max-width" "900px" ]
+        }
         (List.map standardItem standardImages)
 
 
 masonryImageList : Html m
 masonryImageList =
-    ImageList.view
-        [ ImageList.masonry
-        , Html.Attributes.style "max-width" "900px"
-        , Html.Attributes.style "column-count" "5"
-        , Html.Attributes.style "column-gap" "16px"
-        ]
+    imageList
+        { imageListConfig
+            | masonry = True
+            , additionalAttributes =
+                [ Html.Attributes.style "max-width" "900px"
+                , Html.Attributes.style "column-count" "5"
+                , Html.Attributes.style "column-gap" "16px"
+                ]
+        }
         (List.map masonryItem masonryImages)
 
 
-imageListHeroItem : Html m
+imageListHeroItem : ImageList.ListItem
 imageListHeroItem =
-    ImageList.item
-        [ Html.Attributes.style "width" "calc(100% / 5 - 4.2px)"
-        , Html.Attributes.style "margin" "2px"
-        ]
-        [ ImageList.imageAspectContainer []
-            [ ImageList.divImage [ Html.Attributes.style "background-color" "black" ] []
-            ]
-        ]
+    -- TODO:
+    -- ImageList.item
+    --     [ Html.Attributes.style "width" "calc(100% / 5 - 4.2px)"
+    --     , Html.Attributes.style "margin" "2px"
+    --     ]
+    --     [ ImageList.imageAspectContainer []
+    --         [ ImageList.divImage [ Html.Attributes.style "background-color" "black" ] []
+    --         ]
+    --     ]
+    { image = "background-color: black"
+    , label = Nothing
+    }
 
 
-standardItem : String -> Html m
+standardItem : String -> ImageList.ListItem
 standardItem url =
-    ImageList.item
-        [ Html.Attributes.style "width" "calc(100% / 5 - 4.2px)"
-        , Html.Attributes.style "margin" "2px"
-        ]
-        [ ImageList.imageAspectContainer
-            [ Html.Attributes.style "padding-bottom" "66.66667%"
-            ]
-            [ ImageList.image [ ImageList.src url ] []
-            , ImageList.supporting [] [ ImageList.label [] [ text "Text label" ] ]
-            ]
-        ]
+    -- TODO:
+    -- ImageList.item
+    --     [ Html.Attributes.style "width" "calc(100% / 5 - 4.2px)"
+    --     , Html.Attributes.style "margin" "2px"
+    --     ]
+    --     [ ImageList.imageAspectContainer
+    --         [ Html.Attributes.style "padding-bottom" "66.66667%"
+    --         ]
+    --         [ ImageList.image [ ImageList.src url ] []
+    --         , ImageList.supporting [] [ ImageList.label [] [ text "Text label" ] ]
+    --         ]
+    --     ]
+    { image = url
+    , label = Just "Text label"
+    }
 
 
-masonryItem : String -> Html m
+masonryItem : String -> ImageList.ListItem
 masonryItem url =
-    ImageList.item []
-        [ ImageList.image [ ImageList.src url ] []
-        , ImageList.label [] [ text "Text label" ]
-        ]
+    { image = url
+    , label = Just "Text label"
+    }
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
@@ -89,9 +101,10 @@ view lift page model =
     page.body "Image List"
         "Image lists display a collection of images in an organized grid."
         [ Hero.view []
-            [ ImageList.view
-                [ Html.Attributes.style "width" "300px"
-                ]
+            [ imageList
+                { imageListConfig
+                    | additionalAttributes = [ Html.Attributes.style "width" "300px" ]
+                }
                 (List.repeat 15 imageListHeroItem)
             ]
         , Html.h2

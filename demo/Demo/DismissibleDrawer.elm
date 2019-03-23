@@ -14,10 +14,10 @@ import Html.Attributes
 import Html.Events
 import Json.Decode as Json
 import Material.Button as Button
-import Material.Drawer as Drawer
-import Material.Icon as Icon
+import Material.Drawer as Drawer exposing (drawer, drawerConfig)
+import Material.Icon as Icon exposing (icon, iconConfig)
 import Material.List as Lists
-import Material.TopAppBar as TopAppBar
+import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -52,25 +52,29 @@ view lift page model =
         , Html.Attributes.style "display" "flex"
         , Html.Attributes.style "height" "100vh"
         ]
-        [ Drawer.view lift
-            "dismissible-drawer-drawer"
-            model.mdc
-            [ Drawer.open |> when model.drawerOpen ]
+        [ drawer
+            { drawerConfig
+                | variant = Drawer.Dismissable
+                , open = model.drawerOpen
+            }
             [ Demo.PermanentDrawer.drawerHeader
             , Demo.PermanentDrawer.drawerItems
             ]
         , Html.div
             [ Drawer.appContent ]
-            [ TopAppBar.view lift
-                "dismissible-drawer-top-app-bar"
-                model.mdc
-                []
+            [ topAppBar topAppBarConfig
                 [ TopAppBar.section
                     [ TopAppBar.alignStart
                     ]
-                    [ TopAppBar.navigationIcon [ Html.Events.onClick (lift ToggleDrawer) ]
+                    [ icon
+                        { iconConfig
+                            | additionalAttributes =
+                                [ TopAppBar.navigationIcon
+                                , Html.Events.onClick (lift ToggleDrawer)
+                                ]
+                        }
                         "menu"
-                    , TopAppBar.title [] [ text "Dismissible Drawer" ]
+                    , Html.span [ TopAppBar.title ] [ text "Dismissible Drawer" ]
                     ]
                 ]
             , Demo.PermanentDrawer.mainContent model lift

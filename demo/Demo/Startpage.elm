@@ -5,7 +5,7 @@ import Demo.Url exposing (Url(..))
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.ImageList as ImageList
+import Material.ImageList as ImageList exposing (imageList, imageListConfig)
 
 
 view : Page m -> Html m

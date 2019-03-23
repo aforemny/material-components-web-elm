@@ -7,8 +7,8 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.TextField as TextField
-import Material.TextField.HelperText as TextField
+import Material.TextField as TextField exposing (textField, textFieldConfig)
+import Material.TextField.HelperText exposing (helperText, helperTextConfig)
 import Material.Typography as Typography
 
 
@@ -58,16 +58,8 @@ heroTextFields : (Msg -> m) -> Model -> Html m
 heroTextFields lift model =
     heroTextFieldContainer []
         [ textFieldContainer []
-            [ TextField.view lift
-                "text-fields-hero-text-field-1"
-                model.mdc
-                [ TextField.label "Standard" ]
-                []
-            , TextField.view lift
-                "text-fields-hero-text-field-2"
-                model.mdc
-                [ TextField.label "Standard", TextField.outlined ]
-                []
+            [ textField { textFieldConfig | label = "Standard" }
+            , textField { textFieldConfig | label = "Standard", outlined = True }
             ]
         ]
 
@@ -93,131 +85,112 @@ textFieldContainer options =
         )
 
 
-helperText : Html m
-helperText =
-    TextField.helperText
-        [ TextField.persistent ]
-        [ text "Helper Text"
-        ]
+helperText_ : Html m
+helperText_ =
+    helperText { helperTextConfig | persistent = True } "Helper Text"
 
 
 filledTextFields : (Msg -> m) -> Model -> Html m
 filledTextFields lift model =
-    let
-        textField index options =
-            [ TextField.view lift
-                index
-                model.mdc
-                (TextField.label "Standard" :: options)
-                []
-            , helperText
-            ]
-    in
     textFieldRow []
         [ textFieldContainer []
-            (textField "text-fields-filled-1" [])
+            [ textField { textFieldConfig | label = "Standard" }
+            , helperText_
+            ]
         , textFieldContainer []
-            (textField "text-fields-filled-2" [ TextField.leadingIcon "event" ])
+            [ textField { textFieldConfig | label = "Standard" }
+            , helperText_
+            ]
         , textFieldContainer []
-            (textField "text-fields-filled-3" [ TextField.trailingIcon "trash" ])
+            [ textField { textFieldConfig | label = "Standard" }
+            , helperText_
+            ]
         ]
 
 
 outlinedTextFields : (Msg -> m) -> Model -> Html m
 outlinedTextFields lift model =
-    let
-        textField index options =
-            [ TextField.view lift
-                index
-                model.mdc
-                (TextField.label "Standard" :: TextField.outlined :: options)
-                []
-            , helperText
-            ]
-    in
     textFieldRow []
         [ textFieldContainer []
-            (textField "text-fields-outlined-1" [])
+            [ textField { textFieldConfig | label = "Standard", outlined = True }
+            , helperText_
+            ]
         , textFieldContainer []
-            (textField "text-fields-outlined-2" [ TextField.leadingIcon "event" ])
+            [ textField { textFieldConfig | label = "Standard", outlined = True }
+            , helperText_
+            ]
         , textFieldContainer []
-            (textField "text-fields-outlined-3" [ TextField.trailingIcon "trash" ])
+            [ textField { textFieldConfig | label = "Standard", outlined = True }
+            , helperText_
+            ]
         ]
 
 
 shapedFilledTextFields : (Msg -> m) -> Model -> Html m
 shapedFilledTextFields lift model =
-    let
-        textField index options =
-            [ TextField.view lift
-                index
-                model.mdc
-                (TextField.label "Standard"
-                    :: Html.Attributes.style "border-radius" "16px 16px 0 0"
-                    :: options
-                )
-                []
-            , helperText
-            ]
-    in
     textFieldRow []
         [ textFieldContainer []
-            (textField "text-fields-shaped-filled-1" [])
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , additionalAttributes =
+                        [ Html.Attributes.style "border-radius" "16px 16px 0 0" ]
+                }
+            , helperText_
+            ]
         , textFieldContainer []
-            (textField "text-fields-shaped-filled-2" [ TextField.leadingIcon "event" ])
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , additionalAttributes =
+                        [ Html.Attributes.style "border-radius" "16px 16px 0 0" ]
+                }
+            , helperText_
+            ]
         , textFieldContainer []
-            (textField "text-fields-shaped-filled-3" [ TextField.trailingIcon "trash" ])
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , additionalAttributes =
+                        [ Html.Attributes.style "border-radius" "16px 16px 0 0" ]
+                }
+            , helperText_
+            ]
         ]
 
 
 shapedOutlinedTextFields : (Msg -> m) -> Model -> Html m
 shapedOutlinedTextFields lift model =
-    let
-        textField index options =
-            [ TextField.view lift
-                index
-                model.mdc
-                (TextField.label "Standard" :: TextField.outlined :: options)
-                []
-            , helperText
-            ]
-    in
     textFieldRow []
         [ textFieldContainer []
-            (textField "text-fields-shaped-outlined-1" [])
+            [ textField { textFieldConfig | label = "Standard", outlined = True }
+            , helperText_
+            ]
         , textFieldContainer []
-            (textField "text-fields-shaped-outlined-2" [ TextField.leadingIcon "event" ])
+            [ textField { textFieldConfig | label = "Standard", outlined = True }
+            , helperText_
+            ]
         , textFieldContainer []
-            (textField "text-fields-shaped-outlined-3" [ TextField.trailingIcon "trash" ])
+            [ textField { textFieldConfig | label = "Standard", outlined = True }
+            , helperText_
+            ]
         ]
 
 
 fullwidthTextField : (Msg -> m) -> Model -> Html m
 fullwidthTextField lift model =
     textFieldContainer []
-        [ TextField.view lift
-            "text-field-fullwidth-text-field"
-            model.mdc
-            [ TextField.placeholder "Standard"
-            , TextField.fullwidth
-            ]
-            []
-        , helperText
+        [ textField { textFieldConfig | label = "Standard", fullwidth = True }
+        , helperText_
         ]
 
 
 textareaTextField : (Msg -> m) -> Model -> Html m
 textareaTextField lift model =
     textFieldContainer []
-        [ TextField.view lift
-            "text-fields-textarea-text-field"
-            model.mdc
-            [ TextField.label "Standard"
-            , TextField.textarea
-            , TextField.outlined
-            ]
-            []
-        , helperText
+        [ textField
+            { textFieldConfig | label = "Standard", textarea = True, outlined = True }
+        , helperText_
         ]
 
 
@@ -234,16 +207,14 @@ fullwidthTextareaTextField : (Msg -> m) -> Model -> Html m
 fullwidthTextareaTextField lift model =
     textFieldRowFullwidth []
         [ textFieldContainer []
-            [ TextField.view lift
-                "text-fields-fullwidth-textarea-text-field"
-                model.mdc
-                [ TextField.label "Standard"
-                , TextField.textarea
-                , TextField.fullwidth
-                , TextField.outlined
-                ]
-                []
-            , helperText
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , textarea = True
+                    , fullwidth = True
+                    , outlined = True
+                }
+            , helperText_
             ]
         ]
 

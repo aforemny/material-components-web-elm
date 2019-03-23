@@ -6,11 +6,12 @@ import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.Button as Button
-import Material.Dialog as Dialog
+import Material.Button as Button exposing (button, buttonConfig)
+import Material.Dialog as Dialog exposing (dialog, dialogConfig)
 import Material.FormField as FormField
-import Material.List as Lists
-import Material.Radio as RadioButton
+import Material.Icon as Icon exposing (icon, iconConfig)
+import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig)
+import Material.Radio as Radio exposing (radio, radioConfig)
 import Material.Typography as Typography
 
 
@@ -42,219 +43,145 @@ update lift msg model =
 
 heroDialog : (Msg -> m) -> String -> Model -> Html m
 heroDialog lift index model =
-    Dialog.view lift
-        index
-        model.mdc
-        [ Dialog.open
-        , Dialog.noScrim
-        , Html.Attributes.style "position" "relative"
-        , Html.Attributes.style "width" "320px"
-        , Html.Attributes.style "z-index" "auto"
-        ]
-        [ Html.h2
-            [ Dialog.title
-            ]
-            [ text "Get this party started?"
-            ]
-        , Dialog.content []
+    dialog
+        { dialogConfig
+            | open = True
+            , additionalAttributes =
+                [ Html.Attributes.style "position" "relative"
+                , Html.Attributes.style "width" "320px"
+                , Html.Attributes.style "z-index" "auto"
+                ]
+        }
+        { title = "Get this party started?"
+        , content =
             [ text "Turn up the jams and have a good time."
             ]
-        , Dialog.actions []
-            [ Button.view lift
-                (index ++ "-button-cancel")
-                model.mdc
-                [ Button.ripple
-                , Dialog.cancel
-                ]
-                [ text "Decline"
-                ]
-            , Button.view lift
-                (index ++ "button-accept")
-                model.mdc
-                [ Button.ripple
-                , Dialog.accept
-                ]
-                [ text "Accept"
-                ]
+        , actions =
+            [ button buttonConfig "Decline"
+            , button buttonConfig "Accept"
             ]
-        ]
+        }
 
 
 alertDialog : (Msg -> m) -> String -> Model -> Html m
 alertDialog lift index model =
-    Dialog.view lift
-        index
-        model.mdc
-        [ Dialog.open |> when (model.openDialog == Just index)
-        , Dialog.onClose (lift Close)
-        ]
-        [ Dialog.content []
-            [ text "Discard draft?"
+    dialog
+        { dialogConfig
+            | open = model.openDialog == Just index
+
+            -- TODO: onClose = Just (lift Close)
+        }
+        { title = ""
+        , content =
+            [ text "Discard draft?" ]
+        , actions =
+            [ button { buttonConfig | onClick = Just (lift Close) } "Cancel"
+            , button { buttonConfig | onClick = Just (lift Close) } "Discard"
             ]
-        , Dialog.actions []
-            [ Button.view lift
-                (index ++ "-button-cancel")
-                model.mdc
-                [ Button.ripple
-                , Dialog.cancel
-                , Html.Events.onClick (lift Close)
-                ]
-                [ text "Cancel"
-                ]
-            , Button.view lift
-                (index ++ "-button-accept")
-                model.mdc
-                [ Button.ripple
-                , Dialog.accept
-                , Html.Events.onClick (lift Close)
-                ]
-                [ text "Discard"
-                ]
-            ]
-        ]
+        }
 
 
 simpleDialog : (Msg -> m) -> String -> Model -> Html m
 simpleDialog lift index model =
-    Dialog.view lift
-        index
-        model.mdc
-        [ Dialog.open |> when (model.openDialog == Just index)
-        , Dialog.onClose (lift Close)
-        ]
-        [ Html.h2
-            [ Dialog.title
-            ]
-            [ text "Select an account"
-            ]
-        , Dialog.content []
-            [ Lists.ul
-                [ Lists.avatarList ]
-                [ Lists.li
-                    [ Html.Attributes.tabindex 0
-                    , Html.Events.onClick (lift Close)
-                    ]
-                    [ Lists.graphicIcon
+    dialog
+        { dialogConfig
+            | open = model.openDialog == Just index
+
+            -- TODO: onClose = Just (lift Close)
+        }
+        { title = "Select an account"
+        , content =
+            [ list { listConfig | avatarList = True }
+                [ listItem
+                    { listItemConfig
+                        | additionalAttributes =
+                            [ Html.Attributes.tabindex 0
+                            , Html.Events.onClick (lift Close)
+                            ]
+                    }
+                    [ Lists.graphic
                         [ Html.Attributes.style "background-color" "rgba(0,0,0,.3)"
                         , Html.Attributes.style "color" "#fff"
                         ]
-                        "person"
+                        [ icon iconConfig "person" ]
                     , Lists.text [] [ text "user1@example.com" ]
                     ]
-                , Lists.li
-                    [ Html.Attributes.tabindex 0
-                    , Html.Events.onClick (lift Close)
-                    ]
-                    [ Lists.graphicIcon
+                , listItem
+                    { listItemConfig
+                        | additionalAttributes =
+                            [ Html.Attributes.tabindex 0
+                            , Html.Events.onClick (lift Close)
+                            ]
+                    }
+                    [ Lists.graphic
                         [ Html.Attributes.style "background-color" "rgba(0,0,0,.3)"
                         , Html.Attributes.style "color" "#fff"
                         ]
-                        "person"
+                        [ icon iconConfig "person" ]
                     , Lists.text [] [ text "user2@example.com" ]
                     ]
-                , Lists.li
-                    [ Html.Attributes.tabindex 0
-                    , Html.Events.onClick (lift Close)
-                    ]
-                    [ Lists.graphicIcon
+                , listItem
+                    { listItemConfig
+                        | additionalAttributes =
+                            [ Html.Attributes.tabindex 0
+                            , Html.Events.onClick (lift Close)
+                            ]
+                    }
+                    [ Lists.graphic
                         [ Html.Attributes.style "background-color" "rgba(0,0,0,.3)"
                         , Html.Attributes.style "color" "#fff"
                         ]
-                        "add"
+                        [ icon iconConfig "add" ]
                     , Lists.text [] [ text "Add account" ]
                     ]
                 ]
             ]
-        ]
+        , actions = []
+        }
 
 
 confirmationDialog : (Msg -> m) -> String -> Model -> Html m
 confirmationDialog lift index model =
-    Dialog.view lift
-        index
-        model.mdc
-        [ Dialog.open |> when (model.openDialog == Just index)
-        , Dialog.onClose (lift Close)
-        ]
-        [ Html.h2
-            [ Dialog.title
-            ]
-            [ text "Phone ringtone"
-            ]
-        , Dialog.content []
-            [ Lists.ul
-                [ Lists.avatarList ]
-                [ Lists.li []
-                    [ Lists.graphic []
-                        [ RadioButton.view lift
-                            "dialog-confirmation-dialog-checkbox-1"
-                            model.mdc
-                            [ RadioButton.selected ]
-                            []
-                        ]
+    dialog
+        { dialogConfig
+            | open = model.openDialog == Just index
+
+            -- TODO: onClose = Just (lift Close)
+        }
+        { title = "Phone ringtone"
+        , content =
+            [ list { listConfig | avatarList = True }
+                [ listItem listItemConfig
+                    [ Lists.graphic [] [ radio { radioConfig | checked = True } ]
                     , Lists.text [] [ text "Never Gonna Give You Up" ]
                     ]
-                , Lists.li []
-                    [ Lists.graphic []
-                        [ RadioButton.view lift
-                            "dialog-confirmation-dialog-checkbox-2"
-                            model.mdc
-                            []
-                            []
-                        ]
+                , listItem listItemConfig
+                    [ Lists.graphic [] [ radio radioConfig ]
                     , Lists.text [] [ text "Hot Cross Buns" ]
                     ]
-                , Lists.li []
-                    [ Lists.graphic []
-                        [ RadioButton.view lift
-                            "dialog-confirmation-dialog-checkbox-3"
-                            model.mdc
-                            []
-                            []
-                        ]
+                , listItem listItemConfig
+                    [ Lists.graphic [] [ radio radioConfig ]
                     , Lists.text [] [ text "None" ]
                     ]
                 ]
             ]
-        , Dialog.actions []
-            [ Button.view lift
-                (index ++ "-button-cancel")
-                model.mdc
-                [ Button.ripple
-                , Dialog.cancel
-                , Html.Events.onClick (lift Close)
-                ]
-                [ text "Cancel"
-                ]
-            , Button.view lift
-                (index ++ "-button-accept")
-                model.mdc
-                [ Button.ripple
-                , Dialog.accept
-                , Html.Events.onClick (lift Close)
-                ]
-                [ text "OK"
-                ]
+        , actions =
+            [ button { buttonConfig | onClick = Just (lift Close) } "Cancel"
+            , button { buttonConfig | onClick = Just (lift Close) } "OK"
             ]
-        ]
+        }
 
 
 scrollableDialog : (Msg -> m) -> String -> Model -> Html m
 scrollableDialog lift index model =
-    Dialog.view lift
-        index
-        model.mdc
-        [ Dialog.open |> when (model.openDialog == Just index)
-        , Dialog.onClose (lift Close)
-        ]
-        [ Html.h2
-            [ Dialog.title
-            ]
-            [ text "The Wonderful Wizard of Oz"
-            ]
-        , Dialog.content
-            [ Dialog.scrollable
-            ]
+    dialog
+        { dialogConfig
+            | open = model.openDialog == Just index
+
+            -- TODO: onClose = Just (lift Close)
+        }
+        { title = "The Wonderful Wizard of Oz"
+        , content =
             [ Html.p []
                 [ text """
                     Dorothy lived in the midst of the great Kansas prairies,
@@ -342,27 +269,11 @@ scrollableDialog lift index model =
                   """
                 ]
             ]
-        , Dialog.actions []
-            [ Button.view lift
-                (index ++ "-button-cancel")
-                model.mdc
-                [ Button.ripple
-                , Dialog.cancel
-                , Html.Events.onClick (lift Close)
-                ]
-                [ text "Decline"
-                ]
-            , Button.view lift
-                (index ++ "-button-accept")
-                model.mdc
-                [ Button.ripple
-                , Dialog.accept
-                , Html.Events.onClick (lift Close)
-                ]
-                [ text "Continue"
-                ]
+        , actions =
+            [ button { buttonConfig | onClick = Just (lift Close) } "Decline"
+            , button { buttonConfig | onClick = Just (lift Close) } "Continue"
             ]
-        ]
+        }
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
@@ -397,41 +308,22 @@ view lift page model =
             , altText = "Source Code"
             }
         , Page.demos
-            [ Button.view lift
-                "dialog-show-alert"
-                model.mdc
-                [ Button.ripple
-                , Html.Events.onClick (lift (Show "dialog-alert-dialog"))
-                ]
-                [ text "Alert"
-                ]
+            [ button
+                { buttonConfig | onClick = Just (lift (Show "dialog-alert-dialog")) }
+                "Alert"
             , text " "
-            , Button.view lift
-                "dialog-show-simple"
-                model.mdc
-                [ Button.ripple
-                , Html.Events.onClick (lift (Show "dialog-simple-dialog"))
-                ]
-                [ text "Simple"
-                ]
+            , button
+                { buttonConfig | onClick = Just (lift (Show "dialog-simple-dialog")) }
+                "Simple"
             , text " "
-            , Button.view lift
-                "dialog-show-confirmation-dialog"
-                model.mdc
-                [ Button.ripple
-                , Html.Events.onClick (lift (Show "dialog-confirmation-dialog"))
-                ]
-                [ text "Confirmation"
-                ]
+            , button
+                { buttonConfig | onClick = Just (lift (Show "dialog-confirmation-dialog")) }
+                "Confirmation"
             , text " "
-            , Button.view lift
-                "dialog-show-scrollable-dialog"
-                model.mdc
-                [ Button.ripple
-                , Html.Events.onClick (lift (Show "dialog-scrollable-dialog"))
-                ]
-                [ text "Scrollable"
-                ]
+            , button
+                { buttonConfig | onClick = Just (lift (Show "dialog-scrollable-dialog")) }
+                "Scrollable"
+            , text " "
             , alertDialog lift "dialog-alert-dialog" model
             , simpleDialog lift "dialog-simple-dialog" model
             , confirmationDialog lift "dialog-confirmation-dialog" model

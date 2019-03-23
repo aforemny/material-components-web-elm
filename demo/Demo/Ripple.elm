@@ -6,7 +6,7 @@ import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
 import Material.Elevation as Elevation
-import Material.Ripple as Ripple
+import Material.Ripple as Ripple exposing (ripple, rippleConfig)
 import Material.Typography as Typography
 
 
@@ -32,12 +32,8 @@ update lift msg model =
 
 demoBox : (Msg -> m) -> String -> Model -> String -> Html m
 demoBox lift index model label =
-    let
-        ripple =
-            Ripple.bounded lift index model.mdc []
-    in
     Html.div
-        [ Html.Attributes.class "mdc-ripple-surface"
+        [ Ripple.rippleSurface
         , Html.Attributes.style "display" "flex"
         , Html.Attributes.style "align-items" "center"
         , Html.Attributes.style "justify-content" "center"
@@ -50,32 +46,24 @@ demoBox lift index model label =
         , Html.Attributes.style "overflow" "hidden"
         , Elevation.z2
         , Html.Attributes.tabindex 0
-        , ripple.interactionHandler
-        , ripple.properties
         ]
         [ text label
-        , ripple.style
+        , ripple rippleConfig
         ]
 
 
 demoIcon : (Msg -> m) -> String -> Model -> String -> Html m
 demoIcon lift index model icon =
-    let
-        ripple =
-            Ripple.unbounded lift index model.mdc []
-    in
     Html.div
-        [ Html.Attributes.class "mdc-ripple-surface"
+        [ Ripple.rippleSurface
         , Html.Attributes.class "material-icons"
         , Html.Attributes.style "width" "24px"
         , Html.Attributes.style "height" "24px"
         , Html.Attributes.style "padding" "12px"
         , Html.Attributes.style "border-radius" "50%"
-        , ripple.interactionHandler
-        , ripple.properties
         ]
         [ text icon
-        , ripple.style
+        , ripple { rippleConfig | unbounded = True }
         ]
 
 

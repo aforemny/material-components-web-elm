@@ -7,7 +7,8 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.TabBar as TabBar
+import Material.Tab as Tab exposing (tab, tabConfig)
+import Material.TabBar as TabBar exposing (tabBar, tabBarConfig)
 import Material.Theme as Theme
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
@@ -40,117 +41,103 @@ subscriptions lift model =
     Sub.none
 
 
-tab :
+tab_ :
     (Msg -> m)
-    -> Model
     -> String
     -> Int
+    -> Model
     -> String
-    -> TabBar.Tab m
-tab lift model index tab_index label =
-    TabBar.tab
-        [ Html.Events.onClick (lift (SelectTab index tab_index)) ]
-        [ text label ]
+    -> Html m
+tab_ lift index tabIndex model label =
+    let
+        active =
+            tabIndex == Maybe.withDefault 0 (Dict.get index model.states)
+    in
+    tab
+        { tabConfig
+            | active = active
+            , onClick = Just (lift (SelectTab index tabIndex))
+        }
+        { label = label, icon = Nothing }
 
 
 heroTabs : (Msg -> m) -> Model -> String -> Html m
 heroTabs lift model index =
-    let
-        active_tab_index =
-            Dict.get index model.states |> Maybe.withDefault 0
-    in
-    TabBar.view lift
-        index
-        model.mdc
-        [ TabBar.activeTab active_tab_index ]
-        [ tab lift model index 0 "Home"
-        , tab lift model index 1 "Merchandise"
-        , tab lift model index 2 "About Us"
+    tabBar tabBarConfig
+        [ tab_ lift index 0 model "Home"
+        , tab_ lift index 1 model "Merchandise"
+        , tab_ lift index 2 model "About Us"
         ]
 
 
 tabsWithIcons : (Msg -> m) -> Model -> String -> List (Html.Attribute m) -> Html m
 tabsWithIcons lift model index options =
-    let
-        active_tab_index =
-            Dict.get index model.states |> Maybe.withDefault 0
-    in
-    TabBar.view lift
-        index
-        model.mdc
-        [ TabBar.activeTab active_tab_index ]
-        [ iconTab lift model index 0 "access_time" "Recents" options
-        , iconTab lift model index 1 "near_me" "Nearby" options
-        , iconTab lift model index 2 "favorite" "Favorites" options
+    tabBar tabBarConfig
+        [ iconTab lift index 0 model "access_time" "Recents" options
+        , iconTab lift index 1 model "near_me" "Nearby" options
+        , iconTab lift index 2 model "favorite" "Favorites" options
         ]
 
 
 tabsWithStackedIcons : (Msg -> m) -> Model -> String -> Html m
 tabsWithStackedIcons lift model index =
-    let
-        active_tab_index =
-            Dict.get index model.states |> Maybe.withDefault 0
-    in
-    TabBar.view lift
-        index
-        model.mdc
-        [ TabBar.activeTab active_tab_index ]
-        [ stackedTab lift model index 0 "access_time" "Recents"
-        , stackedTab lift model index 1 "near_me" "Nearby"
-        , stackedTab lift model index 2 "favorite" "Favorites"
+    tabBar tabBarConfig
+        [ stackedTab lift index 0 model "access_time" "Recents"
+        , stackedTab lift index 1 model "near_me" "Nearby"
+        , stackedTab lift index 2 model "favorite" "Favorites"
         ]
 
 
 scrollingTabs : (Msg -> m) -> Model -> String -> Html m
 scrollingTabs lift model index =
-    let
-        active_tab_index =
-            Dict.get index model.states |> Maybe.withDefault 0
-    in
-    TabBar.view lift
-        index
-        model.mdc
-        [ TabBar.activeTab active_tab_index ]
+    tabBar tabBarConfig
         ([ "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight" ]
-            |> List.indexedMap (\i v -> tab lift model index i ("Tab " ++ v))
+            |> List.indexedMap (\i v -> tab_ lift index i model ("Tab " ++ v))
         )
 
 
 iconTab :
     (Msg -> m)
-    -> Model
     -> String
     -> Int
+    -> Model
     -> String
     -> String
     -> List (Html.Attribute m)
-    -> TabBar.Tab m
-iconTab lift model index tab_index icon label options =
-    TabBar.tab
-        ([ Html.Events.onClick (lift (SelectTab index tab_index))
-         , TabBar.icon icon
-         ]
-            ++ options
-        )
-        [ text label ]
+    -> Html m
+iconTab lift index tabIndex model icon label options =
+    let
+        active =
+            tabIndex == Maybe.withDefault 0 (Dict.get index model.states)
+    in
+    tab
+        { tabConfig
+            | active = active
+            , onClick = Just (lift (SelectTab index tabIndex))
+        }
+        { label = label, icon = Just icon }
 
 
 stackedTab :
     (Msg -> m)
-    -> Model
     -> String
     -> Int
+    -> Model
     -> String
     -> String
-    -> TabBar.Tab m
-stackedTab lift model index tab_index icon label =
-    TabBar.tab
-        [ Html.Events.onClick (lift (SelectTab index tab_index))
-        , TabBar.icon icon
-        , TabBar.stacked
-        , TabBar.smallIndicator
-        ]
-        [ text label ]
+    -> Html m
+stackedTab lift index tabIndex model icon label =
+    let
+        active =
+            tabIndex == Maybe.withDefault 0 (Dict.get index model.states)
+    in
+    tab
+        { tabConfig
+            | onClick = Just (lift (SelectTab index tabIndex))
+            , stacked = True
+            , indicatorSpansContent = False
+        }
+        { label = label, icon = Just icon }
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
@@ -185,11 +172,13 @@ view lift page model =
             , altText = "Source Code"
             }
         , Page.demos
-            [ h3 [ Typography.subtitle1 ] [ text "Tabs with icons next to labels" ]
+            [ Html.h3 [ Typography.subtitle1 ] [ text "Tabs with icons next to labels" ]
             , tabsWithIcons lift model "tabs-with-icons" []
-            , h3 [ Typography.subtitle1 ] [ text "Tabs with icons above labels and indicators restricted to content" ]
+            , Html.h3 [ Typography.subtitle1 ]
+                [ text "Tabs with icons above labels and indicators restricted to content"
+                ]
             , tabsWithStackedIcons lift model "tabs-with-stacked-icons"
-            , h3 [ Typography.subtitle1 ] [ text "Scrolling tabs" ]
+            , Html.h3 [ Typography.subtitle1 ] [ text "Scrolling tabs" ]
             , scrollingTabs lift model "scrolling-tabs"
             ]
         ]

@@ -6,8 +6,8 @@ import Demo.Page as Page exposing (Page)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.FormField as FormField
-import Material.Radio as RadioButton
+import Material.FormField as FormField exposing (formField, formFieldConfig)
+import Material.Radio as Radio exposing (radio, radioConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -47,14 +47,13 @@ isSelected group index model =
 
 heroRadio : (Msg -> m) -> Model -> String -> String -> Html m
 heroRadio lift model group index =
-    RadioButton.view lift
-        index
-        model.mdc
-        [ Html.Events.onClick (lift (Set group index))
-        , RadioButton.selected |> when (isSelected group index model)
-        , Html.Attributes.style "margin" "0 10px"
-        ]
-        []
+    radio
+        { radioConfig
+            | checked = isSelected group index model
+            , onClick = Just (lift (Set group index))
+            , additionalAttributes =
+                [ Html.Attributes.style "margin" "0 10px" ]
+        }
 
 
 heroRadioGroup : (Msg -> m) -> Model -> Html m
@@ -65,25 +64,27 @@ heroRadioGroup lift model =
         ]
 
 
-radio : (Msg -> m) -> Model -> String -> String -> String -> Html m
-radio lift model group index label =
-    FormField.view [ Html.Attributes.style "margin" "0 10px" ]
-        [ RadioButton.view lift
-            index
-            model.mdc
-            [ Html.Events.onClick (lift (Set group index))
-            , RadioButton.selected |> when (isSelected group index model)
-            ]
-            []
-        , Html.label [ Html.for index ] [ text label ]
+radio_ : (Msg -> m) -> Model -> String -> String -> String -> Html m
+radio_ lift model group index label =
+    formField
+        { formFieldConfig
+            | additionalAttributes =
+                [ Html.Attributes.style "margin" "0 10px" ]
+        }
+        [ radio
+            { radioConfig
+                | checked = isSelected group index model
+                , onClick = Just (lift (Set group index))
+            }
+        , Html.label [ Html.Attributes.for index ] [ text label ]
         ]
 
 
 exampleRadioGroup : (Msg -> m) -> Model -> Html m
 exampleRadioGroup lift model =
     Html.div []
-        [ radio lift model "example" "radio-buttons-example-radio-1" "Radio 1"
-        , radio lift model "example" "radio-buttons-example-radio-2" "Radio 2"
+        [ radio_ lift model "example" "radio-buttons-example-radio-1" "Radio 1"
+        , radio_ lift model "example" "radio-buttons-example-radio-2" "Radio 2"
         ]
 
 

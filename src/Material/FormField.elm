@@ -4,6 +4,10 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+
+-- TODO: formField is used differently in demo
+
+
 type alias Config msg =
     { label : String
     , alignEnd : Bool

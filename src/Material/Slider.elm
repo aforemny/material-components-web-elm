@@ -2,16 +2,25 @@ module Material.Slider exposing (Config, slider, sliderConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
+import Html.Events
+import Json.Decode as Decode
 import Svg
 import Svg.Attributes
+
+
+
+-- TODO: withTickMarks
+-- TODO: step
 
 
 type alias Config msg =
     { discrete : Bool
     , min : Float
     , max : Float
+    , step : Float
     , value : Float
     , additionalAttributes : List (Html.Attribute msg)
+    , onChange : Maybe (Float -> msg)
     }
 
 
@@ -20,8 +29,10 @@ sliderConfig =
     { discrete = False
     , min = 0
     , max = 1
+    , step = 1
     , value = 0
     , additionalAttributes = []
+    , onChange = Nothing
     }
 
 
@@ -36,6 +47,7 @@ slider config =
             , ariaValueMinAttr config
             , ariaValueMaxAttr config
             , ariaValuenowAttr config
+            , changeHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -82,6 +94,20 @@ ariaValueMaxAttr { max } =
 ariaValuenowAttr : Config msg -> Maybe (Html.Attribute msg)
 ariaValuenowAttr { value } =
     Just (Html.Attributes.attribute "aria-valuenow" (String.fromFloat value))
+
+
+changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler config =
+    Maybe.map
+        (\handler ->
+            Html.Events.on "change"
+                (Decode.map handler
+                    (Decode.map (Maybe.withDefault 0)
+                        (Decode.map String.toFloat Html.Events.targetValue)
+                    )
+                )
+        )
+        config.onChange
 
 
 trackContainerElt : Html msg

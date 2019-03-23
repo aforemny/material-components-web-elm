@@ -5,10 +5,10 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Checkbox as Checkbox
-import Material.Icon as Icon
-import Material.List as Lists
-import Material.Radio as RadioButton
+import Material.Checkbox as Checkbox exposing (checkbox, checkboxConfig)
+import Material.Icon as Icon exposing (icon, iconConfig)
+import Material.List as Lists exposing (dividerConfig, list, listConfig, listItem, listItemConfig)
+import Material.Radio as Radio exposing (radio, radioConfig)
 import Material.Ripple as Ripple
 import Material.Typography as Typography
 
@@ -42,21 +42,28 @@ demoList =
 
 heroList : Html m
 heroList =
-    Lists.ul
-        (Html.Attributes.style "background" "#fff" :: demoList)
-        (List.repeat 3 <| Lists.li [] [ text "Line item" ])
+    list
+        { listConfig
+            | additionalAttributes = Html.Attributes.style "background" "#fff" :: demoList
+        }
+        (List.repeat 3 <| listItem listItemConfig [ text "Line item" ])
 
 
 singleLineList : Html m
 singleLineList =
-    Lists.ul demoList (List.repeat 3 <| Lists.li [] [ text "Line item" ])
+    list { listConfig | additionalAttributes = demoList }
+        (List.repeat 3 <| listItem listItemConfig [ text "Line item" ])
 
 
 twoLineList : Html m
 twoLineList =
-    Lists.ul (Lists.twoLine :: demoList)
+    list
+        { listConfig
+            | twoLine = True
+            , additionalAttributes = demoList
+        }
         (List.repeat 3 <|
-            Lists.li []
+            listItem listItemConfig
                 [ Lists.text []
                     [ Lists.primaryText [] [ text "Line item" ]
                     , Lists.secondaryText [] [ text "Secondary text" ]
@@ -67,38 +74,63 @@ twoLineList =
 
 leadingIconList : Html m
 leadingIconList =
-    Lists.ul demoList
-        [ Lists.li [] [ Lists.graphicIcon [] "wifi", text "Line item" ]
-        , Lists.li [] [ Lists.graphicIcon [] "bluetooth", text "Line item" ]
-        , Lists.li [] [ Lists.graphicIcon [] "data_usage", text "Line item" ]
+    list { listConfig | additionalAttributes = demoList }
+        [ listItem listItemConfig
+            [ Lists.graphic [] [ icon iconConfig "wifi" ]
+            , text "Line item"
+            ]
+        , listItem listItemConfig
+            [ Lists.graphic [] [ icon iconConfig "bluetooth" ]
+            , text "Line item"
+            ]
+        , listItem listItemConfig
+            [ Lists.graphic [] [ icon iconConfig "data_usage" ]
+            , text "Line item"
+            ]
         ]
 
 
 trailingIconList : Html m
 trailingIconList =
-    Lists.ul demoList
-        (List.repeat 3 <| Lists.li [] [ text "Line item", Lists.metaIcon [] "info" ])
+    list { listConfig | additionalAttributes = demoList }
+        (List.repeat 3 <|
+            listItem listItemConfig
+                [ text "Line item"
+                , Lists.meta [] [ icon iconConfig "info" ]
+                ]
+        )
 
 
 activatedItemList : Html m
 activatedItemList =
-    Lists.ul demoList
-        [ Lists.li [] [ Lists.graphicIcon [] "inbox", text "Inbox" ]
-        , Lists.li [ Lists.activated ] [ Lists.graphicIcon [] "star", text "Star" ]
-        , Lists.li [] [ Lists.graphicIcon [] "send", text "Sent" ]
-        , Lists.li [] [ Lists.graphicIcon [] "drafts", text "Drafts" ]
+    list { listConfig | additionalAttributes = demoList }
+        [ listItem listItemConfig
+            [ Lists.graphic [] [ icon iconConfig "inbox" ], text "Inbox" ]
+        , listItem { listItemConfig | activated = True }
+            [ Lists.graphic [] [ icon iconConfig "star" ], text "Star" ]
+        , listItem listItemConfig
+            [ Lists.graphic [] [ icon iconConfig "send" ], text "Sent" ]
+        , listItem listItemConfig
+            [ Lists.graphic [] [ icon iconConfig "drafts" ], text "Drafts" ]
         ]
 
 
 shapedActivatedItemList : Html m
 shapedActivatedItemList =
-    Lists.ul demoList
-        [ Lists.li [] [ Lists.graphicIcon [] "inbox", text "Inbox" ]
-        , Lists.li
-            [ Lists.activated, Html.Attributes.style "border-radius" "0 32px 32px 0" ]
-            [ Lists.graphicIcon [] "star", text "Star" ]
-        , Lists.li [] [ Lists.graphicIcon [] "send", text "Sent" ]
-        , Lists.li [] [ Lists.graphicIcon [] "drafts", text "Drafts" ]
+    list { listConfig | additionalAttributes = demoList }
+        [ listItem listItemConfig
+            [ Lists.graphic [] [ icon iconConfig "inbox" ], text "Inbox" ]
+        , listItem
+            { listItemConfig
+                | activated = True
+                , additionalAttributes =
+                    [ Html.Attributes.style "border-radius" "0 32px 32px 0" ]
+            }
+            [ Lists.graphic [] [ icon iconConfig "star" ], text "Star" ]
+        , listItem listItemConfig
+            [ Lists.graphic [] [ icon iconConfig "send" ], text "Sent" ]
+        , listItem listItemConfig
+            [ Lists.graphic [] [ icon iconConfig "drafts" ], text "Drafts" ]
         ]
 
 
@@ -112,60 +144,64 @@ demoIcon =
 
 folderList : Html m
 folderList =
-    Lists.ul (Lists.twoLine :: Lists.avatarList :: demoList)
-        [ Lists.li []
-            [ Lists.graphicIcon demoIcon "folder"
+    list
+        { listConfig
+            | avatarList = True
+            , twoLine = True
+            , additionalAttributes = demoList
+        }
+        [ listItem listItemConfig
+            [ Lists.graphic demoIcon [ icon iconConfig "folder" ]
             , Lists.text []
                 [ Lists.primaryText [] [ text "Dog Photos" ]
                 , Lists.secondaryText [] [ text "9 Jan 2018" ]
                 ]
-            , Lists.metaIcon [] "info"
+            , Lists.meta [] [ icon iconConfig "info" ]
             ]
-        , Lists.li []
-            [ Lists.graphicIcon demoIcon "folder"
+        , listItem listItemConfig
+            [ Lists.graphic demoIcon [ icon iconConfig "folder" ]
             , Lists.text []
                 [ Lists.primaryText [] [ text "Cat Photos" ]
                 , Lists.secondaryText [] [ text "22 Dec 2017" ]
                 ]
-            , Lists.metaIcon [] "info"
+            , Lists.meta [] [ icon iconConfig "info" ]
             ]
-        , Lists.divider [] []
-        , Lists.li []
-            [ Lists.graphicIcon demoIcon "folder"
+        , Lists.divider dividerConfig
+        , listItem listItemConfig
+            [ Lists.graphic demoIcon [ icon iconConfig "folder" ]
             , Lists.text []
                 [ Lists.primaryText [] [ text "Potatoes" ]
                 , Lists.secondaryText [] [ text "30 Noc 2017" ]
                 ]
-            , Lists.metaIcon [] "info"
+            , Lists.meta [] [ icon iconConfig "info" ]
             ]
-        , Lists.li []
-            [ Lists.graphicIcon demoIcon "folder"
+        , listItem listItemConfig
+            [ Lists.graphic demoIcon [ icon iconConfig "folder" ]
             , Lists.text []
                 [ Lists.primaryText [] [ text "Carrots" ]
                 , Lists.secondaryText [] [ text "17 Oct 2017" ]
                 ]
-            , Lists.metaIcon [] "info"
+            , Lists.meta [] [ icon iconConfig "info" ]
             ]
         ]
 
 
 listWithTrailing : (Int -> Html m) -> Html m
 listWithTrailing metaControl =
-    Lists.ul demoList
-        [ Lists.li []
+    list { listConfig | additionalAttributes = demoList }
+        [ listItem listItemConfig
             [ text "Dog Photos"
             , Lists.meta [] [ metaControl 0 ]
             ]
-        , Lists.li []
+        , listItem listItemConfig
             [ text "Cat Photos"
             , Lists.meta [] [ metaControl 1 ]
             ]
-        , Lists.divider [] []
-        , Lists.li []
+        , listItem listItemConfig
             [ text "Potatoes"
             , Lists.meta [] [ metaControl 2 ]
             ]
-        , Lists.li []
+        , listItem listItemConfig
             [ text "Carrots"
             , Lists.meta [] [ metaControl 3 ]
             ]
@@ -174,26 +210,12 @@ listWithTrailing metaControl =
 
 listWithTrailingCheckbox : (Msg -> m) -> String -> Model -> Html m
 listWithTrailingCheckbox lift index model =
-    listWithTrailing
-        (\n ->
-            Checkbox.view lift
-                (index ++ "-checkbox-" ++ String.fromInt n)
-                model.mdc
-                [ Checkbox.checked False ]
-                []
-        )
+    listWithTrailing (\n -> checkbox { checkboxConfig | state = Checkbox.Unchecked })
 
 
 listWithTrailingRadioButton : (Msg -> m) -> String -> Model -> Html m
 listWithTrailingRadioButton lift index model =
-    listWithTrailing
-        (\n ->
-            RadioButton.view lift
-                (index ++ "-radio-button-" ++ String.fromInt n)
-                model.mdc
-                []
-                []
-        )
+    listWithTrailing (\n -> radio radioConfig)
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m

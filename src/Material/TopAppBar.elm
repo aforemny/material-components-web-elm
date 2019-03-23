@@ -4,6 +4,7 @@ module Material.TopAppBar exposing
     , actionItem
     , alignEnd
     , alignStart
+    , fixedAdjust
     , navigationIcon
     , row
     , section

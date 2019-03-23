@@ -5,6 +5,10 @@ import Html.Attributes exposing (class)
 import Material.TabScroller exposing (tabScroller, tabScrollerConfig)
 
 
+
+-- TODO: move tab, tabConfig here
+
+
 type alias Config msg =
     { tabScrollerConfig : Material.TabScroller.Config msg
     , additionalAttributes : List (Html.Attribute msg)

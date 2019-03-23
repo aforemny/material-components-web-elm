@@ -15,6 +15,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Json
+import Material.LayoutGrid as LayoutGrid exposing (layoutGrid)
 import Material.Typography as Typography
 
 
@@ -40,7 +41,7 @@ update lift msg model =
 
 demoGrid : List (Html.Attribute m) -> List (Html m) -> Html m
 demoGrid options =
-    LayoutGrid.view
+    layoutGrid
         (Html.Attributes.style "background" "rgba(0,0,0,.2)"
             :: Html.Attributes.style "min-width" "360px"
             :: options

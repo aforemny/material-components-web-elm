@@ -5,11 +5,11 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Button as Button
-import Material.Card as Card
+import Material.Button as Button exposing (button, buttonConfig)
+import Material.Card as Card exposing (card, cardConfig, mediaConfig, primaryActionConfig)
 import Material.Checkbox as Checkbox
 import Material.FormField as FormField
-import Material.Icon as Icon
+import Material.Icon as Icon exposing (icon, iconConfig)
 import Material.IconToggle as IconToggle
 import Material.Ripple as Ripple
 import Material.Theme as Theme
@@ -37,194 +37,134 @@ update lift msg model =
             ( model, Cmd.none )
 
 
-cardMedia : Html m
+cardMedia : Card.Block m
 cardMedia =
-    Card.media
-        [ Card.aspect16To9
-        , Card.backgroundImage "images/16-9.jpg"
-        ]
-        []
+    Card.media { mediaConfig | aspect = Just Card.SixteenToNine } "images/16-9.jpg"
 
 
-cardTitle : Html m
+cardTitle : Card.Block m
 cardTitle =
-    Html.div
-        [ Html.Attributes.style "padding" "1rem"
-        ]
-        [ Html.h2
-            [ Typography.headline6
-            , Html.Attributes.style "margin" "0"
+    Card.custom <|
+        Html.div
+            [ Html.Attributes.style "padding" "1rem"
             ]
-            [ text "Our Changing Planet"
+            [ Html.h2
+                [ Typography.headline6
+                , Html.Attributes.style "margin" "0"
+                ]
+                [ text "Our Changing Planet"
+                ]
+            , Html.h3
+                [ Typography.subtitle2
+                , Theme.secondaryBg
+                , Html.Attributes.style "margin" "0"
+                ]
+                [ text "by Kurt Wagner"
+                ]
             ]
-        , Html.h3
-            [ Typography.subtitle2
-            , Theme.textSecondaryOnBackground
-            , Html.Attributes.style "margin" "0"
-            ]
-            [ text "by Kurt Wagner"
-            ]
-        ]
 
 
-cardBody : Html m
+cardBody : Card.Block m
 cardBody =
-    Html.div
-        [ Html.Attributes.style "padding" "0 1rem 0.5rem 1rem"
-        , Typography.body2
-        , Theme.textSecondaryOnBackground
-        ]
-        [ text """
+    Card.custom <|
+        Html.div
+            [ Html.Attributes.style "padding" "0 1rem 0.5rem 1rem"
+            , Typography.body2
+            , Theme.secondaryBg
+            ]
+            [ text """
             Visit ten places on our planet that are undergoing the biggest
             changes today.
           """
-        ]
+            ]
 
 
-cardActions : (Msg -> m) -> String -> Model -> Html m
-cardActions lift index model =
-    Card.actions []
-        [ Card.actionButtons []
-            [ Button.view lift
-                (index ++ "-action-button-read")
-                model.mdc
-                [ Card.actionButton
-                , Button.ripple
-                ]
-                [ text "Read"
-                ]
-            , Button.view lift
-                (index ++ "-action-button-bookmark")
-                model.mdc
-                [ Card.actionButton
-                , Button.ripple
-                ]
-                [ text "Bookmark"
-                ]
+cardActions : Card.Actions m
+cardActions =
+    Card.actions
+        { buttons =
+            [ Card.actionButton buttonConfig "Read"
+            , Card.actionButton buttonConfig "Bookmark"
             ]
-        , Card.actionIcons []
-            [ IconToggle.view lift
-                (index ++ "-action-icon-favorite")
-                model.mdc
-                [ Card.actionIcon
-                , IconToggle.icon
-                    { on = "favorite"
-                    , off = "favorite_border"
-                    }
-                , IconToggle.label
-                    { on = "Remove from favorites"
-                    , off = "Add to favorites"
-                    }
-                ]
-                []
-            , IconToggle.view lift
-                (index ++ "-action-icon-share")
-                model.mdc
-                [ Card.actionIcon
-                , IconToggle.icon { on = "share", off = "share" }
-                , IconToggle.label { on = "Share", off = "Share" }
-                ]
-                []
-            , IconToggle.view lift
-                (index ++ "-action-icon-more-options")
-                model.mdc
-                [ Card.actionIcon
-                , IconToggle.icon { on = "more_vert", off = "more_vert" }
-                , IconToggle.label { on = "More options", off = "More options" }
-                ]
-                []
+        , icons =
+            [ Card.actionIcon iconConfig "favorite"
+            , Card.actionIcon iconConfig "share"
+            , Card.actionIcon iconConfig "more_vert"
             ]
-        ]
+        }
 
 
 heroCard : (Msg -> m) -> String -> Model -> Html m
 heroCard lift index model =
-    let
-        ripple =
-            Ripple.bounded lift (index ++ "-ripple") model.mdc []
-    in
-    Card.view
-        [ Html.Attributes.style "width" "350px"
-        ]
-        [ Card.primaryAction
-            [ ripple.properties
-            , ripple.interactionHandler
-            ]
-            [ cardMedia
-            , cardTitle
-            , cardBody
-            , ripple.style
-            ]
-        , cardActions lift index model
-        ]
+    card
+        { cardConfig
+            | additionalAttributes =
+                [ Html.Attributes.style "width" "350px" ]
+        }
+        { blocks =
+            Card.primaryAction primaryActionConfig
+                [ cardMedia
+                , cardTitle
+                , cardBody
+                ]
+        , actions = Just cardActions
+        }
 
 
 exampleCard1 : (Msg -> m) -> String -> Model -> Html m
 exampleCard1 lift index model =
-    let
-        ripple =
-            Ripple.bounded lift (index ++ "-ripple") model.mdc []
-    in
-    Card.view
-        [ Html.Attributes.style "margin" "48px 0"
-        , Html.Attributes.style "width" "350px"
-        ]
-        [ Card.primaryAction
-            [ ripple.properties
-            , ripple.interactionHandler
-            ]
-            [ cardMedia
-            , cardTitle
-            , cardBody
-            , ripple.style
-            ]
-        , cardActions lift index model
-        ]
+    card
+        { cardConfig
+            | additionalAttributes =
+                [ Html.Attributes.style "margin" "48px 0"
+                , Html.Attributes.style "width" "350px"
+                ]
+        }
+        { blocks =
+            Card.primaryAction primaryActionConfig
+                [ cardMedia
+                , cardTitle
+                , cardBody
+                ]
+        , actions = Just cardActions
+        }
 
 
 exampleCard2 : (Msg -> m) -> String -> Model -> Html m
 exampleCard2 lift index model =
-    let
-        ripple =
-            Ripple.bounded lift (index ++ "-ripple") model.mdc []
-    in
-    Card.view
-        [ Html.Attributes.style "margin" "48px 0"
-        , Html.Attributes.style "width" "350px"
-        ]
-        [ Card.primaryAction
-            [ ripple.properties
-            , ripple.interactionHandler
-            ]
-            [ cardTitle
-            , cardBody
-            , ripple.style
-            ]
-        , cardActions lift index model
-        ]
+    card
+        { cardConfig
+            | additionalAttributes =
+                [ Html.Attributes.style "margin" "48px 0"
+                , Html.Attributes.style "width" "350px"
+                ]
+        }
+        { blocks =
+            Card.primaryAction primaryActionConfig
+                [ cardTitle
+                , cardBody
+                ]
+        , actions = Just cardActions
+        }
 
 
 exampleCard3 : (Msg -> m) -> String -> Model -> Html m
 exampleCard3 lift index model =
-    let
-        ripple =
-            Ripple.bounded lift (index ++ "-ripple") model.mdc []
-    in
-    Card.view
-        [ Html.Attributes.style "margin" "48px 0"
-        , Html.Attributes.style "width" "350px"
-        , Html.Attributes.style "border-radius" "24px 8px"
-        ]
-        [ Card.primaryAction
-            [ ripple.properties
-            , ripple.interactionHandler
-            ]
-            [ cardTitle
-            , cardBody
-            , ripple.style
-            ]
-        , cardActions lift index model
-        ]
+    card
+        { cardConfig
+            | additionalAttributes =
+                [ Html.Attributes.style "margin" "48px 0"
+                , Html.Attributes.style "width" "350px"
+                , Html.Attributes.style "border-radius" "24px 8px"
+                ]
+        }
+        { blocks =
+            Card.primaryAction primaryActionConfig
+                [ cardTitle
+                , cardBody
+                ]
+        , actions = Just cardActions
+        }
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m

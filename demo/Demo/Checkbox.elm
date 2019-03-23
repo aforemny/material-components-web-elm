@@ -7,7 +7,7 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Material.Button as Button
-import Material.Checkbox as Checkbox
+import Material.Checkbox as Checkbox exposing (checkbox, checkboxConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -54,27 +54,24 @@ update lift msg model =
             ( { model | checkboxes = checkboxes }, Cmd.none )
 
 
-checkbox :
-    (Msg -> m)
-    -> String
-    -> Model
-    -> List (Html.Attribute m)
-    -> Html m
-checkbox lift index model options =
-    let
-        checked =
-            Dict.get index model.checkboxes
-                |> Maybe.withDefault Nothing
-                |> Maybe.map Checkbox.checked
+checkbox_ : (Msg -> m) -> String -> Model -> List (Html.Attribute m) -> Html m
+checkbox_ lift index model additionalAttributes =
+    checkbox
+        { checkboxConfig
+            | state =
+                case Maybe.withDefault Nothing (Dict.get index model.checkboxes) of
+                    Just True ->
+                        Checkbox.Checked
 
-        clickHandler =
-            Just (Html.Events.onClick (lift (Click index)))
-    in
-    Checkbox.view lift
-        index
-        model.mdc
-        (List.filterMap identity [ checked, clickHandler ] ++ options)
-        []
+                    Just False ->
+                        Checkbox.Unchecked
+
+                    Nothing ->
+                        Checkbox.Indeterminate
+            , onClick =
+                Just (lift (Click index))
+            , additionalAttributes = additionalAttributes
+        }
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
@@ -82,11 +79,11 @@ view lift page model =
     page.body "Checkbox"
         "Checkboxes allow the user to select multiple options from a set."
         [ Hero.view []
-            [ checkbox lift
+            [ checkbox_ lift
                 "checkbox-checked-hero-checkbox"
                 model
                 [ Html.Attributes.style "margin" "8px" ]
-            , checkbox lift
+            , checkbox_ lift
                 "checkbox-unchecked-hero-checkbox"
                 model
                 [ Html.Attributes.style "margin" "8px" ]
@@ -117,10 +114,10 @@ view lift page model =
             }
         , Page.demos
             [ Html.h3 [ Typography.subtitle1 ] [ text "Unchecked" ]
-            , checkbox lift "checkbox-unchecked-checkbox" model []
+            , checkbox_ lift "checkbox-unchecked-checkbox" model []
             , Html.h3 [ Typography.subtitle1 ] [ text "Indeterminate" ]
-            , checkbox lift "checkbox-indeterminate-checkbox" model []
+            , checkbox_ lift "checkbox-indeterminate-checkbox" model []
             , Html.h3 [ Typography.subtitle1 ] [ text "Checked" ]
-            , checkbox lift "checkbox-checked-checkbox" model []
+            , checkbox_ lift "checkbox-checked-checkbox" model []
             ]
         ]

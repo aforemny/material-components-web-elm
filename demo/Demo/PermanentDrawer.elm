@@ -16,10 +16,10 @@ import Html.Attributes
 import Html.Events
 import Json.Decode as Json
 import Material.Button as Button
-import Material.Drawer as Drawer
-import Material.Icon as Icon
-import Material.List as Lists
-import Material.TopAppBar as TopAppBar
+import Material.Drawer as Drawer exposing (drawer, drawerConfig)
+import Material.Icon as Icon exposing (icon, iconConfig)
+import Material.List as Lists exposing (dividerConfig, list, listConfig, listItem, listItemConfig)
+import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -47,77 +47,81 @@ update lift msg model =
 drawerHeader : Html m
 drawerHeader =
     Drawer.header
-        []
-        [ Html.h3
-            [ Drawer.title ]
-            [ text "Mail" ]
-        , Html.h6
-            [ Drawer.subTitle ]
-            [ text "email@material.io" ]
-        ]
+        { title = "Mail"
+        , subtitle = "email@material.io"
+        , additionalAttributes = []
+        }
 
 
 drawerItems : Html m
 drawerItems =
     Drawer.content []
-        [ Lists.nav []
-            [ Lists.a
-                [ Html.Attributes.href "#persistent-drawer"
-                , Lists.activated
-                ]
-                [ Lists.graphicIcon [] "inbox"
+        [ list listConfig
+            [ listItem
+                { listItemConfig
+                    | activated = True
+                    , additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
+                }
+                [ Lists.graphic [] [ icon iconConfig "inbox" ]
                 , text "Inbox"
                 ]
-            , Lists.a
-                [ Html.Attributes.href "#persistent-drawer"
-                ]
-                [ Lists.graphicIcon [] "star"
+            , listItem
+                { listItemConfig
+                    | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
+                }
+                [ Lists.graphic [] [ icon iconConfig "star" ]
                 , text "Star"
                 ]
-            , Lists.a
-                [ Html.Attributes.href "#persistent-drawer"
-                ]
-                [ Lists.graphicIcon [] "send"
+            , listItem
+                { listItemConfig
+                    | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
+                }
+                [ Lists.graphic [] [ icon iconConfig "send" ]
                 , text "Sent Mail"
                 ]
-            , Lists.a
-                [ Html.Attributes.href "#persistent-drawer"
-                ]
-                [ Lists.graphicIcon [] "drafts"
+            , listItem
+                { listItemConfig
+                    | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
+                }
+                [ Lists.graphic [] [ icon iconConfig "drafts" ]
                 , text "Drafts"
                 ]
-            , Lists.divider [] []
-            , Html.h6 [ Html.Attributes.class "mdc-list-group__subheader" ]
-                [ text "Labels" ]
-            , Lists.a
-                [ Html.Attributes.href "#persistent-drawer"
-                ]
-                [ Lists.graphicIcon [] "bookmark"
+            , Lists.divider dividerConfig
+            , Lists.groupSubheader [] [ text "Labels" ]
+            , listItem
+                { listItemConfig
+                    | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
+                }
+                [ Lists.graphic [] [ icon iconConfig "bookmark" ]
                 , text "Family"
                 ]
-            , Lists.a
-                [ Html.Attributes.href "#persistent-drawer"
-                ]
-                [ Lists.graphicIcon [] "bookmark"
+            , listItem
+                { listItemConfig
+                    | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
+                }
+                [ Lists.graphic [] [ icon iconConfig "bookmark" ]
                 , text "Friends"
                 ]
-            , Lists.a
-                [ Html.Attributes.href "#persistent-drawer"
-                ]
-                [ Lists.graphicIcon [] "bookmark"
+            , listItem
+                { listItemConfig
+                    | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
+                }
+                [ Lists.graphic [] [ icon iconConfig "bookmark" ]
                 , text "Work"
                 ]
-            , Lists.divider [] []
-            , Lists.a
-                [ Html.Attributes.href "#persistent-drawer"
-                ]
-                [ Lists.graphicIcon [] "settings"
+            , Lists.divider dividerConfig
+            , listItem
+                { listItemConfig
+                    | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
+                }
+                [ Lists.graphic [] [ icon iconConfig "settings" ]
                 , text "Settings"
                 ]
-            , Lists.a
-                [ Html.Attributes.href "#persistent-drawer"
-                ]
-                [ Lists.graphicIcon [] "announcement"
+            , listItem
+                { listItemConfig
+                    | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
+                }
+                [ Lists.graphic [] [ icon iconConfig "announcement" ]
                 , text "Help & feedback"
                 ]
             ]
@@ -132,7 +136,7 @@ mainContent model mdc =
         , Html.Attributes.style "overflow" "auto"
         , Html.Attributes.style "height" "100%"
         ]
-        [ Html.div [ TopAppBar.fixedAdjust ] []
+        [ Html.div [] []
         , Html.p
             []
             [ text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
@@ -160,23 +164,17 @@ view lift page model =
         , Html.Attributes.style "display" "flex"
         , Html.Attributes.style "height" "100vh"
         ]
-        [ Drawer.view lift
-            "permanent-drawer-drawer"
-            model.mdc
-            []
+        [ drawer drawerConfig
             [ drawerHeader
             , drawerItems
             ]
         , Html.div
             [ Html.Attributes.class "drawer-frame-app-content" ]
-            [ TopAppBar.view lift
-                "permanent-drawer-top-app-bar"
-                model.mdc
-                []
+            [ topAppBar topAppBarConfig
                 [ TopAppBar.section
                     [ TopAppBar.alignStart
                     ]
-                    [ TopAppBar.title [] [ text "Permanent Drawer" ]
+                    [ Html.span [ TopAppBar.title ] [ text "Permanent Drawer" ]
                     ]
                 ]
             , mainContent model lift

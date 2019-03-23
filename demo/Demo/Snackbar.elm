@@ -6,11 +6,11 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Json
-import Material.Button as Button
-import Material.Checkbox as Checkbox
-import Material.FormField as FormField
-import Material.Snackbar as Snackbar
-import Material.TextField as TextField
+import Material.Button as Button exposing (button, buttonConfig)
+import Material.Checkbox as Checkbox exposing (checkbox, checkboxConfig)
+import Material.FormField as FormField exposing (formField, formFieldConfig)
+import Material.Snackbar as Snackbar exposing (snackbar, snackbarConfig)
+import Material.TextField as TextField exposing (textField, textFieldConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -61,37 +61,39 @@ update lift msg model =
             ( { model | actionText = actionText }, Cmd.none )
 
         Show idx ->
-            let
-                contents =
-                    if model.stacked then
-                        let
-                            snack =
-                                Snackbar.snack
-                                    (Just (lift (Dismiss model.messageText)))
-                                    model.messageText
-                                    model.actionText
-                        in
-                        { snack
-                            | dismissOnAction = model.dismissOnAction
-                            , stacked = model.stacked
-                        }
-
-                    else
-                        let
-                            toast =
-                                Snackbar.toast
-                                    (Just (lift (Dismiss model.messageText)))
-                                    model.messageText
-                        in
-                        { toast
-                            | dismissOnAction = model.dismissOnAction
-                            , action = Just "Hide"
-                        }
-
-                ( mdc, effects ) =
-                    Snackbar.add lift idx contents model.mdc
-            in
-            ( { model | mdc = mdc }, effects )
+            -- TODO:
+            -- let
+            --     contents =
+            --         if model.stacked then
+            --             let
+            --                 snack =
+            --                     Snackbar.snack
+            --                         (Just (lift (Dismiss model.messageText)))
+            --                         model.messageText
+            --                         model.actionText
+            --             in
+            --             { snack
+            --                 | dismissOnAction = model.dismissOnAction
+            --                 , stacked = model.stacked
+            --             }
+            --
+            --         else
+            --             let
+            --                 toast =
+            --                     Snackbar.toast
+            --                         (Just (lift (Dismiss model.messageText)))
+            --                         model.messageText
+            --             in
+            --             { toast
+            --                 | dismissOnAction = model.dismissOnAction
+            --                 , action = Just "Hide"
+            --             }
+            --
+            --     ( mdc, effects ) =
+            --         Snackbar.add lift idx contents model.mdc
+            -- in
+            -- ( { model | mdc = mdc }, effects )
+            ( model, Cmd.none )
 
         Dismiss str ->
             ( model, Cmd.none )
@@ -169,109 +171,91 @@ view lift page model =
             }
         , Page.demos
             [ example []
-                [ Html.h2 [ Typography.title ] [ text "Basic Example" ]
-                , FormField.view []
-                    [ Checkbox.view lift
-                        "snackbar-stacked-checkbox"
-                        model.mdc
-                        [ Html.Events.onClick (lift ToggleStacked)
-                        , Checkbox.checked model.stacked
-                        ]
-                        []
+                [ Html.h2 [ Typography.headline6 ] [ text "Basic Example" ]
+                , formField formFieldConfig
+                    [ checkbox
+                        { checkboxConfig
+                            | state =
+                                if model.stacked then
+                                    Checkbox.Checked
+
+                                else
+                                    Checkbox.Unchecked
+                            , onClick = Just (lift ToggleStacked)
+                        }
                     , Html.label [] [ text "Stacked" ]
                     ]
                 , Html.br [] []
-                , FormField.view []
-                    [ Checkbox.view lift
-                        "snackbar-dismiss-on-action-button"
-                        model.mdc
-                        [ Html.Events.onClick (lift ToggleDismissOnAction)
-                        , Checkbox.checked model.dismissOnAction
-                        ]
-                        []
+                , formField formFieldConfig
+                    [ checkbox
+                        { checkboxConfig
+                            | state =
+                                if model.dismissOnAction then
+                                    Checkbox.Checked
+
+                                else
+                                    Checkbox.Unchecked
+                            , onClick = Just (lift ToggleDismissOnAction)
+                        }
                     , Html.label [] [ text "Dismiss On Action" ]
                     ]
                 , Html.br [] []
-                , TextField.view lift
-                    "snackbar-message-text-field"
-                    model.mdc
-                    [ TextField.value model.messageText
-                    , TextField.label "Message Text"
-                    , Html.Events.on "input" (Json.map (lift << SetMessageText) Html.Events.targetValue)
-                    ]
-                    []
+                , -- TODO: Html.Events.onInput (lift << SetMessageText)
+                  -- TODO: value = model.messageText
+                  textField
+                    { textFieldConfig
+                        | label = "Message Text"
+                    }
                 , Html.br [] []
-                , TextField.view lift
-                    "snackbar-action-text-field"
-                    model.mdc
-                    [ TextField.value model.actionText
-                    , TextField.label "Action Text"
-                    , Html.Events.on "input" (Json.map (lift << SetActionText) Html.Events.targetValue)
-                    ]
-                    []
+                , -- TODO: Html.Events.onInput (lift << SetActionText)
+                  -- TODO: value = model.actionText
+                  textField
+                    { textFieldConfig
+                        | label = "Action Text"
+                    }
                 , Html.br [] []
-                , Button.view lift
-                    "snackbar-show-button"
-                    model.mdc
-                    [ Button.raised
-                    , Html.Attributes.style "margin-top" "14px"
-                    , Html.Events.on "click" (Json.succeed (lift (Show "snackbar-default-snackbar")))
-                    ]
-                    [ text "Show"
-                    ]
+                , button
+                    { buttonConfig
+                        | variant = Button.Raised
+                        , onClick = Just (lift (Show "snackbar-default-snackbar"))
+                        , additionalAttributes =
+                            [ Html.Attributes.style "margin-top" "14px" ]
+                    }
+                    "Show"
                 , text " "
-                , Button.view lift
-                    "snackbar-show-button-dismissible"
-                    model.mdc
-                    [ Button.raised
-                    , Html.Attributes.style "margin-top" "14px"
-                    , Html.Events.on "click" (Json.succeed (lift (Show "snackbar-dismissible-snackbar")))
-                    ]
-                    [ text "Show dismissible"
-                    ]
+                , button
+                    { buttonConfig
+                        | variant = Button.Raised
+                        , onClick = Just (lift (Show "snackbar-dismissible-snackbar"))
+                        , additionalAttributes =
+                            [ Html.Attributes.style "margin-top" "14px" ]
+                    }
+                    "Show dismissible"
                 , text " "
-                , Button.view lift
-                    "snackbar-show-button-leading"
-                    model.mdc
-                    [ Button.raised
-                    , Html.Attributes.style "margin-top" "14px"
-                    , Html.Events.on "click" (Json.succeed (lift (Show "snackbar-leading-snackbar")))
-                    ]
-                    [ text "Show leading"
-                    ]
+                , button
+                    { buttonConfig
+                        | variant = Button.Raised
+                        , onClick = Just (lift (Show "snackbar-leading-snackbar"))
+                        , additionalAttributes =
+                            [ Html.Attributes.style "margin-top" "14px" ]
+                    }
+                    "Show leading"
                 , text " "
-                , Button.view lift
-                    "snackbar-show-button-leading-rtl"
-                    model.mdc
-                    [ Button.raised
-                    , Html.Attributes.style "margin-top" "14px"
-                    , Html.Events.on "click" (Json.succeed (lift (Show "snackbar-leading-snackbar-rtl")))
-                    ]
-                    [ text "Show leading rtl"
-                    ]
-                , Snackbar.view lift "snackbar-default-snackbar" model.mdc [] []
-                , Snackbar.view lift
-                    "snackbar-dismissible-snackbar"
-                    model.mdc
-                    [ Snackbar.dismissible ]
-                    []
-                , Snackbar.view lift
-                    "snackbar-leading-snackbar"
-                    model.mdc
-                    [ Snackbar.dismissible
-                    , Snackbar.leading
-                    ]
-                    []
+                , button
+                    { buttonConfig
+                        | variant = Button.Raised
+                        , onClick = Just (lift (Show "snackbar-leading-snackbar-rtl"))
+                        , additionalAttributes =
+                            [ Html.Attributes.style "margin-top" "14px" ]
+                    }
+                    "Show leading rtl"
+                , snackbar snackbarConfig Nothing
+                , snackbar snackbarConfig Nothing
+                , snackbar { snackbarConfig | leading = True } Nothing
                 , Html.div
                     [ Html.Attributes.attribute "dir" "rtl"
                     ]
-                    [ Snackbar.view lift
-                        "snackbar-leading-snackbar-rtl"
-                        model.mdc
-                        [ Snackbar.dismissible
-                        , Snackbar.leading
-                        ]
-                        []
+                    [ snackbar { snackbarConfig | leading = True } Nothing
                     ]
                 ]
             ]

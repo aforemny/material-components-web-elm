@@ -2,12 +2,14 @@ module Material.Switch exposing (Config, switch, switchConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
+import Html.Events
 
 
 type alias Config msg =
     { checked : Bool
     , disabled : Bool
     , additionalAttributes : List (Html.Attribute msg)
+    , onClick : Maybe msg
     }
 
 
@@ -16,6 +18,7 @@ switchConfig =
     { checked = False
     , disabled = False
     , additionalAttributes = []
+    , onClick = Nothing
     }
 
 
@@ -26,6 +29,7 @@ switch config =
             [ rootCs
             , checkedCs config
             , disabledCs config
+            , clickHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -55,6 +59,11 @@ disabledCs { disabled } =
 
     else
         Nothing
+
+
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler config =
+    Maybe.map Html.Events.onClick config.onClick
 
 
 trackElt : Html msg

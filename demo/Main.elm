@@ -32,8 +32,9 @@ import Demo.TextFields
 import Demo.Theme
 import Demo.TopAppBar
 import Demo.Typography
-import Demo.Url exposing (ToolbarPage(..), TopAppBarPage(..))
+import Demo.Url exposing (TopAppBarPage(..))
 import Html exposing (Html, text)
+import Html.Attributes
 import Material.TopAppBar as TopAppBar
 import Material.Typography as Typography
 import Platform.Cmd exposing (..)
@@ -43,33 +44,32 @@ import Url
 type alias Model =
     { key : Browser.Navigation.Key
     , url : Demo.Url.Url
-    , buttons : Demo.Buttons.Model Msg
-    , cards : Demo.Cards.Model Msg
-    , checkbox : Demo.Checkbox.Model Msg
-    , chips : Demo.Chips.Model Msg
-    , dialog : Demo.Dialog.Model Msg
-    , dismissibleDrawer : Demo.DismissibleDrawer.Model Msg
-    , drawer : Demo.Drawer.Model Msg
-    , elevation : Demo.Elevation.Model Msg
-    , fabs : Demo.Fabs.Model Msg
-    , iconToggle : Demo.IconToggle.Model Msg
-    , imageList : Demo.ImageList.Model Msg
-    , layoutGrid : Demo.LayoutGrid.Model Msg
-    , lists : Demo.Lists.Model Msg
-    , menus : Demo.Menus.Model Msg
-    , permanentDrawer : Demo.PermanentDrawer.Model Msg
-    , radio : Demo.RadioButtons.Model Msg
-    , ripple : Demo.Ripple.Model Msg
-    , selects : Demo.Selects.Model Msg
-    , slider : Demo.Slider.Model Msg
-    , snackbar : Demo.Snackbar.Model Msg
-    , switch : Demo.Switch.Model Msg
-    , tabbar : Demo.TabBar.Model Msg
-    , modalDrawer : Demo.ModalDrawer.Model Msg
-    , textfields : Demo.TextFields.Model Msg
-    , theme : Demo.Theme.Model Msg
-    , toolbar : Demo.Toolbar.Model Msg
-    , topAppBar : Demo.TopAppBar.Model Msg
+    , buttons : Demo.Buttons.Model
+    , cards : Demo.Cards.Model
+    , checkbox : Demo.Checkbox.Model
+    , chips : Demo.Chips.Model
+    , dialog : Demo.Dialog.Model
+    , dismissibleDrawer : Demo.DismissibleDrawer.Model
+    , drawer : Demo.Drawer.Model
+    , elevation : Demo.Elevation.Model
+    , fabs : Demo.Fabs.Model
+    , iconToggle : Demo.IconToggle.Model
+    , imageList : Demo.ImageList.Model
+    , layoutGrid : Demo.LayoutGrid.Model
+    , lists : Demo.Lists.Model
+    , menus : Demo.Menus.Model
+    , permanentDrawer : Demo.PermanentDrawer.Model
+    , radio : Demo.RadioButtons.Model
+    , ripple : Demo.Ripple.Model
+    , selects : Demo.Selects.Model
+    , slider : Demo.Slider.Model
+    , snackbar : Demo.Snackbar.Model
+    , switch : Demo.Switch.Model
+    , tabbar : Demo.TabBar.Model
+    , modalDrawer : Demo.ModalDrawer.Model
+    , textfields : Demo.TextFields.Model
+    , theme : Demo.Theme.Model
+    , topAppBar : Demo.TopAppBar.Model
     }
 
 
@@ -102,7 +102,6 @@ defaultModel key =
     , modalDrawer = Demo.ModalDrawer.defaultModel
     , textfields = Demo.TextFields.defaultModel
     , theme = Demo.Theme.defaultModel
-    , toolbar = Demo.Toolbar.defaultModel
     , topAppBar = Demo.TopAppBar.defaultModel
     }
 
@@ -114,33 +113,32 @@ type Msg
     | UrlChanged Url.Url
     | UrlRequested Browser.UrlRequest
     | Navigate Demo.Url.Url
-    | ButtonsMsg (Demo.Buttons.Msg Msg)
-    | CardsMsg (Demo.Cards.Msg Msg)
-    | CheckboxMsg (Demo.Checkbox.Msg Msg)
-    | ChipsMsg (Demo.Chips.Msg Msg)
-    | DialogMsg (Demo.Dialog.Msg Msg)
-    | DismissibleDrawerMsg (Demo.DismissibleDrawer.Msg Msg)
-    | DrawerMsg (Demo.Drawer.Msg Msg)
-    | ElevationMsg (Demo.Elevation.Msg Msg)
-    | FabsMsg (Demo.Fabs.Msg Msg)
-    | IconToggleMsg (Demo.IconToggle.Msg Msg)
-    | ImageListMsg (Demo.ImageList.Msg Msg)
-    | LayoutGridMsg (Demo.LayoutGrid.Msg Msg)
-    | ListsMsg (Demo.Lists.Msg Msg)
-    | PermanentDrawerMsg (Demo.PermanentDrawer.Msg Msg)
-    | RadioButtonsMsg (Demo.RadioButtons.Msg Msg)
-    | RippleMsg (Demo.Ripple.Msg Msg)
-    | SelectMsg (Demo.Selects.Msg Msg)
-    | MenuMsg (Demo.Menus.Msg Msg)
-    | SliderMsg (Demo.Slider.Msg Msg)
-    | SnackbarMsg (Demo.Snackbar.Msg Msg)
-    | SwitchMsg (Demo.Switch.Msg Msg)
-    | TabBarMsg (Demo.TabBar.Msg Msg)
-    | ModalDrawerMsg (Demo.ModalDrawer.Msg Msg)
-    | TextFieldMsg (Demo.TextFields.Msg Msg)
-    | ThemeMsg (Demo.Theme.Msg Msg)
-    | ToolbarMsg (Demo.Toolbar.Msg Msg)
-    | TopAppBarMsg (Demo.TopAppBar.Msg Msg)
+    | ButtonsMsg Demo.Buttons.Msg
+    | CardsMsg Demo.Cards.Msg
+    | CheckboxMsg Demo.Checkbox.Msg
+    | ChipsMsg Demo.Chips.Msg
+    | DialogMsg Demo.Dialog.Msg
+    | DismissibleDrawerMsg Demo.DismissibleDrawer.Msg
+    | DrawerMsg Demo.Drawer.Msg
+    | ElevationMsg Demo.Elevation.Msg
+    | FabsMsg Demo.Fabs.Msg
+    | IconToggleMsg Demo.IconToggle.Msg
+    | ImageListMsg Demo.ImageList.Msg
+    | LayoutGridMsg Demo.LayoutGrid.Msg
+    | ListsMsg Demo.Lists.Msg
+    | PermanentDrawerMsg Demo.PermanentDrawer.Msg
+    | RadioButtonsMsg Demo.RadioButtons.Msg
+    | RippleMsg Demo.Ripple.Msg
+    | SelectMsg Demo.Selects.Msg
+    | MenuMsg Demo.Menus.Msg
+    | SliderMsg Demo.Slider.Msg
+    | SnackbarMsg Demo.Snackbar.Msg
+    | SwitchMsg Demo.Switch.Msg
+    | TabBarMsg Demo.TabBar.Msg
+    | ModalDrawerMsg Demo.ModalDrawer.Msg
+    | TextFieldMsg Demo.TextFields.Msg
+    | ThemeMsg Demo.Theme.Msg
+    | TopAppBarMsg Demo.TopAppBar.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -345,13 +343,6 @@ update msg model =
             in
             ( { model | theme = theme }, effects )
 
-        ToolbarMsg msg_ ->
-            let
-                ( toolbar, effects ) =
-                    Demo.Toolbar.update ToolbarMsg msg_ model.toolbar
-            in
-            ( { model | toolbar = toolbar }, effects )
-
         TopAppBarMsg msg_ ->
             let
                 ( topAppBar, effects ) =
@@ -373,7 +364,7 @@ view_ : Model -> Html Msg
 view_ model =
     let
         page =
-            { toolbar = Page.toolbar "page-toolbar" model.mdc Navigate model.url
+            { toolbar = Page.toolbar "page-toolbar" Navigate model.url
             , navigate = Navigate
             , body =
                 \title intro nodes ->
@@ -385,7 +376,6 @@ view_ model =
                         ]
                         [ Page.toolbar
                             "page-toolbar"
-                            model.mdc
                             Navigate
                             model.url
                             title
@@ -397,11 +387,10 @@ view_ model =
                             , Html.Attributes.style "margin-right" "auto"
                             ]
                             (Html.div
-                                [ TopAppBar.fixedAdjust ]
+                                [-- TODO: TopAppBar.fixedAdjust
+                                ]
                                 [ Page.header title
-                                , p
-                                    [ Typography.body1 ]
-                                    [ text intro ]
+                                , Html.p [ Typography.body1 ] [ text intro ]
                                 ]
                                 :: nodes
                             )
@@ -484,9 +473,6 @@ view_ model =
         Demo.Url.Theme ->
             Demo.Theme.view ThemeMsg page model.theme
 
-        Demo.Url.Toolbar toolbarPage ->
-            Demo.Toolbar.view ToolbarMsg page toolbarPage model.toolbar
-
         Demo.Url.TopAppBar topAppBarPage ->
             Demo.TopAppBar.view TopAppBarMsg page topAppBarPage model.topAppBar
 
@@ -503,7 +489,7 @@ view_ model =
             Html.div
                 []
                 [ Html.h1
-                    [ Typography.display4
+                    [ Typography.headline1
                     ]
                     [ text "404" ]
                 , text requestedHash
@@ -547,6 +533,5 @@ subscriptions model =
         , Demo.Slider.subscriptions SliderMsg model.slider
         , Demo.TabBar.subscriptions TabBarMsg model.tabbar
         , Demo.ModalDrawer.subscriptions ModalDrawerMsg model.modalDrawer
-        , Demo.Toolbar.subscriptions ToolbarMsg model.toolbar
         , Demo.TopAppBar.subscriptions TopAppBarMsg model.topAppBar
         ]

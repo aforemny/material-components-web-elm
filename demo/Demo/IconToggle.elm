@@ -7,7 +7,7 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.IconToggle as IconToggle
+import Material.IconToggle as IconToggle exposing (iconToggle, iconToggleConfig)
 import Material.Typography as Typography
 
 
@@ -47,27 +47,29 @@ update lift msg model =
             ( { model | iconToggles = iconToggles }, Cmd.none )
 
 
-iconToggle :
+iconToggle_ :
     (Msg -> m)
     -> String
     -> Model
     -> String
     -> String
     -> Html m
-iconToggle lift index model offIcon onIcon =
+iconToggle_ lift index model offIcon onIcon =
     let
         isOn =
-            Dict.get index model.iconToggles
-                |> Maybe.withDefault False
+            Maybe.withDefault False (Dict.get index model.iconToggles)
     in
-    IconToggle.view lift
-        index
-        model.mdc
-        [ IconToggle.icon { on = onIcon, off = offIcon }
-        , Html.Events.onClick (lift (Toggle index))
-        , when isOn IconToggle.on
-        ]
-        []
+    iconToggle
+        { iconToggleConfig
+            | on = isOn
+            , onClick = Just (lift (Toggle index))
+        }
+        (if isOn then
+            onIcon
+
+         else
+            offIcon
+        )
 
 
 iconButton :
@@ -77,7 +79,7 @@ iconButton :
     -> String
     -> Html m
 iconButton lift index model icon =
-    iconToggle lift index model icon icon
+    iconToggle_ lift index model icon icon
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
@@ -85,7 +87,7 @@ view lift page model =
     page.body "Icon Button"
         "Icons are appropriate for buttons that allow a user to take actions or make a selection, such as adding or removing a star to an item."
         [ Hero.view []
-            [ iconToggle lift
+            [ iconToggle_ lift
                 "icon-toggle-hero-icon-toggle"
                 model
                 "favorite_border"
@@ -119,6 +121,6 @@ view lift page model =
             [ Html.h3 [ Typography.subtitle1 ] [ text "Icon Button" ]
             , iconButton lift "icon-toggle-icon-button" model "wifi"
             , Html.h3 [ Typography.subtitle1 ] [ text "Icon Toggle" ]
-            , iconToggle lift "icon-toggle-icon-toggle" model "favorite_border" "favorite"
+            , iconToggle_ lift "icon-toggle-icon-toggle" model "favorite_border" "favorite"
             ]
         ]

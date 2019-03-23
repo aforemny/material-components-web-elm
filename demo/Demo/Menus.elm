@@ -7,9 +7,9 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Json
-import Material.Button as Button
-import Material.List as Lists
-import Material.Menu as Menu
+import Material.Button as Button exposing (button, buttonConfig)
+import Material.List as Lists exposing (dividerConfig, list, listConfig, listItem, listItemConfig)
+import Material.Menu as Menu exposing (menu, menuConfig)
 import Material.Typography as Typography
 
 
@@ -40,16 +40,12 @@ subscriptions lift model =
 
 heroMenu : (Msg -> m) -> Model -> Html m
 heroMenu lift model =
-    Menu.view lift
-        "menus-hero-menu"
-        model.mdc
-        [ Html.Attributes.class "mdc-menu-surface--open"
-        ]
-        (Menu.ul []
-            [ Menu.li [] [ text "A Menu Item" ]
-            , Menu.li [] [ text "Another Menu Item" ]
+    menu { menuConfig | open = True }
+        [ list listConfig
+            [ listItem listItemConfig [ text "A Menu Item" ]
+            , listItem listItemConfig [ text "Another Menu Item" ]
             ]
-        )
+        ]
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
@@ -83,26 +79,19 @@ view lift page model =
             }
         , Page.demos
             [ Html.h3 [ Typography.subtitle1 ] [ text "Anchored menu" ]
-            , Button.view lift
-                "menus-button"
-                model.mdc
-                [ Menu.attach lift "menus-menu" ]
-                [ text "Open menu" ]
-            , Menu.view lift
-                "menus-menu"
-                model.mdc
-                []
-                (Menu.ul []
-                    [ Menu.li [] [ text "Passionfruit" ]
-                    , Menu.li [] [ text "Orange" ]
-                    , Menu.li [] [ text "Guava" ]
-                    , Menu.li [] [ text "Pitaya" ]
-                    , Menu.divider [] []
-                    , Menu.li [] [ text "Pineapple" ]
-                    , Menu.li [] [ text "Mango" ]
-                    , Menu.li [] [ text "Papaya" ]
-                    , Menu.li [] [ text "Lychee" ]
+            , button buttonConfig "Open menu"
+            , menu menuConfig
+                [ list listConfig
+                    [ listItem listItemConfig [ text "Passionfruit" ]
+                    , listItem listItemConfig [ text "Orange" ]
+                    , listItem listItemConfig [ text "Guava" ]
+                    , listItem listItemConfig [ text "Pitaya" ]
+                    , Lists.divider dividerConfig
+                    , listItem listItemConfig [ text "Pineapple" ]
+                    , listItem listItemConfig [ text "Mango" ]
+                    , listItem listItemConfig [ text "Papaya" ]
+                    , listItem listItemConfig [ text "Lychee" ]
                     ]
-                )
+                ]
             ]
         ]

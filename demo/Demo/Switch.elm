@@ -7,8 +7,8 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.FormField as FormField
-import Material.Switch as Switch
+import Material.FormField as FormField exposing (formField, formFieldConfig)
+import Material.Switch as Switch exposing (switch, switchConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -61,14 +61,12 @@ heroSwitch lift model =
         index =
             "switch-hero-switch"
     in
-    FormField.view []
-        [ Switch.view lift
-            index
-            model.mdc
-            [ Html.Events.onClick (lift (Toggle index))
-            , Switch.on |> when (isOn index model)
-            ]
-            []
+    formField formFieldConfig
+        [ switch
+            { switchConfig
+                | checked = isOn index model
+                , onClick = Just (lift (Toggle index))
+            }
         , Html.label [ Html.Attributes.for index ] [ text "off/on" ]
         ]
 
@@ -79,14 +77,12 @@ exampleSwitch lift model =
         index =
             "switch-example-switch"
     in
-    FormField.view []
-        [ Switch.view lift
-            index
-            model.mdc
-            [ Html.Events.onClick (lift (Toggle index))
-            , Switch.on |> when (isOn index model)
-            ]
-            []
+    formField formFieldConfig
+        [ switch
+            { switchConfig
+                | checked = isOn index model
+                , onClick = Just (lift (Toggle index))
+            }
         , Html.label [ Html.Attributes.for index ] [ text "off/on" ]
         ]
 

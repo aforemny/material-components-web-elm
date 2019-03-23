@@ -6,7 +6,7 @@ import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.Fab as Fab
+import Material.Fab as Fab exposing (fab, fabConfig)
 import Material.Typography as Typography
 
 
@@ -32,13 +32,9 @@ update lift msg model =
 
 view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
-    let
-        fab idx options =
-            Fab.view lift idx model.mdc (Fab.ripple :: options) "favorite_border"
-    in
     page.body "Floating Action Button"
         "Floating action buttons represents the primary action in an application. Only one floating action button is recommended per screen to represent the most common action."
-        [ Hero.view [] [ fab "fabs-hero-fab" [] ]
+        [ Hero.view [] [ fab fabConfig "favorite_border" ]
         , Html.h2
             [ Typography.headline6
             , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
@@ -67,10 +63,10 @@ view lift page model =
             [ Html.h3
                 [ Typography.subtitle1 ]
                 [ text "Standard Floating Action Button" ]
-            , fab "fabs-standard-fab" []
+            , fab fabConfig "favorite_border"
             , Html.h3
                 [ Typography.subtitle1 ]
                 [ text "Mini Floating Action Button" ]
-            , fab "fabs-mini-fab" []
+            , fab { fabConfig | mini = True } "favorite_border"
             ]
         ]

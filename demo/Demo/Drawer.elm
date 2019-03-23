@@ -12,9 +12,14 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Drawer as Drawer
-import Material.List as Lists
+import Material.Drawer as Drawer exposing (drawer, drawerConfig)
+import Material.Icon as Icon exposing (icon, iconConfig)
+import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig)
 import Material.Typography as Typography
+
+
+
+-- TODO: scrim?
 
 
 type alias Model =
@@ -77,44 +82,41 @@ view lift page model =
     page.body "Drawer"
         "The navigation drawer slides in from the left and contains the navigation destinations for your app."
         [ Hero.view []
-            [ Drawer.view lift
-                "permanent-drawer-drawer"
-                model.mdc
-                []
+            [ drawer drawerConfig
                 [ Drawer.header
-                    []
-                    [ Html.h3
-                        [ Drawer.title ]
-                        [ text "Title" ]
-                    , Html.h6
-                        [ Drawer.subTitle ]
-                        [ text "subtext" ]
-                    ]
+                    { title = "Title"
+                    , subtitle = "subtext"
+                    , additionalAttributes = []
+                    }
                 , Drawer.content []
-                    [ Lists.nav []
-                        [ Lists.a
-                            [ Html.Attributes.href "#drawer"
-                            , Lists.activated
-                            ]
-                            [ Lists.graphicIcon [] "inbox"
+                    [ list listConfig
+                        [ listItem
+                            { listItemConfig
+                                | activated = True
+                                , additionalAttributes = [ Html.Attributes.href "#drawer" ]
+                            }
+                            [ Lists.graphic [] [ icon iconConfig "inbox" ]
                             , text "Inbox"
                             ]
-                        , Lists.a
-                            [ Html.Attributes.href "#drawer"
-                            ]
-                            [ Lists.graphicIcon [] "star"
+                        , listItem
+                            { listItemConfig
+                                | additionalAttributes = [ Html.Attributes.href "#drawer" ]
+                            }
+                            [ Lists.graphic [] [ icon iconConfig "star" ]
                             , text "Star"
                             ]
-                        , Lists.a
-                            [ Html.Attributes.href "#drawer"
-                            ]
-                            [ Lists.graphicIcon [] "send"
+                        , listItem
+                            { listItemConfig
+                                | additionalAttributes = [ Html.Attributes.href "#drawer" ]
+                            }
+                            [ Lists.graphic [] [ icon iconConfig "send" ]
                             , text "Sent Mail"
                             ]
-                        , Lists.a
-                            [ Html.Attributes.href "#drawer"
-                            ]
-                            [ Lists.graphicIcon [] "drafts"
+                        , listItem
+                            { listItemConfig
+                                | additionalAttributes = [ Html.Attributes.href "#drawer" ]
+                            }
+                            [ Lists.graphic [] [ icon iconConfig "drafts" ]
                             , text "Drafts"
                             ]
                         ]

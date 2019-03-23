@@ -1,6 +1,5 @@
 module Demo.Selects exposing (Model, Msg(..), defaultModel, subscriptions, update, view)
 
-import Array
 import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
@@ -8,7 +7,7 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.Select as Select
+import Material.Select as Select exposing (optionConfig, select, selectConfig)
 import Material.Typography as Typography
 
 
@@ -36,67 +35,53 @@ update lift msg model =
 
 items : List (Html m)
 items =
-    [ Select.option [ Select.value "Apple" ] [ text "Apple" ]
-    , Select.option [ Select.value "Orange" ] [ text "Orange" ]
-    , Select.option [ Select.value "Banana" ] [ text "Banana" ]
+    [ Select.option { optionConfig | value = "Apple" } [ text "Apple" ]
+    , Select.option { optionConfig | value = "Orange" } [ text "Orange" ]
+    , Select.option { optionConfig | value = "Banana" } [ text "Banana" ]
     ]
 
 
 heroSelect : (Msg -> m) -> Model -> Html m
 heroSelect lift model =
-    Select.view lift
-        "selects-hero-select"
-        model.mdc
-        [ Select.label "Fruit" ]
-        items
+    select { selectConfig | label = "Fruit" } items
 
 
 filledSelect : (Msg -> m) -> Model -> Html m
 filledSelect lift model =
-    Select.view lift
-        "selects-filled-select"
-        model.mdc
-        [ Select.label "Fruit" ]
-        items
+    select { selectConfig | label = "Fruit" } items
 
 
 outlinedSelect : (Msg -> m) -> Model -> Html m
 outlinedSelect lift model =
-    Select.view lift
-        "selects-outlined-select"
-        model.mdc
-        [ Select.label "Fruit"
-        , Select.outlined
-        ]
-        items
+    select { selectConfig | variant = Select.Outlined, label = "Fruit" } items
 
 
 shapedFilledSelect : (Msg -> m) -> Model -> Html m
 shapedFilledSelect lift model =
-    Select.view lift
-        "selects-shaped-filled-select"
-        model.mdc
-        [ Select.label "Fruit"
-        , Html.Attributes.style "border-radius" "17.92px 17.92px 0 0"
-        ]
+    select
+        { selectConfig
+            | label = "Fruit"
+            , additionalAttributes =
+                [ Html.Attributes.style "border-radius" "17.92px 17.92px 0 0" ]
+        }
         items
 
 
 shapedOutlinedSelect : (Msg -> m) -> Model -> Html m
 shapedOutlinedSelect lift model =
-    Select.view lift
-        "selects-shaped-outlined-select"
-        model.mdc
-        [ Select.label "Fruit"
-        , Select.outlined
-
-        -- TODO:
-        -- , Select.nativeControl
-        --     [ Html.Attributes.style "border-radius" "28px"
-        --     , Html.Attributes.style "padding-left" "32px"
-        --     , Html.Attributes.style "padding-right" "52px"
-        --     ]
-        ]
+    select
+        { selectConfig
+            | variant = Select.Outlined
+            , label = "Fruit"
+            , additionalAttributes =
+                [-- TODO:
+                 -- , Select.nativeControl
+                 --     [ Html.Attributes.style "border-radius" "28px"
+                 --     , Html.Attributes.style "padding-left" "32px"
+                 --     , Html.Attributes.style "padding-right" "52px"
+                 --     ]
+                ]
+        }
         items
 
 

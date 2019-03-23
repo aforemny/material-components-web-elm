@@ -4,6 +4,15 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+
+-- TODO: leading icon
+-- TODO: trailing icon
+-- TODO: value
+-- TODO: onInput
+-- TODO: onChange
+-- TODO: placeholder
+
+
 type alias Config msg =
     { label : String
     , fullwidth : Bool

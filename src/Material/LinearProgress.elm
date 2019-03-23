@@ -1,4 +1,9 @@
-module Material.LinearProgress exposing (Config, linearProgress, linearProgressConfig)
+module Material.LinearProgress exposing
+    ( Config
+    , Variant(..)
+    , linearProgress
+    , linearProgressConfig
+    )
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)

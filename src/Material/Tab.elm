@@ -2,6 +2,7 @@ module Material.Tab exposing (Config, Content, tab, tabConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
+import Html.Events
 
 
 type alias Config msg =
@@ -10,6 +11,7 @@ type alias Config msg =
     , minWidth : Bool
     , indicatorSpansContent : Bool
     , additionalAttributes : List (Html.Attribute msg)
+    , onClick : Maybe msg
     }
 
 
@@ -20,6 +22,7 @@ tabConfig =
     , minWidth = False
     , indicatorSpansContent = False
     , additionalAttributes = []
+    , onClick = Nothing
     }
 
 
@@ -34,6 +37,7 @@ tab config content =
             , stackedCs config
             , minWidthCs config
             , selectedAriaAttr config
+            , clickHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -105,6 +109,11 @@ selectedAriaAttr { active } =
                 "false"
             )
         )
+
+
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler config =
+    Maybe.map Html.Events.onClick config.onClick
 
 
 tabindexAttr : Maybe (Html.Attribute msg)

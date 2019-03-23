@@ -10,8 +10,8 @@ import Demo.Url as Url exposing (Url)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.Icon as Icon
-import Material.TopAppBar as TopAppBar
+import Material.Icon as Icon exposing (icon, iconConfig)
+import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 import Material.Typography as Typography
 
 
@@ -29,10 +29,11 @@ toolbar :
     -> String
     -> Html m
 toolbar idx navigate url title =
-    TopAppBar.view
-        idx
-        [ Html.Attributes.class "catalog-top-app-bar"
-        ]
+    topAppBar
+        { topAppBarConfig
+            | additionalAttributes =
+                [ Html.Attributes.class "catalog-top-app-bar" ]
+        }
         [ TopAppBar.section
             [ TopAppBar.alignStart
             ]
@@ -49,13 +50,16 @@ toolbar idx navigate url title =
                             []
 
                     _ ->
-                        Icon.view
-                            [ Html.Events.onClick (navigate Url.StartPage)
-                            ]
+                        icon
+                            { iconConfig
+                                | additionalAttributes =
+                                    [ Html.Events.onClick (navigate Url.StartPage) ]
+                            }
                             "arrow_back"
                 ]
-            , TopAppBar.title
-                [ Html.Attributes.class "catalog-top-app-bar__title"
+            , Html.span
+                [ TopAppBar.title
+                , Html.Attributes.class "catalog-top-app-bar__title"
                 , Html.Attributes.style "margin-left"
                     (if url == Url.StartPage then
                         "8px"

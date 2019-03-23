@@ -12,6 +12,10 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+
+-- TODO: native control? (styling)
+
+
 type alias Config msg =
     { label : String
     , variant : Variant

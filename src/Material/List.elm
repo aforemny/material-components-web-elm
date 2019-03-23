@@ -21,6 +21,11 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+
+-- TODO: Rename divider to listDivider, and dividerConfig to listDividerConfig
+-- TODO: Rename groupDivider to listGroupDivider
+
+
 type alias Config msg =
     { nonInteractive : Bool
     , dense : Bool

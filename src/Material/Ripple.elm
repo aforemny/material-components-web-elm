@@ -1,4 +1,4 @@
-module Material.Ripple exposing (Config, ripple, rippleConfig)
+module Material.Ripple exposing (Config, ripple, rippleConfig, rippleSurface)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -21,17 +21,16 @@ ripple : Config msg -> Html msg
 ripple config =
     Html.node "mdc-ripple"
         (List.filterMap identity
-            [ rippleSurfaceCs
-            , dataUnboundedAttr config
+            [ dataUnboundedAttr config
             ]
             ++ config.additionalAttributes
         )
         []
 
 
-rippleSurfaceCs : Maybe (Html.Attribute msg)
-rippleSurfaceCs =
-    Just (class "mdc-ripple-surface")
+rippleSurface : Html.Attribute msg
+rippleSurface =
+    class "mdc-ripple-surface"
 
 
 dataUnboundedAttr : Config msg -> Maybe (Html.Attribute msg)

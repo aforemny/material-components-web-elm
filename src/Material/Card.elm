@@ -1,4 +1,20 @@
-module Material.Card exposing (Config, card, cardConfig)
+module Material.Card exposing
+    ( Actions
+    , Aspect(..)
+    , Block
+    , Config
+    , actionButton
+    , actionIcon
+    , actions
+    , card
+    , cardConfig
+    , custom
+    , fullBleedActions
+    , media
+    , mediaConfig
+    , primaryAction
+    , primaryActionConfig
+    )
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -100,6 +116,11 @@ type alias Content msg =
 
 type Block msg
     = Block (Html msg)
+
+
+custom : Html msg -> Block msg
+custom =
+    Block
 
 
 type alias MediaConfig msg =

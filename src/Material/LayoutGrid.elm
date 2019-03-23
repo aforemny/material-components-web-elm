@@ -1,5 +1,10 @@
 module Material.LayoutGrid exposing
     ( Device(..)
+    , alignBottom
+    , alignLeft
+    , alignMiddle
+    , alignRight
+    , alignTop
     , cell
     , inner
     , layoutGrid
@@ -40,6 +45,31 @@ inner attributes nodes =
 cell : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 cell attributes nodes =
     Html.div (class "mdc-layout-grid__cell" :: attributes) nodes
+
+
+alignBottom : Html.Attribute msg
+alignBottom =
+    class "mdc-layout-grid__cell--align-bottom"
+
+
+alignLeft : Html.Attribute msg
+alignLeft =
+    class "mdc-layout-grid__cell--align-left"
+
+
+alignMiddle : Html.Attribute msg
+alignMiddle =
+    class "mdc-layout-grid__cell--align-middle"
+
+
+alignRight : Html.Attribute msg
+alignRight =
+    class "mdc-layout-grid__cell--align-right"
+
+
+alignTop : Html.Attribute msg
+alignTop =
+    class "mdc-layout-grid__cell--align-top"
 
 
 span : Int -> Html.Attribute msg

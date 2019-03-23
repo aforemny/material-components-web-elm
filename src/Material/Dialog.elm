@@ -4,6 +4,12 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+
+-- TODO: noScrim config?
+-- TODO: onClose config?
+-- TODO: dialog w/o title?
+
+
 type alias Config msg =
     { open : Bool
     , additionalAttributes : List (Html.Attribute msg)

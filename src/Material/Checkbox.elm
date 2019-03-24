@@ -1,9 +1,9 @@
-module Material.Checkbox exposing (Config, State(..), checkbox, checkboxConfig, toggle)
+module Material.Checkbox exposing (Config, State(..), checkbox, checkboxConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
-import Json.Encode
+import Json.Encode as Encode
 import Svg
 import Svg.Attributes
 
@@ -36,10 +36,8 @@ checkbox config =
     Html.node "mdc-checkbox"
         (List.filterMap identity
             [ rootCs
-            , checkedAttr config
-            , indeterminateAttr config
+            , stateAttr config
             , disabledAttr config
-            , clickHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -55,7 +53,40 @@ rootCs =
 
 disabledAttr : Config msg -> Maybe (Html.Attribute msg)
 disabledAttr { disabled } =
-    Just (Html.Attributes.disabled disabled)
+    if disabled then
+        Just (Html.Attributes.attribute "disabled" "")
+
+    else
+        Nothing
+
+
+stateAttr : Config msg -> Maybe (Html.Attribute msg)
+stateAttr { state } =
+    Just <|
+        Html.Attributes.attribute "state" <|
+            case state of
+                Checked ->
+                    "checked"
+
+                Unchecked ->
+                    "unchecked"
+
+                Indeterminate ->
+                    "indeterminate"
+
+
+nativeControlElt : Config msg -> Html msg
+nativeControlElt config =
+    Html.input
+        (List.filterMap identity
+            [ Just (Html.Attributes.type_ "checkbox")
+            , Just (class "mdc-checkbox__native-control")
+            , checkedAttr config
+            , indeterminateAttr config
+            , clickHandler config
+            ]
+        )
+        []
 
 
 checkedAttr : Config msg -> Maybe (Html.Attribute msg)
@@ -65,21 +96,12 @@ checkedAttr { state } =
 
 indeterminateAttr : Config msg -> Maybe (Html.Attribute msg)
 indeterminateAttr { state } =
-    Just (Html.Attributes.property "indeterminate" (Json.Encode.bool (state == Indeterminate)))
+    Just (Html.Attributes.property "indeterminate" (Encode.bool (state == Indeterminate)))
 
 
 clickHandler : Config msg -> Maybe (Html.Attribute msg)
 clickHandler { onClick } =
     Maybe.map Html.Events.onClick onClick
-
-
-nativeControlElt : Config msg -> Html msg
-nativeControlElt config =
-    Html.input
-        [ Html.Attributes.type_ "checkbox"
-        , class "mdc-checkbox__native-control"
-        ]
-        []
 
 
 backgroundElt : Html msg
@@ -99,16 +121,3 @@ backgroundElt =
             ]
         , Html.div [ class "mdc-checkbox__mixedmark" ] []
         ]
-
-
-toggle : State -> State
-toggle state =
-    case state of
-        Checked ->
-            Unchecked
-
-        Unchecked ->
-            Checked
-
-        Indeterminate ->
-            Checked

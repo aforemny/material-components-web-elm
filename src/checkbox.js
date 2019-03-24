@@ -1,53 +1,41 @@
-import { MDCCheckbox } from "@material/checkbox/index";
+import { MDCCheckbox, MDCCheckboxFoundation } from "@material/checkbox/index";
 
 class MdcCheckbox extends HTMLElement {
 
   static get observedAttributes() {
-    return [ "checked", "indeterminate", "disabled", "value" ];
-  };
-
-  get checked() {
-    return this.hasAttribute("checked");
+    return [ "state", "disabled" ];
   }
 
-  set checked(isChecked) {
-    if (isChecked) {
-      this.setAttribute("checked", "");
-    } else {
-      this.removeAttribute("checked");
-    }
-  }
-
-  get indeterminate() {
-    return this.hasAttribute("indeterminate");
-  }
-
-  set indeterminate(isIndeterminate) {
-    if (isIndeterminate) {
-      this.setAttribute("indeterminate", "");
-    } else {
-      this.removeAttribute("indeterminate");
-    }
-  }
-
-  get disabled() {
-    return this.hasAttribute("disabled");
-  }
-
-  set disabled(isDisabled) {
-    if (isDisabled) {
-      this.setAttribute("disabled", "");
-    } else {
-      this.removeAttribute("disabled");
-    }
-  }
-
-  get value() {
-    return this.getAttribute("value");
-  }
-
-  set value(newValue) {
-    this.setAttribute("value", newValue);
+  get adapter() {
+    return {
+      addClass: className => {
+        this.classList.add(className);
+      },
+      removeClass: className => {
+        this.classList.remove(className);
+      },
+      getNativeControl: () => {
+        return this.querySelector("input");
+      },
+      forceLayout: () => {
+        this.offsetWidth;
+      },
+      isAttachedToDOM: () => {
+        return Boolean(this.parentNode);
+      },
+      isIndeterminate: () => {
+        return this.getAttribute("state") === "indeterminate";
+      },
+      isChecked: () => {
+        return this.getAttribute("state") === "checked";
+      },
+      hasNativeControl: () => {
+        return true;
+      },
+      setNativeControlDisabled: disabled => {
+        this.querySelector("input").disabled = disabled;
+      },
+    };
   }
 
   constructor() {
@@ -55,44 +43,45 @@ class MdcCheckbox extends HTMLElement {
   }
 
   connectedCallback() {
-    this.MDCCheckbox = new MDCCheckbox(this);
-    this.MDCCheckbox.checked = this.checked;
-    this.MDCCheckbox.indeterminate = this.indeterminate;
-    this.MDCCheckbox.disabled = this.disabled;
-    this.MDCCheckbox.value = this.value;
+    this.mdcFoundation = new MDCCheckboxFoundation(this.adapter);
+    this.mdcFoundation.init();
+    this.mdcFoundation.handleChange();
+    this.mdcFoundation.setDisabled(this.hasAttribute("disabled"));
+
+    const nativeControl = this.querySelector("input");
+    nativeControl.addEventListener("click", this.handleChange);
+    nativeControl.addEventListener("animationend", this.handleAnimationEnd);
+  }
+
+  handleChange(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    return false;
+  }
+
+  handleAnimationEnd(event) {
+    if (!this.mdcFoundation) return;
+    this.mdcFoundation.handleAnimationEnd();
   }
 
   disconnectedCallback() {
-    if (typeof this.MDCCheckbox !== "undefined") {
-      this.MDCCheckbox.destroy();
-      delete this.MDCCheckbox;
+    if (this.mdcFoundation) {
+      this.mdcFoundation.destroy();
+      delete this.mdcFoundation;
     }
+    const nativeControl = this.querySelector("input");
+    nativeControl.removeEventListener("click", this.handleChange);
+    nativeControl.removeEventListener("animationend", this.handleAnimationEnd);
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    switch (name) {
-      case "checked":
-        if (typeof this.MDCCheckbox !== "undefined") {
-          this.MDCCheckbox.checked = this.checked;
-        }
-        break;
-      case "indeterminate":
-        if (typeof this.MDCCheckbox !== "undefined") {
-          this.MDCCheckbox.indeterminate = newValue;
-        }
-        break;
-      case "disabled":
-        if (typeof this.MDCCheckbox !== "undefined") {
-          this.MDCCheckbox.disabled = newValue;
-        }
-        break;
-      case "value":
-        if (typeof this.MDCCheckbox !== "undefined") {
-          this.MDCCheckbox.value = newValue;
-        }
-        break;
+    if (!this.mdcFoundation) return;
+    if ((name === "state")) {
+        this.mdcFoundation.handleChange();
+    } else if (name === "disabled") {
+        this.mdcFoundation.setDisabled(this.hasAttribute("disabled"));
     }
   }
-};
+}
 
 customElements.define("mdc-checkbox", MdcCheckbox);

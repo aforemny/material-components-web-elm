@@ -13,7 +13,7 @@ import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =
-    { checkboxes : Dict String (Maybe Bool)
+    { checkboxes : Dict String Checkbox.State
     }
 
 
@@ -21,10 +21,10 @@ defaultModel : Model
 defaultModel =
     { checkboxes =
         Dict.fromList
-            [ ( "checkbox-checked-hero-checkbox", Just True )
-            , ( "checkbox-unchecked-hero-checkbox", Just False )
-            , ( "checkbox-unchecked-checkbox", Just False )
-            , ( "checkbox-checked-checkbox", Just True )
+            [ ( "checkbox-checked-hero-checkbox", Checkbox.Checked )
+            , ( "checkbox-unchecked-hero-checkbox", Checkbox.Unchecked )
+            , ( "checkbox-unchecked-checkbox", Checkbox.Unchecked )
+            , ( "checkbox-checked-checkbox", Checkbox.Checked )
             ]
     }
 
@@ -41,37 +41,34 @@ update lift msg model =
                 checkboxes =
                     Dict.update index
                         (\state ->
-                            Just <|
-                                case Maybe.withDefault Nothing state of
-                                    Just True ->
-                                        Just False
+                            if state == Just Checkbox.Checked then
+                                Just Checkbox.Unchecked
 
-                                    _ ->
-                                        Just True
+                            else
+                                Just Checkbox.Checked
                         )
                         model.checkboxes
             in
             ( { model | checkboxes = checkboxes }, Cmd.none )
 
 
-checkbox_ : (Msg -> m) -> String -> Model -> List (Html.Attribute m) -> Html m
-checkbox_ lift index model additionalAttributes =
+controlledCheckbox : (Msg -> m) -> String -> Model -> List (Html.Attribute m) -> Html m
+controlledCheckbox lift index model additionalAttributes =
+    let
+        state =
+            Maybe.withDefault Checkbox.Indeterminate (Dict.get index model.checkboxes)
+    in
     checkbox
         { checkboxConfig
-            | state =
-                case Maybe.withDefault Nothing (Dict.get index model.checkboxes) of
-                    Just True ->
-                        Checkbox.Checked
-
-                    Just False ->
-                        Checkbox.Unchecked
-
-                    Nothing ->
-                        Checkbox.Indeterminate
-            , onClick =
-                Just (lift (Click index))
+            | state = state
+            , onClick = Just (lift (Click index))
             , additionalAttributes = additionalAttributes
         }
+
+
+heroMargin : List (Html.Attribute m)
+heroMargin =
+    [ Html.Attributes.style "margin" "8px" ]
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
@@ -79,14 +76,8 @@ view lift page model =
     page.body "Checkbox"
         "Checkboxes allow the user to select multiple options from a set."
         [ Hero.view []
-            [ checkbox_ lift
-                "checkbox-checked-hero-checkbox"
-                model
-                [ Html.Attributes.style "margin" "8px" ]
-            , checkbox_ lift
-                "checkbox-unchecked-hero-checkbox"
-                model
-                [ Html.Attributes.style "margin" "8px" ]
+            [ controlledCheckbox lift "checkbox-checked-hero-checkbox" model heroMargin
+            , controlledCheckbox lift "checkbox-unchecked-hero-checkbox" model heroMargin
             ]
         , Html.h2
             [ Typography.headline6
@@ -114,10 +105,10 @@ view lift page model =
             }
         , Page.demos
             [ Html.h3 [ Typography.subtitle1 ] [ text "Unchecked" ]
-            , checkbox_ lift "checkbox-unchecked-checkbox" model []
+            , controlledCheckbox lift "checkbox-unchecked-checkbox" model []
             , Html.h3 [ Typography.subtitle1 ] [ text "Indeterminate" ]
-            , checkbox_ lift "checkbox-indeterminate-checkbox" model []
+            , controlledCheckbox lift "checkbox-indeterminate-checkbox" model []
             , Html.h3 [ Typography.subtitle1 ] [ text "Checked" ]
-            , checkbox_ lift "checkbox-checked-checkbox" model []
+            , controlledCheckbox lift "checkbox-checked-checkbox" model []
             ]
         ]

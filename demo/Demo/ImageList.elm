@@ -5,7 +5,7 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.ImageList as ImageList exposing (imageList, imageListConfig)
+import Material.ImageList as ImageList exposing (ImageListItem, imageList, imageListConfig, imageListItem, imageListItemConfig)
 import Material.Typography as Typography
 
 
@@ -54,46 +54,39 @@ masonryImageList =
         (List.map masonryItem masonryImages)
 
 
-imageListHeroItem : ImageList.ListItem
+imageListHeroItem : ImageListItem msg
 imageListHeroItem =
-    -- TODO:
-    -- ImageList.item
-    --     [ Html.Attributes.style "width" "calc(100% / 5 - 4.2px)"
-    --     , Html.Attributes.style "margin" "2px"
-    --     ]
-    --     [ ImageList.imageAspectContainer []
-    --         [ ImageList.divImage [ Html.Attributes.style "background-color" "black" ] []
-    --         ]
-    --     ]
-    { image = "background-color: black"
-    , label = Nothing
-    }
+    imageListItem
+        { imageListItemConfig
+            | label = Nothing
+            , additionalAttributes =
+                [ Html.Attributes.style "width" "calc(100% / 5 - 4.2px)"
+                , Html.Attributes.style "margin" "2px"
+                ]
+        }
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAABNJREFUCB1jZGBg+A/EDEwgAgQADigBA//q6GsAAAAASUVORK5CYII%3D"
 
 
-standardItem : String -> ImageList.ListItem
+standardItem : String -> ImageListItem msg
 standardItem url =
     -- TODO:
-    -- ImageList.item
-    --     [ Html.Attributes.style "width" "calc(100% / 5 - 4.2px)"
-    --     , Html.Attributes.style "margin" "2px"
-    --     ]
-    --     [ ImageList.imageAspectContainer
-    --         [ Html.Attributes.style "padding-bottom" "66.66667%"
-    --         ]
-    --         [ ImageList.image [ ImageList.src url ] []
-    --         , ImageList.supporting [] [ ImageList.label [] [ text "Text label" ] ]
-    --         ]
-    --     ]
-    { image = url
-    , label = Just "Text label"
-    }
+    -- ImageList.imageAspectContainer
+    --   [ Html.Attributes.style "padding-bottom" "66.66667%"
+    --   ]
+    imageListItem
+        { imageListItemConfig
+            | label = Just "Text label"
+            , additionalAttributes =
+                [ Html.Attributes.style "width" "calc(100% / 5 - 4.2px)"
+                , Html.Attributes.style "margin" "2px"
+                ]
+        }
+        url
 
 
-masonryItem : String -> ImageList.ListItem
+masonryItem : String -> ImageListItem msg
 masonryItem url =
-    { image = url
-    , label = Just "Text label"
-    }
+    imageListItem { imageListItemConfig | label = Just "Text label" } url
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m

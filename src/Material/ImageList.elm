@@ -1,4 +1,12 @@
-module Material.ImageList exposing (Config, ListItem, imageList, imageListConfig)
+module Material.ImageList exposing
+    ( Config
+    , ImageListItem
+    , ImageListItemConfig
+    , imageList
+    , imageListConfig
+    , imageListItem
+    , imageListItemConfig
+    )
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -19,7 +27,7 @@ imageListConfig =
     }
 
 
-imageList : Config msg -> List ListItem -> Html msg
+imageList : Config msg -> List (ImageListItem msg) -> Html msg
 imageList config listItems =
     Html.node "mdc-image-list"
         (List.filterMap identity
@@ -32,10 +40,31 @@ imageList config listItems =
         (List.map (listItemElt config) listItems)
 
 
-type alias ListItem =
-    { image : String
-    , label : Maybe String
+type alias ImageListItemConfig msg =
+    { label : Maybe String
+    , href : Maybe String
+    , additionalAttributes : List (Html.Attribute msg)
     }
+
+
+imageListItemConfig : ImageListItemConfig msg
+imageListItemConfig =
+    { label = Nothing
+    , href = Nothing
+    , additionalAttributes = []
+    }
+
+
+type ImageListItem msg
+    = ImageListItem
+        { config : ImageListItemConfig msg
+        , image : String
+        }
+
+
+imageListItem : ImageListItemConfig msg -> String -> ImageListItem msg
+imageListItem config image =
+    ImageListItem { config = config, image = image }
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -61,38 +90,52 @@ withTextProtectionCs { withTextProtection } =
         Nothing
 
 
-listItemElt : Config msg -> ListItem -> Html msg
-listItemElt { masonry } listItem =
-    Html.li
-        [ class "mdc-image-list" ]
-        [ if masonry then
-            imageElt listItem
+listItemElt : Config msg -> ImageListItem msg -> Html msg
+listItemElt ({ masonry } as config_) ((ImageListItem { config }) as listItem) =
+    let
+        inner =
+            [ if masonry then
+                imageElt config_ listItem
 
-          else
-            imageAspectContainerElt listItem
-        , supportingElt listItem
-        ]
+              else
+                imageAspectContainerElt config_ listItem
+            , supportingElt listItem
+            ]
+    in
+    Html.li (class "mdc-image-list__item" :: config.additionalAttributes)
+        (config.href
+            |> Maybe.map (\href -> [ Html.a [ Html.Attributes.href href ] inner ])
+            |> Maybe.withDefault inner
+        )
 
 
-imageAspectContainerElt : ListItem -> Html msg
-imageAspectContainerElt listItem =
+imageAspectContainerElt : Config msg -> ImageListItem msg -> Html msg
+imageAspectContainerElt config listItem =
     Html.div
         [ class "mdc-image-list__image-aspect-container" ]
-        [ imageElt listItem ]
+        [ imageElt config listItem ]
 
 
-imageElt : ListItem -> Html msg
-imageElt { image } =
-    Html.img
-        [ class "mdc-image-list__image"
-        , Html.Attributes.src image
-        ]
-        []
+imageElt : Config msg -> ImageListItem msg -> Html msg
+imageElt { masonry } (ImageListItem { image }) =
+    if masonry then
+        Html.img
+            [ class "mdc-image-list__image"
+            , Html.Attributes.src image
+            ]
+            []
+
+    else
+        Html.div
+            [ class "mdc-image-list__image"
+            , Html.Attributes.style "background-image" ("url('" ++ image ++ "')")
+            ]
+            []
 
 
-supportingElt : ListItem -> Html msg
-supportingElt { label } =
-    case label of
+supportingElt : ImageListItem msg -> Html msg
+supportingElt (ImageListItem { config }) =
+    case config.label of
         Just string ->
             Html.div
                 [ class "mdc-image-list__supporting" ]

@@ -5,7 +5,7 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Button as Button exposing (button, buttonConfig)
+import Material.Button as Button exposing (button, buttonConfig, outlinedButton, raisedButton, unelevatedButton)
 import Material.Typography as Typography
 
 
@@ -31,82 +31,9 @@ update lift msg model =
 
 view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
-    let
-        textButtons idx =
-            example idx
-                lift
-                { title = "Text Button"
-                , mapConfig = \config -> config
-                }
-
-        raisedButtons idx =
-            example idx
-                lift
-                { title = "Raised Button"
-                , mapConfig = \config -> { config | variant = Button.Raised }
-                }
-
-        unelevatedButtons idx =
-            example idx
-                lift
-                { title = "Unelevated Button"
-                , mapConfig = \config -> { buttonConfig | variant = Button.Unelevated }
-                }
-
-        outlinedButtons idx =
-            example idx
-                lift
-                { title = "Outlined Button"
-                , mapConfig = \config -> { buttonConfig | variant = Button.Outlined }
-                }
-
-        shapedButtons idx =
-            example idx
-                lift
-                { title = "Shaped Button"
-                , mapConfig =
-                    \config ->
-                        { config
-                            | variant = Button.Unelevated
-                            , additionalAttributes =
-                                config.additionalAttributes
-                                    ++ [ Html.Attributes.style "border-radius" "18px"
-                                       ]
-                        }
-                }
-    in
     page.body "Button"
         "Buttons communicate an action a user can take. They are typically placed throughout your UI, in places like dialogs, forms, cards, and toolbars."
-        [ Hero.view []
-            [ button
-                { buttonConfig
-                    | additionalAttributes =
-                        [ Html.Attributes.style "margin" "16px 32px"
-                        ]
-                }
-                "Text"
-            , button
-                { buttonConfig
-                    | variant = Button.Raised
-                    , additionalAttributes =
-                        [ Html.Attributes.style "margin" "16px 32px" ]
-                }
-                "Raised"
-            , button
-                { buttonConfig
-                    | variant = Button.Unelevated
-                    , additionalAttributes =
-                        [ Html.Attributes.style "margin" "16px 32px" ]
-                }
-                "Unelevated"
-            , button
-                { buttonConfig
-                    | variant = Button.Outlined
-                    , additionalAttributes =
-                        [ Html.Attributes.style "margin" "16px 32px" ]
-                }
-                "Outlined"
-            ]
+        [ Hero.view [] heroButtons
         , Html.h2
             [ Typography.headline6
             , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
@@ -132,58 +59,60 @@ view lift page model =
             , altText = "Source Code"
             }
         , Page.demos
-            [ textButtons "buttons-text-buttons"
-            , raisedButtons "buttons-raised-buttons"
-            , unelevatedButtons "buttons-unelevated-buttons"
-            , outlinedButtons "buttons-outlined-buttons"
-            , shapedButtons "buttons-shaped-buttons"
+            [ buttonsRow "Text Button" button buttonConfig
+            , buttonsRow "Raised Button" raisedButton buttonConfig
+            , buttonsRow "Unelevated Button" unelevatedButton buttonConfig
+            , buttonsRow "Outlined Button" outlinedButton buttonConfig
+            , buttonsRow "Shaped Button"
+                unelevatedButton
+                { buttonConfig
+                    | additionalAttributes =
+                        [ Html.Attributes.style "border-radius" "18px" ]
+                }
             ]
         ]
 
 
-example :
-    String
-    -> (Msg -> m)
-    ->
-        { title : String
-        , mapConfig : Button.Config m -> Button.Config m
-        }
-    -> Html m
-example idx lift { title, mapConfig } =
-    Html.div
-        []
-        [ Html.h3
-            [ Typography.subtitle1
-            ]
-            [ text title
-            ]
-        , Html.div
-            []
+heroMargin : List (Html.Attribute m)
+heroMargin =
+    [ Html.Attributes.style "margin" "16px 32px" ]
+
+
+heroButtons : List (Html m)
+heroButtons =
+    [ button { buttonConfig | additionalAttributes = heroMargin } "Text"
+    , raisedButton { buttonConfig | additionalAttributes = heroMargin } "Raised"
+    , unelevatedButton { buttonConfig | additionalAttributes = heroMargin } "Unelevated"
+    , outlinedButton { buttonConfig | additionalAttributes = heroMargin } "Outlined"
+    ]
+
+
+rowMargin : List (Html.Attribute m)
+rowMargin =
+    [ Html.Attributes.style "margin" "8px 16px" ]
+
+
+buttonsRow : String -> (Button.Config m -> String -> Html m) -> Button.Config m -> Html m
+buttonsRow title button buttonConfig =
+    Html.div []
+        [ Html.h3 [ Typography.subtitle1 ] [ text title ]
+        , Html.div []
             [ button
-                (mapConfig
-                    { buttonConfig
-                        | additionalAttributes =
-                            [ Html.Attributes.style "margin" "8px 16px" ]
-                    }
-                )
+                { buttonConfig
+                    | additionalAttributes = buttonConfig.additionalAttributes ++ rowMargin
+                }
                 "Default"
             , button
-                (mapConfig
-                    { buttonConfig
-                        | dense = True
-                        , additionalAttributes =
-                            [ Html.Attributes.style "margin" "8px 16px" ]
-                    }
-                )
+                { buttonConfig
+                    | dense = True
+                    , additionalAttributes = buttonConfig.additionalAttributes ++ rowMargin
+                }
                 "Dense"
             , button
-                (mapConfig
-                    { buttonConfig
-                        | icon = Just "favorite"
-                        , additionalAttributes =
-                            [ Html.Attributes.style "margin" "8px 16px" ]
-                    }
-                )
+                { buttonConfig
+                    | icon = Just "favorite"
+                    , additionalAttributes = buttonConfig.additionalAttributes ++ rowMargin
+                }
                 "Icon"
             ]
         ]

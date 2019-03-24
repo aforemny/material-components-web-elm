@@ -1,4 +1,11 @@
-module Material.Button exposing (Config, Variant(..), button, buttonConfig)
+module Material.Button exposing
+    ( Config
+    , button
+    , buttonConfig
+    , outlinedButton
+    , raisedButton
+    , unelevatedButton
+    )
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -8,11 +15,11 @@ import Html.Events
 type alias Config msg =
     { variant : Variant
     , icon : Maybe String
-    , trailingIcon : Maybe String
+    , trailingIcon : Bool
     , disabled : Bool
     , dense : Bool
-    , onClick : Maybe msg
     , additionalAttributes : List (Html.Attribute msg)
+    , onClick : Maybe msg
     }
 
 
@@ -20,11 +27,11 @@ buttonConfig : Config msg
 buttonConfig =
     { variant = Text
     , icon = Nothing
-    , trailingIcon = Nothing
+    , trailingIcon = False
     , disabled = False
     , dense = False
-    , onClick = Nothing
     , additionalAttributes = []
+    , onClick = Nothing
     }
 
 
@@ -48,11 +55,26 @@ button config label =
             ++ config.additionalAttributes
         )
         (List.filterMap identity
-            [ iconElt config
+            [ leadingIconElt config
             , labelElt label
             , trailingIconElt config
             ]
         )
+
+
+raisedButton : Config msg -> String -> Html msg
+raisedButton config label =
+    button { config | variant = Raised } label
+
+
+unelevatedButton : Config msg -> String -> Html msg
+unelevatedButton config label =
+    button { config | variant = Unelevated } label
+
+
+outlinedButton : Config msg -> String -> Html msg
+outlinedButton config label =
+    button { config | variant = Outlined } label
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -97,28 +119,33 @@ denseCs { dense } =
 
 iconElt : Config msg -> Maybe (Html msg)
 iconElt { icon } =
-    icon
-        |> Maybe.map
-            (\iconName ->
-                Html.i
-                    [ class "mdc-button__icon"
-                    , Html.Attributes.attribute "aria-hidden" "true"
-                    ]
-                    [ text iconName ]
-            )
+    Maybe.map
+        (\iconName ->
+            Html.i
+                [ class "mdc-button__icon material-icons"
+                , Html.Attributes.attribute "aria-hidden" "true"
+                ]
+                [ text iconName ]
+        )
+        icon
+
+
+leadingIconElt : Config msg -> Maybe (Html msg)
+leadingIconElt config =
+    if not config.trailingIcon then
+        iconElt config
+
+    else
+        Nothing
 
 
 trailingIconElt : Config msg -> Maybe (Html msg)
-trailingIconElt { trailingIcon } =
-    trailingIcon
-        |> Maybe.map
-            (\iconName ->
-                Html.i
-                    [ class "mdc-button__icon"
-                    , Html.Attributes.attribute "aria-hidden" "true"
-                    ]
-                    [ text iconName ]
-            )
+trailingIconElt config =
+    if config.trailingIcon then
+        iconElt config
+
+    else
+        Nothing
 
 
 labelElt : String -> Maybe (Html msg)

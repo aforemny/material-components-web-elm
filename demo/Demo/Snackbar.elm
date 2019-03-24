@@ -6,7 +6,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Json
-import Material.Button as Button exposing (button, buttonConfig)
+import Material.Button as Button exposing (buttonConfig, raisedButton)
 import Material.Checkbox as Checkbox exposing (checkbox, checkboxConfig)
 import Material.FormField as FormField exposing (formField, formFieldConfig)
 import Material.Snackbar as Snackbar exposing (snackbar, snackbarConfig)
@@ -214,37 +214,33 @@ view lift page model =
                         | label = "Action Text"
                     }
                 , Html.br [] []
-                , button
+                , raisedButton
                     { buttonConfig
-                        | variant = Button.Raised
-                        , onClick = Just (lift (Show "snackbar-default-snackbar"))
+                        | onClick = Just (lift (Show "snackbar-default-snackbar"))
                         , additionalAttributes =
                             [ Html.Attributes.style "margin-top" "14px" ]
                     }
                     "Show"
                 , text " "
-                , button
+                , raisedButton
                     { buttonConfig
-                        | variant = Button.Raised
-                        , onClick = Just (lift (Show "snackbar-dismissible-snackbar"))
+                        | onClick = Just (lift (Show "snackbar-dismissible-snackbar"))
                         , additionalAttributes =
                             [ Html.Attributes.style "margin-top" "14px" ]
                     }
                     "Show dismissible"
                 , text " "
-                , button
+                , raisedButton
                     { buttonConfig
-                        | variant = Button.Raised
-                        , onClick = Just (lift (Show "snackbar-leading-snackbar"))
+                        | onClick = Just (lift (Show "snackbar-leading-snackbar"))
                         , additionalAttributes =
                             [ Html.Attributes.style "margin-top" "14px" ]
                     }
                     "Show leading"
                 , text " "
-                , button
+                , raisedButton
                     { buttonConfig
-                        | variant = Button.Raised
-                        , onClick = Just (lift (Show "snackbar-leading-snackbar-rtl"))
+                        | onClick = Just (lift (Show "snackbar-leading-snackbar-rtl"))
                         , additionalAttributes =
                             [ Html.Attributes.style "margin-top" "14px" ]
                     }

@@ -125,7 +125,7 @@ module.exports = [
     entry: './src/list.js',
     output: {
       path: path.resolve(__dirname, "dist"),
-      filename: "mdc-list-progress.min.js"
+      filename: "mdc-list.min.js"
     },
     module: {
       rules: [

@@ -6,7 +6,7 @@ module Material.LinearProgress exposing
     )
 
 import Html exposing (Html, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style)
 
 
 type alias Config msg =
@@ -37,10 +37,14 @@ linearProgress config =
     Html.node "mdc-linear-progress"
         (List.filterMap identity
             [ rootCs
+            , displayCss
             , roleAttr
             , variantCs config
+            , determinateAttr config
             , progressAttr config
             , bufferAttr config
+            , reverseAttr config
+            , closedAttr config
             ]
             ++ config.additionalAttributes
         )
@@ -56,6 +60,11 @@ rootCs =
     Just (class "mdc-linear-progress")
 
 
+displayCss : Maybe (Html.Attribute msg)
+displayCss =
+    Just (style "display" "block")
+
+
 roleAttr : Maybe (Html.Attribute msg)
 roleAttr =
     Just (Html.Attributes.attribute "role" "progressbar")
@@ -69,6 +78,15 @@ variantCs { variant } =
 
         _ ->
             Nothing
+
+
+determinateAttr : Config msg -> Maybe (Html.Attribute msg)
+determinateAttr { variant } =
+    if variant /= Indeterminate then
+        Just (Html.Attributes.attribute "determinate" "")
+
+    else
+        Nothing
 
 
 progressAttr : Config msg -> Maybe (Html.Attribute msg)
@@ -94,6 +112,24 @@ bufferAttr { variant } =
             Nothing
 
 
+reverseAttr : Config msg -> Maybe (Html.Attribute msg)
+reverseAttr { reverse } =
+    if reverse then
+        Just (Html.Attributes.attribute "reverse" "")
+
+    else
+        Nothing
+
+
+closedAttr : Config msg -> Maybe (Html.Attribute msg)
+closedAttr { closed } =
+    if closed then
+        Just (Html.Attributes.attribute "closed" "")
+
+    else
+        Nothing
+
+
 bufferingDotsElt : Html msg
 bufferingDotsElt =
     Html.div [ class "mdc-linear-progress__buffering-dots" ] []
@@ -106,12 +142,14 @@ bufferElt =
 
 primaryBarElt : Html msg
 primaryBarElt =
-    Html.div [ class "mdc-linear-progress__primary-bar" ] [ barInnerElt ]
+    Html.div [ class "mdc-linear-progress__bar mdc-linear-progress__primary-bar" ]
+        [ barInnerElt ]
 
 
 secondaryBarElt : Html msg
 secondaryBarElt =
-    Html.div [ class "mdc-linear-progress__secondary-bar" ] [ barInnerElt ]
+    Html.div [ class "mdc-linear-progress__bar mdc-linear-progress__secondary-bar" ]
+        [ barInnerElt ]
 
 
 barInnerElt : Html msg

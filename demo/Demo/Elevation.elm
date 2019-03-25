@@ -10,16 +10,12 @@ import Material.Typography as Typography
 
 
 type alias Model =
-    { transition : Bool
-    , elevation : Int
-    }
+    {}
 
 
 defaultModel : Model
 defaultModel =
-    { transition = False
-    , elevation = 1
-    }
+    {}
 
 
 type Msg
@@ -103,81 +99,7 @@ view lift page model =
                 (List.map
                     (\z ->
                         Html.figure
-                            [ case z of
-                                0 ->
-                                    Elevation.z0
-
-                                1 ->
-                                    Elevation.z1
-
-                                2 ->
-                                    Elevation.z2
-
-                                3 ->
-                                    Elevation.z3
-
-                                4 ->
-                                    Elevation.z4
-
-                                5 ->
-                                    Elevation.z5
-
-                                6 ->
-                                    Elevation.z6
-
-                                7 ->
-                                    Elevation.z7
-
-                                8 ->
-                                    Elevation.z8
-
-                                9 ->
-                                    Elevation.z9
-
-                                10 ->
-                                    Elevation.z10
-
-                                11 ->
-                                    Elevation.z11
-
-                                12 ->
-                                    Elevation.z12
-
-                                13 ->
-                                    Elevation.z13
-
-                                14 ->
-                                    Elevation.z14
-
-                                15 ->
-                                    Elevation.z15
-
-                                16 ->
-                                    Elevation.z16
-
-                                17 ->
-                                    Elevation.z17
-
-                                18 ->
-                                    Elevation.z18
-
-                                19 ->
-                                    Elevation.z19
-
-                                20 ->
-                                    Elevation.z20
-
-                                21 ->
-                                    Elevation.z21
-
-                                22 ->
-                                    Elevation.z22
-
-                                23 ->
-                                    Elevation.z23
-
-                                _ ->
-                                    Elevation.z24
+                            [ Elevation.z z
                             , Html.Attributes.style "min-width" "200px"
                             , Html.Attributes.style "min-height" "100px"
                             , Html.Attributes.style "margin" "15px"

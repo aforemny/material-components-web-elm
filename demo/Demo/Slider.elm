@@ -22,10 +22,10 @@ defaultModel : Model
 defaultModel =
     { sliders =
         Dict.fromList
-            [ ( "slider-hero-slider", 50 )
-            , ( "slider-continuous-slider", 50 )
-            , ( "slider-discrete-slider", 50 )
-            , ( "slider-discrete-slider-with-tick-marks", 50 )
+            [ ( "slider-hero-slider", 25 )
+            , ( "slider-continuous-slider", 25 )
+            , ( "slider-discrete-slider", 25 )
+            , ( "slider-discrete-slider-with-tick-marks", 25 )
             ]
     }
 
@@ -70,7 +70,7 @@ continuousSlider lift model =
             | value = Maybe.withDefault 0 (Dict.get index model.sliders)
             , onChange = Just (lift << Change index)
             , min = 0
-            , max = 100
+            , max = 50
         }
 
 
@@ -86,8 +86,8 @@ discreteSlider lift model =
             , onChange = Just (lift << Change index)
             , discrete = True
             , min = 0
-            , max = 100
-            , step = 1
+            , max = 50
+            , step = Just 1
         }
 
 
@@ -103,10 +103,9 @@ discreteSliderWithTickMarks lift model =
             , onChange = Just (lift << Change index)
             , discrete = True
             , min = 0
-            , max = 100
-            , step = 1
-
-            -- TODO: , trackMarkers = True
+            , max = 50
+            , step = Just 1
+            , displayMarkers = True
         }
 
 

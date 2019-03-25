@@ -73,7 +73,7 @@ view page =
                   , title = "FAB"
                   , subtitle = "The primary action in an application"
                   }
-                , { url = IconToggle
+                , { url = IconButton
                   , icon = "images/icon_button_180px.svg"
                   , title = "Icon Button"
                   , subtitle = "Toggling icon states"

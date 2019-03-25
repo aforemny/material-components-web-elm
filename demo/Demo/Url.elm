@@ -22,7 +22,7 @@ type Url
     | PermanentDrawer
     | Elevation
     | Fabs
-    | IconToggle
+    | IconButton
     | ImageList
     | LayoutGrid
     | LinearProgress
@@ -90,8 +90,8 @@ toString url =
         Fabs ->
             "#fab"
 
-        IconToggle ->
-            "#icon-toggle"
+        IconButton ->
+            "#icon-button"
 
         ImageList ->
             "#image-list"
@@ -207,8 +207,8 @@ fromString url =
         "fab" ->
             Fabs
 
-        "icon-toggle" ->
-            IconToggle
+        "icon-button" ->
+            IconButton
 
         "image-list" ->
             ImageList

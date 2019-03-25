@@ -7,11 +7,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Material.Button as Button exposing (button, buttonConfig)
 import Material.Card as Card exposing (card, cardConfig, mediaConfig, primaryActionConfig)
-import Material.Checkbox as Checkbox
-import Material.FormField as FormField
 import Material.Icon as Icon exposing (icon, iconConfig)
-import Material.IconToggle as IconToggle
-import Material.Ripple as Ripple
 import Material.Theme as Theme
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)

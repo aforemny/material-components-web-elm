@@ -146,10 +146,10 @@ module.exports = [
     }
   },
   {
-    entry: './src/icon-toggle.js',
+    entry: './src/icon-button.js',
     output: {
       path: path.resolve(__dirname, "dist"),
-      filename: "mdc-icon-toggle.min.js"
+      filename: "mdc-icon-button.min.js"
     },
     module: {
       rules: [

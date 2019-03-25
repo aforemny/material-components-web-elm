@@ -1,4 +1,4 @@
-module Demo.IconToggle exposing (Model, Msg(..), defaultModel, update, view)
+module Demo.IconButton exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
@@ -7,18 +7,18 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.IconToggle as IconToggle exposing (iconToggle, iconToggleConfig)
+import Material.IconButton as IconButton exposing (iconButton, iconButtonConfig)
 import Material.Typography as Typography
 
 
 type alias Model =
-    { iconToggles : Dict String Bool
+    { iconButtons : Dict String Bool
     }
 
 
 defaultModel : Model
 defaultModel =
-    { iconToggles = Dict.empty
+    { iconButtons = Dict.empty
     }
 
 
@@ -31,55 +31,17 @@ update lift msg model =
     case msg of
         Toggle index ->
             let
-                iconToggles =
+                iconButtons =
                     Dict.update index
-                        (\state ->
-                            Just <|
-                                case state of
-                                    Just True ->
-                                        False
-
-                                    _ ->
-                                        True
-                        )
-                        model.iconToggles
+                        (\state -> Just (not (Maybe.withDefault False state)))
+                        model.iconButtons
             in
-            ( { model | iconToggles = iconToggles }, Cmd.none )
+            ( { model | iconButtons = iconButtons }, Cmd.none )
 
 
-iconToggle_ :
-    (Msg -> m)
-    -> String
-    -> Model
-    -> String
-    -> String
-    -> Html m
-iconToggle_ lift index model offIcon onIcon =
-    let
-        isOn =
-            Maybe.withDefault False (Dict.get index model.iconToggles)
-    in
-    iconToggle
-        { iconToggleConfig
-            | on = isOn
-            , onClick = Just (lift (Toggle index))
-        }
-        (if isOn then
-            onIcon
-
-         else
-            offIcon
-        )
-
-
-iconButton :
-    (Msg -> m)
-    -> String
-    -> Model
-    -> String
-    -> Html m
-iconButton lift index model icon =
-    iconToggle_ lift index model icon icon
+isOn : String -> Model -> Bool
+isOn index model =
+    Maybe.withDefault False (Dict.get index model.iconButtons)
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
@@ -87,11 +49,14 @@ view lift page model =
     page.body "Icon Button"
         "Icons are appropriate for buttons that allow a user to take actions or make a selection, such as adding or removing a star to an item."
         [ Hero.view []
-            [ iconToggle_ lift
-                "icon-toggle-hero-icon-toggle"
-                model
-                "favorite_border"
-                "favorite"
+            [ iconButton
+                { iconButtonConfig | onClick = Just (lift (Toggle "hero-button")) }
+                (if isOn "hero-button" model then
+                    "favorite_border"
+
+                 else
+                    "favorite"
+                )
             ]
         , Html.h2
             [ Typography.headline6
@@ -119,8 +84,17 @@ view lift page model =
             }
         , Page.demos
             [ Html.h3 [ Typography.subtitle1 ] [ text "Icon Button" ]
-            , iconButton lift "icon-toggle-icon-button" model "wifi"
-            , Html.h3 [ Typography.subtitle1 ] [ text "Icon Toggle" ]
-            , iconToggle_ lift "icon-toggle-icon-toggle" model "favorite_border" "favorite"
+            , iconButton
+                { iconButtonConfig | onClick = Just (lift (Toggle "icon-button")) }
+                "wifi"
+            , Html.h3 [ Typography.subtitle1 ] [ text "Icon Button" ]
+            , iconButton
+                { iconButtonConfig | onClick = Just (lift (Toggle "icon-button-toggle")) }
+                (if isOn "icon-button-toggle" model then
+                    "favorite_border"
+
+                 else
+                    "favorite"
+                )
             ]
         ]

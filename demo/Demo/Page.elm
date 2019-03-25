@@ -10,7 +10,7 @@ import Demo.Url as Url exposing (Url)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.IconToggle as IconToggle exposing (iconToggle, iconToggleConfig)
+import Material.IconButton as IconButton exposing (iconButton, iconButtonConfig)
 import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 import Material.Typography as Typography
 
@@ -34,8 +34,8 @@ toolbar url =
             [ Html.a
                 [ Html.Attributes.href (Url.toString Url.StartPage)
                 ]
-                [ iconToggle
-                    { iconToggleConfig
+                [ iconButton
+                    { iconButtonConfig
                         | additionalAttributes = [ TopAppBar.navigationIcon ]
                     }
                     (if url == Url.StartPage then

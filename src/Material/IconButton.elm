@@ -1,4 +1,4 @@
-module Material.IconToggle exposing (Config, iconToggle, iconToggleConfig)
+module Material.IconButton exposing (Config, iconButton, iconButtonConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -12,17 +12,17 @@ type alias Config msg =
     }
 
 
-iconToggleConfig : Config msg
-iconToggleConfig =
+iconButtonConfig : Config msg
+iconButtonConfig =
     { on = False
     , additionalAttributes = []
     , onClick = Nothing
     }
 
 
-iconToggle : Config msg -> String -> Html msg
-iconToggle config iconName =
-    Html.node "mdc-icon-toggle"
+iconButton : Config msg -> String -> Html msg
+iconButton config iconName =
+    Html.node "mdc-icon-button"
         (List.filterMap identity
             [ rootCs
             , roleAttr
@@ -36,7 +36,7 @@ iconToggle config iconName =
 
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
-    Just (class "mdc-icon-toggle material-icons")
+    Just (class "mdc-icon-button material-icons")
 
 
 roleAttr : Maybe (Html.Attribute msg)

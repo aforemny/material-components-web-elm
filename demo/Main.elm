@@ -106,13 +106,10 @@ defaultModel key =
     }
 
 
-{-| TODO: Remove Navigate
--}
 type Msg
     = NoOp
     | UrlChanged Url.Url
     | UrlRequested Browser.UrlRequest
-    | Navigate Demo.Url.Url
     | ButtonsMsg Demo.Buttons.Msg
     | CardsMsg Demo.Cards.Msg
     | CheckboxMsg Demo.Checkbox.Msg
@@ -147,15 +144,6 @@ update msg model =
         NoOp ->
             ( model, Cmd.none )
 
-        Navigate url ->
-            ( { model | url = url }
-            , Cmd.batch
-                [ Browser.Navigation.pushUrl model.key (Demo.Url.toString url)
-
-                -- , scrollTop () TODO
-                ]
-            )
-
         UrlRequested (Browser.Internal url) ->
             ( { model | url = Demo.Url.fromUrl url }
             , Browser.Navigation.load (Demo.Url.toString (Demo.Url.fromUrl url))
@@ -167,7 +155,6 @@ update msg model =
         UrlChanged url ->
             ( { model | url = Demo.Url.fromUrl url }, Cmd.none )
 
-        -- TODO: scrollTop ())
         ButtonsMsg msg_ ->
             let
                 ( buttons, effects ) =
@@ -354,18 +341,15 @@ update msg model =
 view : Model -> Browser.Document Msg
 view model =
     { title = "The elm-mdc library"
-    , body = [ view_ model ]
+    , body = [ body model ]
     }
 
 
-{-| TODO: Should be: Html.Lazy.lazy view\_, but triggers virtual-dom bug #110
--}
-view_ : Model -> Html Msg
-view_ model =
+body : Model -> Html Msg
+body model =
     let
         page =
-            { toolbar = Page.toolbar "page-toolbar" Navigate model.url
-            , navigate = Navigate
+            { toolbar = Page.toolbar model.url
             , body =
                 \title intro nodes ->
                     Html.div
@@ -374,11 +358,7 @@ view_ model =
                         , Html.Attributes.style "height" "100%"
                         , Typography.typography
                         ]
-                        [ Page.toolbar
-                            "page-toolbar"
-                            Navigate
-                            model.url
-                            title
+                        [ Page.toolbar model.url
                         , Html.div
                             [ Html.Attributes.class "demo-content"
                             , Html.Attributes.style "max-width" "900px"

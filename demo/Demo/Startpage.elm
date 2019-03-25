@@ -10,9 +10,8 @@ import Material.ImageList as ImageList exposing (imageList, imageListConfig, ima
 
 view : Page m -> Html m
 view page =
-    Html.div
-        []
-        [ page.toolbar "Material Components for the Web"
+    Html.div []
+        [ page.toolbar
         , imageList
             { imageListConfig
                 | additionalAttributes =

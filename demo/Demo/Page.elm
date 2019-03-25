@@ -10,25 +10,19 @@ import Demo.Url as Url exposing (Url)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.Icon as Icon exposing (icon, iconConfig)
+import Material.IconToggle as IconToggle exposing (iconToggle, iconToggleConfig)
 import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 import Material.Typography as Typography
 
 
 type alias Page m =
-    { toolbar : String -> Html m
-    , navigate : Url -> m
+    { toolbar : Html m
     , body : String -> String -> List (Html m) -> Html m
     }
 
 
-toolbar :
-    String
-    -> (Url -> m)
-    -> Url
-    -> String
-    -> Html m
-toolbar idx navigate url title =
+toolbar : Url -> Html m
+toolbar url =
     topAppBar
         { topAppBarConfig
             | additionalAttributes =
@@ -37,25 +31,19 @@ toolbar idx navigate url title =
         [ TopAppBar.section
             [ TopAppBar.alignStart
             ]
-            [ Html.div
-                [ Html.Attributes.class "catalog-back"
-                , Html.Attributes.style "padding-right" "24px"
+            [ Html.a
+                [ Html.Attributes.href (Url.toString Url.StartPage)
                 ]
-                [ case url of
-                    Url.StartPage ->
-                        Html.img
-                            [ Html.Attributes.class "mdc-toolbar__menu-icon"
-                            , Html.Attributes.src "images/ic_component_24px_white.svg"
-                            ]
-                            []
+                [ iconToggle
+                    { iconToggleConfig
+                        | additionalAttributes = [ TopAppBar.navigationIcon ]
+                    }
+                    (if url == Url.StartPage then
+                        "menu"
 
-                    _ ->
-                        icon
-                            { iconConfig
-                                | additionalAttributes =
-                                    [ Html.Events.onClick (navigate Url.StartPage) ]
-                            }
-                            "arrow_back"
+                     else
+                        "arrow_back"
+                    )
                 ]
             , Html.span
                 [ TopAppBar.title

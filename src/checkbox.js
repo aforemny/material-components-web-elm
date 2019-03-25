@@ -1,4 +1,4 @@
-import { MDCCheckbox, MDCCheckboxFoundation } from "@material/checkbox/index";
+import { MDCCheckboxFoundation } from "@material/checkbox/index";
 
 class MdcCheckbox extends HTMLElement {
 
@@ -76,7 +76,7 @@ class MdcCheckbox extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (!this.mdcFoundation) return;
-    if ((name === "state")) {
+    if (name === "state") {
         this.mdcFoundation.handleChange();
     } else if (name === "disabled") {
         this.mdcFoundation.setDisabled(this.hasAttribute("disabled"));

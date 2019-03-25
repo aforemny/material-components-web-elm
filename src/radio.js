@@ -1,48 +1,48 @@
-import { MDCRadio } from "@material/radio/index";
+import { MDCRadioFoundation } from "@material/radio/index";
 
 class MdcRadio extends HTMLElement {
+
+  static get observedAttributes() {
+    return ["checked", "disabled"];
+  }
+
+  get adapter() {
+    return {
+      setNativeControlDisabled: disabled => {
+        this.querySelector("input").disabled = disabled;
+      },
+      addClass: className => {
+        this.classList.add(className);
+      },
+      removeClass: className => {
+        this.classList.remove(className);
+      }
+    };
+  }
 
   constructor() {
     super();
   }
 
   connectedCallback() {
-    this.MDCRadio = new MDCRadio(this);
-    this.MDCRadio.checked = this.checked || false;
-    this.MDCRadio.indeterminate = this.indeterminate || false;
-    this.MDCRadio.disabled = this.disabled || false;
-    this.MDCRadio.value = this.value || "";
+    this.mdcFoundation = new MDCRadioFoundation(this.adapter);
+    this.mdcFoundation.init();
+    this.mdcFoundation.setDisabled(this.hasAttribute("disabled"));
   }
 
   disconnectedCallback() {
-    if (typeof this.MDCRadio !== "undefined") {
-      this.MDCRadio.destroy();
-      delete this.MDCRadio;
+    if (this.mdcFoundation) {
+      this.mdcFoundation.destroy();
+      delete this.mdcFoundation;
     }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    switch (name) {
-      case "checked":
-        if (typeof this.MDCRadio !== "undefined") {
-          this.MDCRadio.checked = newValue;
-        }
-        break;
-      case "indeterminate":
-        if (typeof this.MDCRadio !== "undefined") {
-          this.MDCRadio.indeterminate = newValue;
-        }
-        break;
-      case "disabled":
-        if (typeof this.MDCRadio !== "undefined") {
-          this.MDCRadio.disabled = newValue;
-        }
-        break;
-      case "value":
-        if (typeof this.MDCRadio !== "undefined") {
-          this.MDCRadio.value = newValue;
-        }
-        break;
+    if (!this.mdcFoundation) return;
+    if (name === "checked") {
+      this.mdcFoundation.checked = newValue;
+    } else if (name === "disabled") {
+      this.mdcFoundation.disabled = newValue;
     }
   }
 };

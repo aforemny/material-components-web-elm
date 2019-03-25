@@ -5,10 +5,6 @@ import Html.Attributes exposing (class)
 import Html.Events
 
 
-
--- TODO: Rename checked to selected?
-
-
 type alias Config msg =
     { checked : Bool
     , disabled : Bool
@@ -32,6 +28,8 @@ radio config =
         (List.filterMap identity
             [ rootCs
             , disabledCs config
+            , checkedAttr config
+            , disabledAttr config
             , clickHandler config
             ]
             ++ config.additionalAttributes
@@ -46,10 +44,28 @@ rootCs =
     Just (class "mdc-radio")
 
 
+checkedAttr : Config msg -> Maybe (Html.Attribute msg)
+checkedAttr { checked } =
+    if checked then
+        Just (Html.Attributes.attribute "checked" "")
+
+    else
+        Nothing
+
+
 disabledCs : Config msg -> Maybe (Html.Attribute msg)
 disabledCs { disabled } =
     if disabled then
         Just (class "mdc-radio--disabled")
+
+    else
+        Nothing
+
+
+disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr { disabled } =
+    if disabled then
+        Just (Html.Attributes.attribute "disabled" "")
 
     else
         Nothing
@@ -65,8 +81,8 @@ nativeControlElt config =
     Html.input
         [ nativeControlCs
         , radioTypeAttr
-        , checkedAttr config
-        , disabledAttr config
+        , nativeCheckedAttr config
+        , nativeDisabledAttr config
         ]
         []
 
@@ -81,13 +97,13 @@ radioTypeAttr =
     Html.Attributes.type_ "radio"
 
 
-checkedAttr : Config msg -> Html.Attribute msg
-checkedAttr { checked } =
+nativeCheckedAttr : Config msg -> Html.Attribute msg
+nativeCheckedAttr { checked } =
     Html.Attributes.checked checked
 
 
-disabledAttr : Config msg -> Html.Attribute msg
-disabledAttr { disabled } =
+nativeDisabledAttr : Config msg -> Html.Attribute msg
+nativeDisabledAttr { disabled } =
     Html.Attributes.disabled disabled
 
 

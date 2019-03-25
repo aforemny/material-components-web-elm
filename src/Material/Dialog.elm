@@ -2,17 +2,14 @@ module Material.Dialog exposing (Config, Content, dialog, dialogConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
-
-
-
--- TODO: noScrim config?
--- TODO: onClose config?
--- TODO: dialog w/o title?
+import Html.Events
+import Json.Decode as Decode
 
 
 type alias Config msg =
     { open : Bool
     , additionalAttributes : List (Html.Attribute msg)
+    , onClose : Maybe msg
     }
 
 
@@ -20,11 +17,12 @@ dialogConfig : Config msg
 dialogConfig =
     { open = False
     , additionalAttributes = []
+    , onClose = Nothing
     }
 
 
 type alias Content msg =
-    { title : String
+    { title : Maybe String
     , content : List (Html msg)
     , actions : List (Html msg)
     }
@@ -35,12 +33,13 @@ dialog config content =
     Html.node "mdc-dialog"
         (List.filterMap identity
             [ rootCs
-            , openCs config
+            , openAttr config
             , roleAttr
             , ariaModalAttr
+            , closeHandler config
             ]
         )
-        [ surfaceElt content
+        [ containerElt content
         , scrimElt
         ]
 
@@ -50,10 +49,10 @@ rootCs =
     Just (class "mdc-dialog")
 
 
-openCs : Config msg -> Maybe (Html.Attribute msg)
-openCs { open } =
+openAttr : Config msg -> Maybe (Html.Attribute msg)
+openAttr { open } =
     if open then
-        Just (class "mdc-dialog--open")
+        Just (Html.Attributes.attribute "open" "")
 
     else
         Nothing
@@ -67,6 +66,16 @@ roleAttr =
 ariaModalAttr : Maybe (Html.Attribute msg)
 ariaModalAttr =
     Just (Html.Attributes.attribute "aria-modal" "true")
+
+
+closeHandler : Config msg -> Maybe (Html.Attribute msg)
+closeHandler { onClose } =
+    Maybe.map (Html.Events.on "MDCDialog:close" << Decode.succeed) onClose
+
+
+containerElt : Content msg -> Html msg
+containerElt content =
+    Html.div [ class "mdc-dialog__container" ] [ surfaceElt content ]
 
 
 surfaceElt : Content msg -> Html msg
@@ -83,7 +92,12 @@ surfaceElt content =
 
 titleElt : Content msg -> Maybe (Html msg)
 titleElt { title } =
-    Just (Html.div [ class "mdc-dialog__title" ] [ text title ])
+    case title of
+        Just title_ ->
+            Just (Html.div [ class "mdc-dialog__title" ] [ text title_ ])
+
+        Nothing ->
+            Nothing
 
 
 contentElt : Content msg -> Maybe (Html msg)

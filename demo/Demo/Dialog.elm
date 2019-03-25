@@ -4,7 +4,7 @@ import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
-import Html.Attributes
+import Html.Attributes exposing (class, style)
 import Html.Events
 import Material.Button as Button exposing (button, buttonConfig)
 import Material.Dialog as Dialog exposing (dialog, dialogConfig)
@@ -43,24 +43,21 @@ update lift msg model =
 
 heroDialog : (Msg -> m) -> String -> Model -> Html m
 heroDialog lift index model =
-    dialog
-        { dialogConfig
-            | open = True
-            , additionalAttributes =
-                [ Html.Attributes.style "position" "relative"
-                , Html.Attributes.style "width" "320px"
-                , Html.Attributes.style "z-index" "auto"
+    Html.div
+        [ class "mdc-dialog mdc-dialog--open"
+        , style "position" "relative"
+        ]
+        [ Html.div
+            [ class "mdc-dialog__surface" ]
+            [ Html.div [ class "mdc-dialog__title" ] [ text "Get this party started?" ]
+            , Html.div [ class "mdc-dialog__content" ]
+                [ text "Turn up the jams and have a good time." ]
+            , Html.div [ class "mdc-dialog__actions" ]
+                [ button buttonConfig "Decline"
+                , button buttonConfig "Accept"
                 ]
-        }
-        { title = "Get this party started?"
-        , content =
-            [ text "Turn up the jams and have a good time."
             ]
-        , actions =
-            [ button buttonConfig "Decline"
-            , button buttonConfig "Accept"
-            ]
-        }
+        ]
 
 
 alertDialog : (Msg -> m) -> String -> Model -> Html m
@@ -68,10 +65,9 @@ alertDialog lift index model =
     dialog
         { dialogConfig
             | open = model.openDialog == Just index
-
-            -- TODO: onClose = Just (lift Close)
+            , onClose = Just (lift Close)
         }
-        { title = ""
+        { title = Nothing
         , content =
             [ text "Discard draft?" ]
         , actions =
@@ -86,10 +82,9 @@ simpleDialog lift index model =
     dialog
         { dialogConfig
             | open = model.openDialog == Just index
-
-            -- TODO: onClose = Just (lift Close)
+            , onClose = Just (lift Close)
         }
-        { title = "Select an account"
+        { title = Just "Select an account"
         , content =
             [ list { listConfig | avatarList = True }
                 [ listItem
@@ -145,10 +140,9 @@ confirmationDialog lift index model =
     dialog
         { dialogConfig
             | open = model.openDialog == Just index
-
-            -- TODO: onClose = Just (lift Close)
+            , onClose = Just (lift Close)
         }
-        { title = "Phone ringtone"
+        { title = Just "Phone ringtone"
         , content =
             [ list { listConfig | avatarList = True }
                 [ listItem listItemConfig
@@ -177,10 +171,9 @@ scrollableDialog lift index model =
     dialog
         { dialogConfig
             | open = model.openDialog == Just index
-
-            -- TODO: onClose = Just (lift Close)
+            , onClose = Just (lift Close)
         }
-        { title = "The Wonderful Wizard of Oz"
+        { title = Just "The Wonderful Wizard of Oz"
         , content =
             [ Html.p []
                 [ text """

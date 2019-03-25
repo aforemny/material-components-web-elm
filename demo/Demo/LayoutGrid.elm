@@ -15,7 +15,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Json
-import Material.LayoutGrid as LayoutGrid exposing (layoutGrid)
+import Material.LayoutGrid as LayoutGrid exposing (layoutGrid, layoutGridCell, layoutGridInner)
 import Material.Typography as Typography
 
 
@@ -50,7 +50,7 @@ demoGrid options =
 
 demoCell : List (Html.Attribute m) -> Html m
 demoCell options =
-    LayoutGrid.cell
+    layoutGridCell
         (Html.Attributes.style "background" "rgba(0,0,0,.2)"
             :: Html.Attributes.style "height" "100px"
             :: options
@@ -60,19 +60,21 @@ demoCell options =
 
 heroGrid : Html m
 heroGrid =
-    demoGrid [] (List.repeat 3 (demoCell []))
+    demoGrid [] [ layoutGridInner [] (List.repeat 3 (demoCell [])) ]
 
 
 columnsGrid : Html m
 columnsGrid =
     demoGrid []
-        [ demoCell [ LayoutGrid.span6 ]
-        , demoCell [ LayoutGrid.span3 ]
-        , demoCell [ LayoutGrid.span2 ]
-        , demoCell [ LayoutGrid.span1 ]
-        , demoCell [ LayoutGrid.span3 ]
-        , demoCell [ LayoutGrid.span1 ]
-        , demoCell [ LayoutGrid.span8 ]
+        [ layoutGridInner []
+            [ demoCell [ LayoutGrid.span6 ]
+            , demoCell [ LayoutGrid.span3 ]
+            , demoCell [ LayoutGrid.span2 ]
+            , demoCell [ LayoutGrid.span1 ]
+            , demoCell [ LayoutGrid.span3 ]
+            , demoCell [ LayoutGrid.span1 ]
+            , demoCell [ LayoutGrid.span8 ]
+            ]
         ]
 
 
@@ -82,9 +84,11 @@ leftAlignedGrid =
         [ LayoutGrid.alignLeft
         , Html.Attributes.style "max-width" "800px"
         ]
-        [ demoCell []
-        , demoCell []
-        , demoCell []
+        [ layoutGridInner []
+            [ demoCell []
+            , demoCell []
+            , demoCell []
+            ]
         ]
 
 
@@ -94,20 +98,27 @@ rightAlignedGrid =
         [ LayoutGrid.alignRight
         , Html.Attributes.style "max-width" "800px"
         ]
-        [ demoCell []
-        , demoCell []
-        , demoCell []
+        [ layoutGridInner [] (List.repeat 3 (demoCell []))
         ]
 
 
 cellAlignmentGrid : Html m
 cellAlignmentGrid =
+    let
+        innerHeight =
+            [ Html.Attributes.style "min-height" "200px" ]
+
+        cellHeight =
+            Html.Attributes.style "min-height" "50px"
+    in
     demoGrid
         [ Html.Attributes.style "min-height" "200px"
         ]
-        [ demoCell [ LayoutGrid.alignTop, Html.Attributes.style "min-height" "50px" ]
-        , demoCell [ LayoutGrid.alignMiddle, Html.Attributes.style "min-height" "50px" ]
-        , demoCell [ LayoutGrid.alignBottom, Html.Attributes.style "min-height" "50px" ]
+        [ layoutGridInner innerHeight
+            [ demoCell [ LayoutGrid.alignTop, cellHeight ]
+            , demoCell [ LayoutGrid.alignMiddle, cellHeight ]
+            , demoCell [ LayoutGrid.alignBottom, cellHeight ]
+            ]
         ]
 
 

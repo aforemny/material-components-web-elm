@@ -5,9 +5,9 @@ module Material.LayoutGrid exposing
     , alignMiddle
     , alignRight
     , alignTop
-    , cell
-    , inner
     , layoutGrid
+    , layoutGridCell
+    , layoutGridInner
     , span1
     , span10
     , span11
@@ -23,7 +23,7 @@ module Material.LayoutGrid exposing
     )
 
 import Html exposing (Html, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style)
 
 
 type Device
@@ -34,16 +34,18 @@ type Device
 
 layoutGrid : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 layoutGrid attributes nodes =
-    Html.node "mdc-layout-grid" (class "mdc-layout-grid" :: attributes) nodes
+    Html.node "mdc-layout-grid"
+        (class "mdc-layout-grid" :: style "display" "block" :: attributes)
+        nodes
 
 
-inner : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-inner attributes nodes =
+layoutGridInner : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+layoutGridInner attributes nodes =
     Html.div (class "mdc-layout-grid__inner" :: attributes) nodes
 
 
-cell : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-cell attributes nodes =
+layoutGridCell : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+layoutGridCell attributes nodes =
     Html.div (class "mdc-layout-grid__cell" :: attributes) nodes
 
 
@@ -54,17 +56,17 @@ alignBottom =
 
 alignLeft : Html.Attribute msg
 alignLeft =
-    class "mdc-layout-grid__cell--align-left"
+    class "mdc-layout-grid--align-left"
+
+
+alignRight : Html.Attribute msg
+alignRight =
+    class "mdc-layout-grid--align-right"
 
 
 alignMiddle : Html.Attribute msg
 alignMiddle =
     class "mdc-layout-grid__cell--align-middle"
-
-
-alignRight : Html.Attribute msg
-alignRight =
-    class "mdc-layout-grid__cell--align-right"
 
 
 alignTop : Html.Attribute msg
@@ -74,7 +76,7 @@ alignTop =
 
 span : Int -> Html.Attribute msg
 span n =
-    class ("mdc-layout-grid--span-" ++ String.fromInt n)
+    class ("mdc-layout-grid__cell--span-" ++ String.fromInt n)
 
 
 span1 : Html.Attribute msg

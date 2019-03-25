@@ -28,8 +28,9 @@ switch config =
         (List.filterMap identity
             [ rootCs
             , checkedCs config
+            , checkedAttr config
             , disabledCs config
-            , clickHandler config
+            , disabledAttr config
             ]
             ++ config.additionalAttributes
         )
@@ -52,6 +53,24 @@ checkedCs { checked } =
         Nothing
 
 
+checkedAttr : Config msg -> Maybe (Html.Attribute msg)
+checkedAttr { checked } =
+    if checked then
+        Just (Html.Attributes.attribute "checked" "")
+
+    else
+        Nothing
+
+
+disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr { disabled } =
+    if disabled then
+        Just (Html.Attributes.attribute "disabled" "")
+
+    else
+        Nothing
+
+
 disabledCs : Config msg -> Maybe (Html.Attribute msg)
 disabledCs { disabled } =
     if disabled then
@@ -59,11 +78,6 @@ disabledCs { disabled } =
 
     else
         Nothing
-
-
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
-clickHandler config =
-    Maybe.map Html.Events.onClick config.onClick
 
 
 trackElt : Html msg
@@ -84,35 +98,43 @@ thumbElt config =
 nativeControlElt : Config msg -> Html msg
 nativeControlElt config =
     Html.input
-        [ nativeControlCs
-        , checkboxTypeAttr
-        , switchRoleAttr
-        , checkedAttr config
-        , disabledAttr config
-        ]
+        (List.filterMap identity
+            [ nativeControlCs
+            , checkboxTypeAttr
+            , switchRoleAttr
+            , nativeCheckedAttr config
+            , nativeDisabledAttr config
+            , clickHandler config
+            ]
+        )
         []
 
 
-checkedAttr : Config msg -> Html.Attribute msg
-checkedAttr { checked } =
-    Html.Attributes.checked checked
-
-
-nativeControlCs : Html.Attribute msg
+nativeControlCs : Maybe (Html.Attribute msg)
 nativeControlCs =
-    class "mdc-switch__native-control"
+    Just (class "mdc-switch__native-control")
 
 
-switchRoleAttr : Html.Attribute msg
+switchRoleAttr : Maybe (Html.Attribute msg)
 switchRoleAttr =
-    Html.Attributes.attribute "role" "switch"
+    Just (Html.Attributes.attribute "role" "switch")
 
 
-checkboxTypeAttr : Html.Attribute msg
+checkboxTypeAttr : Maybe (Html.Attribute msg)
 checkboxTypeAttr =
-    Html.Attributes.type_ "checkbox"
+    Just (Html.Attributes.type_ "checkbox")
 
 
-disabledAttr : Config msg -> Html.Attribute msg
-disabledAttr { disabled } =
-    Html.Attributes.disabled disabled
+nativeCheckedAttr : Config msg -> Maybe (Html.Attribute msg)
+nativeCheckedAttr { checked } =
+    Just (Html.Attributes.checked checked)
+
+
+nativeDisabledAttr : Config msg -> Maybe (Html.Attribute msg)
+nativeDisabledAttr { disabled } =
+    Just (Html.Attributes.disabled disabled)
+
+
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler config =
+    Maybe.map Html.Events.onClick config.onClick

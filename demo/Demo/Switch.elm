@@ -35,22 +35,14 @@ update lift msg model =
             let
                 switches =
                     Dict.update index
-                        (\state ->
-                            Just <|
-                                case state of
-                                    Just True ->
-                                        False
-
-                                    _ ->
-                                        True
-                        )
+                        (\state -> Just (not (Maybe.withDefault False state)))
                         model.switches
             in
             ( { model | switches = switches }, Cmd.none )
 
 
-isOn : String -> Model -> Bool
-isOn index model =
+isChecked : String -> Model -> Bool
+isChecked index model =
     Dict.get index model.switches
         |> Maybe.withDefault False
 
@@ -64,7 +56,7 @@ heroSwitch lift model =
     formField formFieldConfig
         [ switch
             { switchConfig
-                | checked = isOn index model
+                | checked = isChecked index model
                 , onClick = Just (lift (Toggle index))
             }
         , Html.label [ Html.Attributes.for index ] [ text "off/on" ]
@@ -80,7 +72,7 @@ exampleSwitch lift model =
     formField formFieldConfig
         [ switch
             { switchConfig
-                | checked = isOn index model
+                | checked = isChecked index model
                 , onClick = Just (lift (Toggle index))
             }
         , Html.label [ Html.Attributes.for index ] [ text "off/on" ]

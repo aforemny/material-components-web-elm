@@ -6,7 +6,7 @@ import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
 import Material.Elevation as Elevation
-import Material.Ripple as Ripple exposing (ripple, rippleConfig)
+import Material.Ripple as Ripple exposing (ripple, rippleConfig, unboundedRipple)
 import Material.Typography as Typography
 
 
@@ -30,48 +30,40 @@ update lift msg model =
             ( model, Cmd.none )
 
 
-demoBox : (Msg -> m) -> String -> Model -> String -> Html m
-demoBox lift index model label =
-    Html.div
-        [ Ripple.rippleSurface
-        , Html.Attributes.style "display" "flex"
-        , Html.Attributes.style "align-items" "center"
-        , Html.Attributes.style "justify-content" "center"
-        , Html.Attributes.style "width" "200px"
-        , Html.Attributes.style "height" "100px"
-        , Html.Attributes.style "padding" "1rem"
-        , Html.Attributes.style "cursor" "pointer"
-        , Html.Attributes.style "user-select" "none"
-        , Html.Attributes.style "background-color" "#fff"
-        , Html.Attributes.style "overflow" "hidden"
-        , Elevation.z2
-        , Html.Attributes.tabindex 0
-        ]
-        [ text label
-        , ripple rippleConfig
-        ]
+demoBox : List (Html.Attribute msg)
+demoBox =
+    [ Html.Attributes.style "display" "flex"
+    , Html.Attributes.style "align-items" "center"
+    , Html.Attributes.style "justify-content" "center"
+    , Html.Attributes.style "width" "200px"
+    , Html.Attributes.style "height" "100px"
+    , Html.Attributes.style "padding" "1rem"
+    , Html.Attributes.style "cursor" "pointer"
+    , Html.Attributes.style "user-select" "none"
+    , Html.Attributes.style "background-color" "#fff"
+    , Html.Attributes.style "overflow" "hidden"
+    , Html.Attributes.style "position" "relative"
+    , Elevation.z2
+    , Html.Attributes.tabindex 0
+    ]
 
 
-demoIcon : (Msg -> m) -> String -> Model -> String -> Html m
-demoIcon lift index model icon =
-    Html.div
-        [ Ripple.rippleSurface
-        , Html.Attributes.class "material-icons"
-        , Html.Attributes.style "width" "24px"
-        , Html.Attributes.style "height" "24px"
-        , Html.Attributes.style "padding" "12px"
-        , Html.Attributes.style "border-radius" "50%"
-        ]
-        [ text icon
-        , ripple { rippleConfig | unbounded = True }
-        ]
+demoIcon : List (Html.Attribute msg)
+demoIcon =
+    [ Html.Attributes.class "material-icons"
+    , Html.Attributes.style "width" "24px"
+    , Html.Attributes.style "height" "24px"
+    , Html.Attributes.style "padding" "12px"
+    , Html.Attributes.style "border-radius" "50%"
+    , Html.Attributes.style "position" "relative"
+    ]
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
     page.body "Ripple"
         "Ripples are visual representations used to communicate the status of a component or interactive element."
-        [ Hero.view [] [ demoBox lift "ripple-hero-ripple" model "Click here!" ]
+        [ Hero.view [] [ Html.div demoBox [ ripple rippleConfig, text "Click here!" ] ]
         , Html.h2
             [ Typography.headline6
             , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
@@ -98,8 +90,24 @@ view lift page model =
             }
         , Page.demos
             [ Html.h3 [ Typography.subtitle1 ] [ text "Bounded Ripple" ]
-            , demoBox lift "ripple-bounded-ripple" model "Interact with me!"
+            , Html.div demoBox
+                [ ripple rippleConfig
+                , text "Interact with me!"
+                ]
             , Html.h3 [ Typography.subtitle1 ] [ text "Unbounded Ripple" ]
-            , demoIcon lift "ripple-unbounded-ripple" model "favorite"
+            , Html.div demoIcon
+                [ unboundedRipple rippleConfig
+                , text "favorite"
+                ]
+            , Html.h3 [ Typography.subtitle1 ] [ text "Theme Color: Primary" ]
+            , Html.div demoBox
+                [ ripple { rippleConfig | color = Just Ripple.PrimaryColor }
+                , text "Primary"
+                ]
+            , Html.h3 [ Typography.subtitle1 ] [ text "Theme Color: Secondary" ]
+            , Html.div demoBox
+                [ ripple { rippleConfig | color = Just Ripple.AccentColor }
+                , text "Secondary"
+                ]
             ]
         ]

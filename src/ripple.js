@@ -7,13 +7,13 @@ class MdcRipple extends HTMLElement {
   }
 
   connectedCallback() {
-    this.MDCRipple = new MDCRipple(this);
+    this.mdcRipple = new MDCRipple(this);
   }
 
   disconnectedCallback() {
-    if (typeof this.MDCRipple !== "undefined") {
-      this.MDCRipple.destroy();
-      delete this.MDCRipple;
+    if (this.mdcRipple) {
+      this.mdcRipple.destroy();
+      delete this.mdcRipple;
     }
   }
 };

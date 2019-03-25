@@ -8,11 +8,11 @@ import Html.Attributes
 import Html.Events
 import Material.Icon as Icon exposing (icon, iconConfig)
 import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
+import Material.Typography as Typography
 
 
 type alias Model =
-    { examples : Dict String Example
-    }
+    {}
 
 
 type alias Example =
@@ -26,61 +26,40 @@ defaultExample =
 
 defaultModel : Model
 defaultModel =
-    { examples = Dict.empty
-    }
+    {}
 
 
 type Msg
-    = ExampleMsg String ExampleMsg
-
-
-type ExampleMsg
-    = OpenDrawer
+    = NoOp
 
 
 update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
 update lift msg model =
     case msg of
-        ExampleMsg index msg_ ->
-            let
-                example =
-                    Dict.get index model.examples
-                        |> Maybe.withDefault defaultExample
-                        |> updateExample msg_
-
-                examples =
-                    Dict.insert index example model.examples
-            in
-            ( { model | examples = examples }, Cmd.none )
-
-
-updateExample : ExampleMsg -> Example -> Example
-updateExample msg model =
-    case msg of
-        OpenDrawer ->
-            model
+        NoOp ->
+            ( model, Cmd.none )
 
 
 view : (Msg -> m) -> Page m -> Maybe TopAppBarPage -> Model -> Html m
 view lift page topAppBarPage model =
     case topAppBarPage of
         Just Url.StandardTopAppBar ->
-            standardTopAppBar lift "top-app-bar-standard" model
+            standardTopAppBar
 
         Just Url.FixedTopAppBar ->
-            fixedTopAppBar lift "top-app-bar-fixed" model
+            fixedTopAppBar
 
         Just Url.DenseTopAppBar ->
-            denseTopAppBar lift "top-app-bar-dense" model
+            denseTopAppBar
 
         Just Url.ProminentTopAppBar ->
-            prominentTopAppBar lift "top-app-bar-prominent" model
+            prominentTopAppBar
 
         Just Url.ShortTopAppBar ->
-            shortTopAppBar lift "top-app-bar-short" model
+            shortTopAppBar
 
         Just Url.ShortCollapsedTopAppBar ->
-            shortCollapsedTopAppBar lift "top-app-bar-short-collapsed" model
+            shortCollapsedTopAppBar
 
         Nothing ->
             page.body "Top App Bar"
@@ -129,336 +108,293 @@ view lift page topAppBarPage model =
                         ]
                     ]
                 , Html.div
-                    [ Html.Attributes.class "mdc-topappbar-demo"
+                    [ Html.Attributes.style "display" "-ms-flexbox"
                     , Html.Attributes.style "display" "flex"
-                    , Html.Attributes.style "flex-flow" "row wrap"
+                    , Html.Attributes.style "-ms-flex-wrap" "wrap"
+                    , Html.Attributes.style "flex-wrap" "wrap"
+                    , Html.Attributes.style "min-height" "200px"
                     ]
-                    [ iframe lift model "Standard TopAppBar" Url.StandardTopAppBar
-                    , iframe lift model "Fixed TopAppBar" Url.FixedTopAppBar
-                    , iframe lift model "Dense TopAppBar" Url.DenseTopAppBar
-                    , iframe lift model "Prominent TopAppBar" Url.ProminentTopAppBar
-                    , iframe lift model "Short TopAppBar" Url.ShortTopAppBar
-                    , iframe lift
-                        model
-                        "Short - Always Closed TopAppBar"
-                        Url.ShortCollapsedTopAppBar
+                    [ iframe "Standard" Url.StandardTopAppBar
+                    , iframe "Fixed" Url.FixedTopAppBar
+                    , iframe "Dense" Url.DenseTopAppBar
+                    , iframe "Prominent" Url.ProminentTopAppBar
+                    , iframe "Short" Url.ShortTopAppBar
+                    , iframe "Short - Always Collapsed" Url.ShortCollapsedTopAppBar
                     ]
                 ]
 
 
-iframe : (Msg -> m) -> Model -> String -> TopAppBarPage -> Html m
-iframe lift model title topAppBarPage =
+iframe : String -> TopAppBarPage -> Html m
+iframe title topAppBarPage =
     let
         url =
-            (++) "https://aforemny.github.io/elm-mdc/" <|
-                Url.toString (Url.TopAppBar (Just topAppBarPage))
+            Url.toString (Url.TopAppBar (Just topAppBarPage))
     in
     Html.div
-        [ Html.Attributes.style "display" "flex"
-        , Html.Attributes.style "flex-flow" "column"
-        , Html.Attributes.style "margin" "24px"
-        , Html.Attributes.style "width" "320px"
-        , Html.Attributes.style "height" "600px"
+        [ Html.Attributes.style "display" "inline-block"
+        , Html.Attributes.style "-ms-flex" "1 1 45%"
+        , Html.Attributes.style "flex" "1 1 45%"
+        , Html.Attributes.style "-ms-flex-pack" "distribute"
+        , Html.Attributes.style "justify-content" "space-around"
+        , Html.Attributes.style "min-height" "200px"
+        , Html.Attributes.style "min-width" "400px"
+        , Html.Attributes.style "padding" "15px"
         ]
-        [ Html.h2
-            [ Html.Attributes.class "demo-topappbar-example-heading"
-            , Html.Attributes.style "font-size" "24px"
-            , Html.Attributes.style "margin-bottom" "16px"
-            , Html.Attributes.style "font-family" "Roboto, sans-serif"
-            , Html.Attributes.style "font-size" "2.8125rem"
-            , Html.Attributes.style "line-height" "3rem"
-            , Html.Attributes.style "font-weight" "400"
-            , Html.Attributes.style "letter-spacing" "normal"
-            , Html.Attributes.style "text-transform" "inherit"
-            ]
-            [ Html.span
-                [ Html.Attributes.class "demo-topappbar-example-heading__text"
-                , Html.Attributes.style "flex-grow" "1"
-                , Html.Attributes.style "margin-right" "16px"
-                ]
-                [ text title ]
-            ]
-        , Html.p []
+        [ Html.div []
             [ Html.a
                 [ Html.Attributes.href url
                 , Html.Attributes.target "_blank"
                 ]
-                [ text "View in separate window"
+                [ Html.h3 [ Typography.subtitle1 ] [ text title ]
                 ]
             ]
         , Html.iframe
-            [ Html.Attributes.src url
-            , Html.Attributes.style "border" "1px solid #eee"
-            , Html.Attributes.style "height" "500px"
-            , Html.Attributes.style "font-size" "16px"
-            , Html.Attributes.style "overflow" "scroll"
+            [ Html.Attributes.style "width" "100%"
+            , Html.Attributes.style "height" "200px"
+            , Html.Attributes.src url
             ]
             []
         ]
 
 
-topAppBarWrapper :
-    (Msg -> m)
-    -> String
-    -> Model
-    -> List (Html.Attribute m)
-    -> Html m
-    -> Html m
-topAppBarWrapper lift index model options topappbar =
+topAppBarWrapper : List (Html.Attribute m) -> Html m -> Html m
+topAppBarWrapper fixedAdjust topAppBar =
+    Html.div
+        [ Html.Attributes.class "top-app-bar__frame"
+        , Html.Attributes.style "height" "200vh"
+        , Typography.typography
+        ]
+        [ topAppBar
+        , body fixedAdjust
+        ]
+
+
+standardTopAppBar : Html m
+standardTopAppBar =
     let
-        state =
-            Dict.get index model.examples
-                |> Maybe.withDefault defaultExample
+        standardConfig =
+            topAppBarConfig
     in
-    Html.div
-        [ Html.Attributes.class "mdc-topappbar-demo"
+    topAppBarWrapper
+        [ TopAppBar.fixedAdjust standardConfig
         ]
-        [ topappbar
-        , body options lift index model
-        ]
-
-
-standardTopAppBar : (Msg -> m) -> String -> Model -> Html m
-standardTopAppBar lift index model =
-    topAppBarWrapper lift
-        index
-        model
-        [-- TODO: TopAppBar.fixedAdjust
-        ]
-        (topAppBar topAppBarConfig
-            [ TopAppBar.section
-                [ TopAppBar.alignStart
-                ]
-                [ icon
-                    { iconConfig
-                        | additionalAttributes = [ TopAppBar.navigationIcon ]
-                    }
-                    "menu"
-                , Html.span [ TopAppBar.title ] [ text "Title" ]
-                ]
-            , TopAppBar.section
-                [ TopAppBar.alignEnd
-                ]
-                [ icon
-                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "file_download"
-                , icon
-                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "print"
-                , icon
-                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "bookmark"
+        (topAppBar standardConfig
+            [ TopAppBar.row []
+                [ TopAppBar.section
+                    [ TopAppBar.alignStart
+                    ]
+                    [ icon
+                        { iconConfig
+                            | additionalAttributes = [ TopAppBar.navigationIcon ]
+                        }
+                        "menu"
+                    , Html.span [ TopAppBar.title ] [ text "Standard" ]
+                    ]
+                , TopAppBar.section
+                    [ TopAppBar.alignEnd
+                    ]
+                    [ icon
+                        { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "file_download"
+                    , icon
+                        { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "print"
+                    , icon
+                        { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "bookmark"
+                    ]
                 ]
             ]
         )
 
 
-fixedTopAppBar : (Msg -> m) -> String -> Model -> Html m
-fixedTopAppBar lift index model =
-    topAppBarWrapper lift
-        index
-        model
-        [-- TODO: TopAppBar.fixedAdjust
+fixedTopAppBar : Html m
+fixedTopAppBar =
+    let
+        fixedConfig =
+            { topAppBarConfig | fixed = True }
+    in
+    topAppBarWrapper
+        [ TopAppBar.fixedAdjust fixedConfig
         ]
-        (topAppBar { topAppBarConfig | fixed = True }
-            [ TopAppBar.section
-                [ TopAppBar.alignStart
-                ]
-                [ icon
-                    { iconConfig
-                        | additionalAttributes = [ TopAppBar.navigationIcon ]
-                    }
-                    "menu"
-                , Html.span [ TopAppBar.title ] [ text "Title" ]
-                ]
-            , TopAppBar.section
-                [ TopAppBar.alignEnd
-                ]
-                [ icon
-                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "file_download"
-                , icon
-                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "print"
-                , icon
-                    { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "bookmark"
+        (topAppBar fixedConfig
+            [ TopAppBar.row []
+                [ TopAppBar.section
+                    [ TopAppBar.alignStart
+                    ]
+                    [ icon
+                        { iconConfig
+                            | additionalAttributes = [ TopAppBar.navigationIcon ]
+                        }
+                        "menu"
+                    , Html.span [ TopAppBar.title ] [ text "Fixed" ]
+                    ]
+                , TopAppBar.section
+                    [ TopAppBar.alignEnd
+                    ]
+                    [ icon
+                        { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "file_download"
+                    , icon
+                        { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "print"
+                    , icon
+                        { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "bookmark"
+                    ]
                 ]
             ]
         )
 
 
-menuTopAppBar : (Msg -> m) -> String -> Model -> Html m
-menuTopAppBar lift index model =
-    topAppBarWrapper lift
-        index
-        model
-        [-- TODO: TopAppBar.fixedAdjust
+denseTopAppBar : Html m
+denseTopAppBar =
+    let
+        denseConfig =
+            { topAppBarConfig | dense = True }
+    in
+    topAppBarWrapper
+        [ TopAppBar.fixedAdjust denseConfig
         ]
-        (topAppBar { topAppBarConfig | fixed = True }
-            [ TopAppBar.section
-                [ TopAppBar.alignStart
-                ]
-                [ icon
-                    { iconConfig
-                        | additionalAttributes = [ TopAppBar.navigationIcon ]
-                    }
-                    "menu"
-                , Html.span [ TopAppBar.title ] [ text "Title" ]
-                ]
-            , TopAppBar.section
-                [ TopAppBar.alignEnd
-                ]
-                [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "file_download"
-                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "print"
-                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "bookmark"
+        (topAppBar denseConfig
+            [ TopAppBar.row []
+                [ TopAppBar.section
+                    [ TopAppBar.alignStart
+                    ]
+                    [ icon
+                        { iconConfig
+                            | additionalAttributes = [ TopAppBar.navigationIcon ]
+                        }
+                        "menu"
+                    , Html.span [ TopAppBar.title ] [ text "Dense" ]
+                    ]
+                , TopAppBar.section
+                    [ TopAppBar.alignEnd
+                    ]
+                    [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "file_download"
+                    , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "print"
+                    , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "bookmark"
+                    ]
                 ]
             ]
         )
 
 
-
--- , viewDrawer
-
-
-denseTopAppBar : (Msg -> m) -> String -> Model -> Html m
-denseTopAppBar lift index model =
-    topAppBarWrapper lift
-        index
-        model
-        [-- TODO: TopAppBar.fixedAdjust
+prominentTopAppBar : Html m
+prominentTopAppBar =
+    let
+        prominentConfig =
+            { topAppBarConfig | variant = TopAppBar.Prominent }
+    in
+    topAppBarWrapper
+        [ TopAppBar.fixedAdjust prominentConfig
         ]
-        (topAppBar { topAppBarConfig | dense = True }
-            [ TopAppBar.section
-                [ TopAppBar.alignStart
-                ]
-                [ icon
-                    { iconConfig
-                        | additionalAttributes = [ TopAppBar.navigationIcon ]
-                    }
-                    "menu"
-                , Html.span [ TopAppBar.title ] [ text "Title" ]
-                ]
-            , TopAppBar.section
-                [ TopAppBar.alignEnd
-                ]
-                [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "file_download"
-                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "print"
-                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "bookmark"
+        (topAppBar prominentConfig
+            [ TopAppBar.row []
+                [ TopAppBar.section
+                    [ TopAppBar.alignStart
+                    ]
+                    [ icon
+                        { iconConfig
+                            | additionalAttributes = [ TopAppBar.navigationIcon ]
+                        }
+                        "menu"
+                    , Html.span [ TopAppBar.title ] [ text "Prominent" ]
+                    ]
+                , TopAppBar.section
+                    [ TopAppBar.alignEnd
+                    ]
+                    [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "file_download"
+                    , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "print"
+                    , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "bookmark"
+                    ]
                 ]
             ]
         )
 
 
-prominentTopAppBar : (Msg -> m) -> String -> Model -> Html m
-prominentTopAppBar lift index model =
-    topAppBarWrapper lift
-        index
-        model
-        [-- TODO: TopAppBar.prominentFixedAdjust
+shortTopAppBar : Html m
+shortTopAppBar =
+    let
+        shortConfig =
+            { topAppBarConfig | variant = TopAppBar.Short }
+    in
+    topAppBarWrapper
+        [ TopAppBar.fixedAdjust shortConfig
         ]
-        (topAppBar { topAppBarConfig | variant = TopAppBar.Prominent }
-            [ TopAppBar.section
-                [ TopAppBar.alignStart
-                ]
-                [ icon
-                    { iconConfig
-                        | additionalAttributes = [ TopAppBar.navigationIcon ]
-                    }
-                    "menu"
-                , Html.span [ TopAppBar.title ] [ text "Title" ]
-                ]
-            , TopAppBar.section
-                [ TopAppBar.alignEnd
-                ]
-                [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "file_download"
-                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "print"
-                , icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "bookmark"
+        (topAppBar shortConfig
+            [ TopAppBar.row []
+                [ TopAppBar.section
+                    [ TopAppBar.alignStart
+                    ]
+                    [ icon
+                        { iconConfig
+                            | additionalAttributes = [ TopAppBar.navigationIcon ]
+                        }
+                        "menu"
+                    , Html.span [ TopAppBar.title ] [ text "Short" ]
+                    ]
+                , TopAppBar.section
+                    [ TopAppBar.alignEnd
+                    ]
+                    [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "file_download"
+                    ]
                 ]
             ]
         )
 
 
-shortTopAppBar : (Msg -> m) -> String -> Model -> Html m
-shortTopAppBar lift index model =
-    topAppBarWrapper lift
-        index
-        model
-        [-- TODO: TopAppBar.fixedAdjust
+shortCollapsedTopAppBar : Html m
+shortCollapsedTopAppBar =
+    let
+        shortCollapsedConfig =
+            { topAppBarConfig | variant = TopAppBar.ShortCollapsed }
+    in
+    topAppBarWrapper
+        [ TopAppBar.fixedAdjust shortCollapsedConfig
         ]
-        (topAppBar { topAppBarConfig | variant = TopAppBar.Short }
-            [ TopAppBar.section
-                [ TopAppBar.alignStart
-                ]
-                [ icon
-                    { iconConfig
-                        | additionalAttributes = [ TopAppBar.navigationIcon ]
-                    }
-                    "menu"
-                , Html.span [ TopAppBar.title ] [ text "Title" ]
-                ]
-            , TopAppBar.section
-                [ TopAppBar.alignEnd
-                ]
-                [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "file_download"
+        (topAppBar shortCollapsedConfig
+            [ TopAppBar.row []
+                [ TopAppBar.section
+                    [ TopAppBar.alignStart
+                    ]
+                    [ icon
+                        { iconConfig
+                            | additionalAttributes = [ TopAppBar.navigationIcon ]
+                        }
+                        "menu"
+                    ]
+                , TopAppBar.section
+                    [ TopAppBar.alignEnd
+                    ]
+                    [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
+                        "file_download"
+                    ]
                 ]
             ]
         )
 
 
-shortCollapsedTopAppBar : (Msg -> m) -> String -> Model -> Html m
-shortCollapsedTopAppBar lift index model =
-    topAppBarWrapper lift
-        index
-        model
-        [-- TODO: TopAppBar.fixedAdjust
-        ]
-        (topAppBar { topAppBarConfig | variant = TopAppBar.ShortCollapsed }
-            [ TopAppBar.section
-                [ TopAppBar.alignStart
-                ]
-                [ icon
-                    { iconConfig
-                        | additionalAttributes = [ TopAppBar.navigationIcon ]
-                    }
-                    "menu"
-                , Html.span [ TopAppBar.title ] [ text "Title" ]
-                ]
-            , TopAppBar.section
-                [ TopAppBar.alignEnd
-                ]
-                [ icon { iconConfig | additionalAttributes = [ TopAppBar.actionItem ] }
-                    "file_download"
-                ]
-            ]
-        )
-
-
-body : List (Html.Attribute m) -> (Msg -> m) -> String -> Model -> Html m
-body options lift index model =
-    Html.div
-        options
-        (List.repeat 18 <|
+body : List (Html.Attribute m) -> Html m
+body fixedAdjust =
+    Html.div fixedAdjust
+        (List.repeat 4 <|
             Html.p []
                 [ text """
-Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac
-turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor
-sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies
-mi vitae est. Pellentesque habitant morbi tristique senectus et netus et
-malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae,
-ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas
-semper. Aenean ultricies mi vitae est.
-    """
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum.
+"""
                 ]
         )
 

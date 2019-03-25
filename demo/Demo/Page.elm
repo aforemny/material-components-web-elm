@@ -59,16 +59,10 @@ toolbar idx navigate url title =
                 ]
             , Html.span
                 [ TopAppBar.title
-                , Html.Attributes.class "catalog-top-app-bar__title"
-                , Html.Attributes.style "margin-left"
-                    (if url == Url.StartPage then
-                        "8px"
-
-                     else
-                        "24"
-                    )
+                , Html.Attributes.style "text-transform" "uppercase"
+                , Html.Attributes.style "font-weight" "400"
                 ]
-                [ text title ]
+                [ text "Material Components for Elm" ]
             ]
         ]
 

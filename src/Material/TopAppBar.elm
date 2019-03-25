@@ -148,4 +148,4 @@ fixedAdjust { variant, dense } =
             class "mdc-top-app-bar--dense-fixed-adjust"
 
         _ ->
-            class "mdc-top-app-bar-fixed-adjust"
+            class "mdc-top-app-bar--fixed-adjust"

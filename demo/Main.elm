@@ -35,7 +35,7 @@ import Demo.Typography
 import Demo.Url exposing (TopAppBarPage(..))
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.TopAppBar as TopAppBar
+import Material.TopAppBar as TopAppBar exposing (topAppBarConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (..)
 import Url
@@ -387,7 +387,7 @@ view_ model =
                             , Html.Attributes.style "margin-right" "auto"
                             ]
                             (Html.div
-                                [-- TODO: TopAppBar.fixedAdjust
+                                [ TopAppBar.fixedAdjust topAppBarConfig
                                 ]
                                 [ Page.header title
                                 , Html.p [ Typography.body1 ] [ text intro ]

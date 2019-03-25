@@ -7,15 +7,15 @@ class MdcTopAppBar extends HTMLElement {
   }
 
   connectedCallback() {
-    this.MDCTopAppBar = new MDCTopAppBar(this);
+    this.mdcComponent = new MDCTopAppBar(this);
   }
 
   disconnectedCallback() {
-    if (typeof this.MDCTopAppBar !== "undefined") {
-      this.MDCTopAppBar.destroy();
-      delete this.MDCTopAppBar;
+    if (typeof this.mdcComponent !== "undefined") {
+      this.mdcComponent.destroy();
+      delete this.mdcComponent;
     }
   }
 };
 
-customElements.define("mdc-checkbox", MdcCheckbox);
+customElements.define("mdc-top-app-bar", MdcTopAppBar);

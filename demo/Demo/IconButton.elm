@@ -7,7 +7,7 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.IconButton as IconButton exposing (iconButton, iconButtonConfig)
+import Material.IconButton as IconButton exposing (iconButton, iconButtonConfig, iconToggle, iconToggleConfig)
 import Material.Typography as Typography
 
 
@@ -49,14 +49,14 @@ view lift page model =
     page.body "Icon Button"
         "Icons are appropriate for buttons that allow a user to take actions or make a selection, such as adding or removing a star to an item."
         [ Hero.view []
-            [ iconButton
-                { iconButtonConfig | onClick = Just (lift (Toggle "hero-button")) }
-                (if isOn "hero-button" model then
-                    "favorite_border"
-
-                 else
-                    "favorite"
-                )
+            [ iconToggle
+                { iconToggleConfig
+                    | on = isOn "icon-button-hero" model
+                    , onClick = Just (lift (Toggle "icon-button-hero"))
+                }
+                { off = "favorite_border"
+                , on = "favorite"
+                }
             ]
         , Html.h2
             [ Typography.headline6
@@ -88,13 +88,13 @@ view lift page model =
                 { iconButtonConfig | onClick = Just (lift (Toggle "icon-button")) }
                 "wifi"
             , Html.h3 [ Typography.subtitle1 ] [ text "Icon Button" ]
-            , iconButton
-                { iconButtonConfig | onClick = Just (lift (Toggle "icon-button-toggle")) }
-                (if isOn "icon-button-toggle" model then
-                    "favorite_border"
-
-                 else
-                    "favorite"
-                )
+            , iconToggle
+                { iconToggleConfig
+                    | on = isOn "icon-button-toggle" model
+                    , onClick = Just (lift (Toggle "icon-button-toggle"))
+                }
+                { off = "favorite_border"
+                , on = "favorite"
+                }
             ]
         ]

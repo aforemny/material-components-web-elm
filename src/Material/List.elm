@@ -1,29 +1,26 @@
 module Material.List exposing
     ( Config
-    , DividerConfig
-    , divider
-    , dividerConfig
-    , graphic
-    , group
-    , groupDivider
-    , groupSubheader
+    , ListItemConfig
+    , ListItemDividerConfig
     , list
     , listConfig
+    , listGroup
+    , listGroupDivider
+    , listGroupSubheader
     , listItem
     , listItemConfig
-    , meta
-    , primaryText
-    , secondaryText
-    , text
+    , listItemDivider
+    , listItemDividerConfig
+    , listItemGraphic
+    , listItemMeta
+    , listItemPrimaryText
+    , listItemSecondaryText
+    , listItemText
     )
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
-
-
-
--- TODO: Rename divider to listDivider, and dividerConfig to listDividerConfig
--- TODO: Rename groupDivider to listGroupDivider
+import Html.Events
 
 
 type alias Config msg =
@@ -106,6 +103,7 @@ type alias ListItemConfig msg =
     , selected : Bool
     , activated : Bool
     , additionalAttributes : List (Html.Attribute msg)
+    , onClick : Maybe msg
     }
 
 
@@ -115,17 +113,20 @@ listItemConfig =
     , selected = False
     , activated = False
     , additionalAttributes = []
+    , onClick = Nothing
     }
 
 
 listItem : ListItemConfig msg -> List (Html msg) -> Html msg
 listItem config nodes =
-    Html.li
+    Html.node "mdc-list-item"
         (List.filterMap identity
             [ listItemCs
             , disabledCs config
             , selectedCs config
             , activatedCs config
+            , ariaSelectedAttr config
+            , clickHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -164,51 +165,65 @@ activatedCs { activated } =
         Nothing
 
 
-text : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-text attributes nodes =
-    Html.div (class "mdc-list-item__text" :: attributes) nodes
+ariaSelectedAttr : ListItemConfig msg -> Maybe (Html.Attribute msg)
+ariaSelectedAttr { selected, activated } =
+    if selected || activated then
+        Just (Html.Attributes.attribute "aria-selected" "true")
+
+    else
+        Nothing
 
 
-primaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-primaryText attributes nodes =
-    Html.div (class "mdc-list-item__primary-text" :: attributes) nodes
+clickHandler : ListItemConfig msg -> Maybe (Html.Attribute msg)
+clickHandler { onClick } =
+    Maybe.map Html.Events.onClick onClick
 
 
-secondaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-secondaryText attributes nodes =
-    Html.div (class "mdc-list-item__secondary-text" :: attributes) nodes
+listItemText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+listItemText additionalAttributes nodes =
+    Html.div (class "mdc-list-item__text" :: additionalAttributes) nodes
 
 
-graphic : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-graphic attributes nodes =
-    Html.div (class "mdc-list-item__graphic" :: attributes) nodes
+listItemPrimaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+listItemPrimaryText additionalAttributes nodes =
+    Html.div (class "mdc-list-item__primary-text" :: additionalAttributes) nodes
 
 
-meta : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-meta attributes nodes =
-    Html.div (class "mdc-list-item__meta" :: attributes) nodes
+listItemSecondaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+listItemSecondaryText additionalAttributes nodes =
+    Html.div (class "mdc-list-item__secondary-text" :: additionalAttributes) nodes
 
 
-type alias DividerConfig msg =
+listItemGraphic : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+listItemGraphic additionalAttributes nodes =
+    Html.div (class "mdc-list-item__graphic" :: additionalAttributes) nodes
+
+
+listItemMeta : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+listItemMeta additionalAttributes nodes =
+    Html.div (class "mdc-list-item__meta" :: additionalAttributes) nodes
+
+
+type alias ListItemDividerConfig msg =
     { inset : Bool
     , padded : Bool
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
-dividerConfig : DividerConfig msg
-dividerConfig =
+listItemDividerConfig : ListItemDividerConfig msg
+listItemDividerConfig =
     { inset = False
     , padded = False
     , additionalAttributes = []
     }
 
 
-divider : DividerConfig msg -> Html msg
-divider config =
+listItemDivider : ListItemDividerConfig msg -> Html msg
+listItemDivider config =
     Html.li
         (List.filterMap identity
-            [ dividerCs
+            [ listDividerCs
             , separatorRoleAttr
             , insetCs config
             , paddedCs config
@@ -218,8 +233,8 @@ divider config =
         []
 
 
-dividerCs : Maybe (Html.Attribute msg)
-dividerCs =
+listDividerCs : Maybe (Html.Attribute msg)
+listDividerCs =
     Just (class "mdc-list-divider")
 
 
@@ -228,7 +243,7 @@ separatorRoleAttr =
     Just (Html.Attributes.attribute "role" "separator")
 
 
-insetCs : DividerConfig msg -> Maybe (Html.Attribute msg)
+insetCs : ListItemDividerConfig msg -> Maybe (Html.Attribute msg)
 insetCs { inset } =
     if inset then
         Just (class "mdc-list-divider--inset")
@@ -237,7 +252,7 @@ insetCs { inset } =
         Nothing
 
 
-paddedCs : DividerConfig msg -> Maybe (Html.Attribute msg)
+paddedCs : ListItemDividerConfig msg -> Maybe (Html.Attribute msg)
 paddedCs { padded } =
     if padded then
         Just (class "mdc-list-divider--padded")
@@ -246,26 +261,26 @@ paddedCs { padded } =
         Nothing
 
 
-group : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-group attributes nodes =
-    Html.div (groupCs :: attributes) nodes
+listGroup : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+listGroup additionalAttributes nodes =
+    Html.div (listGroupCs :: additionalAttributes) nodes
 
 
-groupCs : Html.Attribute msg
-groupCs =
+listGroupCs : Html.Attribute msg
+listGroupCs =
     class "mdc-list-group"
 
 
-groupDivider : List (Html.Attribute msg) -> Html msg
-groupDivider additionalAttributes =
-    Html.hr (List.filterMap identity [ dividerCs ] ++ additionalAttributes) []
+listGroupDivider : List (Html.Attribute msg) -> Html msg
+listGroupDivider additionalAttributes =
+    Html.hr (List.filterMap identity [ listDividerCs ] ++ additionalAttributes) []
 
 
-groupSubheader : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-groupSubheader attributes nodes =
-    Html.div attributes nodes
+listGroupSubheader : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+listGroupSubheader additionalAttributes nodes =
+    Html.div (listGroupSubheaderCs :: additionalAttributes) nodes
 
 
-subHeaderCs : Html.Attribute msg
-subHeaderCs =
+listGroupSubheaderCs : Html.Attribute msg
+listGroupSubheaderCs =
     class "mdc-list-group__subheader"

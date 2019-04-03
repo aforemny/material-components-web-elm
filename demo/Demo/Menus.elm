@@ -8,7 +8,7 @@ import Html.Attributes
 import Html.Events
 import Json.Decode as Json
 import Material.Button as Button exposing (button, buttonConfig)
-import Material.List as Lists exposing (dividerConfig, list, listConfig, listItem, listItemConfig)
+import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig, listItemDivider, listItemDividerConfig)
 import Material.Menu as Menu exposing (menu, menuConfig)
 import Material.Typography as Typography
 
@@ -86,7 +86,7 @@ view lift page model =
                     , listItem listItemConfig [ text "Orange" ]
                     , listItem listItemConfig [ text "Guava" ]
                     , listItem listItemConfig [ text "Pitaya" ]
-                    , Lists.divider dividerConfig
+                    , listItemDivider listItemDividerConfig
                     , listItem listItemConfig [ text "Pineapple" ]
                     , listItem listItemConfig [ text "Mango" ]
                     , listItem listItemConfig [ text "Papaya" ]

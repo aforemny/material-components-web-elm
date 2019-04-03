@@ -14,7 +14,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Material.Drawer as Drawer exposing (drawer, drawerConfig)
 import Material.Icon as Icon exposing (icon, iconConfig)
-import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig)
+import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig, listItemGraphic)
 import Material.Typography as Typography
 
 
@@ -95,28 +95,28 @@ view lift page model =
                                 | activated = True
                                 , additionalAttributes = [ Html.Attributes.href "#drawer" ]
                             }
-                            [ Lists.graphic [] [ icon iconConfig "inbox" ]
+                            [ listItemGraphic [] [ icon iconConfig "inbox" ]
                             , text "Inbox"
                             ]
                         , listItem
                             { listItemConfig
                                 | additionalAttributes = [ Html.Attributes.href "#drawer" ]
                             }
-                            [ Lists.graphic [] [ icon iconConfig "star" ]
+                            [ listItemGraphic [] [ icon iconConfig "star" ]
                             , text "Star"
                             ]
                         , listItem
                             { listItemConfig
                                 | additionalAttributes = [ Html.Attributes.href "#drawer" ]
                             }
-                            [ Lists.graphic [] [ icon iconConfig "send" ]
+                            [ listItemGraphic [] [ icon iconConfig "send" ]
                             , text "Sent Mail"
                             ]
                         , listItem
                             { listItemConfig
                                 | additionalAttributes = [ Html.Attributes.href "#drawer" ]
                             }
-                            [ Lists.graphic [] [ icon iconConfig "drafts" ]
+                            [ listItemGraphic [] [ icon iconConfig "drafts" ]
                             , text "Drafts"
                             ]
                         ]

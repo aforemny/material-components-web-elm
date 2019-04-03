@@ -18,7 +18,7 @@ import Json.Decode as Json
 import Material.Button as Button
 import Material.Drawer as Drawer exposing (drawer, drawerConfig)
 import Material.Icon as Icon exposing (icon, iconConfig)
-import Material.List as Lists exposing (dividerConfig, list, listConfig, listItem, listItemConfig)
+import Material.List as Lists exposing (list, listConfig, listGroupSubheader, listItem, listItemConfig, listItemDivider, listItemDividerConfig, listItemGraphic)
 import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
@@ -62,66 +62,66 @@ drawerItems =
                     | activated = True
                     , additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
                 }
-                [ Lists.graphic [] [ icon iconConfig "inbox" ]
+                [ listItemGraphic [] [ icon iconConfig "inbox" ]
                 , text "Inbox"
                 ]
             , listItem
                 { listItemConfig
                     | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
                 }
-                [ Lists.graphic [] [ icon iconConfig "star" ]
+                [ listItemGraphic [] [ icon iconConfig "star" ]
                 , text "Star"
                 ]
             , listItem
                 { listItemConfig
                     | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
                 }
-                [ Lists.graphic [] [ icon iconConfig "send" ]
+                [ listItemGraphic [] [ icon iconConfig "send" ]
                 , text "Sent Mail"
                 ]
             , listItem
                 { listItemConfig
                     | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
                 }
-                [ Lists.graphic [] [ icon iconConfig "drafts" ]
+                [ listItemGraphic [] [ icon iconConfig "drafts" ]
                 , text "Drafts"
                 ]
-            , Lists.divider dividerConfig
-            , Lists.groupSubheader [] [ text "Labels" ]
+            , listItemDivider listItemDividerConfig
+            , listGroupSubheader [] [ text "Labels" ]
             , listItem
                 { listItemConfig
                     | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
                 }
-                [ Lists.graphic [] [ icon iconConfig "bookmark" ]
+                [ listItemGraphic [] [ icon iconConfig "bookmark" ]
                 , text "Family"
                 ]
             , listItem
                 { listItemConfig
                     | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
                 }
-                [ Lists.graphic [] [ icon iconConfig "bookmark" ]
+                [ listItemGraphic [] [ icon iconConfig "bookmark" ]
                 , text "Friends"
                 ]
             , listItem
                 { listItemConfig
                     | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
                 }
-                [ Lists.graphic [] [ icon iconConfig "bookmark" ]
+                [ listItemGraphic [] [ icon iconConfig "bookmark" ]
                 , text "Work"
                 ]
-            , Lists.divider dividerConfig
+            , listItemDivider listItemDividerConfig
             , listItem
                 { listItemConfig
                     | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
                 }
-                [ Lists.graphic [] [ icon iconConfig "settings" ]
+                [ listItemGraphic [] [ icon iconConfig "settings" ]
                 , text "Settings"
                 ]
             , listItem
                 { listItemConfig
                     | additionalAttributes = [ Html.Attributes.href "#persistent-drawer" ]
                 }
-                [ Lists.graphic [] [ icon iconConfig "announcement" ]
+                [ listItemGraphic [] [ icon iconConfig "announcement" ]
                 , text "Help & feedback"
                 ]
             ]

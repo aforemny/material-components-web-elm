@@ -2,7 +2,7 @@ module Demo.Helper.ResourceLink exposing (view)
 
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.List as Lists exposing (listItem, listItemConfig)
+import Material.List as Lists exposing (listItem, listItemConfig, listItemGraphic)
 
 
 view :
@@ -20,7 +20,7 @@ view { link, title, icon, altText } =
                 , Html.Attributes.target "_blank"
                 ]
         }
-        [ Lists.graphic []
+        [ listItemGraphic []
             [ Html.img
                 [ Html.Attributes.class "resources-icon"
                 , Html.Attributes.src icon

@@ -5,25 +5,40 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
+import Html.Events
+import Json.Decode as Decode
 import Material.Checkbox as Checkbox exposing (checkbox, checkboxConfig)
 import Material.Icon as Icon exposing (icon, iconConfig)
-import Material.List as Lists exposing (dividerConfig, list, listConfig, listItem, listItemConfig)
+import Material.List as Lists exposing (list, listConfig, listGroup, listGroupSubheader, listItem, listItemConfig, listItemDivider, listItemDividerConfig, listItemGraphic, listItemMeta, listItemPrimaryText, listItemSecondaryText, listItemText)
 import Material.Radio as Radio exposing (radio, radioConfig)
 import Material.Ripple as Ripple
 import Material.Typography as Typography
+import Set exposing (Set)
 
 
 type alias Model =
-    {}
+    { checkboxIndices : Set Int
+    , radioIndex : Int
+    , activatedIndex : Int
+    , shapedActivatedIndex : Int
+    }
 
 
 defaultModel : Model
 defaultModel =
-    {}
+    { checkboxIndices = Set.empty
+    , radioIndex = 3
+    , activatedIndex = 1
+    , shapedActivatedIndex = 1
+    }
 
 
 type Msg
     = NoOp
+    | ToggleCheckbox Int
+    | SetRadio Int
+    | SetActivated Int
+    | SetShapedActivated Int
 
 
 update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
@@ -31,6 +46,27 @@ update lift msg model =
     case msg of
         NoOp ->
             ( model, Cmd.none )
+
+        ToggleCheckbox index ->
+            ( { model
+                | checkboxIndices =
+                    if Set.member index model.checkboxIndices then
+                        Set.remove index model.checkboxIndices
+
+                    else
+                        Set.insert index model.checkboxIndices
+              }
+            , Cmd.none
+            )
+
+        SetRadio index ->
+            ( { model | radioIndex = index }, Cmd.none )
+
+        SetActivated index ->
+            ( { model | activatedIndex = index }, Cmd.none )
+
+        SetShapedActivated index ->
+            ( { model | shapedActivatedIndex = index }, Cmd.none )
 
 
 demoList : List (Html.Attribute m)
@@ -64,9 +100,9 @@ twoLineList =
         }
         (List.repeat 3 <|
             listItem listItemConfig
-                [ Lists.text []
-                    [ Lists.primaryText [] [ text "Line item" ]
-                    , Lists.secondaryText [] [ text "Secondary text" ]
+                [ listItemText []
+                    [ listItemPrimaryText [] [ text "Line item" ]
+                    , listItemSecondaryText [] [ text "Secondary text" ]
                     ]
                 ]
         )
@@ -76,15 +112,15 @@ leadingIconList : Html m
 leadingIconList =
     list { listConfig | additionalAttributes = demoList }
         [ listItem listItemConfig
-            [ Lists.graphic [] [ icon iconConfig "wifi" ]
+            [ listItemGraphic [] [ icon iconConfig "wifi" ]
             , text "Line item"
             ]
         , listItem listItemConfig
-            [ Lists.graphic [] [ icon iconConfig "bluetooth" ]
+            [ listItemGraphic [] [ icon iconConfig "bluetooth" ]
             , text "Line item"
             ]
         , listItem listItemConfig
-            [ Lists.graphic [] [ icon iconConfig "data_usage" ]
+            [ listItemGraphic [] [ icon iconConfig "data_usage" ]
             , text "Line item"
             ]
         ]
@@ -96,41 +132,52 @@ trailingIconList =
         (List.repeat 3 <|
             listItem listItemConfig
                 [ text "Line item"
-                , Lists.meta [] [ icon iconConfig "info" ]
+                , listItemMeta [] [ icon iconConfig "info" ]
                 ]
         )
 
 
-activatedItemList : Html m
-activatedItemList =
+activatedItemList : (Msg -> m) -> Model -> Html m
+activatedItemList lift model =
+    let
+        listItemConfig_ index =
+            { listItemConfig
+                | activated = model.activatedIndex == index
+                , onClick = Just (lift (SetActivated index))
+            }
+    in
     list { listConfig | additionalAttributes = demoList }
-        [ listItem listItemConfig
-            [ Lists.graphic [] [ icon iconConfig "inbox" ], text "Inbox" ]
-        , listItem { listItemConfig | activated = True }
-            [ Lists.graphic [] [ icon iconConfig "star" ], text "Star" ]
-        , listItem listItemConfig
-            [ Lists.graphic [] [ icon iconConfig "send" ], text "Sent" ]
-        , listItem listItemConfig
-            [ Lists.graphic [] [ icon iconConfig "drafts" ], text "Drafts" ]
+        [ listItem (listItemConfig_ 0)
+            [ listItemGraphic [] [ icon iconConfig "inbox" ], text "Inbox" ]
+        , listItem (listItemConfig_ 1)
+            [ listItemGraphic [] [ icon iconConfig "star" ], text "Star" ]
+        , listItem (listItemConfig_ 2)
+            [ listItemGraphic [] [ icon iconConfig "send" ], text "Sent" ]
+        , listItem (listItemConfig_ 3)
+            [ listItemGraphic [] [ icon iconConfig "drafts" ], text "Drafts" ]
         ]
 
 
-shapedActivatedItemList : Html m
-shapedActivatedItemList =
-    list { listConfig | additionalAttributes = demoList }
-        [ listItem listItemConfig
-            [ Lists.graphic [] [ icon iconConfig "inbox" ], text "Inbox" ]
-        , listItem
+shapedActivatedItemList : (Msg -> m) -> Model -> Html m
+shapedActivatedItemList lift model =
+    let
+        listItemConfig_ index =
             { listItemConfig
-                | activated = True
+                | activated = model.shapedActivatedIndex == index
+                , onClick = Just (lift (SetShapedActivated index))
                 , additionalAttributes =
                     [ Html.Attributes.style "border-radius" "0 32px 32px 0" ]
             }
-            [ Lists.graphic [] [ icon iconConfig "star" ], text "Star" ]
-        , listItem listItemConfig
-            [ Lists.graphic [] [ icon iconConfig "send" ], text "Sent" ]
-        , listItem listItemConfig
-            [ Lists.graphic [] [ icon iconConfig "drafts" ], text "Drafts" ]
+    in
+    list { listConfig | additionalAttributes = demoList }
+        [ listItem (listItemConfig_ 0)
+            [ listItemGraphic [] [ icon iconConfig "inbox" ], text "Inbox" ]
+        , listItem (listItemConfig_ 1)
+            [ listItemGraphic [] [ icon iconConfig "star" ], text "Star" ]
+        , listItem (listItemConfig_ 2)
+            [ listItemGraphic [] [ icon iconConfig "send" ], text "Sent" ]
+        , listItem (listItemConfig_ 3)
+            [ listItemGraphic [] [ icon iconConfig "drafts" ], text "Drafts" ]
         ]
 
 
@@ -151,71 +198,153 @@ folderList =
             , additionalAttributes = demoList
         }
         [ listItem listItemConfig
-            [ Lists.graphic demoIcon [ icon iconConfig "folder" ]
-            , Lists.text []
-                [ Lists.primaryText [] [ text "Dog Photos" ]
-                , Lists.secondaryText [] [ text "9 Jan 2018" ]
+            [ listItemGraphic demoIcon [ icon iconConfig "folder" ]
+            , listItemText []
+                [ listItemPrimaryText [] [ text "Dog Photos" ]
+                , listItemSecondaryText [] [ text "9 Jan 2018" ]
                 ]
-            , Lists.meta [] [ icon iconConfig "info" ]
+            , listItemMeta [] [ icon iconConfig "info" ]
             ]
         , listItem listItemConfig
-            [ Lists.graphic demoIcon [ icon iconConfig "folder" ]
-            , Lists.text []
-                [ Lists.primaryText [] [ text "Cat Photos" ]
-                , Lists.secondaryText [] [ text "22 Dec 2017" ]
+            [ listItemGraphic demoIcon [ icon iconConfig "folder" ]
+            , listItemText []
+                [ listItemPrimaryText [] [ text "Cat Photos" ]
+                , listItemSecondaryText [] [ text "22 Dec 2017" ]
                 ]
-            , Lists.meta [] [ icon iconConfig "info" ]
+            , listItemMeta [] [ icon iconConfig "info" ]
             ]
-        , Lists.divider dividerConfig
+        , listItemDivider listItemDividerConfig
         , listItem listItemConfig
-            [ Lists.graphic demoIcon [ icon iconConfig "folder" ]
-            , Lists.text []
-                [ Lists.primaryText [] [ text "Potatoes" ]
-                , Lists.secondaryText [] [ text "30 Noc 2017" ]
+            [ listItemGraphic demoIcon [ icon iconConfig "folder" ]
+            , listItemText []
+                [ listItemPrimaryText [] [ text "Potatoes" ]
+                , listItemSecondaryText [] [ text "30 Noc 2017" ]
                 ]
-            , Lists.meta [] [ icon iconConfig "info" ]
+            , listItemMeta [] [ icon iconConfig "info" ]
             ]
         , listItem listItemConfig
-            [ Lists.graphic demoIcon [ icon iconConfig "folder" ]
-            , Lists.text []
-                [ Lists.primaryText [] [ text "Carrots" ]
-                , Lists.secondaryText [] [ text "17 Oct 2017" ]
+            [ listItemGraphic demoIcon [ icon iconConfig "folder" ]
+            , listItemText []
+                [ listItemPrimaryText [] [ text "Carrots" ]
+                , listItemSecondaryText [] [ text "17 Oct 2017" ]
                 ]
-            , Lists.meta [] [ icon iconConfig "info" ]
+            , listItemMeta [] [ icon iconConfig "info" ]
             ]
         ]
 
 
-listWithTrailing : (Int -> Html m) -> Html m
-listWithTrailing metaControl =
-    list { listConfig | additionalAttributes = demoList }
-        [ listItem listItemConfig
+listWithTrailingCheckbox : (Msg -> m) -> Model -> Html m
+listWithTrailingCheckbox lift model =
+    let
+        listItemConfig_ index =
+            { listItemConfig
+                | onClick = Just (lift (ToggleCheckbox 0))
+                , additionalAttributes =
+                    [ Html.Attributes.attribute "aria-checked"
+                        (if Set.member index model.checkboxIndices then
+                            "true"
+
+                         else
+                            "false"
+                        )
+                    , Html.Events.on "keydown"
+                        (Html.Events.keyCode
+                            |> Decode.andThen
+                                (\keyCode ->
+                                    if keyCode == 32 || keyCode == 13 then
+                                        Decode.succeed (lift (ToggleCheckbox index))
+
+                                    else
+                                        Decode.fail ""
+                                )
+                        )
+                    ]
+            }
+
+        checkbox_ index =
+            checkbox
+                { checkboxConfig
+                    | onClick = Just (lift (ToggleCheckbox index))
+                    , state =
+                        if Set.member index model.checkboxIndices then
+                            Checkbox.Checked
+
+                        else
+                            Checkbox.Unchecked
+                }
+    in
+    list
+        { listConfig
+            | additionalAttributes =
+                [ Html.Attributes.attribute "role" "group"
+                ]
+                    ++ demoList
+        }
+        [ listItem (listItemConfig_ 0)
             [ text "Dog Photos"
-            , Lists.meta [] [ metaControl 0 ]
+            , listItemMeta [] [ checkbox_ 0 ]
             ]
-        , listItem listItemConfig
+        , listItem (listItemConfig_ 1)
             [ text "Cat Photos"
-            , Lists.meta [] [ metaControl 1 ]
+            , listItemMeta [] [ checkbox_ 1 ]
             ]
-        , listItem listItemConfig
+        , listItem (listItemConfig_ 2)
             [ text "Potatoes"
-            , Lists.meta [] [ metaControl 2 ]
+            , listItemMeta [] [ checkbox_ 2 ]
             ]
-        , listItem listItemConfig
+        , listItem (listItemConfig_ 3)
             [ text "Carrots"
-            , Lists.meta [] [ metaControl 3 ]
+            , listItemMeta [] [ checkbox_ 3 ]
             ]
         ]
 
 
-listWithTrailingCheckbox : (Msg -> m) -> String -> Model -> Html m
-listWithTrailingCheckbox lift index model =
-    listWithTrailing (\n -> checkbox { checkboxConfig | state = Checkbox.Unchecked })
+listWithTrailingRadioButton : (Msg -> m) -> Model -> Html m
+listWithTrailingRadioButton lift model =
+    let
+        listItemConfig_ index =
+            { listItemConfig
+                | onClick = Just (lift (SetRadio index))
+                , additionalAttributes =
+                    [ Html.Events.on "keydown"
+                        (Html.Events.keyCode
+                            |> Decode.andThen
+                                (\keyCode ->
+                                    if keyCode == 32 || keyCode == 13 then
+                                        Decode.succeed (lift (SetRadio index))
 
+                                    else
+                                        Decode.fail ""
+                                )
+                        )
+                    ]
+            }
 
-listWithTrailingRadioButton : (Msg -> m) -> String -> Model -> Html m
-listWithTrailingRadioButton lift index model =
-    listWithTrailing (\n -> radio radioConfig)
+        radio_ index =
+            radio
+                { radioConfig
+                    | checked = model.radioIndex == index
+                    , onClick = Just (lift (SetRadio index))
+                }
+    in
+    list { listConfig | additionalAttributes = demoList }
+        [ listItem (listItemConfig_ 0)
+            [ text "Dog Photos"
+            , listItemMeta [] [ radio_ 0 ]
+            ]
+        , listItem (listItemConfig_ 1)
+            [ text "Cat Photos"
+            , listItemMeta [] [ radio_ 1 ]
+            ]
+        , listItem (listItemConfig_ 2)
+            [ text "Potatoes"
+            , listItemMeta [] [ radio_ 2 ]
+            ]
+        , listItem (listItemConfig_ 3)
+            [ text "Carrots"
+            , listItemMeta [] [ radio_ 3 ]
+            ]
+        ]
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
@@ -255,16 +384,17 @@ view lift page model =
             , Html.h3 [ Typography.subtitle1 ] [ text "Leading Icon" ]
             , leadingIconList
             , Html.h3 [ Typography.subtitle1 ] [ text "List with activated item" ]
-            , activatedItemList
+            , activatedItemList lift model
             , Html.h3 [ Typography.subtitle1 ] [ text "List with shaped activated item" ]
-            , shapedActivatedItemList
+            , shapedActivatedItemList lift model
             , Html.h3 [ Typography.subtitle1 ] [ text "Trailing Icon" ]
             , trailingIconList
-            , Html.h3 [ Typography.subtitle1 ] [ text "Two-Line with Leading and Trailing Icon and Divider" ]
+            , Html.h3 [ Typography.subtitle1 ]
+                [ text "Two-Line with Leading and Trailing Icon and Divider" ]
             , folderList
             , Html.h3 [ Typography.subtitle1 ] [ text "List with Trailing Checkbox" ]
-            , listWithTrailingCheckbox lift "lists-list-with-checkbox" model
+            , listWithTrailingCheckbox lift model
             , Html.h3 [ Typography.subtitle1 ] [ text "List with Trailing Radio Buttons" ]
-            , listWithTrailingRadioButton lift "lists-list-with-radio-buttons" model
+            , listWithTrailingRadioButton lift model
             ]
         ]

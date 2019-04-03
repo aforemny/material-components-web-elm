@@ -10,7 +10,7 @@ import Material.Button as Button exposing (button, buttonConfig)
 import Material.Dialog as Dialog exposing (dialog, dialogConfig)
 import Material.FormField as FormField
 import Material.Icon as Icon exposing (icon, iconConfig)
-import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig)
+import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig, listItemGraphic, listItemText)
 import Material.Radio as Radio exposing (radio, radioConfig)
 import Material.Typography as Typography
 
@@ -94,12 +94,12 @@ simpleDialog lift index model =
                             , Html.Events.onClick (lift Close)
                             ]
                     }
-                    [ Lists.graphic
+                    [ listItemGraphic
                         [ Html.Attributes.style "background-color" "rgba(0,0,0,.3)"
                         , Html.Attributes.style "color" "#fff"
                         ]
                         [ icon iconConfig "person" ]
-                    , Lists.text [] [ text "user1@example.com" ]
+                    , listItemText [] [ text "user1@example.com" ]
                     ]
                 , listItem
                     { listItemConfig
@@ -108,12 +108,12 @@ simpleDialog lift index model =
                             , Html.Events.onClick (lift Close)
                             ]
                     }
-                    [ Lists.graphic
+                    [ listItemGraphic
                         [ Html.Attributes.style "background-color" "rgba(0,0,0,.3)"
                         , Html.Attributes.style "color" "#fff"
                         ]
                         [ icon iconConfig "person" ]
-                    , Lists.text [] [ text "user2@example.com" ]
+                    , listItemText [] [ text "user2@example.com" ]
                     ]
                 , listItem
                     { listItemConfig
@@ -122,12 +122,12 @@ simpleDialog lift index model =
                             , Html.Events.onClick (lift Close)
                             ]
                     }
-                    [ Lists.graphic
+                    [ listItemGraphic
                         [ Html.Attributes.style "background-color" "rgba(0,0,0,.3)"
                         , Html.Attributes.style "color" "#fff"
                         ]
                         [ icon iconConfig "add" ]
-                    , Lists.text [] [ text "Add account" ]
+                    , listItemText [] [ text "Add account" ]
                     ]
                 ]
             ]
@@ -146,16 +146,16 @@ confirmationDialog lift index model =
         , content =
             [ list { listConfig | avatarList = True }
                 [ listItem listItemConfig
-                    [ Lists.graphic [] [ radio { radioConfig | checked = True } ]
-                    , Lists.text [] [ text "Never Gonna Give You Up" ]
+                    [ listItemGraphic [] [ radio { radioConfig | checked = True } ]
+                    , listItemText [] [ text "Never Gonna Give You Up" ]
                     ]
                 , listItem listItemConfig
-                    [ Lists.graphic [] [ radio radioConfig ]
-                    , Lists.text [] [ text "Hot Cross Buns" ]
+                    [ listItemGraphic [] [ radio radioConfig ]
+                    , listItemText [] [ text "Hot Cross Buns" ]
                     ]
                 , listItem listItemConfig
-                    [ Lists.graphic [] [ radio radioConfig ]
-                    , Lists.text [] [ text "None" ]
+                    [ listItemGraphic [] [ radio radioConfig ]
+                    , listItemText [] [ text "None" ]
                     ]
                 ]
             ]

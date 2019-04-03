@@ -12,7 +12,7 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Drawer as Drawer exposing (drawer, drawerConfig)
+import Material.Drawer as Drawer exposing (drawerConfig, drawerContent, drawerHeader, permanentDrawer)
 import Material.Icon as Icon exposing (icon, iconConfig)
 import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig, listItemGraphic)
 import Material.Typography as Typography
@@ -57,7 +57,7 @@ example label url =
         [ Html.div
             []
             [ Html.a
-                [ Html.Attributes.href ("." ++ url)
+                [ Html.Attributes.href ("page.html" ++ url)
                 , Html.Attributes.target "_blank"
                 ]
                 [ Html.h3
@@ -68,7 +68,7 @@ example label url =
                 ]
             ]
         , Html.iframe
-            [ Html.Attributes.src ("./index.html" ++ url)
+            [ Html.Attributes.src ("./page.html" ++ url)
             , Html.Attributes.style "height" "400px"
             , Html.Attributes.style "width" "100vw"
             , Html.Attributes.style "max-width" "780px"
@@ -82,13 +82,13 @@ view lift page model =
     page.body "Drawer"
         "The navigation drawer slides in from the left and contains the navigation destinations for your app."
         [ Hero.view []
-            [ drawer drawerConfig
-                [ Drawer.header
+            [ permanentDrawer drawerConfig
+                [ drawerHeader
                     { title = "Title"
                     , subtitle = "subtext"
                     , additionalAttributes = []
                     }
-                , Drawer.content []
+                , drawerContent []
                     [ list listConfig
                         [ listItem
                             { listItemConfig

@@ -1,37 +1,42 @@
 module Material.Drawer exposing
     ( Config
     , HeaderConfig
-    , Variant(..)
     , appContent
-    , content
-    , drawer
+    , dismissibleDrawer
     , drawerConfig
-    , header
-    , scrim
+    , drawerContent
+    , drawerHeader
+    , drawerScrim
+    , modalDrawer
+    , permanentDrawer
     )
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
+import Html.Events
+import Json.Decode as Decode
 
 
 type alias Config msg =
     { variant : Variant
     , open : Bool
     , additionalAttributes : List (Html.Attribute msg)
+    , onClose : Maybe msg
     }
 
 
 drawerConfig : Config msg
 drawerConfig =
-    { variant = Default
+    { variant = Permanent
     , open = False
     , additionalAttributes = []
+    , onClose = Nothing
     }
 
 
 type Variant
-    = Default
-    | Dismissable
+    = Permanent
+    | Dismissible
     | Modal
 
 
@@ -41,15 +46,31 @@ drawer config nodes =
         (List.filterMap identity
             [ rootCs
             , variantCs config
-            , openCs config
+            , openAttr config
+            , closeHandler config
             ]
             ++ config.additionalAttributes
         )
         nodes
 
 
-content : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-content attributes nodes =
+permanentDrawer : Config msg -> List (Html msg) -> Html msg
+permanentDrawer config nodes =
+    drawer { config | variant = Permanent } nodes
+
+
+dismissibleDrawer : Config msg -> List (Html msg) -> Html msg
+dismissibleDrawer config nodes =
+    drawer { config | variant = Dismissible } nodes
+
+
+modalDrawer : Config msg -> List (Html msg) -> Html msg
+modalDrawer config nodes =
+    drawer { config | variant = Modal } nodes
+
+
+drawerContent : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+drawerContent attributes nodes =
     Html.div (class "mdc-drawer__content" :: attributes) nodes
 
 
@@ -60,8 +81,8 @@ type alias HeaderConfig msg =
     }
 
 
-header : HeaderConfig msg -> Html msg
-header config =
+drawerHeader : HeaderConfig msg -> Html msg
+drawerHeader config =
     Html.div (class "mdc-drawer__header" :: config.additionalAttributes)
         [ titleElt config
         , subtitleElt config
@@ -86,23 +107,28 @@ rootCs =
 variantCs : Config msg -> Maybe (Html.Attribute msg)
 variantCs { variant } =
     case variant of
-        Default ->
+        Permanent ->
             Nothing
 
-        Dismissable ->
-            Just (class "mdc-drawer--dismissable")
+        Dismissible ->
+            Just (class "mdc-drawer--dismissible")
 
         Modal ->
             Just (class "mdc-drawer--modal")
 
 
-openCs : Config msg -> Maybe (Html.Attribute msg)
-openCs { open } =
-    if open then
-        Just (class "mdc-drawer--open")
+openAttr : Config msg -> Maybe (Html.Attribute msg)
+openAttr { variant, open } =
+    if open && variant /= Permanent then
+        Just (Html.Attributes.attribute "open" "")
 
     else
         Nothing
+
+
+closeHandler : Config msg -> Maybe (Html.Attribute msg)
+closeHandler { onClose } =
+    Maybe.map (Html.Events.on "MDCDrawer:close" << Decode.succeed) onClose
 
 
 contentElt : List (Html msg) -> Html msg
@@ -115,6 +141,6 @@ appContent =
     class "mdc-drawer-app-content"
 
 
-scrim : Html.Attribute msg
-scrim =
-    class "mdc-drawer-scrim"
+drawerScrim : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+drawerScrim additionalAttributes nodes =
+    Html.div ([ class "mdc-drawer-scrim" ] ++ additionalAttributes) nodes

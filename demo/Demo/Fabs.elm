@@ -7,6 +7,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Material.Fab as Fab exposing (fab, fabConfig)
+import Material.Fab.Extended as ExtendedFab exposing (extendedFab, extendedFabConfig)
 import Material.Typography as Typography
 
 
@@ -68,5 +69,39 @@ view lift page model =
                 [ Typography.subtitle1 ]
                 [ text "Mini Floating Action Button" ]
             , fab { fabConfig | mini = True } "favorite_border"
+            , Html.h3 [ Typography.subtitle1 ] [ text "Extended FAB" ]
+            , extendedFab { extendedFabConfig | icon = Just "add" } "Create"
+            , Html.h3
+                [ Typography.subtitle1 ]
+                [ text "Extended FAB (Text label followed by icon)" ]
+            , extendedFab { extendedFabConfig | icon = Just "add", trailingIcon = True }
+                "Create"
+            , Html.h3
+                [ Typography.subtitle1 ]
+                [ text "Extended FAB (without icon)" ]
+            , extendedFab extendedFabConfig "Create"
+            , Html.h3
+                [ Typography.subtitle1 ]
+                [ text "FAB (Shaped)" ]
+            , Html.div [ Html.Attributes.style "display" "flex" ]
+                [ fab
+                    { fabConfig
+                        | additionalAttributes =
+                            [ Html.Attributes.style "border-radius" "50% 0"
+                            , Html.Attributes.style "margin-right" "24px"
+                            ]
+                    }
+                    "favorite_border"
+                , fab
+                    { fabConfig
+                        | mini = True
+                        , additionalAttributes =
+                            [ Html.Attributes.style "border-radius" "8px"
+                            , Html.Attributes.style "margin-right" "24px"
+                            ]
+                    }
+                    "favorite_border"
+                , extendedFab { extendedFabConfig | icon = Just "add" } "Create"
+                ]
             ]
         ]

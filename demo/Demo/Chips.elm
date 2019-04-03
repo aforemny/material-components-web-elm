@@ -5,7 +5,9 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Chip as Chip exposing (chip, chipConfig)
+import Material.Chip.Choice as ChoiceChip exposing (choiceChip, choiceChipConfig)
+import Material.Chip.Filter as FilterChip exposing (filterChip, filterChipConfig)
+import Material.Chip.Input as InputChip exposing (inputChip, inputChipConfig)
 import Material.ChipSet as ChipSet exposing (chipSet, chipSetConfig)
 import Material.Typography as Typography
 import Set exposing (Set)
@@ -13,7 +15,7 @@ import Set exposing (Set)
 
 type alias Model =
     { selectedChips : Set String
-    , choiceChip : String
+    , choiceChip : Maybe String
     }
 
 
@@ -26,7 +28,7 @@ defaultModel =
             , "chips-filter-chips-bottoms"
             , "chips-filter-chips-alice"
             ]
-    , choiceChip = "chips-choice-medium"
+    , choiceChip = Just "chips-choice-medium"
     }
 
 
@@ -46,7 +48,16 @@ update lift msg model =
         ToggleChip chipType index ->
             case chipType of
                 Choice ->
-                    ( { model | choiceChip = index }, Cmd.none )
+                    ( { model
+                        | choiceChip =
+                            if model.choiceChip == Just index then
+                                Nothing
+
+                            else
+                                Just index
+                      }
+                    , Cmd.none
+                    )
 
                 _ ->
                     let
@@ -107,23 +118,23 @@ view lift page model =
 heroChips : (Msg -> m) -> Model -> Html m
 heroChips lift model =
     chipSet chipSetConfig
-        [ chip chipConfig "Chip One"
-        , chip chipConfig "Chip Two"
-        , chip chipConfig "Chip Three"
-        , chip chipConfig "Chip Four"
+        [ choiceChip choiceChipConfig "Chip One"
+        , choiceChip choiceChipConfig "Chip Two"
+        , choiceChip choiceChipConfig "Chip Three"
+        , choiceChip choiceChipConfig "Chip Four"
         ]
 
 
 choiceChips : (Msg -> m) -> Model -> List (Html m)
 choiceChips lift model =
     let
-        choiceChip index label =
-            chip
-                { chipConfig
-                    | active = index == model.choiceChip
+        chip index label =
+            choiceChip
+                { choiceChipConfig
+                    | selected = Just index == model.choiceChip
                     , onClick = Just (lift (ToggleChip Choice index))
                 }
-                "label"
+                label
     in
     [ Html.h2
         [ Typography.subtitle1
@@ -131,11 +142,11 @@ choiceChips lift model =
         [ text "Choice Chips"
         ]
     , chipSet { chipSetConfig | variant = ChipSet.Choice }
-        [ choiceChip "chips-choice-extra-small" "Extra Small"
-        , choiceChip "chips-choice-small" "Small"
-        , choiceChip "chips-choice-medium" "Medium"
-        , choiceChip "chips-choice-large" "Large"
-        , choiceChip "chips-choice-extra-large" "Extra Large"
+        [ chip "chips-choice-extra-small" "Extra Small"
+        , chip "chips-choice-small" "Small"
+        , chip "chips-choice-medium" "Medium"
+        , chip "chips-choice-large" "Large"
+        , chip "chips-choice-extra-large" "Extra Large"
         ]
     ]
 
@@ -151,39 +162,38 @@ filterChips lift model =
         [ Typography.body2 ]
         [ text "No leading icon" ]
     , let
-        filterChip index label =
-            chip
-                { chipConfig
-                    | active = Set.member index model.selectedChips
-                    , icon = Just (Chip.LeadingIcon "checkmark")
+        chip index label =
+            filterChip
+                { filterChipConfig
+                    | selected = Set.member index model.selectedChips
                     , onClick = Just (lift (ToggleChip Filter index))
                 }
                 label
       in
       chipSet { chipSetConfig | variant = ChipSet.Filter }
-        [ filterChip "chips-filter-chips-tops" "Tops"
-        , filterChip "chips-filter-chips-bottoms" "Bottoms"
-        , filterChip "chips-filter-chips-shoes" "Shoes"
-        , filterChip "chips-filter-chips-accessories" "Accessories"
+        [ chip "chips-filter-chips-tops" "Tops"
+        , chip "chips-filter-chips-bottoms" "Bottoms"
+        , chip "chips-filter-chips-shoes" "Shoes"
+        , chip "chips-filter-chips-accessories" "Accessories"
         ]
     , Html.h3
         [ Typography.body2 ]
         [ text "With leading icon" ]
     , let
-        filterChip index label =
-            chip
-                { chipConfig
-                    | active = Set.member index model.selectedChips
-                    , icon = Just (Chip.LeadingIcon "face")
+        chip index label =
+            filterChip
+                { filterChipConfig
+                    | selected = Set.member index model.selectedChips
+                    , icon = Just "face"
                     , onClick = Just (lift (ToggleChip Filter index))
                 }
                 label
       in
       chipSet { chipSetConfig | variant = ChipSet.Filter }
-        [ filterChip "chips-filter-chips-alice" "Alice"
-        , filterChip "chips-filter-chips-bob" "Bob"
-        , filterChip "chips-filter-chips-charlie" "Charlie"
-        , filterChip "chips-filter-chips-danielle" "Danielle"
+        [ chip "chips-filter-chips-alice" "Alice"
+        , chip "chips-filter-chips-bob" "Bob"
+        , chip "chips-filter-chips-charlie" "Charlie"
+        , chip "chips-filter-chips-danielle" "Danielle"
         ]
     ]
 
@@ -191,10 +201,10 @@ filterChips lift model =
 actionChips : (Msg -> m) -> Model -> List (Html m)
 actionChips lift model =
     let
-        actionChip index ( icon, label ) =
-            chip
-                { chipConfig
-                    | icon = Just (Chip.LeadingIcon icon)
+        chip index ( icon, label ) =
+            filterChip
+                { filterChipConfig
+                    | icon = Just icon
                     , onClick = Just (lift (ToggleChip Action index))
                 }
                 label
@@ -205,10 +215,10 @@ actionChips lift model =
         [ text "Action Chips"
         ]
     , chipSet chipSetConfig
-        [ actionChip "chips-action-chips-add-to-calendar" ( "event", "Add to calendar" )
-        , actionChip "chips-action-chips-bookmark" ( "bookmark", "Bookmark" )
-        , actionChip "chips-action-chips-set-alarm" ( "alarm", "Set alarm" )
-        , actionChip "chips-action-chips-get-directions" ( "directions", "Get directions" )
+        [ chip "chips-action-chips-add-to-calendar" ( "event", "Add to calendar" )
+        , chip "chips-action-chips-bookmark" ( "bookmark", "Bookmark" )
+        , chip "chips-action-chips-set-alarm" ( "alarm", "Set alarm" )
+        , chip "chips-action-chips-get-directions" ( "directions", "Get directions" )
         ]
     ]
 
@@ -216,9 +226,9 @@ actionChips lift model =
 shapedChips : (Msg -> m) -> Model -> List (Html m)
 shapedChips lift model =
     let
-        shapedChip index label =
-            chip
-                { chipConfig
+        chip index label =
+            choiceChip
+                { choiceChipConfig
                     | additionalAttributes =
                         [ Html.Attributes.style "border-radius" "4px" ]
                 }
@@ -230,9 +240,9 @@ shapedChips lift model =
         [ text "Shaped Chips"
         ]
     , chipSet chipSetConfig
-        [ shapedChip "chips-shaped-chips-bookcase" "Bookcase"
-        , shapedChip "chips-shaped-chips-tv-stand" "TV Stand"
-        , shapedChip "chips-shaped-chips-sofas" "Sofas"
-        , shapedChip "chips-shaped-chips-office-chairs" "Office chairs"
+        [ chip "chips-shaped-chips-bookcase" "Bookcase"
+        , chip "chips-shaped-chips-tv-stand" "TV Stand"
+        , chip "chips-shaped-chips-sofas" "Sofas"
+        , chip "chips-shaped-chips-office-chairs" "Office chairs"
         ]
     ]

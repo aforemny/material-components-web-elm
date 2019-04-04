@@ -7,7 +7,6 @@ module Demo.Drawer exposing
     , view
     )
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
@@ -16,10 +15,6 @@ import Material.Drawer as Drawer exposing (drawerConfig, drawerContent, drawerHe
 import Material.Icon as Icon exposing (icon, iconConfig)
 import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig, listItemGraphic)
 import Material.Typography as Typography
-
-
-
--- TODO: scrim?
 
 
 type alias Model =
@@ -81,7 +76,7 @@ view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
     page.body "Drawer"
         "The navigation drawer slides in from the left and contains the navigation destinations for your app."
-        [ Hero.view []
+        [ Page.hero []
             [ permanentDrawer drawerConfig
                 [ drawerHeader
                     { title = "Title"

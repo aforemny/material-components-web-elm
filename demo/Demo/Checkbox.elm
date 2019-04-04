@@ -1,6 +1,5 @@
 module Demo.Checkbox exposing (Model, Msg(..), defaultModel, update, view)
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Dict exposing (Dict)
@@ -75,7 +74,7 @@ view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
     page.body "Checkbox"
         "Checkboxes allow the user to select multiple options from a set."
-        [ Hero.view []
+        [ Page.hero []
             [ controlledCheckbox lift "checkbox-checked-hero-checkbox" model heroMargin
             , controlledCheckbox lift "checkbox-unchecked-hero-checkbox" model heroMargin
             ]

@@ -1,6 +1,5 @@
 module Demo.IconButton exposing (Model, Msg(..), defaultModel, update, view)
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Dict exposing (Dict)
@@ -48,7 +47,7 @@ view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
     page.body "Icon Button"
         "Icons are appropriate for buttons that allow a user to take actions or make a selection, such as adding or removing a star to an item."
-        [ Hero.view []
+        [ Page.hero []
             [ iconToggle
                 { iconToggleConfig
                     | on = isOn "icon-button-hero" model

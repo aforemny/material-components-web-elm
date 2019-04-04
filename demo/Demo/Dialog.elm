@@ -1,6 +1,5 @@
 module Demo.Dialog exposing (Model, Msg(..), defaultModel, update, view)
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
@@ -273,9 +272,7 @@ view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
     page.body "Dialog"
         "Dialogs inform users about a specific task and may contain critical information, require decisions, or involve multiple tasks."
-        [ Hero.view []
-            [ heroDialog lift "dialog-hero-dialog" model
-            ]
+        [ Page.hero [] [ heroDialog lift "dialog-hero-dialog" model ]
         , Html.h2
             [ Typography.headline6
             , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"

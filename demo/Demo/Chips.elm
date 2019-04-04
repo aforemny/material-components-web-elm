@@ -1,6 +1,5 @@
 module Demo.Chips exposing (Model, Msg(..), defaultModel, update, view)
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
@@ -77,9 +76,7 @@ view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
     page.body "Chips"
         "Chips are compact elements that allow users to enter information, select a choice, filter content, or trigger an action."
-        [ Hero.view []
-            [ heroChips lift model
-            ]
+        [ Page.hero [] [ heroChips lift model ]
         , Html.h2
             [ Typography.headline6
             , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"

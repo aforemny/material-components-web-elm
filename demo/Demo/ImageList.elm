@@ -1,6 +1,5 @@
 module Demo.ImageList exposing (Model, Msg(..), defaultModel, update, view)
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
@@ -93,7 +92,7 @@ view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
     page.body "Image List"
         "Image lists display a collection of images in an organized grid."
-        [ Hero.view []
+        [ Page.hero []
             [ imageList
                 { imageListConfig
                     | additionalAttributes = [ Html.Attributes.style "width" "300px" ]

@@ -8,7 +8,6 @@ module Demo.LayoutGrid exposing
 
 import Browser.Dom
 import Browser.Events
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
@@ -126,9 +125,7 @@ view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
     page.body "Layout Grid"
         "Material design’s responsive UI is based on a 12-column grid layout."
-        [ Hero.view []
-            [ heroGrid
-            ]
+        [ Page.hero [] [ heroGrid ]
         , Html.h2
             [ Typography.headline6
             , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"

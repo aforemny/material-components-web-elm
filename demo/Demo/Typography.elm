@@ -1,8 +1,7 @@
 module Demo.Typography exposing (view)
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
-import Demo.Page exposing (Page)
+import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
 import Material.Typography as Typography
@@ -12,7 +11,7 @@ view : Page m -> Html m
 view page =
     page.body "Typography"
         "Roboto is the standard typeface on Android and Chrome."
-        [ Hero.view []
+        [ Page.hero []
             [ Html.h1 [ Typography.headline1 ] [ text "Typography" ]
             ]
         , Html.h2

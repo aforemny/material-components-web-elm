@@ -1,6 +1,5 @@
 module Demo.TabBar exposing (Model, Msg(..), defaultModel, subscriptions, update, view)
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Dict exposing (Dict)

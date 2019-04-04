@@ -1,28 +1,29 @@
 module Demo.TextFields exposing (Model, Msg(..), defaultModel, update, view)
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.TextField as TextField exposing (textField, textFieldConfig)
+import Material.Icon as Icon exposing (icon, iconConfig)
+import Material.TextField as TextField exposing (textField, textFieldConfig, textFieldIcon)
 import Material.TextField.HelperText exposing (helperText, helperTextConfig)
 import Material.Typography as Typography
 
 
 type alias Model =
-    {}
+    { value : String }
 
 
 defaultModel : Model
 defaultModel =
-    {}
+    { value = "" }
 
 
 type Msg
     = NoOp
+    | SetValue String
 
 
 update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
@@ -31,199 +32,15 @@ update lift msg model =
         NoOp ->
             ( model, Cmd.none )
 
-
-heroTextFieldsContainer : List (Html.Attribute m) -> List (Html m) -> Html m
-heroTextFieldsContainer options =
-    Html.div
-        (Html.Attributes.class "hero-text-field-container"
-            :: Html.Attributes.style "display" "flex"
-            :: Html.Attributes.style "flex" "1 1 100%"
-            :: Html.Attributes.style "justify-content" "space-around"
-            :: Html.Attributes.style "flex-wrap" "wrap"
-            :: options
-        )
-
-
-heroTextFieldContainer : List (Html.Attribute m) -> List (Html m) -> Html m
-heroTextFieldContainer options =
-    Html.div
-        (Html.Attributes.class "text-field-container"
-            :: Html.Attributes.style "min-width" "200px"
-            :: Html.Attributes.style "padding" "20px"
-            :: options
-        )
-
-
-heroTextFields : (Msg -> m) -> Model -> Html m
-heroTextFields lift model =
-    heroTextFieldContainer []
-        [ textFieldContainer []
-            [ textField { textFieldConfig | label = "Standard" }
-            , textField { textFieldConfig | label = "Standard", outlined = True }
-            ]
-        ]
-
-
-textFieldRow : List (Html.Attribute m) -> List (Html m) -> Html m
-textFieldRow options =
-    Html.div
-        (Html.Attributes.class "text-field-row"
-            :: Html.Attributes.style "display" "flex"
-            :: Html.Attributes.style "align-items" "flex-start"
-            :: Html.Attributes.style "justify-content" "space-between"
-            :: Html.Attributes.style "flex-wrap" "wrap"
-            :: options
-        )
-
-
-textFieldContainer : List (Html.Attribute m) -> List (Html m) -> Html m
-textFieldContainer options =
-    Html.div
-        (Html.Attributes.class "text-field-container"
-            :: Html.Attributes.style "min-width" "200px"
-            :: options
-        )
-
-
-helperText_ : Html m
-helperText_ =
-    helperText { helperTextConfig | persistent = True } "Helper Text"
-
-
-filledTextFields : (Msg -> m) -> Model -> Html m
-filledTextFields lift model =
-    textFieldRow []
-        [ textFieldContainer []
-            [ textField { textFieldConfig | label = "Standard" }
-            , helperText_
-            ]
-        , textFieldContainer []
-            [ textField { textFieldConfig | label = "Standard" }
-            , helperText_
-            ]
-        , textFieldContainer []
-            [ textField { textFieldConfig | label = "Standard" }
-            , helperText_
-            ]
-        ]
-
-
-outlinedTextFields : (Msg -> m) -> Model -> Html m
-outlinedTextFields lift model =
-    textFieldRow []
-        [ textFieldContainer []
-            [ textField { textFieldConfig | label = "Standard", outlined = True }
-            , helperText_
-            ]
-        , textFieldContainer []
-            [ textField { textFieldConfig | label = "Standard", outlined = True }
-            , helperText_
-            ]
-        , textFieldContainer []
-            [ textField { textFieldConfig | label = "Standard", outlined = True }
-            , helperText_
-            ]
-        ]
-
-
-shapedFilledTextFields : (Msg -> m) -> Model -> Html m
-shapedFilledTextFields lift model =
-    textFieldRow []
-        [ textFieldContainer []
-            [ textField
-                { textFieldConfig
-                    | label = "Standard"
-                    , additionalAttributes =
-                        [ Html.Attributes.style "border-radius" "16px 16px 0 0" ]
-                }
-            , helperText_
-            ]
-        , textFieldContainer []
-            [ textField
-                { textFieldConfig
-                    | label = "Standard"
-                    , additionalAttributes =
-                        [ Html.Attributes.style "border-radius" "16px 16px 0 0" ]
-                }
-            , helperText_
-            ]
-        , textFieldContainer []
-            [ textField
-                { textFieldConfig
-                    | label = "Standard"
-                    , additionalAttributes =
-                        [ Html.Attributes.style "border-radius" "16px 16px 0 0" ]
-                }
-            , helperText_
-            ]
-        ]
-
-
-shapedOutlinedTextFields : (Msg -> m) -> Model -> Html m
-shapedOutlinedTextFields lift model =
-    textFieldRow []
-        [ textFieldContainer []
-            [ textField { textFieldConfig | label = "Standard", outlined = True }
-            , helperText_
-            ]
-        , textFieldContainer []
-            [ textField { textFieldConfig | label = "Standard", outlined = True }
-            , helperText_
-            ]
-        , textFieldContainer []
-            [ textField { textFieldConfig | label = "Standard", outlined = True }
-            , helperText_
-            ]
-        ]
-
-
-fullwidthTextField : (Msg -> m) -> Model -> Html m
-fullwidthTextField lift model =
-    textFieldContainer []
-        [ textField { textFieldConfig | label = "Standard", fullwidth = True }
-        , helperText_
-        ]
-
-
-textareaTextField : (Msg -> m) -> Model -> Html m
-textareaTextField lift model =
-    textFieldContainer []
-        [ textField
-            { textFieldConfig | label = "Standard", textarea = True, outlined = True }
-        , helperText_
-        ]
-
-
-textFieldRowFullwidth : List (Html.Attribute m) -> List (Html m) -> Html m
-textFieldRowFullwidth options =
-    Html.div
-        (Html.Attributes.class "text-field-row text-field-row--fullwidth"
-            :: Html.Attributes.style "display" "block"
-            :: options
-        )
-
-
-fullwidthTextareaTextField : (Msg -> m) -> Model -> Html m
-fullwidthTextareaTextField lift model =
-    textFieldRowFullwidth []
-        [ textFieldContainer []
-            [ textField
-                { textFieldConfig
-                    | label = "Standard"
-                    , textarea = True
-                    , fullwidth = True
-                    , outlined = True
-                }
-            , helperText_
-            ]
-        ]
+        SetValue value ->
+            ( model, Cmd.none )
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
     page.body "Text Field"
         "Text fields allow users to input, edit, and select text. Text fields typically reside in forms but can appear in other places, like dialog boxes and search."
-        [ Hero.view [] [ heroTextFields lift model ]
+        [ Page.hero [] [ heroTextFields lift model ]
         , Html.h2
             [ Typography.headline6
             , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
@@ -265,3 +82,211 @@ view lift page model =
             , fullwidthTextareaTextField lift model
             ]
         ]
+
+
+heroTextFields : (Msg -> m) -> Model -> Html m
+heroTextFields lift model =
+    Html.div heroTextFieldContainer
+        [ Html.div textFieldContainerHero
+            [ textField { textFieldConfig | label = "Standard", value = Just model.value, onInput = Just (lift << SetValue) } ]
+        , Html.div textFieldContainerHero
+            [ textField { textFieldConfig | label = "Standard", outlined = True, value = Just model.value, onInput = Just (lift << SetValue) } ]
+        ]
+
+
+filledTextFields : (Msg -> m) -> Model -> Html m
+filledTextFields lift model =
+    Html.div textFieldRow
+        [ Html.div textFieldContainer
+            [ textField { textFieldConfig | label = "Standard" }
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , leadingIcon = textFieldIcon iconConfig "event"
+                }
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , trailingIcon = textFieldIcon iconConfig "delete"
+                }
+            , demoHelperText
+            ]
+        ]
+
+
+shapedFilledTextFields : (Msg -> m) -> Model -> Html m
+shapedFilledTextFields lift model =
+    Html.div textFieldRow
+        [ Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , additionalAttributes =
+                        [ Html.Attributes.style "border-radius" "16px 16px 0 0" ]
+                }
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , leadingIcon = textFieldIcon iconConfig "event"
+                    , additionalAttributes =
+                        [ Html.Attributes.style "border-radius" "16px 16px 0 0" ]
+                }
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , trailingIcon = textFieldIcon iconConfig "delete"
+                    , additionalAttributes =
+                        [ Html.Attributes.style "border-radius" "16px 16px 0 0" ]
+                }
+            , demoHelperText
+            ]
+        ]
+
+
+outlinedTextFields : (Msg -> m) -> Model -> Html m
+outlinedTextFields lift model =
+    Html.div textFieldRow
+        [ Html.div textFieldContainer
+            [ textField { textFieldConfig | label = "Standard", outlined = True }
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , outlined = True
+                    , leadingIcon = textFieldIcon iconConfig "event"
+                }
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , outlined = True
+                    , trailingIcon = textFieldIcon iconConfig "delete"
+                }
+            , demoHelperText
+            ]
+        ]
+
+
+shapedOutlinedTextFields : (Msg -> m) -> Model -> Html m
+shapedOutlinedTextFields lift model =
+    Html.div textFieldRow
+        [ Html.div textFieldContainer
+            [ textField { textFieldConfig | label = "Standard", outlined = True }
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , outlined = True
+                    , leadingIcon = textFieldIcon iconConfig "event"
+                }
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , outlined = True
+                    , trailingIcon = textFieldIcon iconConfig "delete"
+                }
+            , demoHelperText
+            ]
+        ]
+
+
+textareaTextField : (Msg -> m) -> Model -> Html m
+textareaTextField lift model =
+    Html.div textFieldContainer
+        [ textField
+            { textFieldConfig | label = "Standard", textarea = True, outlined = True }
+        , demoHelperText
+        ]
+
+
+fullwidthTextField : (Msg -> m) -> Model -> Html m
+fullwidthTextField lift model =
+    Html.div textFieldContainer
+        [ textField { textFieldConfig | placeholder = Just "Standard", fullwidth = True }
+        , demoHelperText
+        ]
+
+
+fullwidthTextareaTextField : (Msg -> m) -> Model -> Html m
+fullwidthTextareaTextField lift model =
+    Html.div textFieldRowFullwidth
+        [ Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , textarea = True
+                    , fullwidth = True
+                    , outlined = True
+                }
+            , demoHelperText
+            ]
+        ]
+
+
+heroTextFieldContainer : List (Html.Attribute m)
+heroTextFieldContainer =
+    [ Html.Attributes.class "hero-text-field-container"
+    , Html.Attributes.style "display" "-ms-flexbox"
+    , Html.Attributes.style "display" "flex"
+    , Html.Attributes.style "-ms-flex" "1 1 100%"
+    , Html.Attributes.style "flex" "1 1 100%"
+    , Html.Attributes.style "-ms-flex-pack" "distribute"
+    , Html.Attributes.style "justify-content" "space-around"
+    , Html.Attributes.style "-ms-flex-wrap" "wrap"
+    , Html.Attributes.style "flex-wrap" "wrap"
+    ]
+
+
+textFieldContainerHero : List (Html.Attribute m)
+textFieldContainerHero =
+    Html.Attributes.style "padding" "20px" :: textFieldContainer
+
+
+textFieldContainer : List (Html.Attribute m)
+textFieldContainer =
+    [ Html.Attributes.class "text-field-container"
+    , Html.Attributes.style "min-width" "200px"
+    ]
+
+
+textFieldRow : List (Html.Attribute m)
+textFieldRow =
+    [ Html.Attributes.class "text-field-row"
+    , Html.Attributes.style "display" "flex"
+    , Html.Attributes.style "align-items" "flex-start"
+    , Html.Attributes.style "justify-content" "space-between"
+    , Html.Attributes.style "flex-wrap" "wrap"
+    ]
+
+
+textFieldRowFullwidth : List (Html.Attribute m)
+textFieldRowFullwidth =
+    [ Html.Attributes.class "text-field-row text-field-row--fullwidth"
+    , Html.Attributes.style "display" "block"
+    ]
+
+
+demoHelperText : Html m
+demoHelperText =
+    helperText { helperTextConfig | persistent = True } "Helper Text"

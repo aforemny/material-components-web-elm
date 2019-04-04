@@ -1,6 +1,5 @@
 module Demo.Elevation exposing (Model, Msg(..), defaultModel, update, view)
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
@@ -51,19 +50,10 @@ view lift page model =
     in
     page.body "Elevation"
         "Elevation is the relative depth, or distance, between two surfaces along the z-axis."
-        [ Hero.view []
-            [ heroSurface
-                [ Elevation.z0
-                ]
-                [ text "Flat 0dp" ]
-            , heroSurface
-                [ Elevation.z8
-                ]
-                [ text "Raised 8dp" ]
-            , heroSurface
-                [ Elevation.z16
-                ]
-                [ text "Raised 16dp" ]
+        [ Page.hero []
+            [ heroSurface [ Elevation.z0 ] [ text "Flat 0dp" ]
+            , heroSurface [ Elevation.z8 ] [ text "Raised 8dp" ]
+            , heroSurface [ Elevation.z16 ] [ text "Raised 16dp" ]
             ]
         , Html.h2
             [ Typography.headline6

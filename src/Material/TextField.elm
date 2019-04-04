@@ -1,16 +1,10 @@
-module Material.TextField exposing (Config, textField, textFieldConfig)
+module Material.TextField exposing (Config, textField, textFieldConfig, textFieldIcon)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
-
-
-
--- TODO: leading icon
--- TODO: trailing icon
--- TODO: value
--- TODO: onInput
--- TODO: onChange
--- TODO: placeholder
+import Html.Events
+import Json.Decode as Decode
+import Material.Icon as Icon exposing (icon, iconConfig)
 
 
 type alias Config msg =
@@ -21,7 +15,19 @@ type alias Config msg =
     , cols : Maybe Int
     , outlined : Bool
     , disabled : Bool
+    , required : Bool
+    , invalid : Bool
+    , minLength : Maybe Int
+    , maxLength : Maybe Int
+    , min : Maybe Int
+    , max : Maybe Int
+    , value : Maybe String
+    , placeholder : Maybe String
+    , leadingIcon : Maybe (Html msg)
+    , trailingIcon : Maybe (Html msg)
     , additionalAttributes : List (Html.Attribute msg)
+    , onInput : Maybe (String -> msg)
+    , onChange : Maybe (String -> msg)
     }
 
 
@@ -34,7 +40,19 @@ textFieldConfig =
     , cols = Nothing
     , outlined = False
     , disabled = False
+    , required = False
+    , invalid = False
+    , minLength = Nothing
+    , maxLength = Nothing
+    , min = Nothing
+    , max = Nothing
+    , value = Nothing
+    , placeholder = Nothing
     , additionalAttributes = []
+    , leadingIcon = Nothing
+    , trailingIcon = Nothing
+    , onInput = Nothing
+    , onChange = Nothing
     }
 
 
@@ -43,48 +61,68 @@ textField config =
     Html.node "mdc-text-field"
         (List.filterMap identity
             [ rootCs
+            , outlinedCs config
             , fullwidthCs config
             , textareaCs config
+            , disabledCs config
+            , withLeadingIconCs config
+            , withTrailingIconCs config
+            , valueAttr config
             ]
             ++ config.additionalAttributes
         )
-        (if config.fullwidth then
-            if config.textarea then
+        (List.concat
+            [ leadingIconElt config
+            , if config.fullwidth then
+                if config.textarea || config.outlined then
+                    [ inputElt config
+                    , notchedOutlineElt config
+                    ]
+
+                else
+                    [ inputElt config
+                    , lineRippleElt
+                    ]
+
+              else if config.textarea || config.outlined then
                 [ inputElt config
                 , notchedOutlineElt config
                 ]
 
-            else if config.outlined then
+              else
                 [ inputElt config
-                , notchedOutlineElt config
-                ]
-
-            else
-                [ inputElt config
+                , labelElt config
                 , lineRippleElt
                 ]
-
-         else if config.textarea then
-            [ inputElt config
-            , notchedOutlineElt config
+            , trailingIconElt config
             ]
+        )
 
-         else if config.outlined then
-            [ inputElt config
-            , notchedOutlineElt config
-            ]
 
-         else
-            [ inputElt config
-            , labelElt config
-            , lineRippleElt
-            ]
+textFieldIcon : Icon.Config msg -> String -> Maybe (Html msg)
+textFieldIcon iconConfig iconName =
+    Just
+        (icon
+            { iconConfig
+                | additionalAttributes =
+                    class "mdc-text-field__icon" :: iconConfig.additionalAttributes
+            }
+            iconName
         )
 
 
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-text-field")
+
+
+outlinedCs : Config msg -> Maybe (Html.Attribute msg)
+outlinedCs { outlined } =
+    if outlined then
+        Just (class "mdc-text-field--outlined")
+
+    else
+        Nothing
 
 
 fullwidthCs : Config msg -> Maybe (Html.Attribute msg)
@@ -114,6 +152,97 @@ disabledCs { disabled } =
         Nothing
 
 
+withLeadingIconCs : Config msg -> Maybe (Html.Attribute msg)
+withLeadingIconCs { leadingIcon } =
+    if leadingIcon /= Nothing then
+        Just (class "mdc-text-field--with-leading-icon")
+
+    else
+        Nothing
+
+
+withTrailingIconCs : Config msg -> Maybe (Html.Attribute msg)
+withTrailingIconCs { trailingIcon } =
+    if trailingIcon /= Nothing then
+        Just (class "mdc-text-field--with-trailing-icon")
+
+    else
+        Nothing
+
+
+requiredAttr : Config msg -> Maybe (Html.Attribute msg)
+requiredAttr { required } =
+    if required then
+        Just (Html.Attributes.attribute "required" "")
+
+    else
+        Nothing
+
+
+invalidAttr : Config msg -> Maybe (Html.Attribute msg)
+invalidAttr { invalid } =
+    if invalid then
+        Just (Html.Attributes.attribute "invalid" "")
+
+    else
+        Nothing
+
+
+minLengthAttr : Config msg -> Maybe (Html.Attribute msg)
+minLengthAttr { minLength } =
+    Maybe.map Html.Attributes.minlength minLength
+
+
+maxLengthAttr : Config msg -> Maybe (Html.Attribute msg)
+maxLengthAttr { maxLength } =
+    Maybe.map Html.Attributes.maxlength maxLength
+
+
+minAttr : Config msg -> Maybe (Html.Attribute msg)
+minAttr { min } =
+    Maybe.map (Html.Attributes.min << String.fromInt) min
+
+
+maxAttr : Config msg -> Maybe (Html.Attribute msg)
+maxAttr { max } =
+    Maybe.map (Html.Attributes.max << String.fromInt) max
+
+
+valueAttr : Config msg -> Maybe (Html.Attribute msg)
+valueAttr { value } =
+    Maybe.map (Html.Attributes.attribute "value") value
+
+
+placeholderAttr : Config msg -> Maybe (Html.Attribute msg)
+placeholderAttr { placeholder } =
+    Maybe.map Html.Attributes.placeholder placeholder
+
+
+leadingIconElt : Config msg -> List (Html msg)
+leadingIconElt { leadingIcon } =
+    leadingIcon
+        |> Maybe.map List.singleton
+        |> Maybe.withDefault []
+
+
+trailingIconElt : Config msg -> List (Html msg)
+trailingIconElt { trailingIcon } =
+    trailingIcon
+        |> Maybe.map List.singleton
+        |> Maybe.withDefault []
+
+
+inputHandler : Config msg -> Maybe (Html.Attribute msg)
+inputHandler { onInput } =
+    Maybe.map Html.Events.onInput onInput
+
+
+changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler { onChange } =
+    Maybe.map (\f -> Html.Events.on "change" (Decode.map f Html.Events.targetValue))
+        onChange
+
+
 inputElt : Config msg -> Html msg
 inputElt config =
     (if config.textarea then
@@ -127,6 +256,15 @@ inputElt config =
             , rowsAttr config
             , colsAttr config
             , disabledAttr config
+            , requiredAttr config
+            , invalidAttr config
+            , minLengthAttr config
+            , maxLengthAttr config
+            , minAttr config
+            , maxAttr config
+            , placeholderAttr config
+            , inputHandler config
+            , changeHandler config
             ]
         )
         []
@@ -161,8 +299,15 @@ disabledAttr { disabled } =
 
 
 labelElt : Config msg -> Html msg
-labelElt { label } =
-    Html.div [ class "mdc-floating-label" ] [ text label ]
+labelElt { label, value } =
+    Html.div
+        (if Maybe.withDefault "" value /= "" then
+            [ class "mdc-floating-label mdc-floating-label--float-above" ]
+
+         else
+            [ class "mdc-floating-label" ]
+        )
+        [ text label ]
 
 
 lineRippleElt : Html msg

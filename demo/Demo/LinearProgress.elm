@@ -1,6 +1,5 @@
 module Demo.LinearProgress exposing (view)
 
-import Demo.Helper.Hero as Hero
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
@@ -13,7 +12,7 @@ view : Page m -> Html m
 view page =
     page.body "Linear Progress Indicator"
         "Progress indicators display the length of a process or express an unspecified wait time."
-        [ Hero.view []
+        [ Page.hero []
             [ linearProgress
                 { linearProgressConfig | variant = LinearProgress.Determinate 0.5 }
             ]

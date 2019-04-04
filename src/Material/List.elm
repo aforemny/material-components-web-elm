@@ -23,6 +23,10 @@ import Html.Attributes exposing (class)
 import Html.Events
 
 
+
+-- TODO: Trigger onClick on Enter and Space keypress
+
+
 type alias Config msg =
     { nonInteractive : Bool
     , dense : Bool

@@ -314,18 +314,6 @@ module.exports = [
     }
   },
   {
-    entry: './src/tab-scroller.js',
-    output: {
-      path: path.resolve(__dirname, "dist"),
-      filename: "mdc-tab-scroller.min.js"
-    },
-    module: {
-      rules: [
-        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
-      ]
-    }
-  },
-  {
     entry: './src/text-field.js',
     output: {
       path: path.resolve(__dirname, "dist"),

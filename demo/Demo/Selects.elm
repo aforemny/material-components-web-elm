@@ -6,89 +6,37 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.Select as Select exposing (optionConfig, select, selectConfig)
+import Material.Select as Select exposing (SelectOption, filledSelect, outlinedSelect, selectConfig, selectOption, selectOptionConfig)
 import Material.Typography as Typography
 
 
 type alias Model =
-    { selects : Dict String String
+    { value : String
     }
 
 
 defaultModel : Model
 defaultModel =
-    { selects = Dict.empty
+    { value = ""
     }
 
 
 type Msg
-    = Select String String
+    = Select String
 
 
 update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
 update lift msg model =
     case msg of
-        Select index value ->
-            ( { model | selects = Dict.insert index value model.selects }, Cmd.none )
-
-
-items : List (Html m)
-items =
-    [ Select.option { optionConfig | value = "Apple" } [ text "Apple" ]
-    , Select.option { optionConfig | value = "Orange" } [ text "Orange" ]
-    , Select.option { optionConfig | value = "Banana" } [ text "Banana" ]
-    ]
-
-
-heroSelect : (Msg -> m) -> Model -> Html m
-heroSelect lift model =
-    select { selectConfig | label = "Fruit" } items
-
-
-filledSelect : (Msg -> m) -> Model -> Html m
-filledSelect lift model =
-    select { selectConfig | label = "Fruit" } items
-
-
-outlinedSelect : (Msg -> m) -> Model -> Html m
-outlinedSelect lift model =
-    select { selectConfig | variant = Select.Outlined, label = "Fruit" } items
-
-
-shapedFilledSelect : (Msg -> m) -> Model -> Html m
-shapedFilledSelect lift model =
-    select
-        { selectConfig
-            | label = "Fruit"
-            , additionalAttributes =
-                [ Html.Attributes.style "border-radius" "17.92px 17.92px 0 0" ]
-        }
-        items
-
-
-shapedOutlinedSelect : (Msg -> m) -> Model -> Html m
-shapedOutlinedSelect lift model =
-    select
-        { selectConfig
-            | variant = Select.Outlined
-            , label = "Fruit"
-            , additionalAttributes =
-                [-- TODO:
-                 -- , Select.nativeControl
-                 --     [ Html.Attributes.style "border-radius" "28px"
-                 --     , Html.Attributes.style "padding-left" "32px"
-                 --     , Html.Attributes.style "padding-right" "52px"
-                 --     ]
-                ]
-        }
-        items
+        Select value ->
+            ( { model | value = value }, Cmd.none )
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
     page.body "Select"
         "Selects allow users to select from a single-option menu. It functions as a wrapper around the browser's native <select> element."
-        [ Page.hero [] [ heroSelect lift model ]
+        [ Page.hero [] [ heroSelects lift model ]
         , Html.h2
             [ Typography.headline6
             , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
@@ -115,15 +63,73 @@ view lift page model =
             }
         , Page.demos
             [ Html.h3 [ Typography.subtitle1 ] [ text "Filled" ]
-            , filledSelect lift model
+            , filledSelects lift model
             , Html.h3 [ Typography.subtitle1 ] [ text "Outlined" ]
-            , outlinedSelect lift model
+            , outlinedSelects lift model
             , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Filled" ]
-            , shapedFilledSelect lift model
+            , shapedFilledSelects lift model
             , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Outlined" ]
-            , shapedOutlinedSelect lift model
+            , shapedOutlinedSelects lift model
             ]
         ]
+
+
+heroSelects : (Msg -> m) -> Model -> Html m
+heroSelects lift model =
+    filledSelect
+        { selectConfig
+            | label = "Fruit"
+            , value = Just model.value
+            , onChange = Just (lift << Select)
+        }
+        items
+
+
+filledSelects : (Msg -> m) -> Model -> Html m
+filledSelects lift model =
+    filledSelect { selectConfig | label = "Fruit" } items
+
+
+outlinedSelects : (Msg -> m) -> Model -> Html m
+outlinedSelects lift model =
+    outlinedSelect { selectConfig | label = "Fruit" } items
+
+
+shapedFilledSelects : (Msg -> m) -> Model -> Html m
+shapedFilledSelects lift model =
+    filledSelect
+        { selectConfig
+            | label = "Fruit"
+            , additionalAttributes =
+                [ Html.Attributes.style "border-radius" "17.92px 17.92px 0 0" ]
+        }
+        items
+
+
+shapedOutlinedSelects : (Msg -> m) -> Model -> Html m
+shapedOutlinedSelects lift model =
+    outlinedSelect
+        { selectConfig
+            | label = "Fruit"
+            , additionalAttributes =
+                [-- TODO:
+                 -- , Select.nativeControl
+                 --     [ Html.Attributes.style "border-radius" "28px"
+                 --     , Html.Attributes.style "padding-left" "32px"
+                 --     , Html.Attributes.style "padding-right" "52px"
+                 --     ]
+                ]
+        }
+        items
+
+
+items : List (SelectOption m)
+items =
+    [ selectOption { selectOptionConfig | value = "" } [ text "" ]
+    , selectOption { selectOptionConfig | value = "Apple" } [ text "Apple" ]
+    , selectOption { selectOptionConfig | value = "Orange" } [ text "Orange" ]
+    , selectOption { selectOptionConfig | value = "Banana" } [ text "Banana" ]
+    ]
 
 
 subscriptions : (Msg -> m) -> Model -> Sub m

@@ -2,7 +2,6 @@ module Demo.Drawer exposing
     ( Model
     , Msg(..)
     , defaultModel
-    , subscriptions
     , update
     , view
     )
@@ -148,8 +147,3 @@ view lift page model =
             , example "Modal" "#modal-drawer"
             ]
         ]
-
-
-subscriptions : (Msg -> m) -> Model -> Sub m
-subscriptions lift model =
-    Sub.none

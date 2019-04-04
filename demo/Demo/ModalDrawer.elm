@@ -2,7 +2,6 @@ module Demo.ModalDrawer exposing
     ( Model
     , Msg(..)
     , defaultModel
-    , subscriptions
     , update
     , view
     )
@@ -93,8 +92,3 @@ view lift page model =
             , Demo.PermanentDrawer.mainContent model lift
             ]
         ]
-
-
-subscriptions : (Msg -> m) -> Model -> Sub m
-subscriptions lift model =
-    Sub.none

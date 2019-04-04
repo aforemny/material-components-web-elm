@@ -1,4 +1,4 @@
-module Demo.TopAppBar exposing (Model, Msg(..), defaultModel, subscriptions, update, view)
+module Demo.TopAppBar exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.Page as Page exposing (Page)
 import Demo.Url as Url exposing (TopAppBarPage)
@@ -397,8 +397,3 @@ culpa qui officia deserunt mollit anim id est laborum.
 """
                 ]
         )
-
-
-subscriptions : (Msg -> m) -> Model -> Sub m
-subscriptions lift model =
-    Sub.none

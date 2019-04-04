@@ -1,4 +1,4 @@
-module Demo.Menus exposing (Model, Msg(..), defaultModel, subscriptions, update, view)
+module Demo.Menus exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
@@ -38,11 +38,6 @@ update lift msg model =
 
         Close ->
             ( { model | open = False }, Cmd.none )
-
-
-subscriptions : (Msg -> m) -> Model -> Sub m
-subscriptions lift model =
-    Sub.none
 
 
 heroMenu : (Msg -> m) -> Model -> Html m

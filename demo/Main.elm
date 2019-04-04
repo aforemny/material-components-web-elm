@@ -504,14 +504,4 @@ init flags url key =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ Demo.DismissibleDrawer.subscriptions DismissibleDrawerMsg model.dismissibleDrawer
-        , Demo.Drawer.subscriptions DrawerMsg model.drawer
-        , Demo.Menus.subscriptions MenuMsg model.menus
-        , Demo.PermanentDrawer.subscriptions PermanentDrawerMsg model.permanentDrawer
-        , Demo.Selects.subscriptions SelectMsg model.selects
-        , Demo.Slider.subscriptions SliderMsg model.slider
-        , Demo.TabBar.subscriptions TabBarMsg model.tabbar
-        , Demo.ModalDrawer.subscriptions ModalDrawerMsg model.modalDrawer
-        , Demo.TopAppBar.subscriptions TopAppBarMsg model.topAppBar
-        ]
+    Sub.none

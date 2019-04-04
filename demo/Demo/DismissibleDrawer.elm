@@ -2,7 +2,6 @@ module Demo.DismissibleDrawer exposing
     ( Model
     , Msg(..)
     , defaultModel
-    , subscriptions
     , update
     , view
     )
@@ -97,8 +96,3 @@ html, body {
         """
             ]
         ]
-
-
-subscriptions : (Msg -> m) -> Model -> Sub m
-subscriptions lift model =
-    Sub.none

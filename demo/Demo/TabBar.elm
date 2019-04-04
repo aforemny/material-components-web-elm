@@ -1,4 +1,4 @@
-module Demo.TabBar exposing (Model, Msg(..), defaultModel, subscriptions, update, view)
+module Demo.TabBar exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
@@ -33,11 +33,6 @@ update lift msg model =
     case msg of
         SelectTab index tabIndex ->
             ( { model | states = Dict.insert index tabIndex model.states }, Cmd.none )
-
-
-subscriptions : (Msg -> m) -> Model -> Sub m
-subscriptions lift model =
-    Sub.none
 
 
 tab_ :

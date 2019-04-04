@@ -4,7 +4,6 @@ module Demo.PermanentDrawer exposing
     , defaultModel
     , drawerBody
     , mainContent
-    , subscriptions
     , update
     , view
     )
@@ -185,8 +184,3 @@ html, body {
         """
             ]
         ]
-
-
-subscriptions : (Msg -> m) -> Model -> Sub m
-subscriptions lift model =
-    Sub.none

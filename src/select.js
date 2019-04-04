@@ -6,6 +6,10 @@ class MdcSelect extends HTMLElement {
     super();
   }
 
+  get root_() {
+    return this;
+  }
+
   connectedCallback() {
     this.MDCSelect = new MDCSelect(this);
   }

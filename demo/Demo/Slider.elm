@@ -1,4 +1,4 @@
-module Demo.Slider exposing (Model, Msg(..), defaultModel, subscriptions, update, view)
+module Demo.Slider exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
@@ -38,11 +38,6 @@ update lift msg model =
     case msg of
         Change index value ->
             ( { model | sliders = Dict.insert index value model.sliders }, Cmd.none )
-
-
-subscriptions : (Msg -> m) -> Model -> Sub m
-subscriptions lift model =
-    Sub.none
 
 
 heroSlider : (Msg -> m) -> Model -> Html m

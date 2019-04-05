@@ -1,7 +1,9 @@
 import { MDCTabBarFoundation } from "@material/tab-bar/index";
-import { MDCTabFoundation } from "@material/tab/index";
+import { MDCTab } from "@material/tab/index";
 import { MDCTabScroller } from "@material/tab-scroller/index";
 import { strings, cssClasses } from "@material/tab-bar/constants";
+
+let tabIdCounter = 0;
 
 class MdcTabBar extends HTMLElement {
 
@@ -18,38 +20,42 @@ class MdcTabBar extends HTMLElement {
       getScrollContentWidth: () => this.tabScroller_.getScrollContentWidth(),
       getOffsetWidth: () => this.offsetWidth,
       isRTL: () => window.getComputedStyle(this).getPropertyValue('direction') === 'rtl',
-      setActiveTab: index => this.foundation_.activateTab(index),
+      setActiveTab: index => {
+        if ((index < 0) || (index > this.tabList_.length - 1)) return;
+        this.tabList_[index].root_.dispatchEvent(new CustomEvent(
+          "MDCTab:interacted",
+          {
+            detail: { index },
+            bubbles: true
+          }
+        ));
+      },
       activateTabAtIndex: (index, clientRect) => {
-        const tabList = this.tabList_;
-        if ((index < 0) || (index > tabList.length - 1)) return;
+        if ((index < 0) || (index > this.tabList_.length - 1)) return;
         this.previousIndex_ = index;
-        tabList[index].activate(clientRect);
+        this.tabList_[index].activate(clientRect);
       },
       deactivateTabAtIndex: index => {
-        const tabList = this.tabList_;
-        if ((index < 0) || (index > tabList.length - 1)) return;
-        tabList[index].deactivate();
+        if ((index < 0) || (index > this.tabList_.length - 1)) return;
+        this.tabList_[index].deactivate();
       },
       focusTabAtIndex: index => {
-        const tabList = this.tabList_;
-        if ((index < 0) || (index > tabList.length - 1)) return;
-        tabList[index].focus();
+        if ((index < 0) || (index > this.tabList_.length - 1)) return;
+        this.tabList_[index].focus();
       },
       getTabIndicatorClientRectAtIndex: index => {
-        const tabList = this.tabList_;
-        if ((index < 0) || (index > tabList.length - 1)) return;
-        return tabList[index].computeIndicatorClientRect();
+        if ((index < 0) || (index > this.tabList_.length - 1)) return;
+        return this.tabList_[index].computeIndicatorClientRect();
       },
       getTabDimensionsAtIndex: index => {
-        const tabList = this.tabList_;
-        if ((index < 0) || (index > tabList.length - 1)) return;
-        return tabList[index].computeDimensions();
+        if ((index < 0) || (index > this.tabList_.length - 1)) return;
+        return this.tabList_[index].computeDimensions();
       },
       getPreviousActiveTabIndex: () => {
         return this.previousIndex_;
       },
       getFocusedTabIndex: () => {
-        const tabElements = this.tabList_;
+        const tabElements = this.getTabElements_();
         const activeElement = document.activeElement;
         return tabElements.indexOf(activeElement);
       },
@@ -71,30 +77,36 @@ class MdcTabBar extends HTMLElement {
     super();
     this.previousIndex_ = -1;
     this.tabScroller_;
+    this.tabList_;
     this.handleKeyDown_ = this.handleKeyDown.bind(this);
-  }
-
-  get tabList_() {
-    return [].slice.call(this.querySelectorAll(MDCTabBarFoundation.strings.TAB_SELECTOR));
   }
 
   connectedCallback() {
     this.foundation_ = new MDCTabBarFoundation(this.adapter);
     this.foundation_.init();
-    console.log(this.foundation_);
 
     const tabScrollerElement = this.querySelector(strings.TAB_SCROLLER_SELECTOR);
     this.tabScroller_ = new MDCTabScroller(tabScrollerElement);
 
-    this.addEventListener('keydown', this.handleKeyDown_);
+    this.tabList_ = this.instantiateTabs();
 
-    window.requestAnimationFrame(() => {
-      this.foundation_.activateTab(parseInt(this.getAttribute("activetab") || "-1"));
+    this.addEventListener('keydown', this.handleKeyDown_);
+    this.foundation_.activateTab(parseInt(this.getAttribute("activetab") || "-1"));
+  }
+
+  getTabElements_() {
+    return [].slice.call(this.querySelectorAll(MDCTabBarFoundation.strings.TAB_SELECTOR));
+  }
+
+  instantiateTabs() {
+    return this.getTabElements_().map((el) => {
+      el.id = el.id || `mdc-tab-${++tabIdCounter}`;
+      el.tabIndex = el.tabIndex || -1;
+      return new MDCTab(el);
     });
   }
 
   handleKeyDown(event) {
-    console.log("handleKeyDown", this.foundation_.handleKeyDown);
     this.foundation_.handleKeyDown(event);
   }
 

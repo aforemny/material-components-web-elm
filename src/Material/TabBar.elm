@@ -109,7 +109,7 @@ tab config content =
 
 viewTab : Tab msg -> Html msg
 viewTab (Tab { config, content }) =
-    Html.node "mdc-tab"
+    Html.button
         (List.filterMap identity
             [ tabCs
             , tabRoleAttr

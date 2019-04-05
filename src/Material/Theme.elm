@@ -1,23 +1,28 @@
 module Material.Theme exposing
     ( background
-    , disabledOnDark
-    , disabledOnLight
-    , hintOnDark
-    , hintOnLight
-    , iconOnDark
-    , iconOnLight
     , onPrimary
     , onSecondary
     , onSurface
     , primary
     , primaryBg
-    , primaryOnDark
-    , primaryOnLight
     , secondary
     , secondaryBg
-    , secondaryOnDark
-    , secondaryOnLight
     , surface
+    , textDisabledOnBackground
+    , textDisabledOnDark
+    , textDisabledOnLight
+    , textHintOnBackground
+    , textHintOnDark
+    , textHintOnLight
+    , textIconOnBackground
+    , textIconOnDark
+    , textIconOnLight
+    , textPrimaryOnBackground
+    , textPrimaryOnDark
+    , textPrimaryOnLight
+    , textSecondaryOnBackground
+    , textSecondaryOnDark
+    , textSecondaryOnLight
     )
 
 import Html
@@ -69,51 +74,76 @@ secondaryBg =
     class "mdc-theme--secondary-bg"
 
 
-primaryOnLight : Html.Attribute msg
-primaryOnLight =
+textPrimaryOnLight : Html.Attribute msg
+textPrimaryOnLight =
     class "mdc-theme--text-primary-on-light"
 
 
-secondaryOnLight : Html.Attribute msg
-secondaryOnLight =
+textSecondaryOnLight : Html.Attribute msg
+textSecondaryOnLight =
     class "mdc-theme--text-secondary-on-light"
 
 
-hintOnLight : Html.Attribute msg
-hintOnLight =
+textHintOnLight : Html.Attribute msg
+textHintOnLight =
     class "mdc-theme--text-hint-on-light"
 
 
-disabledOnLight : Html.Attribute msg
-disabledOnLight =
+textDisabledOnLight : Html.Attribute msg
+textDisabledOnLight =
     class "mdc-theme--text-disabled-on-light"
 
 
-iconOnLight : Html.Attribute msg
-iconOnLight =
+textIconOnLight : Html.Attribute msg
+textIconOnLight =
     class "mdc-theme--text-icon-on-light"
 
 
-primaryOnDark : Html.Attribute msg
-primaryOnDark =
+textPrimaryOnDark : Html.Attribute msg
+textPrimaryOnDark =
     class "mdc-theme--text-primary-on-dark"
 
 
-secondaryOnDark : Html.Attribute msg
-secondaryOnDark =
+textSecondaryOnDark : Html.Attribute msg
+textSecondaryOnDark =
     class "mdc-theme--text-secondary-on-dark"
 
 
-hintOnDark : Html.Attribute msg
-hintOnDark =
+textHintOnDark : Html.Attribute msg
+textHintOnDark =
     class "mdc-theme--text-hint-on-dark"
 
 
-disabledOnDark : Html.Attribute msg
-disabledOnDark =
+textDisabledOnDark : Html.Attribute msg
+textDisabledOnDark =
     class "mdc-theme--text-disabled-on-dark"
 
 
-iconOnDark : Html.Attribute msg
-iconOnDark =
+textIconOnDark : Html.Attribute msg
+textIconOnDark =
     class "mdc-theme--text-icon-on-dark"
+
+
+textPrimaryOnBackground : Html.Attribute msg
+textPrimaryOnBackground =
+    class "mdc-theme--text-primary-on-background"
+
+
+textSecondaryOnBackground : Html.Attribute msg
+textSecondaryOnBackground =
+    class "mdc-theme--text-secondary-on-background"
+
+
+textHintOnBackground : Html.Attribute msg
+textHintOnBackground =
+    class "mdc-theme--text-hint-on-background"
+
+
+textDisabledOnBackground : Html.Attribute msg
+textDisabledOnBackground =
+    class "mdc-theme--text-disabled-on-background"
+
+
+textIconOnBackground : Html.Attribute msg
+textIconOnBackground =
+    class "mdc-theme--text-icon-on-background"

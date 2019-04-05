@@ -1,6 +1,6 @@
 module Material.TabBar exposing
-    ( Config
-    , Tab
+    ( Tab
+    , TabBarConfig
     , TabScrollerAlign(..)
     , TabScrollerConfig
     , tab
@@ -16,20 +16,20 @@ import Html.Events
 import Json.Decode as Decode
 
 
-type alias Config msg =
+type alias TabBarConfig msg =
     { additionalAttributes : List (Html.Attribute msg)
     , tabScrollerConfig : TabScrollerConfig msg
     }
 
 
-tabBarConfig : Config msg
+tabBarConfig : TabBarConfig msg
 tabBarConfig =
     { additionalAttributes = []
     , tabScrollerConfig = tabScrollerConfig
     }
 
 
-tabBar : Config msg -> List (Tab msg) -> Html msg
+tabBar : TabBarConfig msg -> List (Tab msg) -> Html msg
 tabBar config tabs =
     Html.node "mdc-tab-bar"
         (List.filterMap identity
@@ -77,7 +77,7 @@ type alias TabConfig msg =
 
 
 
--- TODO: move indicatorSpansContent to tab bar's Config, possibly. also
+-- TODO: move indicatorSpansContent to tab bar's TabBarConfig, possibly. also
 -- stacked, minWidth, etc.?
 
 

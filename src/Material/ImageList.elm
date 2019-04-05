@@ -1,5 +1,5 @@
 module Material.ImageList exposing
-    ( Config
+    ( ImageListConfig
     , ImageListItem
     , ImageListItemConfig
     , imageList
@@ -12,14 +12,14 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
-type alias Config msg =
+type alias ImageListConfig msg =
     { masonry : Bool
     , withTextProtection : Bool
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
-imageListConfig : Config msg
+imageListConfig : ImageListConfig msg
 imageListConfig =
     { masonry = False
     , withTextProtection = False
@@ -27,7 +27,7 @@ imageListConfig =
     }
 
 
-imageList : Config msg -> List (ImageListItem msg) -> Html msg
+imageList : ImageListConfig msg -> List (ImageListItem msg) -> Html msg
 imageList config listItems =
     Html.node "mdc-image-list"
         (List.filterMap identity
@@ -72,7 +72,7 @@ rootCs =
     Just (class "mdc-image-list")
 
 
-masonryCs : Config msg -> Maybe (Html.Attribute msg)
+masonryCs : ImageListConfig msg -> Maybe (Html.Attribute msg)
 masonryCs { masonry } =
     if masonry then
         Just (class "mdc-image-list--masonry")
@@ -81,7 +81,7 @@ masonryCs { masonry } =
         Nothing
 
 
-withTextProtectionCs : Config msg -> Maybe (Html.Attribute msg)
+withTextProtectionCs : ImageListConfig msg -> Maybe (Html.Attribute msg)
 withTextProtectionCs { withTextProtection } =
     if withTextProtection then
         Just (class "mdc-image-list--with-text-protection")
@@ -90,7 +90,7 @@ withTextProtectionCs { withTextProtection } =
         Nothing
 
 
-listItemElt : Config msg -> ImageListItem msg -> Html msg
+listItemElt : ImageListConfig msg -> ImageListItem msg -> Html msg
 listItemElt ({ masonry } as config_) ((ImageListItem { config }) as listItem) =
     let
         inner =
@@ -109,14 +109,14 @@ listItemElt ({ masonry } as config_) ((ImageListItem { config }) as listItem) =
         )
 
 
-imageAspectContainerElt : Config msg -> ImageListItem msg -> Html msg
+imageAspectContainerElt : ImageListConfig msg -> ImageListItem msg -> Html msg
 imageAspectContainerElt config listItem =
     Html.div
         [ class "mdc-image-list__image-aspect-container" ]
         [ imageElt config listItem ]
 
 
-imageElt : Config msg -> ImageListItem msg -> Html msg
+imageElt : ImageListConfig msg -> ImageListItem msg -> Html msg
 imageElt { masonry } (ImageListItem { image }) =
     if masonry then
         Html.img

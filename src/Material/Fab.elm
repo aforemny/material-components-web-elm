@@ -1,17 +1,17 @@
-module Material.Fab exposing (Config, fab, fabConfig)
+module Material.Fab exposing (FabConfig, fab, fabConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
-type alias Config msg =
+type alias FabConfig msg =
     { mini : Bool
     , exited : Bool
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
-fabConfig : Config msg
+fabConfig : FabConfig msg
 fabConfig =
     { mini = False
     , exited = False
@@ -19,7 +19,7 @@ fabConfig =
     }
 
 
-fab : Config msg -> String -> Html msg
+fab : FabConfig msg -> String -> Html msg
 fab config iconName =
     Html.node "mdc-fab"
         (List.filterMap identity
@@ -38,7 +38,7 @@ rootCs =
     Just (class "mdc-fab")
 
 
-miniCs : Config msg -> Maybe (Html.Attribute msg)
+miniCs : FabConfig msg -> Maybe (Html.Attribute msg)
 miniCs { mini } =
     if mini then
         Just (class "mdc-fab--mini")
@@ -47,7 +47,7 @@ miniCs { mini } =
         Nothing
 
 
-exitedCs : Config msg -> Maybe (Html.Attribute msg)
+exitedCs : FabConfig msg -> Maybe (Html.Attribute msg)
 exitedCs { exited } =
     if exited then
         Just (class "mdc-fab--exited")

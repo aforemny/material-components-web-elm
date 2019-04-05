@@ -1,4 +1,4 @@
-module Material.Chip.Filter exposing (Config, filterChip, filterChipConfig)
+module Material.Chip.Filter exposing (FilterChipConfig, filterChip, filterChipConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -8,7 +8,7 @@ import Svg
 import Svg.Attributes
 
 
-type alias Config msg =
+type alias FilterChipConfig msg =
     { icon : Maybe String
     , selected : Bool
     , additionalAttributes : List (Html.Attribute msg)
@@ -16,7 +16,7 @@ type alias Config msg =
     }
 
 
-filterChipConfig : Config msg
+filterChipConfig : FilterChipConfig msg
 filterChipConfig =
     { icon = Nothing
     , selected = False
@@ -25,7 +25,7 @@ filterChipConfig =
     }
 
 
-filterChip : Config msg -> String -> Html msg
+filterChip : FilterChipConfig msg -> String -> Html msg
 filterChip config label =
     Html.node "mdc-chip"
         (List.filterMap identity
@@ -50,7 +50,7 @@ rootCs =
     Just (class "mdc-chip")
 
 
-selectedCs : Config msg -> Maybe (Html.Attribute msg)
+selectedCs : FilterChipConfig msg -> Maybe (Html.Attribute msg)
 selectedCs { selected } =
     if selected then
         Just (class "mdc-chip--selected")
@@ -59,7 +59,7 @@ selectedCs { selected } =
         Nothing
 
 
-selectedAttr : Config msg -> Maybe (Html.Attribute msg)
+selectedAttr : FilterChipConfig msg -> Maybe (Html.Attribute msg)
 selectedAttr { selected } =
     if selected then
         Just (Html.Attributes.attribute "selected" "")
@@ -68,7 +68,7 @@ selectedAttr { selected } =
         Nothing
 
 
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler : FilterChipConfig msg -> Maybe (Html.Attribute msg)
 clickHandler config =
     Maybe.map (Html.Events.on "MDCChip:interaction" << Decode.succeed) config.onClick
 
@@ -78,7 +78,7 @@ textElt label =
     Just (Html.div [ class "mdc-chip__text" ] [ text label ])
 
 
-leadingIconElt : Config msg -> Maybe (Html msg)
+leadingIconElt : FilterChipConfig msg -> Maybe (Html msg)
 leadingIconElt { icon, selected } =
     case icon of
         Just iconName ->

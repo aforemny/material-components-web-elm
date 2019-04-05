@@ -6,13 +6,13 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Material.Button as Button
-import Material.Checkbox as Checkbox exposing (checkbox, checkboxConfig)
+import Material.Checkbox as Checkbox exposing (CheckboxState, checkbox, checkboxConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =
-    { checkboxes : Dict String Checkbox.State
+    { checkboxes : Dict String CheckboxState
     }
 
 

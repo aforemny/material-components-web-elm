@@ -1,4 +1,4 @@
-module Material.Radio exposing (Config, radio, radioConfig)
+module Material.Radio exposing (RadioConfig, radio, radioConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -6,7 +6,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-type alias Config msg =
+type alias RadioConfig msg =
     { checked : Bool
     , disabled : Bool
     , additionalAttributes : List (Html.Attribute msg)
@@ -14,7 +14,7 @@ type alias Config msg =
     }
 
 
-radioConfig : Config msg
+radioConfig : RadioConfig msg
 radioConfig =
     { checked = False
     , disabled = False
@@ -23,7 +23,7 @@ radioConfig =
     }
 
 
-radio : Config msg -> Html msg
+radio : RadioConfig msg -> Html msg
 radio config =
     Html.node "mdc-radio"
         (List.filterMap identity
@@ -43,7 +43,7 @@ rootCs =
     Just (class "mdc-radio")
 
 
-checkedAttr : Config msg -> Maybe (Html.Attribute msg)
+checkedAttr : RadioConfig msg -> Maybe (Html.Attribute msg)
 checkedAttr { checked } =
     if checked then
         Just (Html.Attributes.attribute "checked" "")
@@ -52,7 +52,7 @@ checkedAttr { checked } =
         Nothing
 
 
-disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr : RadioConfig msg -> Maybe (Html.Attribute msg)
 disabledAttr { disabled } =
     if disabled then
         Just (Html.Attributes.attribute "disabled" "")
@@ -61,13 +61,13 @@ disabledAttr { disabled } =
         Nothing
 
 
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler : RadioConfig msg -> Maybe (Html.Attribute msg)
 clickHandler config =
     Maybe.map (\msg -> Html.Events.preventDefaultOn "click" (Decode.succeed ( msg, True )))
         config.onClick
 
 
-nativeControlElt : Config msg -> Html msg
+nativeControlElt : RadioConfig msg -> Html msg
 nativeControlElt config =
     Html.input
         (List.filterMap identity [ nativeControlCs, radioTypeAttr, clickHandler config ])

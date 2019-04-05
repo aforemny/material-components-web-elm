@@ -1,42 +1,43 @@
 module Material.Card exposing
-    ( Actions
-    , Aspect(..)
-    , Block
-    , Config
-    , actionButton
-    , actionIcon
-    , actions
+    ( CardActions
+    , CardBlock
+    , CardConfig
+    , CardContent
+    , CardMediaAspect(..)
     , card
+    , cardActionButton
+    , cardActionIcon
+    , cardActions
+    , cardBlock
     , cardConfig
-    , custom
-    , fullBleedActions
-    , media
-    , mediaConfig
-    , primaryAction
-    , primaryActionConfig
+    , cardFullBleedActions
+    , cardMedia
+    , cardMediaConfig
+    , cardPrimaryAction
+    , cardPrimaryActionConfig
     )
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
-import Material.Button exposing (buttonConfig)
-import Material.Icon exposing (iconConfig)
+import Material.Button exposing (ButtonConfig, buttonConfig)
+import Material.Icon exposing (IconConfig, iconConfig)
 
 
-type alias Config msg =
+type alias CardConfig msg =
     { outlined : Bool
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
-cardConfig : Config msg
+cardConfig : CardConfig msg
 cardConfig =
     { outlined = False
     , additionalAttributes = []
     }
 
 
-card : Config msg -> Content msg -> Html msg
+card : CardConfig msg -> CardContent msg -> Html msg
 card config content =
     Html.node "mdc-card"
         (List.filterMap identity
@@ -52,12 +53,12 @@ card config content =
         )
 
 
-blocksElt : Content msg -> List (Html msg)
+blocksElt : CardContent msg -> List (Html msg)
 blocksElt { blocks } =
     List.map (\(Block html) -> html) blocks
 
 
-actionsElt : Content msg -> List (Html msg)
+actionsElt : CardContent msg -> List (Html msg)
 actionsElt content =
     case content.actions of
         Just (Actions { buttons, icons, fullBleed }) ->
@@ -99,7 +100,7 @@ rootCs =
     Just (class "mdc-card")
 
 
-outlinedCs : Config msg -> Maybe (Html.Attribute msg)
+outlinedCs : CardConfig msg -> Maybe (Html.Attribute msg)
 outlinedCs { outlined } =
     if outlined then
         Just (class "mdc-card--outlined")
@@ -108,41 +109,41 @@ outlinedCs { outlined } =
         Nothing
 
 
-type alias Content msg =
-    { blocks : List (Block msg)
-    , actions : Maybe (Actions msg)
+type alias CardContent msg =
+    { blocks : List (CardBlock msg)
+    , actions : Maybe (CardActions msg)
     }
 
 
-type Block msg
+type CardBlock msg
     = Block (Html msg)
 
 
-custom : Html msg -> Block msg
-custom =
+cardBlock : Html msg -> CardBlock msg
+cardBlock =
     Block
 
 
 type alias MediaConfig msg =
-    { aspect : Maybe Aspect
+    { aspect : Maybe CardMediaAspect
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
-mediaConfig : MediaConfig msg
-mediaConfig =
+cardMediaConfig : MediaConfig msg
+cardMediaConfig =
     { aspect = Nothing
     , additionalAttributes = []
     }
 
 
-type Aspect
+type CardMediaAspect
     = Square
     | SixteenToNine
 
 
-media : MediaConfig msg -> String -> Block msg
-media config backgroundImage =
+cardMedia : MediaConfig msg -> String -> CardBlock msg
+cardMedia config backgroundImage =
     Block <|
         Html.div
             (List.filterMap identity
@@ -184,15 +185,15 @@ type alias PrimaryActionConfig msg =
     }
 
 
-primaryActionConfig : PrimaryActionConfig msg
-primaryActionConfig =
+cardPrimaryActionConfig : PrimaryActionConfig msg
+cardPrimaryActionConfig =
     { additionalAttributes = []
     , onClick = Nothing
     }
 
 
-primaryAction : PrimaryActionConfig msg -> List (Block msg) -> List (Block msg)
-primaryAction config blocks =
+cardPrimaryAction : PrimaryActionConfig msg -> List (CardBlock msg) -> List (CardBlock msg)
+cardPrimaryAction config blocks =
     [ Block <|
         Html.div
             (List.filterMap identity
@@ -215,7 +216,7 @@ primaryActionClickHandler { onClick } =
     Maybe.map Html.Events.onClick onClick
 
 
-type Actions msg
+type CardActions msg
     = Actions
         { buttons : List (Button msg)
         , icons : List (Icon msg)
@@ -223,13 +224,13 @@ type Actions msg
         }
 
 
-actions : { buttons : List (Button msg), icons : List (Icon msg) } -> Actions msg
-actions { buttons, icons } =
+cardActions : { buttons : List (Button msg), icons : List (Icon msg) } -> CardActions msg
+cardActions { buttons, icons } =
     Actions { buttons = buttons, icons = icons, fullBleed = False }
 
 
-fullBleedActions : Button msg -> Actions msg
-fullBleedActions button =
+cardFullBleedActions : Button msg -> CardActions msg
+cardFullBleedActions button =
     Actions { buttons = [ button ], icons = [], fullBleed = True }
 
 
@@ -237,8 +238,8 @@ type Button msg
     = Button (Html msg)
 
 
-actionButton : Material.Button.Config msg -> String -> Button msg
-actionButton buttonConfig label =
+cardActionButton : ButtonConfig msg -> String -> Button msg
+cardActionButton buttonConfig label =
     Button <|
         Material.Button.button
             { buttonConfig
@@ -254,8 +255,8 @@ type Icon msg
     = Icon (Html msg)
 
 
-actionIcon : Material.Icon.Config msg -> String -> Icon msg
-actionIcon iconConfig iconName =
+cardActionIcon : IconConfig msg -> String -> Icon msg
+cardActionIcon iconConfig iconName =
     Icon <|
         Material.Icon.icon
             { iconConfig

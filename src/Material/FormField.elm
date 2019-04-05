@@ -1,11 +1,11 @@
-module Material.FormField exposing (Config, formField, formFieldConfig)
+module Material.FormField exposing (FormFieldConfig, formField, formFieldConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 
 
-type alias Config msg =
+type alias FormFieldConfig msg =
     { label : String
     , for : Maybe String
     , alignEnd : Bool
@@ -14,7 +14,7 @@ type alias Config msg =
     }
 
 
-formFieldConfig : Config msg
+formFieldConfig : FormFieldConfig msg
 formFieldConfig =
     { label = ""
     , for = Nothing
@@ -24,7 +24,7 @@ formFieldConfig =
     }
 
 
-formField : Config msg -> List (Html msg) -> Html msg
+formField : FormFieldConfig msg -> List (Html msg) -> Html msg
 formField config nodes =
     Html.node "mdc-form-field"
         (List.filterMap identity [ rootCs, alignEndCs config ]
@@ -38,7 +38,7 @@ rootCs =
     Just (class "mdc-form-field")
 
 
-alignEndCs : Config msg -> Maybe (Html.Attribute msg)
+alignEndCs : FormFieldConfig msg -> Maybe (Html.Attribute msg)
 alignEndCs { alignEnd } =
     if alignEnd then
         Just (class "mdc-form-field--align-end")
@@ -47,17 +47,17 @@ alignEndCs { alignEnd } =
         Nothing
 
 
-forAttr : Config msg -> Maybe (Html.Attribute msg)
+forAttr : FormFieldConfig msg -> Maybe (Html.Attribute msg)
 forAttr { for } =
     Maybe.map Html.Attributes.for for
 
 
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler : FormFieldConfig msg -> Maybe (Html.Attribute msg)
 clickHandler { onClick } =
     Maybe.map Html.Events.onClick onClick
 
 
-labelElt : Config msg -> Html msg
+labelElt : FormFieldConfig msg -> Html msg
 labelElt ({ label } as config) =
     Html.label (List.filterMap identity [ forAttr config, clickHandler config ])
         [ text label ]

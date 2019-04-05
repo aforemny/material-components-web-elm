@@ -1,10 +1,10 @@
-module Material.Fab.Extended exposing (Config, extendedFab, extendedFabConfig)
+module Material.Fab.Extended exposing (ExtendedFabConfig, extendedFab, extendedFabConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
-type alias Config msg =
+type alias ExtendedFabConfig msg =
     { icon : Maybe String
     , trailingIcon : Bool
     , exited : Bool
@@ -12,7 +12,7 @@ type alias Config msg =
     }
 
 
-extendedFabConfig : Config msg
+extendedFabConfig : ExtendedFabConfig msg
 extendedFabConfig =
     { icon = Nothing
     , trailingIcon = False
@@ -21,7 +21,7 @@ extendedFabConfig =
     }
 
 
-extendedFab : Config msg -> String -> Html msg
+extendedFab : ExtendedFabConfig msg -> String -> Html msg
 extendedFab config label =
     Html.node "mdc-fab"
         (List.filterMap identity
@@ -43,7 +43,7 @@ rootCs =
     Just (class "mdc-fab mdc-fab--extended")
 
 
-exitedCs : Config msg -> Maybe (Html.Attribute msg)
+exitedCs : ExtendedFabConfig msg -> Maybe (Html.Attribute msg)
 exitedCs { exited } =
     if exited then
         Just (class "mdc-fab--exited")
@@ -52,7 +52,7 @@ exitedCs { exited } =
         Nothing
 
 
-leadingIconElt : Config msg -> Maybe (Html msg)
+leadingIconElt : ExtendedFabConfig msg -> Maybe (Html msg)
 leadingIconElt { icon, trailingIcon } =
     case ( icon, trailingIcon ) of
         ( Just iconName, False ) ->
@@ -70,7 +70,7 @@ labelElt label =
     Just (Html.span [ class "mdc-fab__label" ] [ text label ])
 
 
-trailingIconElt : Config msg -> Maybe (Html msg)
+trailingIconElt : ExtendedFabConfig msg -> Maybe (Html msg)
 trailingIconElt { icon, trailingIcon } =
     case ( icon, trailingIcon ) of
         ( Just iconName, True ) ->

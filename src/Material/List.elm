@@ -1,5 +1,5 @@
 module Material.List exposing
-    ( Config
+    ( ListConfig
     , ListItemConfig
     , ListItemDividerConfig
     , list
@@ -27,7 +27,7 @@ import Html.Events
 -- TODO: Trigger onClick on Enter and Space keypress
 
 
-type alias Config msg =
+type alias ListConfig msg =
     { nonInteractive : Bool
     , dense : Bool
     , avatarList : Bool
@@ -36,7 +36,7 @@ type alias Config msg =
     }
 
 
-listConfig : Config msg
+listConfig : ListConfig msg
 listConfig =
     { nonInteractive = False
     , dense = False
@@ -46,7 +46,7 @@ listConfig =
     }
 
 
-list : Config msg -> List (Html msg) -> Html msg
+list : ListConfig msg -> List (Html msg) -> Html msg
 list config nodes =
     Html.node "mdc-list"
         (List.filterMap identity
@@ -66,7 +66,7 @@ rootCs =
     Just (class "mdc-list")
 
 
-nonInteractiveCs : Config msg -> Maybe (Html.Attribute msg)
+nonInteractiveCs : ListConfig msg -> Maybe (Html.Attribute msg)
 nonInteractiveCs { nonInteractive } =
     if nonInteractive then
         Just (class "mdc-list--non-interactive")
@@ -75,7 +75,7 @@ nonInteractiveCs { nonInteractive } =
         Nothing
 
 
-denseCs : Config msg -> Maybe (Html.Attribute msg)
+denseCs : ListConfig msg -> Maybe (Html.Attribute msg)
 denseCs { dense } =
     if dense then
         Just (class "mdc-list--dense")
@@ -84,7 +84,7 @@ denseCs { dense } =
         Nothing
 
 
-avatarListCs : Config msg -> Maybe (Html.Attribute msg)
+avatarListCs : ListConfig msg -> Maybe (Html.Attribute msg)
 avatarListCs { avatarList } =
     if avatarList then
         Just (class "mdc-list--avatar-list")
@@ -93,7 +93,7 @@ avatarListCs { avatarList } =
         Nothing
 
 
-twoLineCs : Config msg -> Maybe (Html.Attribute msg)
+twoLineCs : ListConfig msg -> Maybe (Html.Attribute msg)
 twoLineCs { twoLine } =
     if twoLine then
         Just (class "mdc-list--two-line")

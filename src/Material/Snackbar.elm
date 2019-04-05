@@ -1,8 +1,8 @@
 module Material.Snackbar exposing
-    ( Config
-    , Message
+    ( Message
     , Msg
     , Queue
+    , SnackbarConfig
     , addMessage
     , initialQueue
     , snackbar
@@ -85,18 +85,18 @@ addMessage lift message =
     Task.perform lift (Task.succeed (AddMessage message))
 
 
-type alias Config msg =
+type alias SnackbarConfig msg =
     { additionalAttributes : List (Html.Attribute msg)
     }
 
 
-snackbarConfig : Config msg
+snackbarConfig : SnackbarConfig msg
 snackbarConfig =
     { additionalAttributes = []
     }
 
 
-snackbar : (Msg msg -> msg) -> Config msg -> Queue msg -> Html msg
+snackbar : (Msg msg -> msg) -> SnackbarConfig msg -> Queue msg -> Html msg
 snackbar lift config queue =
     let
         message =

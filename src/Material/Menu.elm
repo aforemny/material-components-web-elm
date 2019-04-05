@@ -1,4 +1,4 @@
-module Material.Menu exposing (Config, menu, menuConfig, menuSurfaceAnchor)
+module Material.Menu exposing (MenuConfig, menu, menuConfig, menuSurfaceAnchor)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -6,7 +6,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-type alias Config msg =
+type alias MenuConfig msg =
     { open : Bool
     , quickOpen : Bool
     , additionalAttributes : List (Html.Attribute msg)
@@ -14,7 +14,7 @@ type alias Config msg =
     }
 
 
-menuConfig : Config msg
+menuConfig : MenuConfig msg
 menuConfig =
     { open = False
     , quickOpen = False
@@ -23,7 +23,7 @@ menuConfig =
     }
 
 
-menu : Config msg -> List (Html msg) -> Html msg
+menu : MenuConfig msg -> List (Html msg) -> Html msg
 menu config nodes =
     Html.node "mdc-menu"
         (List.filterMap identity
@@ -47,7 +47,7 @@ rootCs =
     Just (class "mdc-menu mdc-menu-surface")
 
 
-openAttr : Config msg -> Maybe (Html.Attribute msg)
+openAttr : MenuConfig msg -> Maybe (Html.Attribute msg)
 openAttr { open } =
     if open then
         Just (Html.Attributes.attribute "open" "")
@@ -56,7 +56,7 @@ openAttr { open } =
         Nothing
 
 
-quickOpenAttr : Config msg -> Maybe (Html.Attribute msg)
+quickOpenAttr : MenuConfig msg -> Maybe (Html.Attribute msg)
 quickOpenAttr { quickOpen } =
     if quickOpen then
         Just (Html.Attributes.attribute "quickopen" "")
@@ -65,6 +65,6 @@ quickOpenAttr { quickOpen } =
         Nothing
 
 
-closeHandler : Config msg -> Maybe (Html.Attribute msg)
+closeHandler : MenuConfig msg -> Maybe (Html.Attribute msg)
 closeHandler { onClose } =
     Maybe.map (Html.Events.on "MDCMenu:close" << Decode.succeed) onClose

@@ -1,5 +1,5 @@
 module Material.Button exposing
-    ( Config
+    ( ButtonConfig
     , button
     , buttonConfig
     , outlinedButton
@@ -12,7 +12,7 @@ import Html.Attributes exposing (class)
 import Html.Events
 
 
-type alias Config msg =
+type alias ButtonConfig msg =
     { variant : Variant
     , icon : Maybe String
     , trailingIcon : Bool
@@ -23,7 +23,7 @@ type alias Config msg =
     }
 
 
-buttonConfig : Config msg
+buttonConfig : ButtonConfig msg
 buttonConfig =
     { variant = Text
     , icon = Nothing
@@ -42,7 +42,7 @@ type Variant
     | Outlined
 
 
-button : Config msg -> String -> Html msg
+button : ButtonConfig msg -> String -> Html msg
 button config label =
     Html.node "mdc-button"
         (List.filterMap identity
@@ -62,17 +62,17 @@ button config label =
         )
 
 
-raisedButton : Config msg -> String -> Html msg
+raisedButton : ButtonConfig msg -> String -> Html msg
 raisedButton config label =
     button { config | variant = Raised } label
 
 
-unelevatedButton : Config msg -> String -> Html msg
+unelevatedButton : ButtonConfig msg -> String -> Html msg
 unelevatedButton config label =
     button { config | variant = Unelevated } label
 
 
-outlinedButton : Config msg -> String -> Html msg
+outlinedButton : ButtonConfig msg -> String -> Html msg
 outlinedButton config label =
     button { config | variant = Outlined } label
 
@@ -82,17 +82,17 @@ rootCs =
     Just (class "mdc-button")
 
 
-disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr : ButtonConfig msg -> Maybe (Html.Attribute msg)
 disabledAttr { disabled } =
     Just (Html.Attributes.disabled disabled)
 
 
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler : ButtonConfig msg -> Maybe (Html.Attribute msg)
 clickHandler { onClick } =
     Maybe.map Html.Events.onClick onClick
 
 
-variantCs : Config msg -> Maybe (Html.Attribute msg)
+variantCs : ButtonConfig msg -> Maybe (Html.Attribute msg)
 variantCs { variant } =
     case variant of
         Text ->
@@ -108,7 +108,7 @@ variantCs { variant } =
             Just (class "mdc-button--outlined")
 
 
-denseCs : Config msg -> Maybe (Html.Attribute msg)
+denseCs : ButtonConfig msg -> Maybe (Html.Attribute msg)
 denseCs { dense } =
     if dense then
         Just (class "mdc-button--dense")
@@ -117,7 +117,7 @@ denseCs { dense } =
         Nothing
 
 
-iconElt : Config msg -> Maybe (Html msg)
+iconElt : ButtonConfig msg -> Maybe (Html msg)
 iconElt { icon } =
     Maybe.map
         (\iconName ->
@@ -130,7 +130,7 @@ iconElt { icon } =
         icon
 
 
-leadingIconElt : Config msg -> Maybe (Html msg)
+leadingIconElt : ButtonConfig msg -> Maybe (Html msg)
 leadingIconElt config =
     if not config.trailingIcon then
         iconElt config
@@ -139,7 +139,7 @@ leadingIconElt config =
         Nothing
 
 
-trailingIconElt : Config msg -> Maybe (Html msg)
+trailingIconElt : ButtonConfig msg -> Maybe (Html msg)
 trailingIconElt config =
     if config.trailingIcon then
         iconElt config

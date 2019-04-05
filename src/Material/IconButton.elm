@@ -1,5 +1,5 @@
 module Material.IconButton exposing
-    ( Config
+    ( IconButtonConfig
     , iconButton
     , iconButtonConfig
     , iconToggle
@@ -11,7 +11,7 @@ import Html.Attributes exposing (class)
 import Html.Events
 
 
-type alias Config msg =
+type alias IconButtonConfig msg =
     { on : Bool
     , label : Maybe String
     , additionalAttributes : List (Html.Attribute msg)
@@ -19,7 +19,7 @@ type alias Config msg =
     }
 
 
-iconButtonConfig : Config msg
+iconButtonConfig : IconButtonConfig msg
 iconButtonConfig =
     { on = False
     , additionalAttributes = []
@@ -28,7 +28,7 @@ iconButtonConfig =
     }
 
 
-iconButton : Config msg -> String -> Html msg
+iconButton : IconButtonConfig msg -> String -> Html msg
 iconButton config iconName =
     Html.node "mdc-icon-button"
         (List.filterMap identity
@@ -42,12 +42,12 @@ iconButton config iconName =
         [ text iconName ]
 
 
-iconToggleConfig : Config msg
+iconToggleConfig : IconButtonConfig msg
 iconToggleConfig =
     iconButtonConfig
 
 
-iconToggle : Config msg -> { on : String, off : String } -> Html msg
+iconToggle : IconButtonConfig msg -> { on : String, off : String } -> Html msg
 iconToggle config { on, off } =
     Html.node "mdc-icon-button"
         (List.filterMap identity
@@ -71,7 +71,7 @@ rootCs =
     Just (class "mdc-icon-button")
 
 
-onAttr : Config msg -> Maybe (Html.Attribute msg)
+onAttr : IconButtonConfig msg -> Maybe (Html.Attribute msg)
 onAttr { on } =
     if on then
         Just (Html.Attributes.attribute "data-on" "")
@@ -105,7 +105,7 @@ ariaHiddenAttr =
     Just (Html.Attributes.attribute "aria-hidden" "true")
 
 
-ariaPressedAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaPressedAttr : IconButtonConfig msg -> Maybe (Html.Attribute msg)
 ariaPressedAttr { on } =
     Just
         (Html.Attributes.attribute "aria-pressed"
@@ -118,11 +118,11 @@ ariaPressedAttr { on } =
         )
 
 
-ariaLabelAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaLabelAttr : IconButtonConfig msg -> Maybe (Html.Attribute msg)
 ariaLabelAttr { label } =
     Maybe.map (Html.Attributes.attribute "aria-label") label
 
 
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler : IconButtonConfig msg -> Maybe (Html.Attribute msg)
 clickHandler config =
     Maybe.map Html.Events.onClick config.onClick

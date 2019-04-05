@@ -1,4 +1,4 @@
-module Material.Switch exposing (Config, switch, switchConfig)
+module Material.Switch exposing (SwitchConfig, switch, switchConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -6,7 +6,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-type alias Config msg =
+type alias SwitchConfig msg =
     { checked : Bool
     , disabled : Bool
     , additionalAttributes : List (Html.Attribute msg)
@@ -14,7 +14,7 @@ type alias Config msg =
     }
 
 
-switchConfig : Config msg
+switchConfig : SwitchConfig msg
 switchConfig =
     { checked = False
     , disabled = False
@@ -23,7 +23,7 @@ switchConfig =
     }
 
 
-switch : Config msg -> Html msg
+switch : SwitchConfig msg -> Html msg
 switch config =
     Html.node "mdc-switch"
         (List.filterMap identity
@@ -43,7 +43,7 @@ rootCs =
     Just (class "mdc-switch")
 
 
-checkedAttr : Config msg -> Maybe (Html.Attribute msg)
+checkedAttr : SwitchConfig msg -> Maybe (Html.Attribute msg)
 checkedAttr { checked } =
     if checked then
         Just (Html.Attributes.attribute "checked" "")
@@ -52,7 +52,7 @@ checkedAttr { checked } =
         Nothing
 
 
-disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr : SwitchConfig msg -> Maybe (Html.Attribute msg)
 disabledAttr { disabled } =
     if disabled then
         Just (Html.Attributes.attribute "disabled" "")
@@ -76,7 +76,7 @@ checkboxTypeAttr =
     Just (Html.Attributes.type_ "checkbox")
 
 
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler : SwitchConfig msg -> Maybe (Html.Attribute msg)
 clickHandler config =
     Maybe.map (\msg -> Html.Events.preventDefaultOn "click" (Decode.succeed ( msg, True )))
         config.onClick
@@ -87,17 +87,17 @@ trackElt =
     Html.div [ class "mdc-switch__track" ] []
 
 
-thumbUnderlayElt : Config msg -> Html msg
+thumbUnderlayElt : SwitchConfig msg -> Html msg
 thumbUnderlayElt config =
     Html.div [ class "mdc-switch__thumb-underlay" ] [ thumbElt config ]
 
 
-thumbElt : Config msg -> Html msg
+thumbElt : SwitchConfig msg -> Html msg
 thumbElt config =
     Html.div [ class "mdc-switch__thumb" ] [ nativeControlElt config ]
 
 
-nativeControlElt : Config msg -> Html msg
+nativeControlElt : SwitchConfig msg -> Html msg
 nativeControlElt config =
     Html.input
         (List.filterMap identity

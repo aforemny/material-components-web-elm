@@ -4,7 +4,7 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Button as Button exposing (button, buttonConfig, outlinedButton, raisedButton, unelevatedButton)
+import Material.Button as Button exposing (ButtonConfig, button, buttonConfig, outlinedButton, raisedButton, unelevatedButton)
 import Material.Typography as Typography
 
 
@@ -91,7 +91,7 @@ rowMargin =
     [ Html.Attributes.style "margin" "8px 16px" ]
 
 
-buttonsRow : String -> (Button.Config m -> String -> Html m) -> Button.Config m -> Html m
+buttonsRow : String -> (ButtonConfig m -> String -> Html m) -> ButtonConfig m -> Html m
 buttonsRow title button buttonConfig =
     Html.div []
         [ Html.h3 [ Typography.subtitle1 ] [ text title ]

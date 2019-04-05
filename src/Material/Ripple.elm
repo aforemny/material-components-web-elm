@@ -1,17 +1,23 @@
-module Material.Ripple exposing (Color(..), Config, ripple, rippleConfig, unboundedRipple)
+module Material.Ripple exposing
+    ( RippleColor(..)
+    , RippleConfig
+    , ripple
+    , rippleConfig
+    , unboundedRipple
+    )
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
-type alias Config msg =
+type alias RippleConfig msg =
     { unbounded : Bool
-    , color : Maybe Color
+    , color : Maybe RippleColor
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
-rippleConfig : Config msg
+rippleConfig : RippleConfig msg
 rippleConfig =
     { unbounded = False
     , color = Nothing
@@ -19,12 +25,12 @@ rippleConfig =
     }
 
 
-type Color
+type RippleColor
     = PrimaryColor
     | AccentColor
 
 
-ripple : Config msg -> Html msg
+ripple : RippleConfig msg -> Html msg
 ripple config =
     Html.node "mdc-ripple"
         (List.filterMap identity
@@ -42,7 +48,7 @@ ripple config =
         []
 
 
-unboundedRipple : Config msg -> Html msg
+unboundedRipple : RippleConfig msg -> Html msg
 unboundedRipple config =
     ripple { config | unbounded = True }
 
@@ -52,7 +58,7 @@ rippleSurface =
     Just (class "mdc-ripple-surface")
 
 
-colorCs : Config msg -> Maybe (Html.Attribute msg)
+colorCs : RippleConfig msg -> Maybe (Html.Attribute msg)
 colorCs { color } =
     case color of
         Just PrimaryColor ->
@@ -65,7 +71,7 @@ colorCs { color } =
             Nothing
 
 
-dataUnboundedAttr : Config msg -> Maybe (Html.Attribute msg)
+dataUnboundedAttr : RippleConfig msg -> Maybe (Html.Attribute msg)
 dataUnboundedAttr { unbounded } =
     if unbounded then
         Just (Html.Attributes.attribute "data-mdc-ripple-is-unbounded" "")

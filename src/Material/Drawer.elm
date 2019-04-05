@@ -1,5 +1,5 @@
 module Material.Drawer exposing
-    ( Config
+    ( DrawerConfig
     , HeaderConfig
     , appContent
     , dismissibleDrawer
@@ -17,7 +17,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-type alias Config msg =
+type alias DrawerConfig msg =
     { variant : Variant
     , open : Bool
     , additionalAttributes : List (Html.Attribute msg)
@@ -25,7 +25,7 @@ type alias Config msg =
     }
 
 
-drawerConfig : Config msg
+drawerConfig : DrawerConfig msg
 drawerConfig =
     { variant = Permanent
     , open = False
@@ -40,7 +40,7 @@ type Variant
     | Modal
 
 
-drawer : Config msg -> List (Html msg) -> Html msg
+drawer : DrawerConfig msg -> List (Html msg) -> Html msg
 drawer config nodes =
     Html.node "mdc-drawer"
         (List.filterMap identity
@@ -54,17 +54,17 @@ drawer config nodes =
         nodes
 
 
-permanentDrawer : Config msg -> List (Html msg) -> Html msg
+permanentDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
 permanentDrawer config nodes =
     drawer { config | variant = Permanent } nodes
 
 
-dismissibleDrawer : Config msg -> List (Html msg) -> Html msg
+dismissibleDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
 dismissibleDrawer config nodes =
     drawer { config | variant = Dismissible } nodes
 
 
-modalDrawer : Config msg -> List (Html msg) -> Html msg
+modalDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
 modalDrawer config nodes =
     drawer { config | variant = Modal } nodes
 
@@ -104,7 +104,7 @@ rootCs =
     Just (class "mdc-drawer")
 
 
-variantCs : Config msg -> Maybe (Html.Attribute msg)
+variantCs : DrawerConfig msg -> Maybe (Html.Attribute msg)
 variantCs { variant } =
     case variant of
         Permanent ->
@@ -117,7 +117,7 @@ variantCs { variant } =
             Just (class "mdc-drawer--modal")
 
 
-openAttr : Config msg -> Maybe (Html.Attribute msg)
+openAttr : DrawerConfig msg -> Maybe (Html.Attribute msg)
 openAttr { variant, open } =
     if open && variant /= Permanent then
         Just (Html.Attributes.attribute "open" "")
@@ -126,7 +126,7 @@ openAttr { variant, open } =
         Nothing
 
 
-closeHandler : Config msg -> Maybe (Html.Attribute msg)
+closeHandler : DrawerConfig msg -> Maybe (Html.Attribute msg)
 closeHandler { onClose } =
     Maybe.map (Html.Events.on "MDCDrawer:close" << Decode.succeed) onClose
 

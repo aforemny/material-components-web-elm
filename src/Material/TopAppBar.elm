@@ -1,5 +1,5 @@
 module Material.TopAppBar exposing
-    ( Config
+    ( TopAppBarConfig
     , actionItem
     , alignEnd
     , alignStart
@@ -23,7 +23,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
-type alias Config msg =
+type alias TopAppBarConfig msg =
     { variant : Variant
     , dense : Bool
     , fixed : Bool
@@ -38,7 +38,7 @@ type Variant
     | Prominent
 
 
-topAppBarConfig : Config msg
+topAppBarConfig : TopAppBarConfig msg
 topAppBarConfig =
     { variant = Default
     , dense = False
@@ -47,7 +47,7 @@ topAppBarConfig =
     }
 
 
-topAppBar : Config msg -> List (Html msg) -> Html msg
+topAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 topAppBar config nodes =
     Html.node "mdc-top-app-bar"
         (List.filterMap identity
@@ -61,17 +61,17 @@ topAppBar config nodes =
         nodes
 
 
-shortTopAppBar : Config msg -> List (Html msg) -> Html msg
+shortTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 shortTopAppBar config nodes =
     topAppBar { config | variant = Short } nodes
 
 
-shortCollapsedTopAppBar : Config msg -> List (Html msg) -> Html msg
+shortCollapsedTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 shortCollapsedTopAppBar config nodes =
     topAppBar { config | variant = ShortCollapsed } nodes
 
 
-prominentTopAppBar : Config msg -> List (Html msg) -> Html msg
+prominentTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 prominentTopAppBar config nodes =
     topAppBar { config | variant = Prominent } nodes
 
@@ -116,7 +116,7 @@ rootCs =
     Just (class "mdc-top-app-bar")
 
 
-variantCs : Config msg -> Maybe (Html.Attribute msg)
+variantCs : TopAppBarConfig msg -> Maybe (Html.Attribute msg)
 variantCs { variant } =
     case variant of
         Default ->
@@ -132,7 +132,7 @@ variantCs { variant } =
             Just (class "mdc-top-app-bar--prominent")
 
 
-denseCs : Config msg -> Maybe (Html.Attribute msg)
+denseCs : TopAppBarConfig msg -> Maybe (Html.Attribute msg)
 denseCs { dense } =
     if dense then
         Just (class "mdc-top-app-bar--dense")
@@ -141,7 +141,7 @@ denseCs { dense } =
         Nothing
 
 
-fixedCs : Config msg -> Maybe (Html.Attribute msg)
+fixedCs : TopAppBarConfig msg -> Maybe (Html.Attribute msg)
 fixedCs { fixed } =
     if fixed then
         Just (class "mdc-top-app-bar--fixed")

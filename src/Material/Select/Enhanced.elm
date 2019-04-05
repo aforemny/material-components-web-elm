@@ -1,5 +1,5 @@
 module Material.Select.Enhanced exposing
-    ( Config
+    ( EnhancedSelectConfig
     , enhancedSelectConfig
     , filledEnhancedSelect
     , outlinedEnhancedSelect
@@ -14,7 +14,7 @@ import Json.Decode as Decode
 import Material.List as Lists exposing (list, listConfig)
 
 
-type alias Config msg =
+type alias EnhancedSelectConfig msg =
     { variant : Variant
     , label : String
     , disabled : Bool
@@ -23,7 +23,7 @@ type alias Config msg =
     }
 
 
-enhancedSelectConfig : Config msg
+enhancedSelectConfig : EnhancedSelectConfig msg
 enhancedSelectConfig =
     { variant = Filled
     , label = ""
@@ -38,7 +38,7 @@ type Variant
     | Outlined
 
 
-enhancedSelect : Config msg -> List (Html msg) -> Html msg
+enhancedSelect : EnhancedSelectConfig msg -> List (Html msg) -> Html msg
 enhancedSelect config nodes =
     Html.node "mdc-enhanced-select"
         (List.filterMap identity
@@ -65,12 +65,12 @@ enhancedSelect config nodes =
         )
 
 
-filledEnhancedSelect : Config msg -> List (Html msg) -> Html msg
+filledEnhancedSelect : EnhancedSelectConfig msg -> List (Html msg) -> Html msg
 filledEnhancedSelect config nodes =
     enhancedSelect { config | variant = Filled } nodes
 
 
-outlinedEnhancedSelect : Config msg -> List (Html msg) -> Html msg
+outlinedEnhancedSelect : EnhancedSelectConfig msg -> List (Html msg) -> Html msg
 outlinedEnhancedSelect config nodes =
     enhancedSelect { config | variant = Outlined } nodes
 
@@ -114,7 +114,7 @@ rootCs =
     Just (class "mdc-select")
 
 
-variantCs : Config msg -> Maybe (Html.Attribute msg)
+variantCs : EnhancedSelectConfig msg -> Maybe (Html.Attribute msg)
 variantCs { variant } =
     if variant == Outlined then
         Just (class "mdc-select--outlined")
@@ -123,7 +123,7 @@ variantCs { variant } =
         Nothing
 
 
-disabledCs : Config msg -> Maybe (Html.Attribute msg)
+disabledCs : EnhancedSelectConfig msg -> Maybe (Html.Attribute msg)
 disabledCs { disabled } =
     if disabled then
         Just (class "mdc-select--disabled")
@@ -194,7 +194,7 @@ listElt nodes =
     list listConfig nodes
 
 
-floatingLabelElt : Config msg -> Html msg
+floatingLabelElt : EnhancedSelectConfig msg -> Html msg
 floatingLabelElt { label } =
     Html.label [ class "mdc-floating-label" ] [ text label ]
 
@@ -204,7 +204,7 @@ lineRippleElt =
     Html.label [ class "mdc-line-ripple" ] []
 
 
-notchedOutlineElt : Config msg -> Html msg
+notchedOutlineElt : EnhancedSelectConfig msg -> Html msg
 notchedOutlineElt { label } =
     Html.div [ class "mdc-notched-outline" ]
         [ Html.div [ class "mdc-notched-outline__leading" ] []

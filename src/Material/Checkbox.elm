@@ -1,4 +1,9 @@
-module Material.Checkbox exposing (Config, State(..), checkbox, checkboxConfig)
+module Material.Checkbox exposing
+    ( CheckboxConfig
+    , CheckboxState(..)
+    , checkbox
+    , checkboxConfig
+    )
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -9,21 +14,21 @@ import Svg
 import Svg.Attributes
 
 
-type alias Config msg =
-    { state : State
+type alias CheckboxConfig msg =
+    { state : CheckboxState
     , disabled : Bool
     , additionalAttributes : List (Html.Attribute msg)
     , onClick : Maybe msg
     }
 
 
-type State
+type CheckboxState
     = Unchecked
     | Checked
     | Indeterminate
 
 
-checkboxConfig : Config msg
+checkboxConfig : CheckboxConfig msg
 checkboxConfig =
     { state = Unchecked
     , disabled = False
@@ -32,7 +37,7 @@ checkboxConfig =
     }
 
 
-checkbox : Config msg -> Html msg
+checkbox : CheckboxConfig msg -> Html msg
 checkbox config =
     Html.node "mdc-checkbox"
         (List.filterMap identity
@@ -52,7 +57,7 @@ rootCs =
     Just (class "mdc-checkbox")
 
 
-disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr : CheckboxConfig msg -> Maybe (Html.Attribute msg)
 disabledAttr { disabled } =
     if disabled then
         Just (Html.Attributes.attribute "disabled" "")
@@ -61,7 +66,7 @@ disabledAttr { disabled } =
         Nothing
 
 
-stateAttr : Config msg -> Maybe (Html.Attribute msg)
+stateAttr : CheckboxConfig msg -> Maybe (Html.Attribute msg)
 stateAttr { state } =
     Just <|
         Html.Attributes.attribute "state" <|
@@ -76,14 +81,14 @@ stateAttr { state } =
                     "indeterminate"
 
 
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler : CheckboxConfig msg -> Maybe (Html.Attribute msg)
 clickHandler { onClick } =
     Maybe.map
         (\msg -> Html.Events.preventDefaultOn "click" (Decode.succeed ( msg, True )))
         onClick
 
 
-nativeControlElt : Config msg -> Html msg
+nativeControlElt : CheckboxConfig msg -> Html msg
 nativeControlElt config =
     Html.input
         (List.filterMap identity

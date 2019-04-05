@@ -1,5 +1,5 @@
 module Material.Select exposing
-    ( Config
+    ( SelectConfig
     , SelectOption
     , SelectOptionConfig
     , filledSelect
@@ -15,7 +15,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-type alias Config msg =
+type alias SelectConfig msg =
     { label : String
     , value : Maybe String
     , variant : Variant
@@ -24,7 +24,7 @@ type alias Config msg =
     }
 
 
-selectConfig : Config msg
+selectConfig : SelectConfig msg
 selectConfig =
     { label = ""
     , value = Nothing
@@ -39,7 +39,7 @@ type Variant
     | Outlined
 
 
-select : Config msg -> List (SelectOption msg) -> Html msg
+select : SelectConfig msg -> List (SelectOption msg) -> Html msg
 select config nodes =
     Html.node "mdc-select"
         (List.filterMap identity
@@ -63,12 +63,12 @@ select config nodes =
         )
 
 
-filledSelect : Config msg -> List (SelectOption msg) -> Html msg
+filledSelect : SelectConfig msg -> List (SelectOption msg) -> Html msg
 filledSelect config nodes =
     select { config | variant = Filled } nodes
 
 
-outlinedSelect : Config msg -> List (SelectOption msg) -> Html msg
+outlinedSelect : SelectConfig msg -> List (SelectOption msg) -> Html msg
 outlinedSelect config nodes =
     select { config | variant = Outlined } nodes
 
@@ -78,7 +78,7 @@ rootCs =
     Just (class "mdc-select")
 
 
-variantCs : Config msg -> Maybe (Html.Attribute msg)
+variantCs : SelectConfig msg -> Maybe (Html.Attribute msg)
 variantCs { variant } =
     if variant == Outlined then
         Just (class "mdc-select--outlined")
@@ -87,7 +87,7 @@ variantCs { variant } =
         Nothing
 
 
-valueAttr : Config msg -> Maybe (Html.Attribute msg)
+valueAttr : SelectConfig msg -> Maybe (Html.Attribute msg)
 valueAttr { value } =
     Maybe.map Html.Attributes.value value
 
@@ -97,7 +97,7 @@ dropdownIconElt =
     Html.i [ class "mdc-select__dropdown-icon" ] []
 
 
-nativeControlElt : Config msg -> List (SelectOption msg) -> Html msg
+nativeControlElt : SelectConfig msg -> List (SelectOption msg) -> Html msg
 nativeControlElt config nodes =
     Html.select
         (List.filterMap identity
@@ -130,7 +130,7 @@ selectOptionConfig =
 
 
 type SelectOption msg
-    = SelectOption (Config msg -> Html msg)
+    = SelectOption (SelectConfig msg -> Html msg)
 
 
 selectOption : SelectOptionConfig msg -> List (Html msg) -> SelectOption msg
@@ -148,7 +148,7 @@ selectOption config nodes =
         )
 
 
-selectedAttr : Config msg -> SelectOptionConfig msg -> Html.Attribute msg
+selectedAttr : SelectConfig msg -> SelectOptionConfig msg -> Html.Attribute msg
 selectedAttr topConfig config =
     Html.Attributes.selected (Maybe.withDefault "" topConfig.value == config.value)
 
@@ -163,7 +163,7 @@ optionValueAttr { value } =
     Html.Attributes.value value
 
 
-changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler : SelectConfig msg -> Maybe (Html.Attribute msg)
 changeHandler { onChange } =
     Maybe.map
         (\f ->
@@ -173,7 +173,7 @@ changeHandler { onChange } =
         onChange
 
 
-floatingLabelElt : Config msg -> Html msg
+floatingLabelElt : SelectConfig msg -> Html msg
 floatingLabelElt { label, value } =
     Html.label
         [ if Maybe.withDefault "" value /= "" then
@@ -190,7 +190,7 @@ lineRippleElt =
     Html.label [ class "mdc-line-ripple" ] []
 
 
-notchedOutlineElt : Config msg -> Html msg
+notchedOutlineElt : SelectConfig msg -> Html msg
 notchedOutlineElt { label } =
     Html.div [ class "mdc-notched-outline" ]
         [ Html.div [ class "mdc-notched-outline__leading" ] []

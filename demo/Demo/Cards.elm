@@ -5,7 +5,7 @@ import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
 import Material.Button as Button exposing (button, buttonConfig)
-import Material.Card as Card exposing (card, cardConfig, mediaConfig, primaryActionConfig)
+import Material.Card as Card exposing (CardActions, CardBlock, card, cardActionButton, cardActionIcon, cardActions, cardBlock, cardConfig, cardMedia, cardMediaConfig, cardPrimaryAction, cardPrimaryActionConfig)
 import Material.Icon as Icon exposing (icon, iconConfig)
 import Material.Theme as Theme
 import Material.Typography as Typography
@@ -32,14 +32,15 @@ update lift msg model =
             ( model, Cmd.none )
 
 
-cardMedia : Card.Block m
-cardMedia =
-    Card.media { mediaConfig | aspect = Just Card.SixteenToNine } "images/photos/3x2/2.jpg"
+cardMedia_ : CardBlock m
+cardMedia_ =
+    cardMedia { cardMediaConfig | aspect = Just Card.SixteenToNine }
+        "images/photos/3x2/2.jpg"
 
 
-cardTitle : Card.Block m
+cardTitle : CardBlock m
 cardTitle =
-    Card.custom <|
+    cardBlock <|
         Html.div
             [ Html.Attributes.style "padding" "1rem"
             ]
@@ -59,9 +60,9 @@ cardTitle =
             ]
 
 
-cardBody : Card.Block m
+cardBody : CardBlock m
 cardBody =
-    Card.custom <|
+    cardBlock <|
         Html.div
             [ Html.Attributes.style "padding" "0 1rem 0.5rem 1rem"
             , Typography.body2
@@ -74,17 +75,17 @@ cardBody =
             ]
 
 
-cardActions : Card.Actions m
-cardActions =
-    Card.actions
+cardActions_ : CardActions m
+cardActions_ =
+    cardActions
         { buttons =
-            [ Card.actionButton buttonConfig "Read"
-            , Card.actionButton buttonConfig "Bookmark"
+            [ cardActionButton buttonConfig "Read"
+            , cardActionButton buttonConfig "Bookmark"
             ]
         , icons =
-            [ Card.actionIcon iconConfig "favorite_border"
-            , Card.actionIcon iconConfig "share"
-            , Card.actionIcon iconConfig "more_vert"
+            [ cardActionIcon iconConfig "favorite_border"
+            , cardActionIcon iconConfig "share"
+            , cardActionIcon iconConfig "more_vert"
             ]
         }
 
@@ -97,12 +98,12 @@ heroCard lift index model =
                 [ Html.Attributes.style "width" "350px" ]
         }
         { blocks =
-            Card.primaryAction primaryActionConfig
-                [ cardMedia
+            cardPrimaryAction cardPrimaryActionConfig
+                [ cardMedia_
                 , cardTitle
                 , cardBody
                 ]
-        , actions = Just cardActions
+        , actions = Just cardActions_
         }
 
 
@@ -116,8 +117,8 @@ exampleCard1 lift index model =
                 ]
         }
         { blocks =
-            Card.primaryAction primaryActionConfig
-                [ cardMedia
+            cardPrimaryAction cardPrimaryActionConfig
+                [ cardMedia_
                 , cardTitle
                 , cardBody
                 ]
@@ -135,11 +136,11 @@ exampleCard2 lift index model =
                 ]
         }
         { blocks =
-            Card.primaryAction primaryActionConfig
+            cardPrimaryAction cardPrimaryActionConfig
                 [ cardTitle
                 , cardBody
                 ]
-        , actions = Just cardActions
+        , actions = Just cardActions_
         }
 
 
@@ -154,11 +155,11 @@ exampleCard3 lift index model =
                 ]
         }
         { blocks =
-            Card.primaryAction primaryActionConfig
+            cardPrimaryAction cardPrimaryActionConfig
                 [ cardTitle
                 , cardBody
                 ]
-        , actions = Just cardActions
+        , actions = Just cardActions_
         }
 
 

@@ -1,4 +1,4 @@
-module Material.Slider exposing (Config, slider, sliderConfig)
+module Material.Slider exposing (SliderConfig, slider, sliderConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
@@ -13,7 +13,7 @@ import Svg.Attributes
 -- TODO: Default values for min, max, step
 
 
-type alias Config msg =
+type alias SliderConfig msg =
     { discrete : Bool
     , displayMarkers : Bool
     , min : Float
@@ -26,7 +26,7 @@ type alias Config msg =
     }
 
 
-sliderConfig : Config msg
+sliderConfig : SliderConfig msg
 sliderConfig =
     { discrete = False
     , displayMarkers = False
@@ -40,7 +40,7 @@ sliderConfig =
     }
 
 
-slider : Config msg -> Html msg
+slider : SliderConfig msg -> Html msg
 slider config =
     Html.node "mdc-slider"
         (List.filterMap identity
@@ -78,7 +78,7 @@ displayCss =
     Just (style "display" "block")
 
 
-discreteCs : Config msg -> Maybe (Html.Attribute msg)
+discreteCs : SliderConfig msg -> Maybe (Html.Attribute msg)
 discreteCs { discrete } =
     if discrete then
         Just (class "mdc-slider--discrete")
@@ -87,7 +87,7 @@ discreteCs { discrete } =
         Nothing
 
 
-discreteAttr : Config msg -> Maybe (Html.Attribute msg)
+discreteAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
 discreteAttr { discrete } =
     if discrete then
         Just (Html.Attributes.attribute "discrete" "")
@@ -96,7 +96,7 @@ discreteAttr { discrete } =
         Nothing
 
 
-displayMarkersCs : Config msg -> Maybe (Html.Attribute msg)
+displayMarkersCs : SliderConfig msg -> Maybe (Html.Attribute msg)
 displayMarkersCs { discrete, displayMarkers } =
     if discrete && displayMarkers then
         Just (class "mdc-slider--display-markers")
@@ -115,22 +115,22 @@ sliderRoleAttr =
     Just (Html.Attributes.attribute "role" "slider")
 
 
-valueAttr : Config msg -> Maybe (Html.Attribute msg)
+valueAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
 valueAttr { value } =
     Just (Html.Attributes.attribute "value" (String.fromFloat value))
 
 
-minAttr : Config msg -> Maybe (Html.Attribute msg)
+minAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
 minAttr { min } =
     Just (Html.Attributes.attribute "min" (String.fromFloat min))
 
 
-maxAttr : Config msg -> Maybe (Html.Attribute msg)
+maxAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
 maxAttr { max } =
     Just (Html.Attributes.attribute "max" (String.fromFloat max))
 
 
-stepAttr : Config msg -> Maybe (Html.Attribute msg)
+stepAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
 stepAttr { step, discrete } =
     step
         |> Maybe.withDefault
@@ -145,7 +145,7 @@ stepAttr { step, discrete } =
         |> Just
 
 
-disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
 disabledAttr { disabled } =
     if disabled then
         Just (Html.Attributes.attribute "disabled" "")
@@ -154,22 +154,22 @@ disabledAttr { disabled } =
         Nothing
 
 
-ariaValueMinAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaValueMinAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
 ariaValueMinAttr { min } =
     Just (Html.Attributes.attribute "aria-valuemin" (String.fromFloat min))
 
 
-ariaValueMaxAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaValueMaxAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
 ariaValueMaxAttr { max } =
     Just (Html.Attributes.attribute "aria-valuemax" (String.fromFloat max))
 
 
-ariaValuenowAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaValuenowAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
 ariaValuenowAttr { value } =
     Just (Html.Attributes.attribute "aria-valuenow" (String.fromFloat value))
 
 
-changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler : SliderConfig msg -> Maybe (Html.Attribute msg)
 changeHandler config =
     Maybe.map
         (\handler ->
@@ -198,7 +198,7 @@ trackMarkerContainerElt =
     Html.div [ class "mdc-slider__track-marker-container" ] []
 
 
-thumbContainerElt : Config msg -> Html msg
+thumbContainerElt : SliderConfig msg -> Html msg
 thumbContainerElt { discrete } =
     Html.div [ class "mdc-slider__thumb-container" ]
         (if discrete then

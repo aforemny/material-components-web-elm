@@ -67,7 +67,10 @@ radio_ : (Msg -> m) -> Model -> String -> String -> String -> Html m
 radio_ lift model group index label =
     formField
         { formFieldConfig
-            | additionalAttributes =
+            | label = label
+            , for = Just index
+            , onClick = Just (lift (Set group index))
+            , additionalAttributes =
                 [ Html.Attributes.style "margin" "0 10px" ]
         }
         [ radio
@@ -75,7 +78,6 @@ radio_ lift model group index label =
                 | checked = isSelected group index model
                 , onClick = Just (lift (Set group index))
             }
-        , Html.label [ Html.Attributes.for index ] [ text label ]
         ]
 
 

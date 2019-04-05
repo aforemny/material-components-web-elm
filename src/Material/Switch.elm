@@ -3,6 +3,7 @@ module Material.Switch exposing (Config, switch, switchConfig)
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
+import Json.Decode as Decode
 
 
 type alias Config msg =
@@ -27,9 +28,7 @@ switch config =
     Html.node "mdc-switch"
         (List.filterMap identity
             [ rootCs
-            , checkedCs config
             , checkedAttr config
-            , disabledCs config
             , disabledAttr config
             ]
             ++ config.additionalAttributes
@@ -42,15 +41,6 @@ switch config =
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-switch")
-
-
-checkedCs : Config msg -> Maybe (Html.Attribute msg)
-checkedCs { checked } =
-    if checked then
-        Just (class "mdc-switch--checked")
-
-    else
-        Nothing
 
 
 checkedAttr : Config msg -> Maybe (Html.Attribute msg)
@@ -71,13 +61,25 @@ disabledAttr { disabled } =
         Nothing
 
 
-disabledCs : Config msg -> Maybe (Html.Attribute msg)
-disabledCs { disabled } =
-    if disabled then
-        Just (class "mdc-switch--disabled")
+nativeControlCs : Maybe (Html.Attribute msg)
+nativeControlCs =
+    Just (class "mdc-switch__native-control")
 
-    else
-        Nothing
+
+switchRoleAttr : Maybe (Html.Attribute msg)
+switchRoleAttr =
+    Just (Html.Attributes.attribute "role" "switch")
+
+
+checkboxTypeAttr : Maybe (Html.Attribute msg)
+checkboxTypeAttr =
+    Just (Html.Attributes.type_ "checkbox")
+
+
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler config =
+    Maybe.map (\msg -> Html.Events.preventDefaultOn "click" (Decode.succeed ( msg, True )))
+        config.onClick
 
 
 trackElt : Html msg
@@ -102,39 +104,7 @@ nativeControlElt config =
             [ nativeControlCs
             , checkboxTypeAttr
             , switchRoleAttr
-            , nativeCheckedAttr config
-            , nativeDisabledAttr config
             , clickHandler config
             ]
         )
         []
-
-
-nativeControlCs : Maybe (Html.Attribute msg)
-nativeControlCs =
-    Just (class "mdc-switch__native-control")
-
-
-switchRoleAttr : Maybe (Html.Attribute msg)
-switchRoleAttr =
-    Just (Html.Attributes.attribute "role" "switch")
-
-
-checkboxTypeAttr : Maybe (Html.Attribute msg)
-checkboxTypeAttr =
-    Just (Html.Attributes.type_ "checkbox")
-
-
-nativeCheckedAttr : Config msg -> Maybe (Html.Attribute msg)
-nativeCheckedAttr { checked } =
-    Just (Html.Attributes.checked checked)
-
-
-nativeDisabledAttr : Config msg -> Maybe (Html.Attribute msg)
-nativeDisabledAttr { disabled } =
-    Just (Html.Attributes.disabled disabled)
-
-
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
-clickHandler config =
-    Maybe.map Html.Events.onClick config.onClick

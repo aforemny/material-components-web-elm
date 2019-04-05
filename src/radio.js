@@ -1,4 +1,4 @@
-import { MDCRadioFoundation } from "@material/radio/index";
+import { MDCRadio } from "@material/radio/index";
 
 class MdcRadio extends HTMLElement {
 
@@ -6,44 +6,39 @@ class MdcRadio extends HTMLElement {
     return ["checked", "disabled"];
   }
 
-  get adapter() {
-    return {
-      setNativeControlDisabled: disabled => {
-        this.querySelector("input").disabled = disabled;
-      },
-      addClass: className => {
-        this.classList.add(className);
-      },
-      removeClass: className => {
-        this.classList.remove(className);
-      }
-    };
-  }
-
   constructor() {
     super();
   }
 
   connectedCallback() {
-    this.mdcFoundation = new MDCRadioFoundation(this.adapter);
-    this.mdcFoundation.init();
-    this.mdcFoundation.setDisabled(this.hasAttribute("disabled"));
+    this.radio_ = new MDCRadio(this);
+    this.setChecked_();
+    this.setDisabled_();
   }
 
   disconnectedCallback() {
-    if (this.mdcFoundation) {
-      this.mdcFoundation.destroy();
-      delete this.mdcFoundation;
-    }
+    this.radio_.destroy();
+  }
+
+  setChecked_() {
+    this.radio_.checked = this.hasAttribute("checked");
+  }
+
+  setDisabled_() {
+    this.radio_.disabled = this.hasAttribute("disabled");
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (!this.mdcFoundation) return;
+    if (!this.radio_) return;
     if (name === "checked") {
-      this.mdcFoundation.checked = newValue;
+      this.setChecked_();
     } else if (name === "disabled") {
-      this.mdcFoundation.disabled = newValue;
+      this.setDisabled_();
     }
+  }
+
+  get input() {
+    return this.radio_;
   }
 };
 

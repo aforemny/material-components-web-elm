@@ -4,17 +4,42 @@ class MdcFormField extends HTMLElement {
 
   constructor() {
     super();
+    this.formField_;
   }
 
   connectedCallback() {
-    this.MDCFormField = new MDCFormField(this);
+    this.formField_ = new MDCFormField(this);
+    window.requestAnimationFrame(() => this.connectInput_());
+  }
+
+  connectInput_() {
+    const input = this.getInput_();
+    if (input) {
+      this.formField_.input = input;
+    }
+  }
+
+  getInput_() {
+    const checkboxElement = this.querySelector("mdc-checkbox");
+    if (checkboxElement) {
+      return checkboxElement.input;
+    }
+    
+    const radioElement = this.querySelector("mdc-radio");
+    if (radioElement) {
+      return radioElement.input;
+    }
+    
+    const switchElement = this.querySelector("mdc-switch");
+    if (switchElement) {
+      return switchElement.input;
+    }
+
+    return false;
   }
 
   disconnectedCallback() {
-    if (typeof this.MDCFormField !== "undefined") {
-      this.MDCFormField.destroy();
-      delete this.MDCFormField;
-    }
+    this.formField_.destroy();
   }
 };
 

@@ -2,24 +2,25 @@ module Material.FormField exposing (Config, formField, formFieldConfig)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
-
-
-
--- TODO: formField is used differently in demo
+import Html.Events
 
 
 type alias Config msg =
     { label : String
+    , for : Maybe String
     , alignEnd : Bool
     , additionalAttributes : List (Html.Attribute msg)
+    , onClick : Maybe msg
     }
 
 
 formFieldConfig : Config msg
 formFieldConfig =
     { label = ""
+    , for = Nothing
     , alignEnd = False
     , additionalAttributes = []
+    , onClick = Nothing
     }
 
 
@@ -29,7 +30,7 @@ formField config nodes =
         (List.filterMap identity [ rootCs, alignEndCs config ]
             ++ config.additionalAttributes
         )
-        (labelElt config :: nodes)
+        (nodes ++ [ labelElt config ])
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -46,6 +47,17 @@ alignEndCs { alignEnd } =
         Nothing
 
 
+forAttr : Config msg -> Maybe (Html.Attribute msg)
+forAttr { for } =
+    Maybe.map Html.Attributes.for for
+
+
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler { onClick } =
+    Maybe.map Html.Events.onClick onClick
+
+
 labelElt : Config msg -> Html msg
-labelElt { label } =
-    Html.label [] [ text label ]
+labelElt ({ label } as config) =
+    Html.label (List.filterMap identity [ forAttr config, clickHandler config ])
+        [ text label ]

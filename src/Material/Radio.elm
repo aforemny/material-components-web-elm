@@ -3,6 +3,7 @@ module Material.Radio exposing (Config, radio, radioConfig)
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
+import Json.Decode as Decode
 
 
 type alias Config msg =
@@ -27,10 +28,8 @@ radio config =
     Html.node "mdc-radio"
         (List.filterMap identity
             [ rootCs
-            , disabledCs config
             , checkedAttr config
             , disabledAttr config
-            , clickHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -53,15 +52,6 @@ checkedAttr { checked } =
         Nothing
 
 
-disabledCs : Config msg -> Maybe (Html.Attribute msg)
-disabledCs { disabled } =
-    if disabled then
-        Just (class "mdc-radio--disabled")
-
-    else
-        Nothing
-
-
 disabledAttr : Config msg -> Maybe (Html.Attribute msg)
 disabledAttr { disabled } =
     if disabled then
@@ -73,38 +63,25 @@ disabledAttr { disabled } =
 
 clickHandler : Config msg -> Maybe (Html.Attribute msg)
 clickHandler config =
-    Maybe.map Html.Events.onClick config.onClick
+    Maybe.map (\msg -> Html.Events.preventDefaultOn "click" (Decode.succeed ( msg, True )))
+        config.onClick
 
 
 nativeControlElt : Config msg -> Html msg
 nativeControlElt config =
     Html.input
-        [ nativeControlCs
-        , radioTypeAttr
-        , nativeCheckedAttr config
-        , nativeDisabledAttr config
-        ]
+        (List.filterMap identity [ nativeControlCs, radioTypeAttr, clickHandler config ])
         []
 
 
-nativeControlCs : Html.Attribute msg
+nativeControlCs : Maybe (Html.Attribute msg)
 nativeControlCs =
-    class "mdc-radio__native-control"
+    Just (class "mdc-radio__native-control")
 
 
-radioTypeAttr : Html.Attribute msg
+radioTypeAttr : Maybe (Html.Attribute msg)
 radioTypeAttr =
-    Html.Attributes.type_ "radio"
-
-
-nativeCheckedAttr : Config msg -> Html.Attribute msg
-nativeCheckedAttr { checked } =
-    Html.Attributes.checked checked
-
-
-nativeDisabledAttr : Config msg -> Html.Attribute msg
-nativeDisabledAttr { disabled } =
-    Html.Attributes.disabled disabled
+    Just (Html.Attributes.type_ "radio")
 
 
 backgroundElt : Html msg

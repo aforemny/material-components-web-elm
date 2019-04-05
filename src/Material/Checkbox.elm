@@ -3,6 +3,7 @@ module Material.Checkbox exposing (Config, State(..), checkbox, checkboxConfig)
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
+import Json.Decode as Decode
 import Json.Encode as Encode
 import Svg
 import Svg.Attributes
@@ -75,33 +76,23 @@ stateAttr { state } =
                     "indeterminate"
 
 
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler { onClick } =
+    Maybe.map
+        (\msg -> Html.Events.preventDefaultOn "click" (Decode.succeed ( msg, True )))
+        onClick
+
+
 nativeControlElt : Config msg -> Html msg
 nativeControlElt config =
     Html.input
         (List.filterMap identity
             [ Just (Html.Attributes.type_ "checkbox")
             , Just (class "mdc-checkbox__native-control")
-            , checkedAttr config
-            , indeterminateAttr config
             , clickHandler config
             ]
         )
         []
-
-
-checkedAttr : Config msg -> Maybe (Html.Attribute msg)
-checkedAttr { state } =
-    Just (Html.Attributes.checked (state == Checked))
-
-
-indeterminateAttr : Config msg -> Maybe (Html.Attribute msg)
-indeterminateAttr { state } =
-    Just (Html.Attributes.property "indeterminate" (Encode.bool (state == Indeterminate)))
-
-
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
-clickHandler { onClick } =
-    Maybe.map Html.Events.onClick onClick
 
 
 backgroundElt : Html msg

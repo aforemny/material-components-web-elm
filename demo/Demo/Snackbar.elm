@@ -172,7 +172,7 @@ view lift page model =
         , Page.demos
             [ example []
                 [ Html.h2 [ Typography.headline6 ] [ text "Basic Example" ]
-                , formField formFieldConfig
+                , formField { formFieldConfig | label = "Stacked" }
                     [ checkbox
                         { checkboxConfig
                             | state =
@@ -183,10 +183,9 @@ view lift page model =
                                     Checkbox.Unchecked
                             , onClick = Just (lift ToggleStacked)
                         }
-                    , Html.label [] [ text "Stacked" ]
                     ]
                 , Html.br [] []
-                , formField formFieldConfig
+                , formField { formFieldConfig | label = "Dismiss On Action" }
                     [ checkbox
                         { checkboxConfig
                             | state =
@@ -197,7 +196,6 @@ view lift page model =
                                     Checkbox.Unchecked
                             , onClick = Just (lift ToggleDismissOnAction)
                         }
-                    , Html.label [] [ text "Dismiss On Action" ]
                     ]
                 , Html.br [] []
                 , -- TODO: Html.Events.onInput (lift << SetMessageText)

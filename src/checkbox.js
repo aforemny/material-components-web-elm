@@ -1,4 +1,4 @@
-import { MDCCheckboxFoundation } from "@material/checkbox/index";
+import { MDCCheckbox } from "@material/checkbox/index";
 
 class MdcCheckbox extends HTMLElement {
 
@@ -6,81 +6,41 @@ class MdcCheckbox extends HTMLElement {
     return [ "state", "disabled" ];
   }
 
-  get adapter() {
-    return {
-      addClass: className => {
-        this.classList.add(className);
-      },
-      removeClass: className => {
-        this.classList.remove(className);
-      },
-      getNativeControl: () => {
-        return this.querySelector("input");
-      },
-      forceLayout: () => {
-        this.offsetWidth;
-      },
-      isAttachedToDOM: () => {
-        return Boolean(this.parentNode);
-      },
-      isIndeterminate: () => {
-        return this.getAttribute("state") === "indeterminate";
-      },
-      isChecked: () => {
-        return this.getAttribute("state") === "checked";
-      },
-      hasNativeControl: () => {
-        return true;
-      },
-      setNativeControlDisabled: disabled => {
-        this.querySelector("input").disabled = disabled;
-      },
-    };
-  }
-
   constructor() {
     super();
   }
 
   connectedCallback() {
-    this.mdcFoundation = new MDCCheckboxFoundation(this.adapter);
-    this.mdcFoundation.init();
-    this.mdcFoundation.handleChange();
-    this.mdcFoundation.setDisabled(this.hasAttribute("disabled"));
-
-    const nativeControl = this.querySelector("input");
-    nativeControl.addEventListener("click", this.handleChange);
-    nativeControl.addEventListener("animationend", this.handleAnimationEnd);
-  }
-
-  handleChange(event) {
-    event.stopPropagation();
-    event.preventDefault();
-    return false;
-  }
-
-  handleAnimationEnd(event) {
-    if (!this.mdcFoundation) return;
-    this.mdcFoundation.handleAnimationEnd();
+    this.checkbox_ = new MDCCheckbox(this);
+    this.setState_();
+    this.setDisabled_();
   }
 
   disconnectedCallback() {
-    if (this.mdcFoundation) {
-      this.mdcFoundation.destroy();
-      delete this.mdcFoundation;
-    }
-    const nativeControl = this.querySelector("input");
-    nativeControl.removeEventListener("click", this.handleChange);
-    nativeControl.removeEventListener("animationend", this.handleAnimationEnd);
+    this.checkbox_.destroy();
+  }
+
+  setState_() {
+    const state = this.getAttribute("state");
+    this.checkbox_.checked = state === "checked";
+    this.checkbox_.indeterminate = state === "indeterminate";
+  }
+
+  setDisabled_() {
+    this.checkbox_.disabled = this.hasAttribute("disabled");
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (!this.mdcFoundation) return;
+    if (!this.checkbox_) return;
     if (name === "state") {
-        this.mdcFoundation.handleChange();
+      this.setState_();
     } else if (name === "disabled") {
-        this.mdcFoundation.setDisabled(this.hasAttribute("disabled"));
+      this.setDisabled_();
     }
+  }
+
+  get input() {
+    return this.checkbox_;
   }
 }
 

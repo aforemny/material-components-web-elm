@@ -52,13 +52,17 @@ heroSwitch lift model =
         index =
             "switch-hero-switch"
     in
-    formField formFieldConfig
+    formField
+        { formFieldConfig
+            | label = "off/on"
+            , for = Just index
+            , onClick = Just (lift (Toggle index))
+        }
         [ switch
             { switchConfig
                 | checked = isChecked index model
                 , onClick = Just (lift (Toggle index))
             }
-        , Html.label [ Html.Attributes.for index ] [ text "off/on" ]
         ]
 
 
@@ -68,13 +72,17 @@ exampleSwitch lift model =
         index =
             "switch-example-switch"
     in
-    formField formFieldConfig
+    formField
+        { formFieldConfig
+            | label = "off/on"
+            , for = Just index
+            , onClick = Just (lift (Toggle index))
+        }
         [ switch
             { switchConfig
                 | checked = isChecked index model
                 , onClick = Just (lift (Toggle index))
             }
-        , Html.label [ Html.Attributes.for index ] [ text "off/on" ]
         ]
 
 

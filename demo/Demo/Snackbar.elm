@@ -7,144 +7,86 @@ import Html.Attributes
 import Html.Events
 import Json.Decode as Json
 import Material.Button as Button exposing (buttonConfig, raisedButton)
-import Material.Checkbox as Checkbox exposing (checkbox, checkboxConfig)
-import Material.FormField as FormField exposing (formField, formFieldConfig)
-import Material.Snackbar as Snackbar exposing (snackbar, snackbarConfig)
-import Material.TextField as TextField exposing (textField, textFieldConfig)
-import Material.Typography as Typography
+import Material.Snackbar as Snackbar exposing (snackbar, snackbarConfig, snackbarMessage)
 import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =
-    { stacked : Bool
-    , dismissOnAction : Bool
-    , messageText : String
-    , actionText : String
-    }
+    { queue : Snackbar.Queue Msg }
 
 
 defaultModel : Model
 defaultModel =
-    { stacked = False
-    , dismissOnAction = True
-    , messageText = "Message deleted"
-    , actionText = "Undo"
-    }
+    { queue = Snackbar.initialQueue }
 
 
 type Msg
-    = ToggleStacked
-    | ToggleDismissOnAction
-    | SetMessageText String
-    | SetActionText String
-    | Show String
-    | Dismiss String
-    | NoOp
+    = ShowBaseline
+    | ShowLeading
+    | ShowStacked
+    | SnackbarMsg (Snackbar.Msg Msg)
+    | Click
 
 
 update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
 update lift msg model =
+    let
+        baselineMessage =
+            { snackbarMessage
+                | label = "Can't send photo. Retry in 5 seconds."
+                , actionButton = Just "Retry"
+                , onActionButtonClick = Just Click
+                , actionIcon = Just "close"
+                , onActionIconClick = Just Click
+            }
+
+        leadingMessage =
+            { snackbarMessage
+                | label = "Your photo has been archived."
+                , leading = True
+                , actionButton = Just "Undo"
+                , onActionButtonClick = Just Click
+                , actionIcon = Just "close"
+                , onActionIconClick = Just Click
+            }
+
+        stackedMessage =
+            { snackbarMessage
+                | label =
+                    "This item already has the label \"travel\". You can add a new label."
+                , stacked = True
+                , actionButton = Just "Add a new label"
+                , onActionButtonClick = Just Click
+                , actionIcon = Just "close"
+                , onActionIconClick = Just Click
+            }
+    in
     case msg of
-        NoOp ->
-            ( model, Cmd.none )
+        ShowBaseline ->
+            ( model, Cmd.map lift (Snackbar.addMessage SnackbarMsg baselineMessage) )
 
-        ToggleStacked ->
-            ( { model | stacked = not model.stacked }, Cmd.none )
+        ShowLeading ->
+            ( model, Cmd.map lift (Snackbar.addMessage SnackbarMsg leadingMessage) )
 
-        ToggleDismissOnAction ->
-            ( { model | dismissOnAction = not model.dismissOnAction }, Cmd.none )
+        ShowStacked ->
+            ( model, Cmd.map lift (Snackbar.addMessage SnackbarMsg stackedMessage) )
 
-        SetMessageText messageText ->
-            ( { model | messageText = messageText }, Cmd.none )
+        SnackbarMsg snackbarMsg ->
+            let
+                ( queue, cmds ) =
+                    Snackbar.update SnackbarMsg snackbarMsg model.queue
+            in
+            ( { model | queue = queue }, Cmd.map lift cmds )
 
-        SetActionText actionText ->
-            ( { model | actionText = actionText }, Cmd.none )
-
-        Show idx ->
-            -- TODO:
-            -- let
-            --     contents =
-            --         if model.stacked then
-            --             let
-            --                 snack =
-            --                     Snackbar.snack
-            --                         (Just (lift (Dismiss model.messageText)))
-            --                         model.messageText
-            --                         model.actionText
-            --             in
-            --             { snack
-            --                 | dismissOnAction = model.dismissOnAction
-            --                 , stacked = model.stacked
-            --             }
-            --
-            --         else
-            --             let
-            --                 toast =
-            --                     Snackbar.toast
-            --                         (Just (lift (Dismiss model.messageText)))
-            --                         model.messageText
-            --             in
-            --             { toast
-            --                 | dismissOnAction = model.dismissOnAction
-            --                 , action = Just "Hide"
-            --             }
-            --
-            --     ( mdc, effects ) =
-            --         Snackbar.add lift idx contents model.mdc
-            -- in
-            -- ( { model | mdc = mdc }, effects )
-            ( model, Cmd.none )
-
-        Dismiss str ->
+        Click ->
             ( model, Cmd.none )
 
 
 view : (Msg -> m) -> Page m -> Model -> Html m
 view lift page model =
-    let
-        example options =
-            Html.div
-                (Html.Attributes.style "margin-top" "24px"
-                    :: options
-                )
-    in
     page.body "Snackbar"
         "Snackbars provide brief feedback about an operation through a message at the bottom of the screen."
-        [ Page.hero []
-            [ Html.div
-                [ Html.Attributes.style "position" "relative"
-                , Html.Attributes.style "left" "0"
-                , Html.Attributes.style "transform" "none"
-                , Html.Attributes.class "mdc-snackbar mdc-snackbar--open"
-                ]
-                [ Html.div
-                    [ Html.Attributes.class "mdc-snackbar__surface" ]
-                    [ Html.div
-                        [ Html.Attributes.class "mdc-snackbar__label"
-                        , Html.Attributes.attribute "role" "status"
-                        , Html.Attributes.attribute "aria-live" "polite"
-                        , Html.Attributes.style "color" "hsla(0,0%,100%,.87)"
-                        ]
-                        [ text "Can't send photo. Retry in 5 seconds." ]
-                    , Html.div
-                        [ Html.Attributes.class "mdc-snackbar__actions" ]
-                        [ Html.button
-                            [ Html.Attributes.type_ "button"
-                            , Html.Attributes.class "mdc-button"
-                            , Html.Attributes.class "mdc-snackbar__action"
-                            ]
-                            [ text "Retry"
-                            ]
-                        , Html.button
-                            [ Html.Attributes.class "mdc-icon-button"
-                            , Html.Attributes.class "mdc-snackbar__dismiss"
-                            , Html.Attributes.class "material-icons"
-                            ]
-                            [ text "close" ]
-                        ]
-                    ]
-                ]
-            ]
+        [ Page.hero [] [ heroMessage ]
         , Html.h2
             [ Html.Attributes.class "mdc-typography--headline6"
             , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
@@ -170,87 +112,68 @@ view lift page model =
             , altText = "Source Code"
             }
         , Page.demos
-            [ example []
-                [ Html.h2 [ Typography.headline6 ] [ text "Basic Example" ]
-                , formField { formFieldConfig | label = "Stacked" }
-                    [ checkbox
-                        { checkboxConfig
-                            | state =
-                                if model.stacked then
-                                    Checkbox.Checked
+            [ raisedButton
+                { buttonConfig
+                    | onClick = Just (lift ShowBaseline)
+                    , additionalAttributes = buttonMargin
+                }
+                "Baseline"
+            , text " "
+            , raisedButton
+                { buttonConfig
+                    | onClick = Just (lift ShowLeading)
+                    , additionalAttributes = buttonMargin
+                }
+                "Leading"
+            , text " "
+            , raisedButton
+                { buttonConfig
+                    | onClick = Just (lift ShowStacked)
+                    , additionalAttributes = buttonMargin
+                }
+                "Stacked"
+            , Html.map lift (snackbar SnackbarMsg snackbarConfig model.queue)
+            ]
+        ]
 
-                                else
-                                    Checkbox.Unchecked
-                            , onClick = Just (lift ToggleStacked)
-                        }
-                    ]
-                , Html.br [] []
-                , formField { formFieldConfig | label = "Dismiss On Action" }
-                    [ checkbox
-                        { checkboxConfig
-                            | state =
-                                if model.dismissOnAction then
-                                    Checkbox.Checked
 
-                                else
-                                    Checkbox.Unchecked
-                            , onClick = Just (lift ToggleDismissOnAction)
-                        }
+heroMessage : Html m
+heroMessage =
+    Html.div
+        [ Html.Attributes.style "position" "relative"
+        , Html.Attributes.style "left" "0"
+        , Html.Attributes.style "transform" "none"
+        , Html.Attributes.class "mdc-snackbar mdc-snackbar--open"
+        ]
+        [ Html.div
+            [ Html.Attributes.class "mdc-snackbar__surface" ]
+            [ Html.div
+                [ Html.Attributes.class "mdc-snackbar__label"
+                , Html.Attributes.attribute "role" "status"
+                , Html.Attributes.attribute "aria-live" "polite"
+                , Html.Attributes.style "color" "hsla(0,0%,100%,.87)"
+                ]
+                [ text "Can't send photo. Retry in 5 seconds." ]
+            , Html.div
+                [ Html.Attributes.class "mdc-snackbar__actions" ]
+                [ Html.button
+                    [ Html.Attributes.type_ "button"
+                    , Html.Attributes.class "mdc-button"
+                    , Html.Attributes.class "mdc-snackbar__action"
                     ]
-                , Html.br [] []
-                , -- TODO: Html.Events.onInput (lift << SetMessageText)
-                  -- TODO: value = model.messageText
-                  textField
-                    { textFieldConfig
-                        | label = "Message Text"
-                    }
-                , Html.br [] []
-                , -- TODO: Html.Events.onInput (lift << SetActionText)
-                  -- TODO: value = model.actionText
-                  textField
-                    { textFieldConfig
-                        | label = "Action Text"
-                    }
-                , Html.br [] []
-                , raisedButton
-                    { buttonConfig
-                        | onClick = Just (lift (Show "snackbar-default-snackbar"))
-                        , additionalAttributes =
-                            [ Html.Attributes.style "margin-top" "14px" ]
-                    }
-                    "Show"
-                , text " "
-                , raisedButton
-                    { buttonConfig
-                        | onClick = Just (lift (Show "snackbar-dismissible-snackbar"))
-                        , additionalAttributes =
-                            [ Html.Attributes.style "margin-top" "14px" ]
-                    }
-                    "Show dismissible"
-                , text " "
-                , raisedButton
-                    { buttonConfig
-                        | onClick = Just (lift (Show "snackbar-leading-snackbar"))
-                        , additionalAttributes =
-                            [ Html.Attributes.style "margin-top" "14px" ]
-                    }
-                    "Show leading"
-                , text " "
-                , raisedButton
-                    { buttonConfig
-                        | onClick = Just (lift (Show "snackbar-leading-snackbar-rtl"))
-                        , additionalAttributes =
-                            [ Html.Attributes.style "margin-top" "14px" ]
-                    }
-                    "Show leading rtl"
-                , snackbar snackbarConfig Nothing
-                , snackbar snackbarConfig Nothing
-                , snackbar { snackbarConfig | leading = True } Nothing
-                , Html.div
-                    [ Html.Attributes.attribute "dir" "rtl"
+                    [ text "Retry"
                     ]
-                    [ snackbar { snackbarConfig | leading = True } Nothing
+                , Html.button
+                    [ Html.Attributes.class "mdc-icon-button"
+                    , Html.Attributes.class "mdc-snackbar__dismiss"
+                    , Html.Attributes.class "material-icons"
                     ]
+                    [ text "close" ]
                 ]
             ]
         ]
+
+
+buttonMargin : List (Html.Attribute m)
+buttonMargin =
+    [ Html.Attributes.style "margin" "14px" ]

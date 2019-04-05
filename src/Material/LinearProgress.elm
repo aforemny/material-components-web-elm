@@ -1,7 +1,8 @@
 module Material.LinearProgress exposing
     ( Config
-    , Variant(..)
-    , linearProgress
+    , bufferedLinearProgress
+    , determinateLinearProgress
+    , indeterminateLinearProgress
     , linearProgressConfig
     )
 
@@ -53,6 +54,21 @@ linearProgress config =
         , primaryBarElt
         , secondaryBarElt
         ]
+
+
+indeterminateLinearProgress : Config msg -> Html msg
+indeterminateLinearProgress config =
+    linearProgress { config | variant = Indeterminate }
+
+
+determinateLinearProgress : Config msg -> { progress : Float } -> Html msg
+determinateLinearProgress config { progress } =
+    linearProgress { config | variant = Determinate progress }
+
+
+bufferedLinearProgress : Config msg -> { progress : Float, buffered : Float } -> Html msg
+bufferedLinearProgress config { progress, buffered } =
+    linearProgress { config | variant = Buffered progress buffered }
 
 
 rootCs : Maybe (Html.Attribute msg)

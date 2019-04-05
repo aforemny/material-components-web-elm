@@ -367,7 +367,7 @@ body model =
                             , Html.Attributes.style "margin-right" "auto"
                             ]
                             (Html.div
-                                [ TopAppBar.fixedAdjust topAppBarConfig
+                                [ TopAppBar.fixedAdjust
                                 ]
                                 [ Page.header title
                                 , Html.p [ Typography.body1 ] [ text intro ]

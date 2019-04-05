@@ -7,14 +7,9 @@ class MdcChipSet extends HTMLElement {
   }
 
   connectedCallback() {
-    //this.MDCChipSet = new MDCChipSet(this);
   }
 
   disconnectedCallback() {
-    if (typeof this.MDCChipSet !== "undefined") {
-      this.MDCChipSet.destroy();
-      delete this.MDCChipSet;
-    }
   }
 };
 

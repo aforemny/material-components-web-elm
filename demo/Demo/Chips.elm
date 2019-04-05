@@ -7,7 +7,7 @@ import Html.Attributes
 import Material.Chip.Choice as ChoiceChip exposing (choiceChip, choiceChipConfig)
 import Material.Chip.Filter as FilterChip exposing (filterChip, filterChipConfig)
 import Material.Chip.Input as InputChip exposing (inputChip, inputChipConfig)
-import Material.ChipSet as ChipSet exposing (chipSet, chipSetConfig)
+import Material.ChipSet as ChipSet exposing (chipSet)
 import Material.Typography as Typography
 import Set exposing (Set)
 
@@ -114,7 +114,7 @@ view lift page model =
 
 heroChips : (Msg -> m) -> Model -> Html m
 heroChips lift model =
-    chipSet chipSetConfig
+    chipSet []
         [ choiceChip choiceChipConfig "Chip One"
         , choiceChip choiceChipConfig "Chip Two"
         , choiceChip choiceChipConfig "Chip Three"
@@ -138,7 +138,7 @@ choiceChips lift model =
         ]
         [ text "Choice Chips"
         ]
-    , chipSet { chipSetConfig | variant = ChipSet.Choice }
+    , chipSet []
         [ chip "chips-choice-extra-small" "Extra Small"
         , chip "chips-choice-small" "Small"
         , chip "chips-choice-medium" "Medium"
@@ -167,7 +167,7 @@ filterChips lift model =
                 }
                 label
       in
-      chipSet { chipSetConfig | variant = ChipSet.Filter }
+      chipSet []
         [ chip "chips-filter-chips-tops" "Tops"
         , chip "chips-filter-chips-bottoms" "Bottoms"
         , chip "chips-filter-chips-shoes" "Shoes"
@@ -186,7 +186,7 @@ filterChips lift model =
                 }
                 label
       in
-      chipSet { chipSetConfig | variant = ChipSet.Filter }
+      chipSet []
         [ chip "chips-filter-chips-alice" "Alice"
         , chip "chips-filter-chips-bob" "Bob"
         , chip "chips-filter-chips-charlie" "Charlie"
@@ -211,7 +211,7 @@ actionChips lift model =
         ]
         [ text "Action Chips"
         ]
-    , chipSet chipSetConfig
+    , chipSet []
         [ chip "chips-action-chips-add-to-calendar" ( "event", "Add to calendar" )
         , chip "chips-action-chips-bookmark" ( "bookmark", "Bookmark" )
         , chip "chips-action-chips-set-alarm" ( "alarm", "Set alarm" )
@@ -236,7 +236,7 @@ shapedChips lift model =
         ]
         [ text "Shaped Chips"
         ]
-    , chipSet chipSetConfig
+    , chipSet []
         [ chip "chips-shaped-chips-bookcase" "Bookcase"
         , chip "chips-shaped-chips-tv-stand" "TV Stand"
         , chip "chips-shaped-chips-sofas" "Sofas"

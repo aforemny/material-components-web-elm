@@ -4,7 +4,7 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.LinearProgress as LinearProgress exposing (linearProgress, linearProgressConfig)
+import Material.LinearProgress as LinearProgress exposing (bufferedLinearProgress, determinateLinearProgress, indeterminateLinearProgress, linearProgressConfig)
 import Material.Typography as Typography
 
 
@@ -13,8 +13,7 @@ view page =
     page.body "Linear Progress Indicator"
         "Progress indicators display the length of a process or express an unspecified wait time."
         [ Page.hero []
-            [ linearProgress
-                { linearProgressConfig | variant = LinearProgress.Determinate 0.5 }
+            [ determinateLinearProgress linearProgressConfig { progress = 0.5 }
             ]
         , Html.h2
             [ Typography.headline6
@@ -42,21 +41,15 @@ view page =
             }
         , Page.demos
             [ Html.h3 [ Typography.subtitle1 ] [ text "Buffered" ]
-            , linearProgress
-                { linearProgressConfig | variant = LinearProgress.Buffered 0.5 0.75 }
+            , bufferedLinearProgress linearProgressConfig
+                { progress = 0.5, buffered = 0.75 }
             , Html.h3 [ Typography.subtitle1 ] [ text "Indeterminate" ]
-            , linearProgress linearProgressConfig
+            , indeterminateLinearProgress linearProgressConfig
             , Html.h3 [ Typography.subtitle1 ] [ text "Reversed" ]
-            , linearProgress
-                { linearProgressConfig
-                    | variant = LinearProgress.Determinate 0.5
-                    , reverse = True
-                }
+            , determinateLinearProgress { linearProgressConfig | reverse = True }
+                { progress = 0.5 }
             , Html.h3 [ Typography.subtitle1 ] [ text "Reversed Buffered" ]
-            , linearProgress
-                { linearProgressConfig
-                    | variant = LinearProgress.Buffered 0.5 0.75
-                    , reverse = True
-                }
+            , bufferedLinearProgress { linearProgressConfig | reverse = True }
+                { progress = 0.5, buffered = 0.75 }
             ]
         ]

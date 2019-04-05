@@ -1,13 +1,19 @@
 module Material.TopAppBar exposing
     ( Config
-    , Variant(..)
     , actionItem
     , alignEnd
     , alignStart
+    , denseFixedAdjust
+    , denseProminentFixedAdjust
     , fixedAdjust
     , navigationIcon
+    , prominentFixedAdjust
+    , prominentTopAppBar
     , row
     , section
+    , shortCollapsedTopAppBar
+    , shortFixedAdjust
+    , shortTopAppBar
     , title
     , topAppBar
     , topAppBarConfig
@@ -53,6 +59,21 @@ topAppBar config nodes =
             ++ config.additionalAttributes
         )
         nodes
+
+
+shortTopAppBar : Config msg -> List (Html msg) -> Html msg
+shortTopAppBar config nodes =
+    topAppBar { config | variant = Short } nodes
+
+
+shortCollapsedTopAppBar : Config msg -> List (Html msg) -> Html msg
+shortCollapsedTopAppBar config nodes =
+    topAppBar { config | variant = ShortCollapsed } nodes
+
+
+prominentTopAppBar : Config msg -> List (Html msg) -> Html msg
+prominentTopAppBar config nodes =
+    topAppBar { config | variant = Prominent } nodes
 
 
 row : List (Html.Attribute msg) -> List (Html msg) -> Html msg
@@ -129,23 +150,26 @@ fixedCs { fixed } =
         Nothing
 
 
-fixedAdjust : Config msg -> Html.Attribute msg
-fixedAdjust { variant, dense } =
-    case ( variant, dense ) of
-        ( Short, _ ) ->
-            class "mdc-top-app-bar--short-fixed-adjust"
+fixedAdjust : Html.Attribute msg
+fixedAdjust =
+    class "mdc-top-app-bar--fixed-adjust"
 
-        ( ShortCollapsed, _ ) ->
-            class "mdc-top-app-bar--short-fixed-adjust"
 
-        ( Prominent, True ) ->
-            class "mdc-top-app-bar--dense-prominent-fixed-adjust"
+denseFixedAdjust : Html.Attribute msg
+denseFixedAdjust =
+    class "mdc-top-app-bar--dense-fixed-adjust"
 
-        ( Prominent, False ) ->
-            class "mdc-top-app-bar--prominent-fixed-adjust"
 
-        ( _, True ) ->
-            class "mdc-top-app-bar--dense-fixed-adjust"
+shortFixedAdjust : Html.Attribute msg
+shortFixedAdjust =
+    class "mdc-top-app-bar--short-fixed-adjust"
 
-        _ ->
-            class "mdc-top-app-bar--fixed-adjust"
+
+prominentFixedAdjust : Html.Attribute msg
+prominentFixedAdjust =
+    class "mdc-top-app-bar--prominent-fixed-adjust"
+
+
+denseProminentFixedAdjust : Html.Attribute msg
+denseProminentFixedAdjust =
+    class "mdc-top-app-bar--dense-prominent-fixed-adjust"

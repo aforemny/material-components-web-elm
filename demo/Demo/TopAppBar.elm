@@ -7,7 +7,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Material.Icon as Icon exposing (icon, iconConfig)
-import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
+import Material.TopAppBar as TopAppBar exposing (prominentTopAppBar, shortCollapsedTopAppBar, shortTopAppBar, topAppBar, topAppBarConfig)
 import Material.Typography as Typography
 
 
@@ -44,22 +44,22 @@ view : (Msg -> m) -> Page m -> Maybe TopAppBarPage -> Model -> Html m
 view lift page topAppBarPage model =
     case topAppBarPage of
         Just Url.StandardTopAppBar ->
-            standardTopAppBar
+            topAppBar_
 
         Just Url.FixedTopAppBar ->
-            fixedTopAppBar
+            fixedTopAppBar_
 
         Just Url.DenseTopAppBar ->
-            denseTopAppBar
+            denseTopAppBar_
 
         Just Url.ProminentTopAppBar ->
-            prominentTopAppBar
+            prominentTopAppBar_
 
         Just Url.ShortTopAppBar ->
-            shortTopAppBar
+            shortTopAppBar_
 
         Just Url.ShortCollapsedTopAppBar ->
-            shortCollapsedTopAppBar
+            shortCollapsedTopAppBar_
 
         Nothing ->
             page.body "Top App Bar"
@@ -169,16 +169,14 @@ topAppBarWrapper fixedAdjust topAppBar =
         ]
 
 
-standardTopAppBar : Html m
-standardTopAppBar =
+topAppBar_ : Html m
+topAppBar_ =
     let
-        standardConfig =
+        defaultConfig =
             topAppBarConfig
     in
-    topAppBarWrapper
-        [ TopAppBar.fixedAdjust standardConfig
-        ]
-        (topAppBar standardConfig
+    topAppBarWrapper [ TopAppBar.fixedAdjust ]
+        (topAppBar defaultConfig
             [ TopAppBar.row []
                 [ TopAppBar.section
                     [ TopAppBar.alignStart
@@ -208,15 +206,13 @@ standardTopAppBar =
         )
 
 
-fixedTopAppBar : Html m
-fixedTopAppBar =
+fixedTopAppBar_ : Html m
+fixedTopAppBar_ =
     let
         fixedConfig =
             { topAppBarConfig | fixed = True }
     in
-    topAppBarWrapper
-        [ TopAppBar.fixedAdjust fixedConfig
-        ]
+    topAppBarWrapper [ TopAppBar.fixedAdjust ]
         (topAppBar fixedConfig
             [ TopAppBar.row []
                 [ TopAppBar.section
@@ -247,15 +243,13 @@ fixedTopAppBar =
         )
 
 
-denseTopAppBar : Html m
-denseTopAppBar =
+denseTopAppBar_ : Html m
+denseTopAppBar_ =
     let
         denseConfig =
             { topAppBarConfig | dense = True }
     in
-    topAppBarWrapper
-        [ TopAppBar.fixedAdjust denseConfig
-        ]
+    topAppBarWrapper [ TopAppBar.denseFixedAdjust ]
         (topAppBar denseConfig
             [ TopAppBar.row []
                 [ TopAppBar.section
@@ -283,16 +277,10 @@ denseTopAppBar =
         )
 
 
-prominentTopAppBar : Html m
-prominentTopAppBar =
-    let
-        prominentConfig =
-            { topAppBarConfig | variant = TopAppBar.Prominent }
-    in
-    topAppBarWrapper
-        [ TopAppBar.fixedAdjust prominentConfig
-        ]
-        (topAppBar prominentConfig
+prominentTopAppBar_ : Html m
+prominentTopAppBar_ =
+    topAppBarWrapper [ TopAppBar.prominentFixedAdjust ]
+        (prominentTopAppBar topAppBarConfig
             [ TopAppBar.row []
                 [ TopAppBar.section
                     [ TopAppBar.alignStart
@@ -319,16 +307,10 @@ prominentTopAppBar =
         )
 
 
-shortTopAppBar : Html m
-shortTopAppBar =
-    let
-        shortConfig =
-            { topAppBarConfig | variant = TopAppBar.Short }
-    in
-    topAppBarWrapper
-        [ TopAppBar.fixedAdjust shortConfig
-        ]
-        (topAppBar shortConfig
+shortTopAppBar_ : Html m
+shortTopAppBar_ =
+    topAppBarWrapper [ TopAppBar.shortFixedAdjust ]
+        (shortTopAppBar topAppBarConfig
             [ TopAppBar.row []
                 [ TopAppBar.section
                     [ TopAppBar.alignStart
@@ -351,16 +333,10 @@ shortTopAppBar =
         )
 
 
-shortCollapsedTopAppBar : Html m
-shortCollapsedTopAppBar =
-    let
-        shortCollapsedConfig =
-            { topAppBarConfig | variant = TopAppBar.ShortCollapsed }
-    in
-    topAppBarWrapper
-        [ TopAppBar.fixedAdjust shortCollapsedConfig
-        ]
-        (topAppBar shortCollapsedConfig
+shortCollapsedTopAppBar_ : Html m
+shortCollapsedTopAppBar_ =
+    topAppBarWrapper [ TopAppBar.shortFixedAdjust ]
+        (shortCollapsedTopAppBar topAppBarConfig
             [ TopAppBar.row []
                 [ TopAppBar.section
                     [ TopAppBar.alignStart

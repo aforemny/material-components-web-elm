@@ -127,7 +127,7 @@ mainContent model mdc =
         , Html.Attributes.style "overflow" "auto"
         , Html.Attributes.style "height" "100%"
         , Html.Attributes.style "box-sizing" "border-box"
-        , TopAppBar.fixedAdjust topAppBarConfig
+        , TopAppBar.fixedAdjust
         , Drawer.appContent
         ]
         [ Html.div [] []

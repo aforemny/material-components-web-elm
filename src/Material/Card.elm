@@ -38,7 +38,7 @@ cardConfig =
 
 card : Config msg -> Content msg -> Html msg
 card config content =
-    Html.div
+    Html.node "mdc-card"
         (List.filterMap identity
             [ rootCs
             , outlinedCs config
@@ -74,14 +74,14 @@ actionsElt content =
                 (List.concat
                     [ if not (List.isEmpty buttons) then
                         [ Html.div [ class "mdc-card__action-buttons" ]
-                            (List.map (\(Icon icon) -> icon) icons)
+                            (List.map (\(Button button) -> button) buttons)
                         ]
 
                       else
                         []
                     , if not (List.isEmpty icons) then
                         [ Html.div [ class "mdc-card__action-icons" ]
-                            (List.map (\(Button button) -> button) buttons)
+                            (List.map (\(Icon icon) -> icon) icons)
                         ]
 
                       else
@@ -179,15 +179,15 @@ aspectCs { aspect } =
 
 
 type alias PrimaryActionConfig msg =
-    { onClick : Maybe msg
-    , additionalAttributes : List (Html.Attribute msg)
+    { additionalAttributes : List (Html.Attribute msg)
+    , onClick : Maybe msg
     }
 
 
 primaryActionConfig : PrimaryActionConfig msg
 primaryActionConfig =
-    { onClick = Nothing
-    , additionalAttributes = []
+    { additionalAttributes = []
+    , onClick = Nothing
     }
 
 

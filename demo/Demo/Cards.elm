@@ -34,7 +34,7 @@ update lift msg model =
 
 cardMedia : Card.Block m
 cardMedia =
-    Card.media { mediaConfig | aspect = Just Card.SixteenToNine } "images/16-9.jpg"
+    Card.media { mediaConfig | aspect = Just Card.SixteenToNine } "images/photos/3x2/2.jpg"
 
 
 cardTitle : Card.Block m
@@ -51,7 +51,7 @@ cardTitle =
                 ]
             , Html.h3
                 [ Typography.subtitle2
-                , Theme.secondaryBg
+                , Theme.textSecondaryOnBackground
                 , Html.Attributes.style "margin" "0"
                 ]
                 [ text "by Kurt Wagner"
@@ -65,7 +65,7 @@ cardBody =
         Html.div
             [ Html.Attributes.style "padding" "0 1rem 0.5rem 1rem"
             , Typography.body2
-            , Theme.secondaryBg
+            , Theme.textSecondaryOnBackground
             ]
             [ text """
             Visit ten places on our planet that are undergoing the biggest
@@ -82,7 +82,7 @@ cardActions =
             , Card.actionButton buttonConfig "Bookmark"
             ]
         , icons =
-            [ Card.actionIcon iconConfig "favorite"
+            [ Card.actionIcon iconConfig "favorite_border"
             , Card.actionIcon iconConfig "share"
             , Card.actionIcon iconConfig "more_vert"
             ]
@@ -121,7 +121,7 @@ exampleCard1 lift index model =
                 , cardTitle
                 , cardBody
                 ]
-        , actions = Just cardActions
+        , actions = Nothing
         }
 
 

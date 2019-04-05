@@ -79,7 +79,6 @@ hero options =
             :: Html.Attributes.style "-webkit-box-pack" "center"
             :: Html.Attributes.style "-ms-flex-pack" "center"
             :: Html.Attributes.style "justify-content" "center"
-            :: Html.Attributes.style "height" "360px"
             :: Html.Attributes.style "min-height" "360px"
             :: Html.Attributes.style "background-color" "rgba(0, 0, 0, 0.05)"
             :: Html.Attributes.style "padding" "24px"

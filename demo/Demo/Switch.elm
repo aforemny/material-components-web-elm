@@ -1,13 +1,13 @@
 module Demo.Switch exposing (Model, Msg(..), defaultModel, update, view)
 
+import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
-import Demo.Page as Page exposing (Page)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.FormField as FormField exposing (formField, formFieldConfig)
-import Material.Switch as Switch exposing (switch, switchConfig)
+import Material.FormField exposing (formField, formFieldConfig)
+import Material.Switch exposing (switch, switchConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -19,7 +19,7 @@ type alias Model =
 
 defaultModel : Model
 defaultModel =
-    { switches = Dict.fromList [ ( "switch-hero-switch", True ) ]
+    { switches = Dict.fromList [ ( "hero-switch", True ) ]
     }
 
 
@@ -27,13 +27,13 @@ type Msg
     = Toggle String
 
 
-update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
 update lift msg model =
     case msg of
-        Toggle index ->
+        Toggle id ->
             let
                 switches =
-                    Dict.update index
+                    Dict.update id
                         (\state -> Just (not (Maybe.withDefault False state)))
                         model.switches
             in
@@ -41,82 +41,63 @@ update lift msg model =
 
 
 isChecked : String -> Model -> Bool
-isChecked index model =
-    Dict.get index model.switches
-        |> Maybe.withDefault False
+isChecked id model =
+    Maybe.withDefault False (Dict.get id model.switches)
 
 
-heroSwitch : (Msg -> m) -> Model -> Html m
-heroSwitch lift model =
+view : Model -> CatalogPage Msg
+view model =
+    { title = "Switch"
+    , prelude = "Switches communicate an action a user can take. They are typically placed throughout your UI, in places like dialogs, forms, cards, and toolbars."
+    , resources =
+        { materialDesignGuidelines = Just "https://material.io/go/design-switches"
+        , documentation = Just "https://material.io/components/web/catalog/input-controls/switches/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-switch"
+        }
+    , hero = heroSwitch model
+    , content =
+        [ Html.h3 [ Typography.subtitle1 ] [ text "Switch" ]
+        , demoSwitch model
+        ]
+    }
+
+
+heroSwitch : Model -> List (Html Msg)
+heroSwitch model =
     let
-        index =
-            "switch-hero-switch"
+        id =
+            "hero-switch"
+    in
+    [ formField
+        { formFieldConfig
+            | label = "off/on"
+            , for = Just id
+            , onClick = Just (Toggle id)
+        }
+        [ switch
+            { switchConfig
+                | checked = isChecked id model
+                , onClick = Just (Toggle id)
+            }
+        ]
+    ]
+
+
+demoSwitch : Model -> Html Msg
+demoSwitch model =
+    let
+        id =
+            "demo-switch"
     in
     formField
         { formFieldConfig
             | label = "off/on"
-            , for = Just index
-            , onClick = Just (lift (Toggle index))
+            , for = Just id
+            , onClick = Just (Toggle id)
         }
         [ switch
             { switchConfig
-                | checked = isChecked index model
-                , onClick = Just (lift (Toggle index))
+                | checked = isChecked id model
+                , onClick = Just (Toggle id)
             }
-        ]
-
-
-exampleSwitch : (Msg -> m) -> Model -> Html m
-exampleSwitch lift model =
-    let
-        index =
-            "switch-example-switch"
-    in
-    formField
-        { formFieldConfig
-            | label = "off/on"
-            , for = Just index
-            , onClick = Just (lift (Toggle index))
-        }
-        [ switch
-            { switchConfig
-                | checked = isChecked index model
-                , onClick = Just (lift (Toggle index))
-            }
-        ]
-
-
-view : (Msg -> m) -> Page m -> Model -> Html m
-view lift page model =
-    page.body "Switch"
-        "Switches communicate an action a user can take. They are typically placed throughout your UI, in places like dialogs, forms, cards, and toolbars."
-        [ Page.hero [] [ heroSwitch lift model ]
-        , Html.h2
-            [ Typography.headline6
-            , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
-            ]
-            [ text "Resources"
-            ]
-        , ResourceLink.view
-            { link = "https://material.io/go/design-switches"
-            , title = "Material Design Guidelines"
-            , icon = "images/material.svg"
-            , altText = "Material Design Guidelines icon"
-            }
-        , ResourceLink.view
-            { link = "https://material.io/components/web/catalog/input-controls/switches/"
-            , title = "Documentation"
-            , icon = "images/ic_drive_document_24px.svg"
-            , altText = "Documentation icon"
-            }
-        , ResourceLink.view
-            { link = "https://github.com/material-components/material-components-web/tree/master/packages/mdc-switch"
-            , title = "Source Code (Material Components Web)"
-            , icon = "images/ic_code_24px.svg"
-            , altText = "Source Code"
-            }
-        , Page.demos
-            [ Html.h3 [ Typography.subtitle1 ] [ text "Switch" ]
-            , exampleSwitch lift model
-            ]
         ]

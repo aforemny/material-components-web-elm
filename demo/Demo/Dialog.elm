@@ -1,16 +1,15 @@
 module Demo.Dialog exposing (Model, Msg(..), defaultModel, update, view)
 
+import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
-import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 import Html.Events
-import Material.Button as Button exposing (button, buttonConfig)
-import Material.Dialog as Dialog exposing (dialog, dialogConfig)
-import Material.FormField as FormField
-import Material.Icon as Icon exposing (icon, iconConfig)
-import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig, listItemGraphic, listItemText)
-import Material.Radio as Radio exposing (radio, radioConfig)
+import Material.Button exposing (button, buttonConfig)
+import Material.Dialog exposing (dialog, dialogConfig)
+import Material.Icon exposing (icon, iconConfig)
+import Material.List exposing (list, listConfig, listItem, listItemConfig, listItemGraphic, listItemText)
+import Material.Radio exposing (radio, radioConfig)
 import Material.Typography as Typography
 
 
@@ -30,7 +29,7 @@ type Msg
     | Show String
 
 
-update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
 update lift msg model =
     case msg of
         Close ->
@@ -40,9 +39,44 @@ update lift msg model =
             ( { model | openDialog = Just index }, Cmd.none )
 
 
-heroDialog : (Msg -> m) -> String -> Model -> Html m
-heroDialog lift index model =
-    Html.div
+view : Model -> CatalogPage Msg
+view model =
+    { title = "Dialog"
+    , prelude = "Dialogs inform users about a specific task and may contain critical information, require decisions, or involve multiple tasks."
+    , resources =
+        { materialDesignGuidelines = Just "https://material.io/go/design-dialogs"
+        , documentation = Just "https://material.io/components/web/catalog/dialogs/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-dialog"
+        }
+    , hero = heroDialog
+    , content =
+        [ button
+            { buttonConfig | onClick = Just (Show "dialog-alert-dialog") }
+            "Alert"
+        , text " "
+        , button
+            { buttonConfig | onClick = Just (Show "dialog-simple-dialog") }
+            "Simple"
+        , text " "
+        , button
+            { buttonConfig | onClick = Just (Show "dialog-confirmation-dialog") }
+            "Confirmation"
+        , text " "
+        , button
+            { buttonConfig | onClick = Just (Show "dialog-scrollable-dialog") }
+            "Scrollable"
+        , text " "
+        , alertDialog model
+        , simpleDialog model
+        , confirmationDialog model
+        , scrollableDialog model
+        ]
+    }
+
+
+heroDialog : List (Html Msg)
+heroDialog =
+    [ Html.div
         [ class "mdc-dialog mdc-dialog--open"
         , style "position" "relative"
         ]
@@ -57,31 +91,32 @@ heroDialog lift index model =
                 ]
             ]
         ]
+    ]
 
 
-alertDialog : (Msg -> m) -> String -> Model -> Html m
-alertDialog lift index model =
+alertDialog : Model -> Html Msg
+alertDialog model =
     dialog
         { dialogConfig
-            | open = model.openDialog == Just index
-            , onClose = Just (lift Close)
+            | open = model.openDialog == Just "dialog-alert-dialog"
+            , onClose = Just Close
         }
         { title = Nothing
         , content =
             [ text "Discard draft?" ]
         , actions =
-            [ button { buttonConfig | onClick = Just (lift Close) } "Cancel"
-            , button { buttonConfig | onClick = Just (lift Close) } "Discard"
+            [ button { buttonConfig | onClick = Just Close } "Cancel"
+            , button { buttonConfig | onClick = Just Close } "Discard"
             ]
         }
 
 
-simpleDialog : (Msg -> m) -> String -> Model -> Html m
-simpleDialog lift index model =
+simpleDialog : Model -> Html Msg
+simpleDialog model =
     dialog
         { dialogConfig
-            | open = model.openDialog == Just index
-            , onClose = Just (lift Close)
+            | open = model.openDialog == Just "dialog-simple-dialog"
+            , onClose = Just Close
         }
         { title = Just "Select an account"
         , content =
@@ -90,7 +125,7 @@ simpleDialog lift index model =
                     { listItemConfig
                         | additionalAttributes =
                             [ Html.Attributes.tabindex 0
-                            , Html.Events.onClick (lift Close)
+                            , Html.Events.onClick Close
                             ]
                     }
                     [ listItemGraphic
@@ -104,7 +139,7 @@ simpleDialog lift index model =
                     { listItemConfig
                         | additionalAttributes =
                             [ Html.Attributes.tabindex 0
-                            , Html.Events.onClick (lift Close)
+                            , Html.Events.onClick Close
                             ]
                     }
                     [ listItemGraphic
@@ -118,7 +153,7 @@ simpleDialog lift index model =
                     { listItemConfig
                         | additionalAttributes =
                             [ Html.Attributes.tabindex 0
-                            , Html.Events.onClick (lift Close)
+                            , Html.Events.onClick Close
                             ]
                     }
                     [ listItemGraphic
@@ -134,12 +169,12 @@ simpleDialog lift index model =
         }
 
 
-confirmationDialog : (Msg -> m) -> String -> Model -> Html m
-confirmationDialog lift index model =
+confirmationDialog : Model -> Html Msg
+confirmationDialog model =
     dialog
         { dialogConfig
-            | open = model.openDialog == Just index
-            , onClose = Just (lift Close)
+            | open = model.openDialog == Just "dialog-confirmation-dialog"
+            , onClose = Just Close
         }
         { title = Just "Phone ringtone"
         , content =
@@ -159,18 +194,18 @@ confirmationDialog lift index model =
                 ]
             ]
         , actions =
-            [ button { buttonConfig | onClick = Just (lift Close) } "Cancel"
-            , button { buttonConfig | onClick = Just (lift Close) } "OK"
+            [ button { buttonConfig | onClick = Just Close } "Cancel"
+            , button { buttonConfig | onClick = Just Close } "OK"
             ]
         }
 
 
-scrollableDialog : (Msg -> m) -> String -> Model -> Html m
-scrollableDialog lift index model =
+scrollableDialog : Model -> Html Msg
+scrollableDialog model =
     dialog
         { dialogConfig
-            | open = model.openDialog == Just index
-            , onClose = Just (lift Close)
+            | open = model.openDialog == Just "dialog-scrollable-dialog"
+            , onClose = Just Close
         }
         { title = Just "The Wonderful Wizard of Oz"
         , content =
@@ -262,61 +297,7 @@ scrollableDialog lift index model =
                 ]
             ]
         , actions =
-            [ button { buttonConfig | onClick = Just (lift Close) } "Decline"
-            , button { buttonConfig | onClick = Just (lift Close) } "Continue"
+            [ button { buttonConfig | onClick = Just Close } "Decline"
+            , button { buttonConfig | onClick = Just Close } "Continue"
             ]
         }
-
-
-view : (Msg -> m) -> Page m -> Model -> Html m
-view lift page model =
-    page.body "Dialog"
-        "Dialogs inform users about a specific task and may contain critical information, require decisions, or involve multiple tasks."
-        [ Page.hero [] [ heroDialog lift "dialog-hero-dialog" model ]
-        , Html.h2
-            [ Typography.headline6
-            , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
-            ]
-            [ text "Resources"
-            ]
-        , ResourceLink.view
-            { link = "https://material.io/go/design-dialogs"
-            , title = "Material Design Guidelines"
-            , icon = "images/material.svg"
-            , altText = "Material Design Guidelines icon"
-            }
-        , ResourceLink.view
-            { link = "https://material.io/components/web/catalog/dialogs/"
-            , title = "Documentation"
-            , icon = "images/ic_drive_document_24px.svg"
-            , altText = "Documentation icon"
-            }
-        , ResourceLink.view
-            { link = "https://github.com/material-components/material-components-web/tree/master/packages/mdc-dialog"
-            , title = "Source Code (Material Components Web)"
-            , icon = "images/ic_code_24px.svg"
-            , altText = "Source Code"
-            }
-        , Page.demos
-            [ button
-                { buttonConfig | onClick = Just (lift (Show "dialog-alert-dialog")) }
-                "Alert"
-            , text " "
-            , button
-                { buttonConfig | onClick = Just (lift (Show "dialog-simple-dialog")) }
-                "Simple"
-            , text " "
-            , button
-                { buttonConfig | onClick = Just (lift (Show "dialog-confirmation-dialog")) }
-                "Confirmation"
-            , text " "
-            , button
-                { buttonConfig | onClick = Just (lift (Show "dialog-scrollable-dialog")) }
-                "Scrollable"
-            , text " "
-            , alertDialog lift "dialog-alert-dialog" model
-            , simpleDialog lift "dialog-simple-dialog" model
-            , confirmationDialog lift "dialog-confirmation-dialog" model
-            , scrollableDialog lift "dialog-scrollable-dialog" model
-            ]
-        ]

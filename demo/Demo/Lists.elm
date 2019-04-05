@@ -1,16 +1,15 @@
 module Demo.Lists exposing (Model, Msg, defaultModel, update, view)
 
+import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
-import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Decode
 import Material.Checkbox as Checkbox exposing (checkbox, checkboxConfig)
-import Material.Icon as Icon exposing (icon, iconConfig)
-import Material.List as Lists exposing (list, listConfig, listGroup, listGroupSubheader, listItem, listItemConfig, listItemDivider, listItemDividerConfig, listItemGraphic, listItemMeta, listItemPrimaryText, listItemSecondaryText, listItemText)
-import Material.Radio as Radio exposing (radio, radioConfig)
-import Material.Ripple as Ripple
+import Material.Icon exposing (icon, iconConfig)
+import Material.List exposing (list, listConfig, listGroup, listGroupSubheader, listItem, listItemConfig, listItemDivider, listItemDividerConfig, listItemGraphic, listItemMeta, listItemPrimaryText, listItemSecondaryText, listItemText)
+import Material.Radio exposing (radio, radioConfig)
 import Material.Typography as Typography
 import Set exposing (Set)
 
@@ -40,7 +39,7 @@ type Msg
     | SetShapedActivated Int
 
 
-update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
 update lift msg model =
     case msg of
         NoOp ->
@@ -68,29 +67,64 @@ update lift msg model =
             ( { model | shapedActivatedIndex = index }, Cmd.none )
 
 
-demoList : List (Html.Attribute m)
+view : Model -> CatalogPage Msg
+view model =
+    { title = "List"
+    , prelude = "Lists present multiple line items vertically as a single continuous element."
+    , resources =
+        { materialDesignGuidelines = Just "https://material.io/go/design-lists"
+        , documentation = Just "https://material.io/components/web/catalog/lists/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-list"
+        }
+    , hero = heroList
+    , content =
+        [ Html.h3 [ Typography.subtitle1 ] [ text "Single-Line" ]
+        , singleLineList
+        , Html.h3 [ Typography.subtitle1 ] [ text "Two-Line" ]
+        , twoLineList
+        , Html.h3 [ Typography.subtitle1 ] [ text "Leading Icon" ]
+        , leadingIconList
+        , Html.h3 [ Typography.subtitle1 ] [ text "List with activated item" ]
+        , activatedItemList model
+        , Html.h3 [ Typography.subtitle1 ] [ text "List with shaped activated item" ]
+        , shapedActivatedItemList model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Trailing Icon" ]
+        , trailingIconList
+        , Html.h3 [ Typography.subtitle1 ]
+            [ text "Two-Line with Leading and Trailing Icon and Divider" ]
+        , folderList
+        , Html.h3 [ Typography.subtitle1 ] [ text "List with Trailing Checkbox" ]
+        , listWithTrailingCheckbox model
+        , Html.h3 [ Typography.subtitle1 ] [ text "List with Trailing Radio Buttons" ]
+        , listWithTrailingRadioButton model
+        ]
+    }
+
+
+demoList : List (Html.Attribute msg)
 demoList =
     [ Html.Attributes.style "max-width" "600px"
     , Html.Attributes.style "border" "1px solid rgba(0,0,0,.1)"
     ]
 
 
-heroList : Html m
+heroList : List (Html msg)
 heroList =
-    list
+    [ list
         { listConfig
             | additionalAttributes = Html.Attributes.style "background" "#fff" :: demoList
         }
         (List.repeat 3 <| listItem listItemConfig [ text "Line item" ])
+    ]
 
 
-singleLineList : Html m
+singleLineList : Html msg
 singleLineList =
     list { listConfig | additionalAttributes = demoList }
         (List.repeat 3 <| listItem listItemConfig [ text "Line item" ])
 
 
-twoLineList : Html m
+twoLineList : Html msg
 twoLineList =
     list
         { listConfig
@@ -107,7 +141,7 @@ twoLineList =
         )
 
 
-leadingIconList : Html m
+leadingIconList : Html msg
 leadingIconList =
     list { listConfig | additionalAttributes = demoList }
         [ listItem listItemConfig
@@ -125,7 +159,7 @@ leadingIconList =
         ]
 
 
-trailingIconList : Html m
+trailingIconList : Html msg
 trailingIconList =
     list { listConfig | additionalAttributes = demoList }
         (List.repeat 3 <|
@@ -136,13 +170,13 @@ trailingIconList =
         )
 
 
-activatedItemList : (Msg -> m) -> Model -> Html m
-activatedItemList lift model =
+activatedItemList : Model -> Html Msg
+activatedItemList model =
     let
         listItemConfig_ index =
             { listItemConfig
                 | activated = model.activatedIndex == index
-                , onClick = Just (lift (SetActivated index))
+                , onClick = Just (SetActivated index)
             }
     in
     list { listConfig | additionalAttributes = demoList }
@@ -157,13 +191,13 @@ activatedItemList lift model =
         ]
 
 
-shapedActivatedItemList : (Msg -> m) -> Model -> Html m
-shapedActivatedItemList lift model =
+shapedActivatedItemList : Model -> Html Msg
+shapedActivatedItemList model =
     let
         listItemConfig_ index =
             { listItemConfig
                 | activated = model.shapedActivatedIndex == index
-                , onClick = Just (lift (SetShapedActivated index))
+                , onClick = Just (SetShapedActivated index)
                 , additionalAttributes =
                     [ Html.Attributes.style "border-radius" "0 32px 32px 0" ]
             }
@@ -180,7 +214,7 @@ shapedActivatedItemList lift model =
         ]
 
 
-demoIcon : List (Html.Attribute m)
+demoIcon : List (Html.Attribute msg)
 demoIcon =
     [ Html.Attributes.style "background" "rgba(0,0,0,.3)"
     , Html.Attributes.style "border-radius" "50%"
@@ -188,7 +222,7 @@ demoIcon =
     ]
 
 
-folderList : Html m
+folderList : Html msg
 folderList =
     list
         { listConfig
@@ -232,12 +266,12 @@ folderList =
         ]
 
 
-listWithTrailingCheckbox : (Msg -> m) -> Model -> Html m
-listWithTrailingCheckbox lift model =
+listWithTrailingCheckbox : Model -> Html Msg
+listWithTrailingCheckbox model =
     let
         listItemConfig_ index =
             { listItemConfig
-                | onClick = Just (lift (ToggleCheckbox 0))
+                | onClick = Just (ToggleCheckbox 0)
                 , additionalAttributes =
                     [ Html.Attributes.attribute "aria-checked"
                         (if Set.member index model.checkboxIndices then
@@ -251,7 +285,7 @@ listWithTrailingCheckbox lift model =
                             |> Decode.andThen
                                 (\keyCode ->
                                     if keyCode == 32 || keyCode == 13 then
-                                        Decode.succeed (lift (ToggleCheckbox index))
+                                        Decode.succeed (ToggleCheckbox index)
 
                                     else
                                         Decode.fail ""
@@ -263,7 +297,7 @@ listWithTrailingCheckbox lift model =
         checkbox_ index =
             checkbox
                 { checkboxConfig
-                    | onClick = Just (lift (ToggleCheckbox index))
+                    | onClick = Just (ToggleCheckbox index)
                     , state =
                         if Set.member index model.checkboxIndices then
                             Checkbox.Checked
@@ -298,19 +332,19 @@ listWithTrailingCheckbox lift model =
         ]
 
 
-listWithTrailingRadioButton : (Msg -> m) -> Model -> Html m
-listWithTrailingRadioButton lift model =
+listWithTrailingRadioButton : Model -> Html Msg
+listWithTrailingRadioButton model =
     let
         listItemConfig_ index =
             { listItemConfig
-                | onClick = Just (lift (SetRadio index))
+                | onClick = Just (SetRadio index)
                 , additionalAttributes =
                     [ Html.Events.on "keydown"
                         (Html.Events.keyCode
                             |> Decode.andThen
                                 (\keyCode ->
                                     if keyCode == 32 || keyCode == 13 then
-                                        Decode.succeed (lift (SetRadio index))
+                                        Decode.succeed (SetRadio index)
 
                                     else
                                         Decode.fail ""
@@ -323,7 +357,7 @@ listWithTrailingRadioButton lift model =
             radio
                 { radioConfig
                     | checked = model.radioIndex == index
-                    , onClick = Just (lift (SetRadio index))
+                    , onClick = Just (SetRadio index)
                 }
     in
     list { listConfig | additionalAttributes = demoList }
@@ -342,58 +376,5 @@ listWithTrailingRadioButton lift model =
         , listItem (listItemConfig_ 3)
             [ text "Carrots"
             , listItemMeta [] [ radio_ 3 ]
-            ]
-        ]
-
-
-view : (Msg -> m) -> Page m -> Model -> Html m
-view lift page model =
-    page.body "List"
-        "Lists present multiple line items vertically as a single continuous element."
-        [ Page.hero [] [ heroList ]
-        , Html.h2
-            [ Typography.headline6
-            , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
-            ]
-            [ text "Resources"
-            ]
-        , ResourceLink.view
-            { link = "https://material.io/go/design-lists"
-            , title = "Material Design Guidelines"
-            , icon = "images/material.svg"
-            , altText = "Material Design Guidelines icon"
-            }
-        , ResourceLink.view
-            { link = "https://material.io/components/web/catalog/lists/"
-            , title = "Documentation"
-            , icon = "images/ic_drive_document_24px.svg"
-            , altText = "Documentation icon"
-            }
-        , ResourceLink.view
-            { link = "https://github.com/material-components/material-components-web/tree/master/packages/mdc-list"
-            , title = "Source Code (Material Components Web)"
-            , icon = "images/ic_code_24px.svg"
-            , altText = "Source Code"
-            }
-        , Page.demos
-            [ Html.h3 [ Typography.subtitle1 ] [ text "Single-Line" ]
-            , singleLineList
-            , Html.h3 [ Typography.subtitle1 ] [ text "Two-Line" ]
-            , twoLineList
-            , Html.h3 [ Typography.subtitle1 ] [ text "Leading Icon" ]
-            , leadingIconList
-            , Html.h3 [ Typography.subtitle1 ] [ text "List with activated item" ]
-            , activatedItemList lift model
-            , Html.h3 [ Typography.subtitle1 ] [ text "List with shaped activated item" ]
-            , shapedActivatedItemList lift model
-            , Html.h3 [ Typography.subtitle1 ] [ text "Trailing Icon" ]
-            , trailingIconList
-            , Html.h3 [ Typography.subtitle1 ]
-                [ text "Two-Line with Leading and Trailing Icon and Divider" ]
-            , folderList
-            , Html.h3 [ Typography.subtitle1 ] [ text "List with Trailing Checkbox" ]
-            , listWithTrailingCheckbox lift model
-            , Html.h3 [ Typography.subtitle1 ] [ text "List with Trailing Radio Buttons" ]
-            , listWithTrailingRadioButton lift model
             ]
         ]

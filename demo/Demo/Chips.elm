@@ -1,13 +1,13 @@
 module Demo.Chips exposing (Model, Msg(..), defaultModel, update, view)
 
+import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
-import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Chip.Choice as ChoiceChip exposing (choiceChip, choiceChipConfig)
-import Material.Chip.Filter as FilterChip exposing (filterChip, filterChipConfig)
-import Material.Chip.Input as InputChip exposing (inputChip, inputChipConfig)
-import Material.ChipSet as ChipSet exposing (chipSet)
+import Material.Chip.Choice exposing (choiceChip, choiceChipConfig)
+import Material.Chip.Filter exposing (filterChip, filterChipConfig)
+import Material.Chip.Input exposing (inputChip, inputChipConfig)
+import Material.ChipSet exposing (chipSet)
 import Material.Typography as Typography
 import Set exposing (Set)
 
@@ -41,7 +41,7 @@ type ChipType
     | Action
 
 
-update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
 update lift msg model =
     case msg of
         ToggleChip chipType index ->
@@ -72,156 +72,123 @@ update lift msg model =
                     ( { model | selectedChips = selectedChips }, Cmd.none )
 
 
-view : (Msg -> m) -> Page m -> Model -> Html m
-view lift page model =
-    page.body "Chips"
-        "Chips are compact elements that allow users to enter information, select a choice, filter content, or trigger an action."
-        [ Page.hero [] [ heroChips lift model ]
-        , Html.h2
-            [ Typography.headline6
-            , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
-            ]
-            [ text "Resources"
-            ]
-        , ResourceLink.view
-            { link = "https://material.io/go/design-chips"
-            , title = "Material Design Guidelines"
-            , icon = "images/material.svg"
-            , altText = "Material Design Guidelines icon"
-            }
-        , ResourceLink.view
-            { link = "https://material.io/components/web/catalog/chips/"
-            , title = "Documentation"
-            , icon = "images/ic_drive_document_24px.svg"
-            , altText = "Documentation icon"
-            }
-        , ResourceLink.view
-            { link = "https://github.com/material-components/material-components-web/tree/master/packages/mdc-chips"
-            , title = "Source Code (Material Components Web)"
-            , icon = "images/ic_code_24px.svg"
-            , altText = "Source Code"
-            }
-        , Page.demos
-            (List.concat
-                [ choiceChips lift model
-                , filterChips lift model
-                , actionChips lift model
-                , shapedChips lift model
-                ]
-            )
+view : Model -> CatalogPage Msg
+view model =
+    { title = "Chips"
+    , prelude = "Chips are compact elements that allow users to enter information, select a choice, filter content, or trigger an action."
+    , resources =
+        { materialDesignGuidelines = Just "https://material.io/go/design-chips"
+        , documentation = Just "https://material.io/components/web/catalog/chips/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-chips"
+        }
+    , hero = heroChips
+    , content =
+        [ Html.h2 [ Typography.subtitle1 ] [ text "Choice Chips" ]
+        , choiceChips model
+        , Html.h2 [ Typography.subtitle1 ] [ text "Filter Chips" ]
+        , Html.h3 [ Typography.body2 ] [ text "No leading icon" ]
+        , filterChips1 model
+        , Html.h3 [ Typography.body2 ] [ text "With leading icon" ]
+        , filterChips2 model
+        , Html.h2 [ Typography.subtitle1 ] [ text "Action Chips" ]
+        , actionChips model
+        , Html.h2 [ Typography.subtitle1 ] [ text "Shaped Chips" ]
+        , shapedChips model
         ]
+    }
 
 
-heroChips : (Msg -> m) -> Model -> Html m
-heroChips lift model =
-    chipSet []
+heroChips : List (Html msg)
+heroChips =
+    [ chipSet []
         [ choiceChip choiceChipConfig "Chip One"
         , choiceChip choiceChipConfig "Chip Two"
         , choiceChip choiceChipConfig "Chip Three"
         , choiceChip choiceChipConfig "Chip Four"
         ]
+    ]
 
 
-choiceChips : (Msg -> m) -> Model -> List (Html m)
-choiceChips lift model =
+choiceChips : Model -> Html Msg
+choiceChips model =
     let
         chip index label =
             choiceChip
                 { choiceChipConfig
                     | selected = Just index == model.choiceChip
-                    , onClick = Just (lift (ToggleChip Choice index))
+                    , onClick = Just (ToggleChip Choice index)
                 }
                 label
     in
-    [ Html.h2
-        [ Typography.subtitle1
-        ]
-        [ text "Choice Chips"
-        ]
-    , chipSet []
+    chipSet []
         [ chip "chips-choice-extra-small" "Extra Small"
         , chip "chips-choice-small" "Small"
         , chip "chips-choice-medium" "Medium"
         , chip "chips-choice-large" "Large"
         , chip "chips-choice-extra-large" "Extra Large"
         ]
-    ]
 
 
-filterChips : (Msg -> m) -> Model -> List (Html m)
-filterChips lift model =
-    [ Html.h2
-        [ Typography.subtitle1
-        ]
-        [ text "Filter Chips"
-        ]
-    , Html.h3
-        [ Typography.body2 ]
-        [ text "No leading icon" ]
-    , let
+filterChips1 : Model -> Html Msg
+filterChips1 model =
+    let
         chip index label =
             filterChip
                 { filterChipConfig
                     | selected = Set.member index model.selectedChips
-                    , onClick = Just (lift (ToggleChip Filter index))
+                    , onClick = Just (ToggleChip Filter index)
                 }
                 label
-      in
-      chipSet []
+    in
+    chipSet []
         [ chip "chips-filter-chips-tops" "Tops"
         , chip "chips-filter-chips-bottoms" "Bottoms"
         , chip "chips-filter-chips-shoes" "Shoes"
         , chip "chips-filter-chips-accessories" "Accessories"
         ]
-    , Html.h3
-        [ Typography.body2 ]
-        [ text "With leading icon" ]
-    , let
+
+
+filterChips2 : Model -> Html Msg
+filterChips2 model =
+    let
         chip index label =
             filterChip
                 { filterChipConfig
                     | selected = Set.member index model.selectedChips
                     , icon = Just "face"
-                    , onClick = Just (lift (ToggleChip Filter index))
+                    , onClick = Just (ToggleChip Filter index)
                 }
                 label
-      in
-      chipSet []
+    in
+    chipSet []
         [ chip "chips-filter-chips-alice" "Alice"
         , chip "chips-filter-chips-bob" "Bob"
         , chip "chips-filter-chips-charlie" "Charlie"
         , chip "chips-filter-chips-danielle" "Danielle"
         ]
-    ]
 
 
-actionChips : (Msg -> m) -> Model -> List (Html m)
-actionChips lift model =
+actionChips : Model -> Html Msg
+actionChips model =
     let
         chip index ( icon, label ) =
             filterChip
                 { filterChipConfig
                     | icon = Just icon
-                    , onClick = Just (lift (ToggleChip Action index))
+                    , onClick = Just (ToggleChip Action index)
                 }
                 label
     in
-    [ Html.h2
-        [ Typography.subtitle1
-        ]
-        [ text "Action Chips"
-        ]
-    , chipSet []
+    chipSet []
         [ chip "chips-action-chips-add-to-calendar" ( "event", "Add to calendar" )
         , chip "chips-action-chips-bookmark" ( "bookmark", "Bookmark" )
         , chip "chips-action-chips-set-alarm" ( "alarm", "Set alarm" )
         , chip "chips-action-chips-get-directions" ( "directions", "Get directions" )
         ]
-    ]
 
 
-shapedChips : (Msg -> m) -> Model -> List (Html m)
-shapedChips lift model =
+shapedChips : Model -> Html msg
+shapedChips model =
     let
         chip index label =
             choiceChip
@@ -231,15 +198,9 @@ shapedChips lift model =
                 }
                 label
     in
-    [ Html.h2
-        [ Typography.subtitle1
-        ]
-        [ text "Shaped Chips"
-        ]
-    , chipSet []
+    chipSet []
         [ chip "chips-shaped-chips-bookcase" "Bookcase"
         , chip "chips-shaped-chips-tv-stand" "TV Stand"
         , chip "chips-shaped-chips-sofas" "Sofas"
         , chip "chips-shaped-chips-office-chairs" "Office chairs"
         ]
-    ]

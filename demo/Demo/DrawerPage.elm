@@ -1,0 +1,108 @@
+module Demo.DrawerPage exposing (DrawerPage)
+
+import Html exposing (Html, text)
+import Html.Attributes
+import Html.Events
+import Json.Decode as Decode
+import Material.Drawer as Drawer exposing (drawerContent, drawerHeader)
+import Material.Icon exposing (icon, iconConfig)
+import Material.List exposing (list, listConfig, listGroupSubheader, listItem, listItemConfig, listItemDivider, listItemDividerConfig, listItemGraphic)
+import Material.TopAppBar as TopAppBar
+
+
+type alias DrawerPage msg =
+    { view : ((Int -> msg) -> Int -> List (Html msg)) -> Html msg -> Html msg
+    }
+
+
+drawerBody : (Int -> msg) -> Int -> List (Html msg)
+drawerBody setSelectedIndex selectedIndex =
+    let
+        listItemConfig_ index =
+            { listItemConfig
+                | activated = selectedIndex == index
+                , onClick = Just (setSelectedIndex index)
+                , additionalAttributes =
+                    [ Html.Events.on "keydown"
+                        (Html.Events.keyCode
+                            |> Decode.andThen
+                                (\keyCode ->
+                                    if keyCode == 32 || keyCode == 13 then
+                                        Decode.succeed (setSelectedIndex index)
+
+                                    else
+                                        Decode.fail ""
+                                )
+                        )
+                    ]
+            }
+    in
+    [ drawerHeader
+        { title = "Mail"
+        , subtitle = "email@material.io"
+        , additionalAttributes = []
+        }
+    , drawerContent []
+        [ list listConfig
+            [ listItem (listItemConfig_ 0)
+                [ listItemGraphic [] [ icon iconConfig "inbox" ]
+                , text "Inbox"
+                ]
+            , listItem (listItemConfig_ 1)
+                [ listItemGraphic [] [ icon iconConfig "star" ]
+                , text "Star"
+                ]
+            , listItem (listItemConfig_ 2)
+                [ listItemGraphic [] [ icon iconConfig "send" ]
+                , text "Sent Mail"
+                ]
+            , listItem (listItemConfig_ 3)
+                [ listItemGraphic [] [ icon iconConfig "drafts" ]
+                , text "Drafts"
+                ]
+            , listItemDivider listItemDividerConfig
+            , listGroupSubheader [] [ text "Labels" ]
+            , listItem (listItemConfig_ 4)
+                [ listItemGraphic [] [ icon iconConfig "bookmark" ]
+                , text "Family"
+                ]
+            , listItem (listItemConfig_ 5)
+                [ listItemGraphic [] [ icon iconConfig "bookmark" ]
+                , text "Friends"
+                ]
+            , listItem (listItemConfig_ 6)
+                [ listItemGraphic [] [ icon iconConfig "bookmark" ]
+                , text "Work"
+                ]
+            , listItemDivider listItemDividerConfig
+            , listItem (listItemConfig_ 7)
+                [ listItemGraphic [] [ icon iconConfig "settings" ]
+                , text "Settings"
+                ]
+            , listItem (listItemConfig_ 8)
+                [ listItemGraphic [] [ icon iconConfig "announcement" ]
+                , text "Help & feedback"
+                ]
+            ]
+        ]
+    ]
+
+
+mainContent : Html msg
+mainContent =
+    Html.div
+        [ Html.Attributes.class "drawer-main-content"
+        , Html.Attributes.style "padding-left" "18px"
+        , Html.Attributes.style "padding-right" "18px"
+        , Html.Attributes.style "overflow" "auto"
+        , Html.Attributes.style "height" "100%"
+        , Html.Attributes.style "box-sizing" "border-box"
+        , TopAppBar.fixedAdjust
+        , Drawer.appContent
+        ]
+        (List.repeat 4 <| Html.p [] [ text loremIpsum ])
+
+
+loremIpsum : String
+loremIpsum =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."

@@ -1,18 +1,16 @@
 module Demo.Startpage exposing (view)
 
-import Demo.Page exposing (Page)
 import Demo.Url as Url exposing (Url(..))
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.ImageList as ImageList exposing (imageList, imageListConfig, imageListItem, imageListItemConfig)
+import Material.ImageList exposing (imageList, imageListConfig, imageListItem, imageListItemConfig)
 
 
-view : Page m -> Html m
-view page =
+view : Html msg
+view =
     Html.div []
-        [ page.toolbar
-        , imageList
+        [ imageList
             { imageListConfig
                 | additionalAttributes =
                     [ Html.Attributes.style "max-width" "900px"

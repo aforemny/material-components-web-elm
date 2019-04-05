@@ -1,12 +1,12 @@
 module Demo.Snackbar exposing (Model, Msg(..), defaultModel, update, view)
 
+import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
-import Demo.Page as Page exposing (Page)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Json
-import Material.Button as Button exposing (buttonConfig, raisedButton)
+import Material.Button exposing (buttonConfig, raisedButton)
 import Material.Snackbar as Snackbar exposing (snackbar, snackbarConfig, snackbarMessage)
 import Platform.Cmd exposing (Cmd, none)
 
@@ -28,7 +28,7 @@ type Msg
     | Click
 
 
-update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
 update lift msg model =
     let
         baselineMessage =
@@ -82,62 +82,43 @@ update lift msg model =
             ( model, Cmd.none )
 
 
-view : (Msg -> m) -> Page m -> Model -> Html m
-view lift page model =
-    page.body "Snackbar"
-        "Snackbars provide brief feedback about an operation through a message at the bottom of the screen."
-        [ Page.hero [] [ heroMessage ]
-        , Html.h2
-            [ Html.Attributes.class "mdc-typography--headline6"
-            , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
-            ]
-            [ text "Resources"
-            ]
-        , ResourceLink.view
-            { link = "https://material.io/go/design-snackbar"
-            , title = "Material Design Guidelines"
-            , icon = "images/material.svg"
-            , altText = "Material Design Guidelines icon"
+view : Model -> CatalogPage Msg
+view model =
+    { title = "Snackbar"
+    , prelude = "Snackbars provide brief feedback about an operation through a message at the bottom of the screen."
+    , resources =
+        { materialDesignGuidelines = Just "https://material.io/go/design-snackbar"
+        , documentation = Just "https://material.io/components/web/catalog/snackbars/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-snackbar"
+        }
+    , hero = [ heroMessage ]
+    , content =
+        [ raisedButton
+            { buttonConfig
+                | onClick = Just ShowBaseline
+                , additionalAttributes = buttonMargin
             }
-        , ResourceLink.view
-            { link = "https://material.io/components/web/catalog/snackbars/"
-            , title = "Documentation"
-            , icon = "images/ic_drive_document_24px.svg"
-            , altText = "Documentation icon"
+            "Baseline"
+        , text " "
+        , raisedButton
+            { buttonConfig
+                | onClick = Just ShowLeading
+                , additionalAttributes = buttonMargin
             }
-        , ResourceLink.view
-            { link = "https://github.com/material-components/material-components-web/tree/master/packages/mdc-snackbar"
-            , title = "Source Code (Material Components Web)"
-            , icon = "images/ic_code_24px.svg"
-            , altText = "Source Code"
+            "Leading"
+        , text " "
+        , raisedButton
+            { buttonConfig
+                | onClick = Just ShowStacked
+                , additionalAttributes = buttonMargin
             }
-        , Page.demos
-            [ raisedButton
-                { buttonConfig
-                    | onClick = Just (lift ShowBaseline)
-                    , additionalAttributes = buttonMargin
-                }
-                "Baseline"
-            , text " "
-            , raisedButton
-                { buttonConfig
-                    | onClick = Just (lift ShowLeading)
-                    , additionalAttributes = buttonMargin
-                }
-                "Leading"
-            , text " "
-            , raisedButton
-                { buttonConfig
-                    | onClick = Just (lift ShowStacked)
-                    , additionalAttributes = buttonMargin
-                }
-                "Stacked"
-            , Html.map lift (snackbar SnackbarMsg snackbarConfig model.queue)
-            ]
+            "Stacked"
+        , snackbar SnackbarMsg snackbarConfig model.queue
         ]
+    }
 
 
-heroMessage : Html m
+heroMessage : Html msg
 heroMessage =
     Html.div
         [ Html.Attributes.style "position" "relative"
@@ -174,6 +155,6 @@ heroMessage =
         ]
 
 
-buttonMargin : List (Html.Attribute m)
+buttonMargin : List (Html.Attribute msg)
 buttonMargin =
     [ Html.Attributes.style "margin" "14px" ]

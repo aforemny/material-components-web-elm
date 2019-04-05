@@ -1,14 +1,14 @@
 module Demo.Selects exposing (Model, Msg(..), defaultModel, update, view)
 
+import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
-import Demo.Page as Page exposing (Page)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.List as Lists exposing (list, listConfig, listItem, listItemConfig)
-import Material.Select as Select exposing (SelectOption, filledSelect, outlinedSelect, selectConfig, selectOption, selectOptionConfig)
-import Material.Select.Enhanced as EnhancedSelect exposing (enhancedSelectConfig, filledEnhancedSelect, outlinedEnhancedSelect, selectItem, selectItemConfig)
+import Material.List exposing (list, listConfig, listItem, listItemConfig)
+import Material.Select exposing (SelectOption, filledSelect, outlinedSelect, selectConfig, selectOption, selectOptionConfig)
+import Material.Select.Enhanced exposing (enhancedSelectConfig, filledEnhancedSelect, outlinedEnhancedSelect, selectItem, selectItemConfig)
 import Material.Typography as Typography
 
 
@@ -30,7 +30,7 @@ type Msg
     | SetEnhancedValue String
 
 
-update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
 update lift msg model =
     case msg of
         SetValue value ->
@@ -40,66 +40,47 @@ update lift msg model =
             ( { model | enhancedValue = value }, Cmd.none )
 
 
-view : (Msg -> m) -> Page m -> Model -> Html m
-view lift page model =
-    page.body "Select"
-        "Selects allow users to select from a single-option menu. It functions as a wrapper around the browser's native <select> element."
-        [ Page.hero [] [ heroSelects lift model ]
-        , Html.h2
-            [ Typography.headline6
-            , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
+view : Model -> CatalogPage Msg
+view model =
+    { title = "Select"
+    , prelude = "Selects allow users to select from a single-option menu. It functions as a wrapper around the browser's native <select> element."
+    , resources =
+        { materialDesignGuidelines = Just "https://material.io/go/design-text-fields"
+        , documentation = Just "https://material.io/components/web/catalog/input-controls/select-menus/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-select"
+        }
+    , hero = [ heroSelects model ]
+    , content =
+        [ Html.div selectRow
+            [ filledSelects model
+            , enhancedFilledSelects model
             ]
-            [ text "Resources"
-            ]
-        , ResourceLink.view
-            { link = "https://material.io/go/design-text-fields"
-            , title = "Material Design Guidelines"
-            , icon = "images/material.svg"
-            , altText = "Material Design Guidelines icon"
-            }
-        , ResourceLink.view
-            { link = "https://material.io/components/web/catalog/input-controls/select-menus/"
-            , title = "Documentation"
-            , icon = "images/ic_drive_document_24px.svg"
-            , altText = "Documentation icon"
-            }
-        , ResourceLink.view
-            { link = "https://github.com/material-components/material-components-web/tree/master/packages/mdc-select"
-            , title = "Source Code (Material Components Web)"
-            , icon = "images/ic_code_24px.svg"
-            , altText = "Source Code"
-            }
-        , Page.demos
-            [ Html.div selectRow
-                [ filledSelects lift model
-                , enhancedFilledSelects lift model
-                ]
-            , Html.h3 [ Typography.subtitle1 ] [ text "Outlined" ]
-            , Html.div selectRow
-                [ outlinedSelects lift model ]
-            , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Filled" ]
-            , Html.div selectRow
-                [ shapedFilledSelects lift model ]
-            , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Outlined (TODO)" ]
-            , Html.div selectRow
-                [ shapedOutlinedSelects lift model ]
-            ]
+        , Html.h3 [ Typography.subtitle1 ] [ text "Outlined" ]
+        , Html.div selectRow
+            [ outlinedSelects model ]
+        , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Filled" ]
+        , Html.div selectRow
+            [ shapedFilledSelects model ]
+        , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Outlined (TODO)" ]
+        , Html.div selectRow
+            [ shapedOutlinedSelects model ]
         ]
+    }
 
 
-heroSelects : (Msg -> m) -> Model -> Html m
-heroSelects lift model =
+heroSelects : Model -> Html Msg
+heroSelects model =
     filledSelect
         { selectConfig
             | label = "Fruit"
             , value = Just model.value
-            , onChange = Just (lift << SetValue)
+            , onChange = Just SetValue
         }
         items
 
 
-filledSelects : (Msg -> m) -> Model -> Html m
-filledSelects lift model =
+filledSelects : Model -> Html msg
+filledSelects model =
     Html.div []
         [ Html.h3 [ Typography.subtitle1 ] [ text "Filled" ]
         , filledSelect
@@ -111,13 +92,13 @@ filledSelects lift model =
         ]
 
 
-enhancedFilledSelects : (Msg -> m) -> Model -> Html m
-enhancedFilledSelects lift model =
+enhancedFilledSelects : Model -> Html Msg
+enhancedFilledSelects model =
     let
         selectItemConfig_ value =
             { selectItemConfig
                 | activated = model.enhancedValue == value
-                , onClick = Just (lift (SetEnhancedValue value))
+                , onClick = Just (SetEnhancedValue value)
             }
     in
     Html.div []
@@ -133,8 +114,8 @@ enhancedFilledSelects lift model =
         ]
 
 
-outlinedSelects : (Msg -> m) -> Model -> Html m
-outlinedSelects lift model =
+outlinedSelects : Model -> Html msg
+outlinedSelects model =
     outlinedSelect
         { selectConfig
             | label = "Fruit"
@@ -143,8 +124,8 @@ outlinedSelects lift model =
         items
 
 
-shapedFilledSelects : (Msg -> m) -> Model -> Html m
-shapedFilledSelects lift model =
+shapedFilledSelects : Model -> Html msg
+shapedFilledSelects model =
     filledSelect
         { selectConfig
             | label = "Fruit"
@@ -155,8 +136,8 @@ shapedFilledSelects lift model =
         items
 
 
-shapedOutlinedSelects : (Msg -> m) -> Model -> Html m
-shapedOutlinedSelects lift model =
+shapedOutlinedSelects : Model -> Html msg
+shapedOutlinedSelects model =
     outlinedSelect
         { selectConfig
             | label = "Fruit"
@@ -171,7 +152,7 @@ shapedOutlinedSelects lift model =
         items
 
 
-items : List (SelectOption m)
+items : List (SelectOption msg)
 items =
     [ selectOption { selectOptionConfig | value = "" } [ text "" ]
     , selectOption { selectOptionConfig | value = "Apple" } [ text "Apple" ]
@@ -180,7 +161,7 @@ items =
     ]
 
 
-selectRow : List (Html.Attribute m)
+selectRow : List (Html.Attribute msg)
 selectRow =
     [ Html.Attributes.style "display" "-ms-flexbox"
     , Html.Attributes.style "display" "flex"
@@ -193,11 +174,11 @@ selectRow =
     ]
 
 
-marginRight : List (Html.Attribute m)
+marginRight : List (Html.Attribute msg)
 marginRight =
     [ Html.Attributes.style "margin-right" "5rem" ]
 
 
-demoWidth : List (Html.Attribute m)
+demoWidth : List (Html.Attribute msg)
 demoWidth =
     [ Html.Attributes.style "width" "7rem" ]

@@ -1,9 +1,9 @@
 module Demo.Theme exposing (Model, Msg, defaultModel, update, view)
 
-import Demo.Page as Page exposing (Page)
+import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Button as Button exposing (buttonConfig, raisedButton)
+import Material.Button exposing (buttonConfig, raisedButton)
 import Material.Elevation as Elevation
 import Material.Theme as Theme
 import Material.Typography as Typography
@@ -22,51 +22,56 @@ type Msg
     = NoOp
 
 
-update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
 update lift msg model =
     case msg of
         NoOp ->
             ( model, Cmd.none )
 
 
-view : (Msg -> m) -> Page m -> Model -> Html m
-view lift page model =
-    page.body "Theme"
-        "Color in Material Design is inspired by bold hues juxtaposed with muted environments, deep shadows, and bright highlights."
-        [ Page.hero []
-            [ raisedButton
-                { buttonConfig
-                    | additionalAttributes = [ Html.Attributes.style "margin" "24px" ]
-                }
-                "Primary"
-            , raisedButton
-                { buttonConfig
-                    | additionalAttributes = [ Html.Attributes.style "margin" "24px" ]
-                }
-                "Secondary"
-            ]
-        , Page.demos
-            [ Html.legend [ Typography.subtitle1 ] [ text "Theme colors as text" ]
-            , themeColorsAsText
-            , Html.legend [ Typography.subtitle1 ] [ text "Theme colors as background" ]
-            , themeColorsAsBackground
-            , Html.legend [ Typography.subtitle1 ] [ text "Text on background" ]
-            , textOnBackground
-            , Html.legend [ Typography.subtitle1 ] [ text "Text on primary" ]
-            , textOnPrimary
-            , Html.legend [ Typography.subtitle1 ] [ text "Text on secondary" ]
-            , textOnSecondary
-            , Html.legend [ Typography.subtitle1 ]
-                [ text "Text on user-defined light background" ]
-            , textOnLightBackground
-            , Html.legend [ Typography.subtitle1 ]
-                [ text "Text on user-defined dark background" ]
-            , textOnDarkBackground
-            ]
+view : Model -> CatalogPage Msg
+view model =
+    { title = "Theme"
+    , prelude = "Color in Material Design is inspired by bold hues juxtaposed with muted environments, deep shadows, and bright highlights."
+    , resources =
+        { materialDesignGuidelines = Just "https://material.io/go/design-color-theming"
+        , documentation = Just "https://material.io/components/web/catalog/theme/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme"
+        }
+    , hero =
+        [ raisedButton
+            { buttonConfig
+                | additionalAttributes = [ Html.Attributes.style "margin" "24px" ]
+            }
+            "Primary"
+        , raisedButton
+            { buttonConfig
+                | additionalAttributes = [ Html.Attributes.style "margin" "24px" ]
+            }
+            "Secondary"
         ]
+    , content =
+        [ Html.legend [ Typography.subtitle1 ] [ text "Theme colors as text" ]
+        , themeColorsAsText
+        , Html.legend [ Typography.subtitle1 ] [ text "Theme colors as background" ]
+        , themeColorsAsBackground
+        , Html.legend [ Typography.subtitle1 ] [ text "Text on background" ]
+        , textOnBackground
+        , Html.legend [ Typography.subtitle1 ] [ text "Text on primary" ]
+        , textOnPrimary
+        , Html.legend [ Typography.subtitle1 ] [ text "Text on secondary" ]
+        , textOnSecondary
+        , Html.legend [ Typography.subtitle1 ]
+            [ text "Text on user-defined light background" ]
+        , textOnLightBackground
+        , Html.legend [ Typography.subtitle1 ]
+            [ text "Text on user-defined dark background" ]
+        , textOnDarkBackground
+        ]
+    }
 
 
-themeColorsAsText : Html m
+themeColorsAsText : Html msg
 themeColorsAsText =
     Html.div demoThemeColorGroup
         [ Html.div (Theme.primary :: demoThemeColorSwatches)
@@ -76,7 +81,7 @@ themeColorsAsText =
         ]
 
 
-themeColorsAsBackground : Html m
+themeColorsAsBackground : Html msg
 themeColorsAsBackground =
     Html.div demoThemeColorGroup
         [ Html.div
@@ -91,7 +96,7 @@ themeColorsAsBackground =
         ]
 
 
-textOnBackground : Html m
+textOnBackground : Html msg
 textOnBackground =
     Html.div demoThemeColorGroup
         [ Html.div (Theme.background :: demoThemeTextRow)
@@ -109,7 +114,7 @@ textOnBackground =
         ]
 
 
-textOnPrimary : Html m
+textOnPrimary : Html msg
 textOnPrimary =
     Html.div demoThemeColorGroup
         [ Html.div (Theme.primaryBg :: demoThemeTextRow)
@@ -121,7 +126,7 @@ textOnPrimary =
         ]
 
 
-textOnSecondary : Html m
+textOnSecondary : Html msg
 textOnSecondary =
     Html.div demoThemeColorGroup
         [ Html.div (Theme.secondaryBg :: demoThemeTextRow)
@@ -133,7 +138,7 @@ textOnSecondary =
         ]
 
 
-textOnLightBackground : Html m
+textOnLightBackground : Html msg
 textOnLightBackground =
     Html.div demoThemeColorGroup
         [ Html.div (demoThemeBgCustomLight ++ demoThemeTextRow)
@@ -151,7 +156,7 @@ textOnLightBackground =
         ]
 
 
-textOnDarkBackground : Html m
+textOnDarkBackground : Html msg
 textOnDarkBackground =
     Html.div demoThemeColorGroup
         [ Html.div (demoThemeBgCustomDark ++ demoThemeTextRow)
@@ -169,12 +174,12 @@ textOnDarkBackground =
         ]
 
 
-demoThemeColorGroup : List (Html.Attribute m)
+demoThemeColorGroup : List (Html.Attribute msg)
 demoThemeColorGroup =
     [ Html.Attributes.style "padding" "16px 0" ]
 
 
-demoThemeColorSwatches : List (Html.Attribute m)
+demoThemeColorSwatches : List (Html.Attribute msg)
 demoThemeColorSwatches =
     [ Html.Attributes.style "display" "-ms-inline-flexbox"
     , Html.Attributes.style "display" "inline-flex"
@@ -185,7 +190,7 @@ demoThemeColorSwatches =
     ]
 
 
-demoThemeColorSwatch : List (Html.Attribute m)
+demoThemeColorSwatch : List (Html.Attribute msg)
 demoThemeColorSwatch =
     [ Html.Attributes.style "display" "inline-block"
     , Html.Attributes.style "-webkit-box-sizing" "border-box"
@@ -199,7 +204,7 @@ demoThemeColorSwatch =
     ]
 
 
-demoThemeTextRow : List (Html.Attribute m)
+demoThemeTextRow : List (Html.Attribute msg)
 demoThemeTextRow =
     [ Html.Attributes.style "display" "-ms-inline-flexbox"
     , Html.Attributes.style "display" "inline-flex"
@@ -214,21 +219,21 @@ demoThemeTextRow =
     ]
 
 
-demoThemeTextStyle : List (Html.Attribute m)
+demoThemeTextStyle : List (Html.Attribute msg)
 demoThemeTextStyle =
     [ Html.Attributes.style "padding" "0 16px" ]
 
 
-demoThemeIconStyle : List (Html.Attribute m)
+demoThemeIconStyle : List (Html.Attribute msg)
 demoThemeIconStyle =
     Html.Attributes.class "material-icons" :: demoThemeTextStyle
 
 
-demoThemeBgCustomLight : List (Html.Attribute m)
+demoThemeBgCustomLight : List (Html.Attribute msg)
 demoThemeBgCustomLight =
     [ Html.Attributes.style "background-color" "#ddd" ]
 
 
-demoThemeBgCustomDark : List (Html.Attribute m)
+demoThemeBgCustomDark : List (Html.Attribute msg)
 demoThemeBgCustomDark =
     [ Html.Attributes.style "background-color" "#d1d1d1" ]

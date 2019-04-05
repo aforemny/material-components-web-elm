@@ -11,7 +11,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
-import Material.List as Lists exposing (list, listConfig)
+import Material.List exposing (list, listConfig)
 
 
 type alias EnhancedSelectConfig msg =

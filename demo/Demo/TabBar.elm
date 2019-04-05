@@ -1,12 +1,12 @@
 module Demo.TabBar exposing (Model, Msg(..), defaultModel, update, view)
 
+import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
-import Demo.Page as Page exposing (Page)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.TabBar as TabBar exposing (tab, tabBar, tabBarConfig, tabConfig)
+import Material.TabBar exposing (tab, tabBar, tabBarConfig, tabConfig)
 import Material.Theme as Theme
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
@@ -36,7 +36,7 @@ type Msg
     | SetActiveScrollingTab Int
 
 
-update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
 update lift msg model =
     case msg of
         SetActiveHeroTab index ->
@@ -52,81 +52,60 @@ update lift msg model =
             ( { model | activeScrollingTab = index }, Cmd.none )
 
 
-view : (Msg -> m) -> Page m -> Model -> Html m
-view lift page model =
-    page.body "Tab Bar"
-        "Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy. The Tab Bar contains the Tab Scroller and Tab components."
-        [ Page.hero []
-            [ heroTabs lift model "tabs-hero-tabs"
+view : Model -> CatalogPage Msg
+view model =
+    { title = "Tab Bar"
+    , prelude = "Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy. The Tab Bar contains the Tab Scroller and Tab components."
+    , resources =
+        { materialDesignGuidelines = Just "https://material.io/go/design-tabs"
+        , documentation = Just "https://material.io/components/web/catalog/tabs/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-bar"
+        }
+    , hero = [ heroTabs model "tabs-hero-tabs" ]
+    , content =
+        [ Html.h3 [ Typography.subtitle1 ] [ text "Tabs with icons next to labels" ]
+        , tabsWithIcons model
+        , Html.h3 [ Typography.subtitle1 ]
+            [ text "Tabs with icons above labels and indicators restricted to content"
             ]
-        , Html.h2
-            [ Typography.headline6
-            , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
-            ]
-            [ text "Resources"
-            ]
-        , ResourceLink.view
-            { link = "https://material.io/go/design-tabs"
-            , title = "Material Design Guidelines"
-            , icon = "images/material.svg"
-            , altText = "Material Design Guidelines icon"
-            }
-        , ResourceLink.view
-            { link = "https://material.io/components/web/catalog/tabs/"
-            , title = "Documentation"
-            , icon = "images/ic_drive_document_24px.svg"
-            , altText = "Documentation icon"
-            }
-        , ResourceLink.view
-            { link = "https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-bar"
-            , title = "Source Code (Material Components Web)"
-            , icon = "images/ic_code_24px.svg"
-            , altText = "Source Code"
-            }
-        , Page.demos
-            [ Html.h3 [ Typography.subtitle1 ] [ text "Tabs with icons next to labels" ]
-            , tabsWithIcons lift model
-            , Html.h3 [ Typography.subtitle1 ]
-                [ text "Tabs with icons above labels and indicators restricted to content"
-                ]
-            , tabsWithStackedIcons lift model
-            , Html.h3 [ Typography.subtitle1 ] [ text "Scrolling tabs" ]
-            , scrollingTabs lift model
-            ]
+        , tabsWithStackedIcons model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Scrolling tabs" ]
+        , scrollingTabs model
         ]
+    }
 
 
-heroTabs : (Msg -> m) -> Model -> String -> Html m
-heroTabs lift model index =
+heroTabs : Model -> String -> Html Msg
+heroTabs model index =
     tabBar tabBarConfig
         [ tab
             { tabConfig
                 | active = model.activeHeroTab == 0
-                , onClick = Just (lift (SetActiveHeroTab 0))
+                , onClick = Just (SetActiveHeroTab 0)
             }
             { label = "Home", icon = Nothing }
         , tab
             { tabConfig
                 | active = model.activeHeroTab == 1
-                , onClick = Just (lift (SetActiveHeroTab 1))
+                , onClick = Just (SetActiveHeroTab 1)
             }
             { label = "Merchandise", icon = Nothing }
         , tab
             { tabConfig
                 | active = model.activeHeroTab == 2
-                , onClick = Just (lift (SetActiveHeroTab 2))
+                , onClick = Just (SetActiveHeroTab 2)
             }
             { label = "About Us", icon = Nothing }
         ]
 
 
-tabsWithIcons : (Msg -> m) -> Model -> Html m
-tabsWithIcons lift model =
+tabsWithIcons : Model -> Html Msg
+tabsWithIcons model =
     let
         tabConfig_ index =
             { tabConfig
                 | active = model.activeIconTab == index
-                , onClick = Just (lift (SetActiveIconTab index))
+                , onClick = Just (SetActiveIconTab index)
             }
     in
     tabBar tabBarConfig
@@ -136,15 +115,15 @@ tabsWithIcons lift model =
         ]
 
 
-tabsWithStackedIcons : (Msg -> m) -> Model -> Html m
-tabsWithStackedIcons lift model =
+tabsWithStackedIcons : Model -> Html Msg
+tabsWithStackedIcons model =
     let
         tabConfig_ index =
             { tabConfig
                 | stacked = True
                 , indicatorSpansContent = True
                 , active = model.activeStackedTab == index
-                , onClick = Just (lift (SetActiveStackedTab index))
+                , onClick = Just (SetActiveStackedTab index)
             }
     in
     tabBar tabBarConfig
@@ -154,13 +133,13 @@ tabsWithStackedIcons lift model =
         ]
 
 
-scrollingTabs : (Msg -> m) -> Model -> Html m
-scrollingTabs lift model =
+scrollingTabs : Model -> Html Msg
+scrollingTabs model =
     let
         tabConfig_ index =
             { tabConfig
                 | active = model.activeScrollingTab == index
-                , onClick = Just (lift (SetActiveScrollingTab index))
+                , onClick = Just (SetActiveScrollingTab index)
             }
     in
     tabBar tabBarConfig

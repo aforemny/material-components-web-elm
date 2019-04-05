@@ -2,7 +2,7 @@ module Demo.Helper.ResourceLink exposing (view)
 
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.List as Lists exposing (listItem, listItemConfig, listItemGraphic)
+import Material.List exposing (listItem, listItemConfig, listItemGraphic)
 
 
 view :
@@ -11,7 +11,7 @@ view :
     , icon : String
     , altText : String
     }
-    -> Html m
+    -> Html msg
 view { link, title, icon, altText } =
     listItem
         { listItemConfig

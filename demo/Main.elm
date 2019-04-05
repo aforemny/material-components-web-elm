@@ -18,7 +18,6 @@ import Demo.LinearProgress
 import Demo.Lists
 import Demo.Menus
 import Demo.ModalDrawer
-import Demo.Page as Page
 import Demo.PermanentDrawer
 import Demo.RadioButtons
 import Demo.Ripple
@@ -347,36 +346,6 @@ view model =
 
 body : Model -> Html Msg
 body model =
-    let
-        page =
-            { toolbar = Page.toolbar model.url
-            , body =
-                \title intro nodes ->
-                    Html.div
-                        [ Html.Attributes.style "display" "flex"
-                        , Html.Attributes.style "flex-flow" "column"
-                        , Html.Attributes.style "height" "100%"
-                        , Typography.typography
-                        ]
-                        [ Page.toolbar model.url
-                        , Html.div
-                            [ Html.Attributes.class "demo-content"
-                            , Html.Attributes.style "max-width" "900px"
-                            , Html.Attributes.style "width" "100%"
-                            , Html.Attributes.style "margin-left" "auto"
-                            , Html.Attributes.style "margin-right" "auto"
-                            ]
-                            (Html.div
-                                [ TopAppBar.fixedAdjust
-                                ]
-                                [ Page.header title
-                                , Html.p [ Typography.body1 ] [ text intro ]
-                                ]
-                                :: nodes
-                            )
-                        ]
-            }
-    in
     case model.url of
         Demo.Url.StartPage ->
             Demo.Startpage.view page

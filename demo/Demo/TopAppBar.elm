@@ -1,12 +1,12 @@
 module Demo.TopAppBar exposing (Model, Msg(..), defaultModel, update, view)
 
-import Demo.Page as Page exposing (Page)
+import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Url as Url exposing (TopAppBarPage)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.Icon as Icon exposing (icon, iconConfig)
+import Material.Icon exposing (icon, iconConfig)
 import Material.TopAppBar as TopAppBar exposing (prominentTopAppBar, shortCollapsedTopAppBar, shortTopAppBar, topAppBar, topAppBarConfig)
 import Material.Typography as Typography
 
@@ -33,98 +33,106 @@ type Msg
     = NoOp
 
 
-update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
 update lift msg model =
     case msg of
         NoOp ->
             ( model, Cmd.none )
 
 
-view : (Msg -> m) -> Page m -> Maybe TopAppBarPage -> Model -> Html m
-view lift page topAppBarPage model =
-    case topAppBarPage of
-        Just Url.StandardTopAppBar ->
-            topAppBar_
-
-        Just Url.FixedTopAppBar ->
-            fixedTopAppBar_
-
-        Just Url.DenseTopAppBar ->
-            denseTopAppBar_
-
-        Just Url.ProminentTopAppBar ->
-            prominentTopAppBar_
-
-        Just Url.ShortTopAppBar ->
-            shortTopAppBar_
-
-        Just Url.ShortCollapsedTopAppBar ->
-            shortCollapsedTopAppBar_
-
-        Nothing ->
-            page.body "Top App Bar"
-                "Top App Bars are a container for items such as application title, navigation icon, and action items."
-                [ Page.hero []
-                    [ Html.div
-                        [ Html.Attributes.style "width" "480px"
-                        , Html.Attributes.style "height" "72px"
-                        ]
-                        [ topAppBar
-                            { topAppBarConfig
-                                | additionalAttributes =
-                                    [ Html.Attributes.style "position" "static" ]
-                            }
-                            [ TopAppBar.section
-                                [ TopAppBar.alignStart
-                                ]
-                                [ icon
-                                    { iconConfig
-                                        | additionalAttributes =
-                                            [ TopAppBar.navigationIcon ]
-                                    }
-                                    "menu"
-                                , Html.span [ TopAppBar.title ] [ text "Title" ]
-                                ]
-                            , TopAppBar.section
-                                [ TopAppBar.alignEnd
-                                ]
-                                [ icon
-                                    { iconConfig
-                                        | additionalAttributes = [ TopAppBar.actionItem ]
-                                    }
-                                    "file_download"
-                                , icon
-                                    { iconConfig
-                                        | additionalAttributes = [ TopAppBar.actionItem ]
-                                    }
-                                    "print"
-                                , icon
-                                    { iconConfig
-                                        | additionalAttributes = [ TopAppBar.actionItem ]
-                                    }
-                                    "more_vert"
-                                ]
-                            ]
-                        ]
+view : Model -> CatalogPage Msg
+view model =
+    -- TODO: topAppBarPage
+    --    case topAppBarPage of
+    --        Just Url.StandardTopAppBar ->
+    --            topAppBar_
+    --
+    --        Just Url.FixedTopAppBar ->
+    --            fixedTopAppBar_
+    --
+    --        Just Url.DenseTopAppBar ->
+    --            denseTopAppBar_
+    --
+    --        Just Url.ProminentTopAppBar ->
+    --            prominentTopAppBar_
+    --
+    --        Just Url.ShortTopAppBar ->
+    --            shortTopAppBar_
+    --
+    --        Just Url.ShortCollapsedTopAppBar ->
+    --            shortCollapsedTopAppBar_
+    --
+    --        Nothing ->
+    { title = "Top App Bar"
+    , prelude = "Top App Bars are a container for items such as application title, navigation icon, and action items."
+    , resources =
+        { materialDesignGuidelines = Just "https://material.io/go/design-app-bar-top"
+        , documentation = Just "https://material.io/components/web/catalog/top-app-bar/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-top-app-bar"
+        }
+    , hero =
+        [ Html.div
+            [ Html.Attributes.style "width" "480px"
+            , Html.Attributes.style "height" "72px"
+            ]
+            [ topAppBar
+                { topAppBarConfig
+                    | additionalAttributes =
+                        [ Html.Attributes.style "position" "static" ]
+                }
+                [ TopAppBar.section
+                    [ TopAppBar.alignStart
                     ]
-                , Html.div
-                    [ Html.Attributes.style "display" "-ms-flexbox"
-                    , Html.Attributes.style "display" "flex"
-                    , Html.Attributes.style "-ms-flex-wrap" "wrap"
-                    , Html.Attributes.style "flex-wrap" "wrap"
-                    , Html.Attributes.style "min-height" "200px"
+                    [ icon
+                        { iconConfig
+                            | additionalAttributes =
+                                [ TopAppBar.navigationIcon ]
+                        }
+                        "menu"
+                    , Html.span [ TopAppBar.title ] [ text "Title" ]
                     ]
-                    [ iframe "Standard" Url.StandardTopAppBar
-                    , iframe "Fixed" Url.FixedTopAppBar
-                    , iframe "Dense" Url.DenseTopAppBar
-                    , iframe "Prominent" Url.ProminentTopAppBar
-                    , iframe "Short" Url.ShortTopAppBar
-                    , iframe "Short - Always Collapsed" Url.ShortCollapsedTopAppBar
+                , TopAppBar.section
+                    [ TopAppBar.alignEnd
+                    ]
+                    [ icon
+                        { iconConfig
+                            | additionalAttributes = [ TopAppBar.actionItem ]
+                        }
+                        "file_download"
+                    , icon
+                        { iconConfig
+                            | additionalAttributes = [ TopAppBar.actionItem ]
+                        }
+                        "print"
+                    , icon
+                        { iconConfig
+                            | additionalAttributes = [ TopAppBar.actionItem ]
+                        }
+                        "more_vert"
                     ]
                 ]
+            ]
+        ]
+    , content =
+        [ Html.div
+            [ Html.Attributes.style "display" "-ms-flexbox"
+            , Html.Attributes.style "display" "flex"
+            , Html.Attributes.style "-ms-flex-wrap" "wrap"
+            , Html.Attributes.style "flex-wrap" "wrap"
+            , Html.Attributes.style "min-height" "200px"
+            ]
+            [ iframe "Standard" Url.StandardTopAppBar
+            , iframe "Fixed" Url.FixedTopAppBar
+            , iframe "Dense" Url.DenseTopAppBar
+            , iframe "Prominent" Url.ProminentTopAppBar
+            , iframe "Short" Url.ShortTopAppBar
+            , iframe "Short - Always Collapsed" Url.ShortCollapsedTopAppBar
+            ]
+        ]
+    }
 
 
-iframe : String -> TopAppBarPage -> Html m
+iframe : String -> TopAppBarPage -> Html msg
 iframe title topAppBarPage =
     let
         url =
@@ -157,7 +165,7 @@ iframe title topAppBarPage =
         ]
 
 
-topAppBarWrapper : List (Html.Attribute m) -> Html m -> Html m
+topAppBarWrapper : List (Html.Attribute msg) -> Html msg -> Html msg
 topAppBarWrapper fixedAdjust topAppBar =
     Html.div
         [ Html.Attributes.class "top-app-bar__frame"
@@ -169,7 +177,7 @@ topAppBarWrapper fixedAdjust topAppBar =
         ]
 
 
-topAppBar_ : Html m
+topAppBar_ : Html msg
 topAppBar_ =
     let
         defaultConfig =
@@ -206,7 +214,7 @@ topAppBar_ =
         )
 
 
-fixedTopAppBar_ : Html m
+fixedTopAppBar_ : Html msg
 fixedTopAppBar_ =
     let
         fixedConfig =
@@ -243,7 +251,7 @@ fixedTopAppBar_ =
         )
 
 
-denseTopAppBar_ : Html m
+denseTopAppBar_ : Html msg
 denseTopAppBar_ =
     let
         denseConfig =
@@ -277,7 +285,7 @@ denseTopAppBar_ =
         )
 
 
-prominentTopAppBar_ : Html m
+prominentTopAppBar_ : Html msg
 prominentTopAppBar_ =
     topAppBarWrapper [ TopAppBar.prominentFixedAdjust ]
         (prominentTopAppBar topAppBarConfig
@@ -307,7 +315,7 @@ prominentTopAppBar_ =
         )
 
 
-shortTopAppBar_ : Html m
+shortTopAppBar_ : Html msg
 shortTopAppBar_ =
     topAppBarWrapper [ TopAppBar.shortFixedAdjust ]
         (shortTopAppBar topAppBarConfig
@@ -333,7 +341,7 @@ shortTopAppBar_ =
         )
 
 
-shortCollapsedTopAppBar_ : Html m
+shortCollapsedTopAppBar_ : Html msg
 shortCollapsedTopAppBar_ =
     topAppBarWrapper [ TopAppBar.shortFixedAdjust ]
         (shortCollapsedTopAppBar topAppBarConfig
@@ -358,7 +366,7 @@ shortCollapsedTopAppBar_ =
         )
 
 
-body : List (Html.Attribute m) -> Html m
+body : List (Html.Attribute msg) -> Html msg
 body fixedAdjust =
     Html.div fixedAdjust
         (List.repeat 4 <|

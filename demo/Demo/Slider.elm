@@ -1,13 +1,13 @@
 module Demo.Slider exposing (Model, Msg(..), defaultModel, update, view)
 
+import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
-import Demo.Page as Page exposing (Page)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Json exposing (Decoder)
-import Material.Slider as Slider exposing (slider, sliderConfig)
+import Material.Slider exposing (slider, sliderConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -21,10 +21,10 @@ defaultModel : Model
 defaultModel =
     { sliders =
         Dict.fromList
-            [ ( "slider-hero-slider", 25 )
-            , ( "slider-continuous-slider", 25 )
-            , ( "slider-discrete-slider", 25 )
-            , ( "slider-discrete-slider-with-tick-marks", 25 )
+            [ ( "hero-slider", 25 )
+            , ( "continuous-slider", 25 )
+            , ( "discrete-slider", 25 )
+            , ( "discrete-slider-with-tick-marks", 25 )
             ]
     }
 
@@ -33,51 +33,72 @@ type Msg
     = Change String Float
 
 
-update : (Msg -> m) -> Msg -> Model -> ( Model, Cmd m )
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
 update lift msg model =
     case msg of
-        Change index value ->
-            ( { model | sliders = Dict.insert index value model.sliders }, Cmd.none )
+        Change id value ->
+            ( { model | sliders = Dict.insert id value model.sliders }, Cmd.none )
 
 
-heroSlider : (Msg -> m) -> Model -> Html m
-heroSlider lift model =
+view : Model -> CatalogPage Msg
+view model =
+    { title = "Slider"
+    , prelude = "Sliders let users select from a range of values by moving the slider thumb."
+    , resources =
+        { materialDesignGuidelines = Just "https://material.io/go/design-sliders"
+        , documentation = Just "https://material.io/components/web/catalog/input-controls/sliders/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-slider"
+        }
+    , hero = [ heroSlider model ]
+    , content =
+        [ Html.h3 [ Typography.subtitle1 ] [ text "Continuous" ]
+        , continuousSlider model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Discrete" ]
+        , discreteSlider model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Discrete with Tick Marks" ]
+        , discreteSliderWithTickMarks model
+        ]
+    }
+
+
+heroSlider : Model -> Html Msg
+heroSlider model =
     let
-        index =
-            "slider-hero-slider"
+        id =
+            "hero-slider"
     in
     slider
         { sliderConfig
-            | value = Maybe.withDefault 0 (Dict.get index model.sliders)
-            , onChange = Just (lift << Change index)
+            | value = Maybe.withDefault 0 (Dict.get id model.sliders)
+            , onChange = Just (Change id)
         }
 
 
-continuousSlider : (Msg -> m) -> Model -> Html m
-continuousSlider lift model =
+continuousSlider : Model -> Html Msg
+continuousSlider model =
     let
-        index =
-            "slider-continuous-slider"
+        id =
+            "continuous-slider"
     in
     slider
         { sliderConfig
-            | value = Maybe.withDefault 0 (Dict.get index model.sliders)
-            , onChange = Just (lift << Change index)
+            | value = Maybe.withDefault 0 (Dict.get id model.sliders)
+            , onChange = Just (Change id)
             , min = 0
             , max = 50
         }
 
 
-discreteSlider : (Msg -> m) -> Model -> Html m
-discreteSlider lift model =
+discreteSlider : Model -> Html Msg
+discreteSlider model =
     let
-        index =
-            "slider-discrete-slider"
+        id =
+            "discrete-slider"
     in
     slider
         { sliderConfig
-            | value = Maybe.withDefault 0 (Dict.get index model.sliders)
-            , onChange = Just (lift << Change index)
+            | value = Maybe.withDefault 0 (Dict.get id model.sliders)
+            , onChange = Just (Change id)
             , discrete = True
             , min = 0
             , max = 50
@@ -85,57 +106,19 @@ discreteSlider lift model =
         }
 
 
-discreteSliderWithTickMarks : (Msg -> m) -> Model -> Html m
-discreteSliderWithTickMarks lift model =
+discreteSliderWithTickMarks : Model -> Html Msg
+discreteSliderWithTickMarks model =
     let
-        index =
-            "slider-discrete-slider-with-tick-marks"
+        id =
+            "discrete-slider-with-tick-marks"
     in
     slider
         { sliderConfig
-            | value = Maybe.withDefault 0 (Dict.get index model.sliders)
-            , onChange = Just (lift << Change index)
+            | value = Maybe.withDefault 0 (Dict.get id model.sliders)
+            , onChange = Just (Change id)
             , discrete = True
             , min = 0
             , max = 50
             , step = Just 1
             , displayMarkers = True
         }
-
-
-view : (Msg -> m) -> Page m -> Model -> Html m
-view lift page model =
-    page.body "Slider"
-        "Sliders let users select from a range of values by moving the slider thumb."
-        [ Page.hero [] [ heroSlider lift model ]
-        , Html.h2
-            [ Typography.headline6
-            , Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
-            ]
-            [ text "Resources"
-            ]
-        , ResourceLink.view
-            { link = "https://material.io/go/design-sliders"
-            , title = "Material Design Guidelines"
-            , icon = "images/material.svg"
-            , altText = "Material Design Guidelines icon"
-            }
-        , ResourceLink.view
-            { link = "https://material.io/components/web/catalog/input-controls/sliders/"
-            , title = "Documentation"
-            , icon = "images/ic_drive_document_24px.svg"
-            , altText = "Documentation icon"
-            }
-        , ResourceLink.view
-            { link = "https://github.com/material-components/material-components-web/tree/master/packages/mdc-slider"
-            , title = "Source Code (Material Components Web)"
-            , icon = "images/ic_code_24px.svg"
-            , altText = "Source Code"
-            }
-        , Html.h3 [ Typography.subtitle1 ] [ text "Continuous" ]
-        , continuousSlider lift model
-        , Html.h3 [ Typography.subtitle1 ] [ text "Discrete" ]
-        , discreteSlider lift model
-        , Html.h3 [ Typography.subtitle1 ] [ text "Discrete with Tick Marks" ]
-        , discreteSliderWithTickMarks lift model
-        ]

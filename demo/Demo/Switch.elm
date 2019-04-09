@@ -27,17 +27,16 @@ type Msg
     = Toggle String
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         Toggle id ->
-            let
-                switches =
+            { model
+                | switches =
                     Dict.update id
                         (\state -> Just (not (Maybe.withDefault False state)))
                         model.switches
-            in
-            ( { model | switches = switches }, Cmd.none )
+            }
 
 
 isChecked : String -> Model -> Bool

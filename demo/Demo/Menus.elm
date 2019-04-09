@@ -22,22 +22,18 @@ defaultModel =
 
 
 type Msg
-    = NoOp
-    | Open
+    = Open
     | Close
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
-        NoOp ->
-            ( model, Cmd.none )
-
         Open ->
-            ( { model | open = True }, Cmd.none )
+            { model | open = True }
 
         Close ->
-            ( { model | open = False }, Cmd.none )
+            { model | open = False }
 
 
 view : Model -> CatalogPage Msg

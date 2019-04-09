@@ -30,11 +30,11 @@ type Msg
     = Set String String
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         Set group index ->
-            ( { model | radios = Dict.insert group index model.radios }, Cmd.none )
+            { model | radios = Dict.insert group index model.radios }
 
 
 isSelected : String -> String -> Model -> Bool

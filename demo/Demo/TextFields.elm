@@ -22,18 +22,14 @@ defaultModel =
 
 
 type Msg
-    = NoOp
-    | SetValue String
+    = SetValue String
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
-        NoOp ->
-            ( model, Cmd.none )
-
         SetValue value ->
-            ( model, Cmd.none )
+            model
 
 
 view : Model -> CatalogPage Msg

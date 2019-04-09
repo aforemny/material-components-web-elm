@@ -25,17 +25,16 @@ type Msg
     = Toggle String
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         Toggle index ->
-            let
-                iconButtons =
+            { model
+                | iconButtons =
                     Dict.update index
                         (\state -> Just (not (Maybe.withDefault False state)))
                         model.iconButtons
-            in
-            ( { model | iconButtons = iconButtons }, Cmd.none )
+            }
 
 
 isOn : String -> Model -> Bool

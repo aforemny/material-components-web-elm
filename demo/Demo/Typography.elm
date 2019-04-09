@@ -20,11 +20,9 @@ type Msg
     = NoOp
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
-    case msg of
-        NoOp ->
-            ( model, Cmd.none )
+update : Msg -> Model -> Model
+update msg model =
+    model
 
 
 view : Model -> CatalogPage Msg

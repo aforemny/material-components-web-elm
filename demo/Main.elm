@@ -188,242 +188,164 @@ update msg model =
             ( { model | url = Demo.Url.fromUrl url }, Cmd.none )
 
         ButtonsMsg msg_ ->
-            let
-                ( buttons, effects ) =
-                    Demo.Buttons.update ButtonsMsg msg_ model.buttons
-            in
-            ( { model | buttons = buttons }, effects )
+            ( { model | buttons = Demo.Buttons.update msg_ model.buttons }, Cmd.none )
 
         CardsMsg msg_ ->
-            let
-                ( cards, effects ) =
-                    Demo.Cards.update CardsMsg msg_ model.cards
-            in
-            ( { model | cards = cards }, effects )
+            ( { model | cards = Demo.Cards.update msg_ model.cards }, Cmd.none )
 
         CheckboxMsg msg_ ->
-            let
-                ( checkbox, effects ) =
-                    Demo.Checkbox.update CheckboxMsg msg_ model.checkbox
-            in
-            ( { model | checkbox = checkbox }, effects )
+            ( { model | checkbox = Demo.Checkbox.update msg_ model.checkbox }, Cmd.none )
 
         ChipsMsg msg_ ->
-            let
-                ( chips, effects ) =
-                    Demo.Chips.update ChipsMsg msg_ model.chips
-            in
-            ( { model | chips = chips }, effects )
+            ( { model | chips = Demo.Chips.update msg_ model.chips }, Cmd.none )
 
         DialogMsg msg_ ->
-            let
-                ( dialog, effects ) =
-                    Demo.Dialog.update DialogMsg msg_ model.dialog
-            in
-            ( { model | dialog = dialog }, effects )
+            ( { model | dialog = Demo.Dialog.update msg_ model.dialog }, Cmd.none )
 
         ElevationMsg msg_ ->
-            let
-                ( elevation, effects ) =
-                    Demo.Elevation.update ElevationMsg msg_ model.elevation
-            in
-            ( { model | elevation = elevation }, effects )
+            ( { model | elevation = Demo.Elevation.update msg_ model.elevation }
+            , Cmd.none
+            )
 
         DrawerMsg msg_ ->
-            let
-                ( drawer, effects ) =
-                    Demo.Drawer.update DrawerMsg msg_ model.drawer
-            in
-            ( { model | drawer = drawer }, effects )
+            ( { model | drawer = Demo.Drawer.update msg_ model.drawer }, Cmd.none )
 
         DismissibleDrawerMsg msg_ ->
-            let
-                ( dismissibleDrawer, effects ) =
-                    Demo.DismissibleDrawer.update DismissibleDrawerMsg msg_ model.dismissibleDrawer
-            in
-            ( { model | dismissibleDrawer = dismissibleDrawer }, effects )
+            ( { model
+                | dismissibleDrawer =
+                    Demo.DismissibleDrawer.update msg_ model.dismissibleDrawer
+              }
+            , Cmd.none
+            )
 
         ModalDrawerMsg msg_ ->
-            let
-                ( modalDrawer, effects ) =
-                    Demo.ModalDrawer.update ModalDrawerMsg msg_ model.modalDrawer
-            in
-            ( { model | modalDrawer = modalDrawer }, effects )
+            ( { model | modalDrawer = Demo.ModalDrawer.update msg_ model.modalDrawer }
+            , Cmd.none
+            )
 
         PermanentDrawerMsg msg_ ->
-            let
-                ( permanentDrawer, effects ) =
-                    Demo.PermanentDrawer.update PermanentDrawerMsg msg_ model.permanentDrawer
-            in
-            ( { model | permanentDrawer = permanentDrawer }, effects )
+            ( { model
+                | permanentDrawer = Demo.PermanentDrawer.update msg_ model.permanentDrawer
+              }
+            , Cmd.none
+            )
 
         FabsMsg msg_ ->
-            let
-                ( fabs, effects ) =
-                    Demo.Fabs.update FabsMsg msg_ model.fabs
-            in
-            ( { model | fabs = fabs }, effects )
+            ( { model | fabs = Demo.Fabs.update msg_ model.fabs }, Cmd.none )
 
         IconButtonMsg msg_ ->
-            let
-                ( iconButton, effects ) =
-                    Demo.IconButton.update IconButtonMsg msg_ model.iconButton
-            in
-            ( { model | iconButton = iconButton }, effects )
+            ( { model | iconButton = Demo.IconButton.update msg_ model.iconButton }
+            , Cmd.none
+            )
 
         ImageListMsg msg_ ->
-            let
-                ( imageList, effects ) =
-                    Demo.ImageList.update ImageListMsg msg_ model.imageList
-            in
-            ( { model | imageList = imageList }, effects )
+            ( { model | imageList = Demo.ImageList.update msg_ model.imageList }
+            , Cmd.none
+            )
 
         MenuMsg msg_ ->
-            let
-                ( menus, effects ) =
-                    Demo.Menus.update MenuMsg msg_ model.menus
-            in
-            ( { model | menus = menus }, effects )
+            ( { model | menus = Demo.Menus.update msg_ model.menus }, Cmd.none )
 
         RadioButtonsMsg msg_ ->
-            let
-                ( radio, effects ) =
-                    Demo.RadioButtons.update RadioButtonsMsg msg_ model.radio
-            in
-            ( { model | radio = radio }, effects )
+            ( { model | radio = Demo.RadioButtons.update msg_ model.radio }, Cmd.none )
 
         RippleMsg msg_ ->
-            let
-                ( ripple, effects ) =
-                    Demo.Ripple.update RippleMsg msg_ model.ripple
-            in
-            ( { model | ripple = ripple }, effects )
+            ( { model | ripple = Demo.Ripple.update msg_ model.ripple }, Cmd.none )
 
         SelectMsg msg_ ->
-            let
-                ( selects, effects ) =
-                    Demo.Selects.update SelectMsg msg_ model.selects
-            in
-            ( { model | selects = selects }, effects )
+            ( { model | selects = Demo.Selects.update msg_ model.selects }, Cmd.none )
 
         SliderMsg msg_ ->
-            let
-                ( slider, effects ) =
-                    Demo.Slider.update SliderMsg msg_ model.slider
-            in
-            ( { model | slider = slider }, effects )
+            ( { model | slider = Demo.Slider.update msg_ model.slider }, Cmd.none )
 
         SnackbarMsg msg_ ->
-            let
-                ( snackbar, effects ) =
-                    Demo.Snackbar.update SnackbarMsg msg_ model.snackbar
-            in
-            ( { model | snackbar = snackbar }, effects )
+            Demo.Snackbar.update msg_ model.snackbar
+                |> Tuple.mapFirst (\snackbar -> { model | snackbar = snackbar })
+                |> Tuple.mapSecond (Cmd.map SnackbarMsg)
 
         SwitchMsg msg_ ->
-            let
-                ( switch, effects ) =
-                    Demo.Switch.update SwitchMsg msg_ model.switch
-            in
-            ( { model | switch = switch }, effects )
+            ( { model | switch = Demo.Switch.update msg_ model.switch }, Cmd.none )
 
         TextFieldMsg msg_ ->
-            let
-                ( textfields, effects ) =
-                    Demo.TextFields.update TextFieldMsg msg_ model.textfields
-            in
-            ( { model | textfields = textfields }, effects )
+            ( { model | textfields = Demo.TextFields.update msg_ model.textfields }
+            , Cmd.none
+            )
 
         TabBarMsg msg_ ->
-            let
-                ( tabbar, effects ) =
-                    Demo.TabBar.update TabBarMsg msg_ model.tabbar
-            in
-            ( { model | tabbar = tabbar }, effects )
+            ( { model | tabbar = Demo.TabBar.update msg_ model.tabbar }, Cmd.none )
 
         LayoutGridMsg msg_ ->
-            let
-                ( layoutGrid, effects ) =
-                    Demo.LayoutGrid.update LayoutGridMsg msg_ model.layoutGrid
-            in
-            ( { model | layoutGrid = layoutGrid }, effects )
+            ( { model | layoutGrid = Demo.LayoutGrid.update msg_ model.layoutGrid }
+            , Cmd.none
+            )
 
         ListsMsg msg_ ->
-            let
-                ( lists, effects ) =
-                    Demo.Lists.update ListsMsg msg_ model.lists
-            in
-            ( { model | lists = lists }, effects )
+            ( { model | lists = Demo.Lists.update msg_ model.lists }, Cmd.none )
 
         ThemeMsg msg_ ->
-            let
-                ( theme, effects ) =
-                    Demo.Theme.update ThemeMsg msg_ model.theme
-            in
-            ( { model | theme = theme }, effects )
+            ( { model | theme = Demo.Theme.update msg_ model.theme }, Cmd.none )
 
         TopAppBarMsg msg_ ->
-            let
-                ( topAppBar, effects ) =
-                    Demo.TopAppBar.update TopAppBarMsg msg_ model.topAppBar
-            in
-            ( { model | topAppBar = topAppBar }, effects )
+            ( { model | topAppBar = Demo.TopAppBar.update msg_ model.topAppBar }
+            , Cmd.none
+            )
 
         LinearProgressMsg msg_ ->
-            let
-                ( linearProgress, effects ) =
-                    Demo.LinearProgress.update LinearProgressMsg msg_ model.linearProgress
-            in
-            ( { model | linearProgress = linearProgress }, effects )
+            ( { model
+                | linearProgress = Demo.LinearProgress.update msg_ model.linearProgress
+              }
+            , Cmd.none
+            )
 
         TypographyMsg msg_ ->
-            let
-                ( typography, effects ) =
-                    Demo.Typography.update TypographyMsg msg_ model.typography
-            in
-            ( { model | typography = typography }, effects )
+            ( { model | typography = Demo.Typography.update msg_ model.typography }
+            , Cmd.none
+            )
 
         StandardTopAppBarMsg msg_ ->
-            let
-                ( standardTopAppBar, effects ) =
-                    Demo.StandardTopAppBar.update StandardTopAppBarMsg msg_ model.standardTopAppBar
-            in
-            ( { model | standardTopAppBar = standardTopAppBar }, effects )
+            ( { model
+                | standardTopAppBar =
+                    Demo.StandardTopAppBar.update msg_ model.standardTopAppBar
+              }
+            , Cmd.none
+            )
 
         FixedTopAppBarMsg msg_ ->
-            let
-                ( fixedTopAppBar, effects ) =
-                    Demo.FixedTopAppBar.update FixedTopAppBarMsg msg_ model.fixedTopAppBar
-            in
-            ( { model | fixedTopAppBar = fixedTopAppBar }, effects )
+            ( { model
+                | fixedTopAppBar = Demo.FixedTopAppBar.update msg_ model.fixedTopAppBar
+              }
+            , Cmd.none
+            )
 
         DenseTopAppBarMsg msg_ ->
-            let
-                ( denseTopAppBar, effects ) =
-                    Demo.DenseTopAppBar.update DenseTopAppBarMsg msg_ model.denseTopAppBar
-            in
-            ( { model | denseTopAppBar = denseTopAppBar }, effects )
+            ( { model
+                | denseTopAppBar = Demo.DenseTopAppBar.update msg_ model.denseTopAppBar
+              }
+            , Cmd.none
+            )
 
         ProminentTopAppBarMsg msg_ ->
-            let
-                ( prominentTopAppBar, effects ) =
-                    Demo.ProminentTopAppBar.update ProminentTopAppBarMsg msg_ model.prominentTopAppBar
-            in
-            ( { model | prominentTopAppBar = prominentTopAppBar }, effects )
+            ( { model
+                | prominentTopAppBar =
+                    Demo.ProminentTopAppBar.update msg_ model.prominentTopAppBar
+              }
+            , Cmd.none
+            )
 
         ShortCollapsedTopAppBarMsg msg_ ->
-            let
-                ( shortCollapsedTopAppBar, effects ) =
-                    Demo.ShortCollapsedTopAppBar.update ShortCollapsedTopAppBarMsg msg_ model.shortCollapsedTopAppBar
-            in
-            ( { model | shortCollapsedTopAppBar = shortCollapsedTopAppBar }, effects )
+            ( { model
+                | shortCollapsedTopAppBar =
+                    Demo.ShortCollapsedTopAppBar.update msg_ model.shortCollapsedTopAppBar
+              }
+            , Cmd.none
+            )
 
         ShortTopAppBarMsg msg_ ->
-            let
-                ( shortTopAppBar, effects ) =
-                    Demo.ShortTopAppBar.update ShortTopAppBarMsg msg_ model.shortTopAppBar
-            in
-            ( { model | shortTopAppBar = shortTopAppBar }, effects )
+            ( { model
+                | shortTopAppBar = Demo.ShortTopAppBar.update msg_ model.shortTopAppBar
+              }
+            , Cmd.none
+            )
 
 
 view : Model -> Browser.Document Msg

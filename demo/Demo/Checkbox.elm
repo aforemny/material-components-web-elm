@@ -31,8 +31,8 @@ type Msg
     = Click String
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         Click index ->
             let
@@ -47,7 +47,7 @@ update lift msg model =
                         )
                         model.checkboxes
             in
-            ( { model | checkboxes = checkboxes }, Cmd.none )
+            { model | checkboxes = checkboxes }
 
 
 view : Model -> CatalogPage Msg

@@ -33,11 +33,11 @@ type Msg
     = Change String Float
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         Change id value ->
-            ( { model | sliders = Dict.insert id value model.sliders }, Cmd.none )
+            { model | sliders = Dict.insert id value model.sliders }
 
 
 view : Model -> CatalogPage Msg

@@ -28,8 +28,8 @@ type Msg
     | Click
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
     let
         baselineMessage =
             { snackbarMessage
@@ -63,20 +63,17 @@ update lift msg model =
     in
     case msg of
         ShowBaseline ->
-            ( model, Cmd.map lift (Snackbar.addMessage SnackbarMsg baselineMessage) )
+            ( model, Snackbar.addMessage SnackbarMsg baselineMessage )
 
         ShowLeading ->
-            ( model, Cmd.map lift (Snackbar.addMessage SnackbarMsg leadingMessage) )
+            ( model, Snackbar.addMessage SnackbarMsg leadingMessage )
 
         ShowStacked ->
-            ( model, Cmd.map lift (Snackbar.addMessage SnackbarMsg stackedMessage) )
+            ( model, Snackbar.addMessage SnackbarMsg stackedMessage )
 
         SnackbarMsg snackbarMsg ->
-            let
-                ( queue, cmds ) =
-                    Snackbar.update SnackbarMsg snackbarMsg model.queue
-            in
-            ( { model | queue = queue }, Cmd.map lift cmds )
+            Snackbar.update SnackbarMsg snackbarMsg model.queue
+                |> Tuple.mapFirst (\queue -> { model | queue = queue })
 
         Click ->
             ( model, Cmd.none )

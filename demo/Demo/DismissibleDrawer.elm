@@ -36,14 +36,14 @@ type Msg
     | SetSelectedIndex Int
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         ToggleDrawer ->
-            ( { model | drawerOpen = not model.drawerOpen }, Cmd.none )
+            { model | drawerOpen = not model.drawerOpen }
 
         SetSelectedIndex index ->
-            ( { model | selectedIndex = index }, Cmd.none )
+            { model | selectedIndex = index }
 
 
 view : Model -> DrawerPage Msg

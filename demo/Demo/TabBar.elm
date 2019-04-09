@@ -36,20 +36,20 @@ type Msg
     | SetActiveScrollingTab Int
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         SetActiveHeroTab index ->
-            ( { model | activeHeroTab = index }, Cmd.none )
+            { model | activeHeroTab = index }
 
         SetActiveIconTab index ->
-            ( { model | activeIconTab = index }, Cmd.none )
+            { model | activeIconTab = index }
 
         SetActiveStackedTab index ->
-            ( { model | activeStackedTab = index }, Cmd.none )
+            { model | activeStackedTab = index }
 
         SetActiveScrollingTab index ->
-            ( { model | activeScrollingTab = index }, Cmd.none )
+            { model | activeScrollingTab = index }
 
 
 view : Model -> CatalogPage Msg

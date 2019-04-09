@@ -23,18 +23,14 @@ defaultModel =
 
 
 type Msg
-    = NoOp
-    | SetSelectedIndex Int
+    = SetSelectedIndex Int
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
-        NoOp ->
-            ( model, Cmd.none )
-
         SetSelectedIndex index ->
-            ( { model | selectedIndex = index }, Cmd.none )
+            { model | selectedIndex = index }
 
 
 view : Model -> DrawerPage Msg

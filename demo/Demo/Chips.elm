@@ -41,26 +41,24 @@ type ChipType
     | Action
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         ToggleChip chipType index ->
             case chipType of
                 Choice ->
-                    ( { model
+                    { model
                         | choiceChip =
                             if model.choiceChip == Just index then
                                 Nothing
 
                             else
                                 Just index
-                      }
-                    , Cmd.none
-                    )
+                    }
 
                 _ ->
-                    let
-                        selectedChips =
+                    { model
+                        | selectedChips =
                             model.selectedChips
                                 |> (if Set.member index model.selectedChips then
                                         Set.remove index
@@ -68,8 +66,7 @@ update lift msg model =
                                     else
                                         Set.insert index
                                    )
-                    in
-                    ( { model | selectedChips = selectedChips }, Cmd.none )
+                    }
 
 
 view : Model -> CatalogPage Msg

@@ -30,14 +30,14 @@ type Msg
     | SetEnhancedValue String
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         SetValue value ->
-            ( { model | value = value }, Cmd.none )
+            { model | value = value }
 
         SetEnhancedValue value ->
-            ( { model | enhancedValue = value }, Cmd.none )
+            { model | enhancedValue = value }
 
 
 view : Model -> CatalogPage Msg

@@ -29,14 +29,14 @@ type Msg
     | Show String
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
         Close ->
-            ( { model | openDialog = Nothing }, Cmd.none )
+            { model | openDialog = Nothing }
 
         Show index ->
-            ( { model | openDialog = Just index }, Cmd.none )
+            { model | openDialog = Just index }
 
 
 view : Model -> CatalogPage Msg

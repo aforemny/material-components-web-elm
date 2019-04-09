@@ -32,39 +32,33 @@ defaultModel =
 
 
 type Msg
-    = NoOp
-    | ToggleCheckbox Int
+    = ToggleCheckbox Int
     | SetRadio Int
     | SetActivated Int
     | SetShapedActivated Int
 
 
-update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
-update lift msg model =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
-        NoOp ->
-            ( model, Cmd.none )
-
         ToggleCheckbox index ->
-            ( { model
+            { model
                 | checkboxIndices =
                     if Set.member index model.checkboxIndices then
                         Set.remove index model.checkboxIndices
 
                     else
                         Set.insert index model.checkboxIndices
-              }
-            , Cmd.none
-            )
+            }
 
         SetRadio index ->
-            ( { model | radioIndex = index }, Cmd.none )
+            { model | radioIndex = index }
 
         SetActivated index ->
-            ( { model | activatedIndex = index }, Cmd.none )
+            { model | activatedIndex = index }
 
         SetShapedActivated index ->
-            ( { model | shapedActivatedIndex = index }, Cmd.none )
+            { model | shapedActivatedIndex = index }
 
 
 view : Model -> CatalogPage Msg

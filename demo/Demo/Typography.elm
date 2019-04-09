@@ -1,4 +1,4 @@
-module Demo.Typography exposing (view)
+module Demo.Typography exposing (Model, Msg, defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
@@ -7,8 +7,28 @@ import Html.Attributes
 import Material.Typography as Typography
 
 
-view : CatalogPage ()
-view =
+type alias Model =
+    {}
+
+
+defaultModel : Model
+defaultModel =
+    {}
+
+
+type Msg
+    = NoOp
+
+
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
+update lift msg model =
+    case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
+
+view : Model -> CatalogPage Msg
+view model =
     { title = "Typography"
     , prelude = "Roboto is the standard typeface on Android and Chrome."
     , resources =

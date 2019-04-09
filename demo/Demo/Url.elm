@@ -1,6 +1,5 @@
 module Demo.Url exposing
-    ( TopAppBarPage(..)
-    , Url(..)
+    ( Url(..)
     , fromString
     , fromUrl
     , toString
@@ -37,18 +36,15 @@ type Url
     | TabBar
     | TextField
     | Theme
-    | TopAppBar (Maybe TopAppBarPage)
-    | Typography
-    | Error404 String
-
-
-type TopAppBarPage
-    = StandardTopAppBar
+    | TopAppBar
+    | StandardTopAppBar
     | FixedTopAppBar
     | DenseTopAppBar
     | ProminentTopAppBar
     | ShortTopAppBar
     | ShortCollapsedTopAppBar
+    | Typography
+    | Error404 String
 
 
 toString : Url -> String
@@ -135,25 +131,25 @@ toString url =
         Theme ->
             "#theme"
 
-        TopAppBar Nothing ->
+        TopAppBar ->
             "#top-app-bar"
 
-        TopAppBar (Just StandardTopAppBar) ->
+        StandardTopAppBar ->
             "#top-app-bar/standard"
 
-        TopAppBar (Just FixedTopAppBar) ->
+        FixedTopAppBar ->
             "#top-app-bar/fixed"
 
-        TopAppBar (Just DenseTopAppBar) ->
+        DenseTopAppBar ->
             "#top-app-bar/dense"
 
-        TopAppBar (Just ProminentTopAppBar) ->
+        ProminentTopAppBar ->
             "#top-app-bar/prominent"
 
-        TopAppBar (Just ShortTopAppBar) ->
+        ShortTopAppBar ->
             "#top-app-bar/short"
 
-        TopAppBar (Just ShortCollapsedTopAppBar) ->
+        ShortCollapsedTopAppBar ->
             "#top-app-bar/short-collapsed"
 
         Typography ->
@@ -253,25 +249,25 @@ fromString url =
             Theme
 
         "top-app-bar" ->
-            TopAppBar Nothing
+            TopAppBar
 
         "top-app-bar/standard" ->
-            TopAppBar (Just StandardTopAppBar)
+            StandardTopAppBar
 
         "top-app-bar/fixed" ->
-            TopAppBar (Just FixedTopAppBar)
+            FixedTopAppBar
 
         "top-app-bar/dense" ->
-            TopAppBar (Just DenseTopAppBar)
+            DenseTopAppBar
 
         "top-app-bar/prominent" ->
-            TopAppBar (Just ProminentTopAppBar)
+            ProminentTopAppBar
 
         "top-app-bar/short" ->
-            TopAppBar (Just ShortTopAppBar)
+            ShortTopAppBar
 
         "top-app-bar/short-collapsed" ->
-            TopAppBar (Just ShortCollapsedTopAppBar)
+            ShortCollapsedTopAppBar
 
         "typography" ->
             Typography

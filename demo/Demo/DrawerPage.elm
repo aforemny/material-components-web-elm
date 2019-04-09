@@ -1,4 +1,4 @@
-module Demo.DrawerPage exposing (DrawerPage)
+module Demo.DrawerPage exposing (DrawerPage, drawerBody, view)
 
 import Html exposing (Html, text)
 import Html.Attributes
@@ -7,12 +7,48 @@ import Json.Decode as Decode
 import Material.Drawer as Drawer exposing (drawerContent, drawerHeader)
 import Material.Icon exposing (icon, iconConfig)
 import Material.List exposing (list, listConfig, listGroupSubheader, listItem, listItemConfig, listItemDivider, listItemDividerConfig, listItemGraphic)
-import Material.TopAppBar as TopAppBar
+import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 
 
 type alias DrawerPage msg =
-    { view : ((Int -> msg) -> Int -> List (Html msg)) -> Html msg -> Html msg
+    { title : String
+    , drawer : Html msg
+    , scrim : Maybe (Html msg)
+    , onMenuClick : Maybe msg
     }
+
+
+view : (msg -> topMsg) -> DrawerPage msg -> Html topMsg
+view lift { title, drawer, scrim, onMenuClick } =
+    Html.map lift <|
+        Html.div
+            [ Html.Attributes.style "height" "100vh" ]
+            [ drawer
+            , Maybe.withDefault (text "") scrim
+            , Html.div [ Drawer.appContent ]
+                [ topAppBar topAppBarConfig
+                    [ TopAppBar.row []
+                        [ TopAppBar.section [ TopAppBar.alignStart ]
+                            [ case onMenuClick of
+                                Just handleClick ->
+                                    icon
+                                        { iconConfig
+                                            | additionalAttributes =
+                                                [ TopAppBar.navigationIcon
+                                                , Html.Events.onClick handleClick
+                                                ]
+                                        }
+                                        "menu"
+
+                                Nothing ->
+                                    text ""
+                            , Html.span [ TopAppBar.title ] [ text title ]
+                            ]
+                        ]
+                    ]
+                , mainContent
+                ]
+            ]
 
 
 drawerBody : (Int -> msg) -> Int -> List (Html msg)
@@ -91,8 +127,7 @@ drawerBody setSelectedIndex selectedIndex =
 mainContent : Html msg
 mainContent =
     Html.div
-        [ Html.Attributes.class "drawer-main-content"
-        , Html.Attributes.style "padding-left" "18px"
+        [ Html.Attributes.style "padding-left" "18px"
         , Html.Attributes.style "padding-right" "18px"
         , Html.Attributes.style "overflow" "auto"
         , Html.Attributes.style "height" "100%"

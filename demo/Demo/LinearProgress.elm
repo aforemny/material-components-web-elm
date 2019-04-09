@@ -1,4 +1,4 @@
-module Demo.LinearProgress exposing (view)
+module Demo.LinearProgress exposing (Model, Msg, defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
@@ -8,8 +8,28 @@ import Material.LinearProgress exposing (bufferedLinearProgress, determinateLine
 import Material.Typography as Typography
 
 
-view : CatalogPage ()
-view =
+type alias Model =
+    {}
+
+
+defaultModel : Model
+defaultModel =
+    {}
+
+
+type Msg
+    = NoOp
+
+
+update : (Msg -> msg) -> Msg -> Model -> ( Model, Cmd msg )
+update lift msg model =
+    case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
+
+view : Model -> CatalogPage Msg
+view model =
     { title = "Linear Progress Indicator"
     , prelude = "Progress indicators display the length of a process or express an unspecified wait time."
     , resources =

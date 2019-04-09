@@ -6,7 +6,7 @@ module Demo.ModalDrawer exposing
     , view
     )
 
-import Demo.DrawerPage exposing (DrawerPage)
+import Demo.DrawerPage as DrawerPage exposing (DrawerPage)
 import Demo.PermanentDrawer
 import Html exposing (Html, text)
 import Html.Attributes
@@ -54,41 +54,14 @@ update lift msg model =
 
 view : Model -> DrawerPage Msg
 view model =
-    { view =
-        \drawerContent mainContent ->
-            Html.div
-                [ Html.Attributes.class "drawer-frame-root"
-                , Html.Attributes.class "mdc-typography"
-                , Html.Attributes.style "display" "flex"
-                , Html.Attributes.style "height" "100vh"
-                ]
-                [ modalDrawer
-                    { drawerConfig
-                        | open = model.drawerOpen
-                        , onClose = Just CloseDrawer
-                    }
-                    (drawerContent SetSelectedIndex model.selectedIndex)
-                , drawerScrim [] []
-                , Html.div
-                    [ Html.Attributes.class "drawer-frame-app-content" ]
-                    [ topAppBar topAppBarConfig
-                        [ TopAppBar.row []
-                            [ TopAppBar.section
-                                [ TopAppBar.alignStart
-                                ]
-                                [ icon
-                                    { iconConfig
-                                        | additionalAttributes =
-                                            [ TopAppBar.navigationIcon
-                                            , Html.Events.onClick OpenDrawer
-                                            ]
-                                    }
-                                    "menu"
-                                , Html.span [ TopAppBar.title ] [ text "Modal Drawer" ]
-                                ]
-                            ]
-                        ]
-                    , mainContent
-                    ]
-                ]
+    { title = "Modal Drawer"
+    , drawer =
+        modalDrawer
+            { drawerConfig
+                | open = model.drawerOpen
+                , onClose = Just CloseDrawer
+            }
+            (DrawerPage.drawerBody SetSelectedIndex model.selectedIndex)
+    , scrim = Just (drawerScrim [] [])
+    , onMenuClick = Just OpenDrawer
     }

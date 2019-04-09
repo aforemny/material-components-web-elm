@@ -146,7 +146,7 @@ view =
                   , title = "Theme"
                   , subtitle = "Using primary and accent colors"
                   }
-                , { url = TopAppBar Nothing
+                , { url = TopAppBar
                   , icon = "images/top_app_bar_180px.svg"
                   , title = "Top App Bar"
                   , subtitle = "Container for items such as application title, navigation icon, and action items."

@@ -4,13 +4,17 @@ import Browser
 import Browser.Navigation
 import Demo.Buttons
 import Demo.Cards
+import Demo.CatalogPage as CatalogPage
 import Demo.Checkbox
 import Demo.Chips
+import Demo.DenseTopAppBar
 import Demo.Dialog
 import Demo.DismissibleDrawer
 import Demo.Drawer
+import Demo.DrawerPage as DrawerPage
 import Demo.Elevation
 import Demo.Fabs
+import Demo.FixedTopAppBar
 import Demo.IconButton
 import Demo.ImageList
 import Demo.LayoutGrid
@@ -19,19 +23,24 @@ import Demo.Lists
 import Demo.Menus
 import Demo.ModalDrawer
 import Demo.PermanentDrawer
+import Demo.ProminentTopAppBar
 import Demo.RadioButtons
 import Demo.Ripple
 import Demo.Selects
+import Demo.ShortCollapsedTopAppBar
+import Demo.ShortTopAppBar
 import Demo.Slider
 import Demo.Snackbar
+import Demo.StandardTopAppBar
 import Demo.Startpage
 import Demo.Switch
 import Demo.TabBar
 import Demo.TextFields
 import Demo.Theme
 import Demo.TopAppBar
+import Demo.TopAppBarPage as TopAppBarPage
 import Demo.Typography
-import Demo.Url exposing (TopAppBarPage(..))
+import Demo.Url
 import Html exposing (Html, text)
 import Html.Attributes
 import Material.TopAppBar as TopAppBar exposing (topAppBarConfig)
@@ -47,28 +56,36 @@ type alias Model =
     , cards : Demo.Cards.Model
     , checkbox : Demo.Checkbox.Model
     , chips : Demo.Chips.Model
+    , denseTopAppBar : Demo.DenseTopAppBar.Model
     , dialog : Demo.Dialog.Model
     , dismissibleDrawer : Demo.DismissibleDrawer.Model
     , drawer : Demo.Drawer.Model
     , elevation : Demo.Elevation.Model
     , fabs : Demo.Fabs.Model
+    , fixedTopAppBar : Demo.FixedTopAppBar.Model
     , iconButton : Demo.IconButton.Model
     , imageList : Demo.ImageList.Model
     , layoutGrid : Demo.LayoutGrid.Model
+    , linearProgress : Demo.LinearProgress.Model
     , lists : Demo.Lists.Model
     , menus : Demo.Menus.Model
+    , modalDrawer : Demo.ModalDrawer.Model
     , permanentDrawer : Demo.PermanentDrawer.Model
+    , prominentTopAppBar : Demo.ProminentTopAppBar.Model
     , radio : Demo.RadioButtons.Model
     , ripple : Demo.Ripple.Model
     , selects : Demo.Selects.Model
+    , shortCollapsedTopAppBar : Demo.ShortCollapsedTopAppBar.Model
+    , shortTopAppBar : Demo.ShortTopAppBar.Model
     , slider : Demo.Slider.Model
     , snackbar : Demo.Snackbar.Model
+    , standardTopAppBar : Demo.StandardTopAppBar.Model
     , switch : Demo.Switch.Model
     , tabbar : Demo.TabBar.Model
-    , modalDrawer : Demo.ModalDrawer.Model
     , textfields : Demo.TextFields.Model
     , theme : Demo.Theme.Model
     , topAppBar : Demo.TopAppBar.Model
+    , typography : Demo.Typography.Model
     }
 
 
@@ -80,28 +97,36 @@ defaultModel key =
     , cards = Demo.Cards.defaultModel
     , checkbox = Demo.Checkbox.defaultModel
     , chips = Demo.Chips.defaultModel
+    , denseTopAppBar = Demo.DenseTopAppBar.defaultModel
     , dialog = Demo.Dialog.defaultModel
     , dismissibleDrawer = Demo.DismissibleDrawer.defaultModel
     , drawer = Demo.Drawer.defaultModel
     , elevation = Demo.Elevation.defaultModel
     , fabs = Demo.Fabs.defaultModel
+    , fixedTopAppBar = Demo.FixedTopAppBar.defaultModel
     , iconButton = Demo.IconButton.defaultModel
     , imageList = Demo.ImageList.defaultModel
     , layoutGrid = Demo.LayoutGrid.defaultModel
+    , linearProgress = Demo.LinearProgress.defaultModel
     , lists = Demo.Lists.defaultModel
     , menus = Demo.Menus.defaultModel
+    , modalDrawer = Demo.ModalDrawer.defaultModel
     , permanentDrawer = Demo.PermanentDrawer.defaultModel
+    , prominentTopAppBar = Demo.ProminentTopAppBar.defaultModel
     , radio = Demo.RadioButtons.defaultModel
     , ripple = Demo.Ripple.defaultModel
     , selects = Demo.Selects.defaultModel
+    , shortCollapsedTopAppBar = Demo.ShortCollapsedTopAppBar.defaultModel
+    , shortTopAppBar = Demo.ShortTopAppBar.defaultModel
     , slider = Demo.Slider.defaultModel
     , snackbar = Demo.Snackbar.defaultModel
+    , standardTopAppBar = Demo.StandardTopAppBar.defaultModel
     , switch = Demo.Switch.defaultModel
     , tabbar = Demo.TabBar.defaultModel
-    , modalDrawer = Demo.ModalDrawer.defaultModel
     , textfields = Demo.TextFields.defaultModel
     , theme = Demo.Theme.defaultModel
     , topAppBar = Demo.TopAppBar.defaultModel
+    , typography = Demo.Typography.defaultModel
     }
 
 
@@ -121,20 +146,28 @@ type Msg
     | IconButtonMsg Demo.IconButton.Msg
     | ImageListMsg Demo.ImageList.Msg
     | LayoutGridMsg Demo.LayoutGrid.Msg
+    | LinearProgressMsg Demo.LinearProgress.Msg
     | ListsMsg Demo.Lists.Msg
+    | MenuMsg Demo.Menus.Msg
+    | ModalDrawerMsg Demo.ModalDrawer.Msg
     | PermanentDrawerMsg Demo.PermanentDrawer.Msg
     | RadioButtonsMsg Demo.RadioButtons.Msg
     | RippleMsg Demo.Ripple.Msg
     | SelectMsg Demo.Selects.Msg
-    | MenuMsg Demo.Menus.Msg
     | SliderMsg Demo.Slider.Msg
     | SnackbarMsg Demo.Snackbar.Msg
+    | StandardTopAppBarMsg Demo.StandardTopAppBar.Msg
     | SwitchMsg Demo.Switch.Msg
     | TabBarMsg Demo.TabBar.Msg
-    | ModalDrawerMsg Demo.ModalDrawer.Msg
     | TextFieldMsg Demo.TextFields.Msg
     | ThemeMsg Demo.Theme.Msg
     | TopAppBarMsg Demo.TopAppBar.Msg
+    | TypographyMsg Demo.Typography.Msg
+    | ShortCollapsedTopAppBarMsg Demo.ShortCollapsedTopAppBar.Msg
+    | DenseTopAppBarMsg Demo.DenseTopAppBar.Msg
+    | ShortTopAppBarMsg Demo.ShortTopAppBar.Msg
+    | ProminentTopAppBarMsg Demo.ProminentTopAppBar.Msg
+    | FixedTopAppBarMsg Demo.FixedTopAppBar.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -336,6 +369,62 @@ update msg model =
             in
             ( { model | topAppBar = topAppBar }, effects )
 
+        LinearProgressMsg msg_ ->
+            let
+                ( linearProgress, effects ) =
+                    Demo.LinearProgress.update LinearProgressMsg msg_ model.linearProgress
+            in
+            ( { model | linearProgress = linearProgress }, effects )
+
+        TypographyMsg msg_ ->
+            let
+                ( typography, effects ) =
+                    Demo.Typography.update TypographyMsg msg_ model.typography
+            in
+            ( { model | typography = typography }, effects )
+
+        StandardTopAppBarMsg msg_ ->
+            let
+                ( standardTopAppBar, effects ) =
+                    Demo.StandardTopAppBar.update StandardTopAppBarMsg msg_ model.standardTopAppBar
+            in
+            ( { model | standardTopAppBar = standardTopAppBar }, effects )
+
+        FixedTopAppBarMsg msg_ ->
+            let
+                ( fixedTopAppBar, effects ) =
+                    Demo.FixedTopAppBar.update FixedTopAppBarMsg msg_ model.fixedTopAppBar
+            in
+            ( { model | fixedTopAppBar = fixedTopAppBar }, effects )
+
+        DenseTopAppBarMsg msg_ ->
+            let
+                ( denseTopAppBar, effects ) =
+                    Demo.DenseTopAppBar.update DenseTopAppBarMsg msg_ model.denseTopAppBar
+            in
+            ( { model | denseTopAppBar = denseTopAppBar }, effects )
+
+        ProminentTopAppBarMsg msg_ ->
+            let
+                ( prominentTopAppBar, effects ) =
+                    Demo.ProminentTopAppBar.update ProminentTopAppBarMsg msg_ model.prominentTopAppBar
+            in
+            ( { model | prominentTopAppBar = prominentTopAppBar }, effects )
+
+        ShortCollapsedTopAppBarMsg msg_ ->
+            let
+                ( shortCollapsedTopAppBar, effects ) =
+                    Demo.ShortCollapsedTopAppBar.update ShortCollapsedTopAppBarMsg msg_ model.shortCollapsedTopAppBar
+            in
+            ( { model | shortCollapsedTopAppBar = shortCollapsedTopAppBar }, effects )
+
+        ShortTopAppBarMsg msg_ ->
+            let
+                ( shortTopAppBar, effects ) =
+                    Demo.ShortTopAppBar.update ShortTopAppBarMsg msg_ model.shortTopAppBar
+            in
+            ( { model | shortTopAppBar = shortTopAppBar }, effects )
+
 
 view : Model -> Browser.Document Msg
 view model =
@@ -348,91 +437,109 @@ body : Model -> Html Msg
 body model =
     case model.url of
         Demo.Url.StartPage ->
-            Demo.Startpage.view page
+            Demo.Startpage.view
 
         Demo.Url.Button ->
-            Demo.Buttons.view ButtonsMsg page model.buttons
+            CatalogPage.view ButtonsMsg (Demo.Buttons.view model.buttons)
 
         Demo.Url.Card ->
-            Demo.Cards.view CardsMsg page model.cards
+            CatalogPage.view CardsMsg (Demo.Cards.view model.cards)
 
         Demo.Url.Checkbox ->
-            Demo.Checkbox.view CheckboxMsg page model.checkbox
+            CatalogPage.view CheckboxMsg (Demo.Checkbox.view model.checkbox)
 
         Demo.Url.Chips ->
-            Demo.Chips.view ChipsMsg page model.chips
+            CatalogPage.view ChipsMsg (Demo.Chips.view model.chips)
 
         Demo.Url.Dialog ->
-            Demo.Dialog.view DialogMsg page model.dialog
+            CatalogPage.view DialogMsg (Demo.Dialog.view model.dialog)
 
         Demo.Url.Drawer ->
-            Demo.Drawer.view DrawerMsg page model.drawer
+            CatalogPage.view DrawerMsg (Demo.Drawer.view model.drawer)
 
         Demo.Url.DismissibleDrawer ->
-            Demo.DismissibleDrawer.view DismissibleDrawerMsg page model.dismissibleDrawer
+            DrawerPage.view DismissibleDrawerMsg (Demo.DismissibleDrawer.view model.dismissibleDrawer)
 
         Demo.Url.ModalDrawer ->
-            Demo.ModalDrawer.view ModalDrawerMsg page model.modalDrawer
+            DrawerPage.view ModalDrawerMsg (Demo.ModalDrawer.view model.modalDrawer)
 
         Demo.Url.PermanentDrawer ->
-            Demo.PermanentDrawer.view PermanentDrawerMsg page model.permanentDrawer
+            DrawerPage.view PermanentDrawerMsg (Demo.PermanentDrawer.view model.permanentDrawer)
 
         Demo.Url.Elevation ->
-            Demo.Elevation.view ElevationMsg page model.elevation
+            CatalogPage.view ElevationMsg (Demo.Elevation.view model.elevation)
 
         Demo.Url.Fabs ->
-            Demo.Fabs.view FabsMsg page model.fabs
+            CatalogPage.view FabsMsg (Demo.Fabs.view model.fabs)
 
         Demo.Url.IconButton ->
-            Demo.IconButton.view IconButtonMsg page model.iconButton
+            CatalogPage.view IconButtonMsg (Demo.IconButton.view model.iconButton)
 
         Demo.Url.ImageList ->
-            Demo.ImageList.view ImageListMsg page model.imageList
+            CatalogPage.view ImageListMsg (Demo.ImageList.view model.imageList)
 
         Demo.Url.LinearProgress ->
-            Demo.LinearProgress.view page
+            CatalogPage.view LinearProgressMsg (Demo.LinearProgress.view model.linearProgress)
 
         Demo.Url.List ->
-            Demo.Lists.view ListsMsg page model.lists
+            CatalogPage.view ListsMsg (Demo.Lists.view model.lists)
 
         Demo.Url.RadioButton ->
-            Demo.RadioButtons.view RadioButtonsMsg page model.radio
+            CatalogPage.view RadioButtonsMsg (Demo.RadioButtons.view model.radio)
 
         Demo.Url.Select ->
-            Demo.Selects.view SelectMsg page model.selects
+            CatalogPage.view SelectMsg (Demo.Selects.view model.selects)
 
         Demo.Url.Menu ->
-            Demo.Menus.view MenuMsg page model.menus
+            CatalogPage.view MenuMsg (Demo.Menus.view model.menus)
 
         Demo.Url.Slider ->
-            Demo.Slider.view SliderMsg page model.slider
+            CatalogPage.view SliderMsg (Demo.Slider.view model.slider)
 
         Demo.Url.Snackbar ->
-            Demo.Snackbar.view SnackbarMsg page model.snackbar
+            CatalogPage.view SnackbarMsg (Demo.Snackbar.view model.snackbar)
 
         Demo.Url.Switch ->
-            Demo.Switch.view SwitchMsg page model.switch
+            CatalogPage.view SwitchMsg (Demo.Switch.view model.switch)
 
         Demo.Url.TabBar ->
-            Demo.TabBar.view TabBarMsg page model.tabbar
+            CatalogPage.view TabBarMsg (Demo.TabBar.view model.tabbar)
 
         Demo.Url.TextField ->
-            Demo.TextFields.view TextFieldMsg page model.textfields
+            CatalogPage.view TextFieldMsg (Demo.TextFields.view model.textfields)
 
         Demo.Url.Theme ->
-            Demo.Theme.view ThemeMsg page model.theme
+            CatalogPage.view ThemeMsg (Demo.Theme.view model.theme)
 
-        Demo.Url.TopAppBar topAppBarPage ->
-            Demo.TopAppBar.view TopAppBarMsg page topAppBarPage model.topAppBar
+        Demo.Url.TopAppBar ->
+            CatalogPage.view TopAppBarMsg (Demo.TopAppBar.view model.topAppBar)
+
+        Demo.Url.StandardTopAppBar ->
+            TopAppBarPage.view StandardTopAppBarMsg (Demo.StandardTopAppBar.view model.standardTopAppBar)
+
+        Demo.Url.FixedTopAppBar ->
+            TopAppBarPage.view FixedTopAppBarMsg (Demo.FixedTopAppBar.view model.fixedTopAppBar)
+
+        Demo.Url.ProminentTopAppBar ->
+            TopAppBarPage.view ProminentTopAppBarMsg (Demo.ProminentTopAppBar.view model.prominentTopAppBar)
+
+        Demo.Url.ShortTopAppBar ->
+            TopAppBarPage.view ShortTopAppBarMsg (Demo.ShortTopAppBar.view model.shortTopAppBar)
+
+        Demo.Url.DenseTopAppBar ->
+            TopAppBarPage.view DenseTopAppBarMsg (Demo.DenseTopAppBar.view model.denseTopAppBar)
+
+        Demo.Url.ShortCollapsedTopAppBar ->
+            TopAppBarPage.view ShortCollapsedTopAppBarMsg (Demo.ShortCollapsedTopAppBar.view model.shortCollapsedTopAppBar)
 
         Demo.Url.LayoutGrid ->
-            Demo.LayoutGrid.view LayoutGridMsg page model.layoutGrid
+            CatalogPage.view LayoutGridMsg (Demo.LayoutGrid.view model.layoutGrid)
 
         Demo.Url.Ripple ->
-            Demo.Ripple.view RippleMsg page model.ripple
+            CatalogPage.view RippleMsg (Demo.Ripple.view model.ripple)
 
         Demo.Url.Typography ->
-            Demo.Typography.view page
+            CatalogPage.view TypographyMsg (Demo.Typography.view model.typography)
 
         Demo.Url.Error404 requestedHash ->
             Html.div

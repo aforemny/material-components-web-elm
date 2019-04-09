@@ -1,6 +1,6 @@
 module Demo.PermanentDrawer exposing (Model, Msg, defaultModel, update, view)
 
-import Demo.DrawerPage exposing (DrawerPage)
+import Demo.DrawerPage as DrawerPage exposing (DrawerPage)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
@@ -39,38 +39,10 @@ update lift msg model =
 
 view : Model -> DrawerPage Msg
 view model =
-    { view =
-        \drawerContent mainContent ->
-            Html.div
-                [ Html.Attributes.class "drawer-frame-root"
-                , Html.Attributes.class "mdc-typography"
-                , Html.Attributes.style "display" "flex"
-                , Html.Attributes.style "height" "100vh"
-                ]
-                [ permanentDrawer drawerConfig
-                    (drawerContent SetSelectedIndex model.selectedIndex)
-                , Html.div
-                    [ Html.Attributes.class "drawer-frame-app-content" ]
-                    [ topAppBar topAppBarConfig
-                        [ TopAppBar.row []
-                            [ TopAppBar.section
-                                [ TopAppBar.alignStart
-                                ]
-                                [ Html.span [ TopAppBar.title ] [ text "Permanent Drawer" ]
-                                ]
-                            ]
-                        ]
-                    , mainContent
-                    ]
-                , Html.node "style"
-                    [ Html.Attributes.type_ "text/css"
-                    ]
-                    [ text """
-html, body {
-  width: 100%;
-  height: 100%;
-}
-        """
-                    ]
-                ]
+    { title = "Permanent Drawer"
+    , drawer =
+        permanentDrawer drawerConfig
+            (DrawerPage.drawerBody SetSelectedIndex model.selectedIndex)
+    , scrim = Nothing
+    , onMenuClick = Nothing
     }

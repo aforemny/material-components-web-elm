@@ -1,5 +1,6 @@
 module Material.IconButton exposing
     ( IconButtonConfig
+    , customIconButton
     , iconButton
     , iconButtonConfig
     , iconToggle
@@ -40,6 +41,19 @@ iconButton config iconName =
             ++ config.additionalAttributes
         )
         [ text iconName ]
+
+
+customIconButton : IconButtonConfig msg -> List (Html msg) -> Html msg
+customIconButton config nodes =
+    Html.node "mdc-icon-button"
+        (List.filterMap identity
+            [ rootCs
+            , tabIndexAttr
+            , clickHandler config
+            ]
+            ++ config.additionalAttributes
+        )
+        nodes
 
 
 iconToggleConfig : IconButtonConfig msg

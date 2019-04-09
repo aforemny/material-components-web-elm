@@ -4,13 +4,34 @@ import Demo.Url as Url exposing (Url(..))
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
+import Material.IconButton as IconButton exposing (customIconButton, iconButtonConfig)
 import Material.ImageList exposing (imageList, imageListConfig, imageListItem, imageListItemConfig)
+import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 
 
 view : Html msg
 view =
     Html.div []
-        [ imageList
+        [ topAppBar topAppBarConfig
+            [ TopAppBar.section [ TopAppBar.alignStart ]
+                [ customIconButton
+                    { iconButtonConfig
+                        | additionalAttributes = [ TopAppBar.navigationIcon ]
+                    }
+                    [ Html.img
+                        [ Html.Attributes.src "images/ic_component_24px_white.svg"
+                        ]
+                        []
+                    ]
+                , Html.span
+                    [ TopAppBar.title
+                    , Html.Attributes.style "text-transform" "uppercase"
+                    , Html.Attributes.style "font-weight" "400"
+                    ]
+                    [ text "Material Components for Elm" ]
+                ]
+            ]
+        , imageList
             { imageListConfig
                 | additionalAttributes =
                     [ Html.Attributes.style "max-width" "900px"

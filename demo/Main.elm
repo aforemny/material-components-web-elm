@@ -52,6 +52,7 @@ import Url
 type alias Model =
     { key : Browser.Navigation.Key
     , url : Demo.Url.Url
+    , catalogDrawerOpen : Bool
     , buttons : Demo.Buttons.Model
     , cards : Demo.Cards.Model
     , checkbox : Demo.Checkbox.Model
@@ -93,6 +94,7 @@ defaultModel : Browser.Navigation.Key -> Model
 defaultModel key =
     { key = key
     , url = Demo.Url.StartPage
+    , catalogDrawerOpen = False
     , buttons = Demo.Buttons.defaultModel
     , cards = Demo.Cards.defaultModel
     , checkbox = Demo.Checkbox.defaultModel
@@ -131,9 +133,11 @@ defaultModel key =
 
 
 type Msg
-    = NoOp
-    | UrlChanged Url.Url
+    = UrlChanged Url.Url
     | UrlRequested Browser.UrlRequest
+    | Navigate Demo.Url.Url
+    | OpenCatalogDrawer
+    | CloseCatalogDrawer
     | ButtonsMsg Demo.Buttons.Msg
     | CardsMsg Demo.Cards.Msg
     | CheckboxMsg Demo.Checkbox.Msg
@@ -173,19 +177,23 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NoOp ->
-            ( model, Cmd.none )
-
         UrlRequested (Browser.Internal url) ->
-            ( { model | url = Demo.Url.fromUrl url }
-            , Browser.Navigation.load (Demo.Url.toString (Demo.Url.fromUrl url))
-            )
+            ( model, Browser.Navigation.load (Demo.Url.toString (Demo.Url.fromUrl url)) )
 
         UrlRequested (Browser.External string) ->
             ( model, Cmd.none )
 
         UrlChanged url ->
-            ( { model | url = Demo.Url.fromUrl url }, Cmd.none )
+            ( { model | url = Demo.Url.fromUrl url, catalogDrawerOpen = False }, Cmd.none )
+
+        Navigate url ->
+            ( model, Browser.Navigation.load (Demo.Url.toString url) )
+
+        OpenCatalogDrawer ->
+            ( { model | catalogDrawerOpen = True }, Cmd.none )
+
+        CloseCatalogDrawer ->
+            ( { model | catalogDrawerOpen = False }, Cmd.none )
 
         ButtonsMsg msg_ ->
             ( { model | buttons = Demo.Buttons.update msg_ model.buttons }, Cmd.none )
@@ -357,111 +365,150 @@ view model =
 
 body : Model -> Html Msg
 body model =
+    let
+        catalogPageConfig =
+            { openDrawer = OpenCatalogDrawer
+            , closeDrawer = CloseCatalogDrawer
+            , drawerOpen = model.catalogDrawerOpen
+            , url = model.url
+            , navigate = Navigate
+            }
+    in
     case model.url of
         Demo.Url.StartPage ->
             Demo.Startpage.view
 
         Demo.Url.Button ->
-            CatalogPage.view ButtonsMsg (Demo.Buttons.view model.buttons)
+            CatalogPage.view ButtonsMsg catalogPageConfig (Demo.Buttons.view model.buttons)
 
         Demo.Url.Card ->
-            CatalogPage.view CardsMsg (Demo.Cards.view model.cards)
+            CatalogPage.view CardsMsg catalogPageConfig (Demo.Cards.view model.cards)
 
         Demo.Url.Checkbox ->
-            CatalogPage.view CheckboxMsg (Demo.Checkbox.view model.checkbox)
+            CatalogPage.view CheckboxMsg
+                catalogPageConfig
+                (Demo.Checkbox.view model.checkbox)
 
         Demo.Url.Chips ->
-            CatalogPage.view ChipsMsg (Demo.Chips.view model.chips)
+            CatalogPage.view ChipsMsg catalogPageConfig (Demo.Chips.view model.chips)
 
         Demo.Url.Dialog ->
-            CatalogPage.view DialogMsg (Demo.Dialog.view model.dialog)
+            CatalogPage.view DialogMsg catalogPageConfig (Demo.Dialog.view model.dialog)
 
         Demo.Url.Drawer ->
-            CatalogPage.view DrawerMsg (Demo.Drawer.view model.drawer)
+            CatalogPage.view DrawerMsg catalogPageConfig (Demo.Drawer.view model.drawer)
 
         Demo.Url.DismissibleDrawer ->
-            DrawerPage.view DismissibleDrawerMsg (Demo.DismissibleDrawer.view model.dismissibleDrawer)
+            DrawerPage.view DismissibleDrawerMsg
+                (Demo.DismissibleDrawer.view model.dismissibleDrawer)
 
         Demo.Url.ModalDrawer ->
             DrawerPage.view ModalDrawerMsg (Demo.ModalDrawer.view model.modalDrawer)
 
         Demo.Url.PermanentDrawer ->
-            DrawerPage.view PermanentDrawerMsg (Demo.PermanentDrawer.view model.permanentDrawer)
+            DrawerPage.view PermanentDrawerMsg
+                (Demo.PermanentDrawer.view model.permanentDrawer)
 
         Demo.Url.Elevation ->
-            CatalogPage.view ElevationMsg (Demo.Elevation.view model.elevation)
+            CatalogPage.view ElevationMsg
+                catalogPageConfig
+                (Demo.Elevation.view model.elevation)
 
-        Demo.Url.Fabs ->
-            CatalogPage.view FabsMsg (Demo.Fabs.view model.fabs)
+        Demo.Url.Fab ->
+            CatalogPage.view FabsMsg catalogPageConfig (Demo.Fabs.view model.fabs)
 
         Demo.Url.IconButton ->
-            CatalogPage.view IconButtonMsg (Demo.IconButton.view model.iconButton)
+            CatalogPage.view IconButtonMsg
+                catalogPageConfig
+                (Demo.IconButton.view model.iconButton)
 
         Demo.Url.ImageList ->
-            CatalogPage.view ImageListMsg (Demo.ImageList.view model.imageList)
+            CatalogPage.view ImageListMsg
+                catalogPageConfig
+                (Demo.ImageList.view model.imageList)
 
         Demo.Url.LinearProgress ->
-            CatalogPage.view LinearProgressMsg (Demo.LinearProgress.view model.linearProgress)
+            CatalogPage.view LinearProgressMsg
+                catalogPageConfig
+                (Demo.LinearProgress.view model.linearProgress)
 
         Demo.Url.List ->
-            CatalogPage.view ListsMsg (Demo.Lists.view model.lists)
+            CatalogPage.view ListsMsg catalogPageConfig (Demo.Lists.view model.lists)
 
         Demo.Url.RadioButton ->
-            CatalogPage.view RadioButtonsMsg (Demo.RadioButtons.view model.radio)
+            CatalogPage.view RadioButtonsMsg
+                catalogPageConfig
+                (Demo.RadioButtons.view model.radio)
 
         Demo.Url.Select ->
-            CatalogPage.view SelectMsg (Demo.Selects.view model.selects)
+            CatalogPage.view SelectMsg catalogPageConfig (Demo.Selects.view model.selects)
 
         Demo.Url.Menu ->
-            CatalogPage.view MenuMsg (Demo.Menus.view model.menus)
+            CatalogPage.view MenuMsg catalogPageConfig (Demo.Menus.view model.menus)
 
         Demo.Url.Slider ->
-            CatalogPage.view SliderMsg (Demo.Slider.view model.slider)
+            CatalogPage.view SliderMsg catalogPageConfig (Demo.Slider.view model.slider)
 
         Demo.Url.Snackbar ->
-            CatalogPage.view SnackbarMsg (Demo.Snackbar.view model.snackbar)
+            CatalogPage.view SnackbarMsg
+                catalogPageConfig
+                (Demo.Snackbar.view model.snackbar)
 
         Demo.Url.Switch ->
-            CatalogPage.view SwitchMsg (Demo.Switch.view model.switch)
+            CatalogPage.view SwitchMsg catalogPageConfig (Demo.Switch.view model.switch)
 
         Demo.Url.TabBar ->
-            CatalogPage.view TabBarMsg (Demo.TabBar.view model.tabbar)
+            CatalogPage.view TabBarMsg catalogPageConfig (Demo.TabBar.view model.tabbar)
 
         Demo.Url.TextField ->
-            CatalogPage.view TextFieldMsg (Demo.TextFields.view model.textfields)
+            CatalogPage.view TextFieldMsg
+                catalogPageConfig
+                (Demo.TextFields.view model.textfields)
 
         Demo.Url.Theme ->
-            CatalogPage.view ThemeMsg (Demo.Theme.view model.theme)
+            CatalogPage.view ThemeMsg catalogPageConfig (Demo.Theme.view model.theme)
 
         Demo.Url.TopAppBar ->
-            CatalogPage.view TopAppBarMsg (Demo.TopAppBar.view model.topAppBar)
+            CatalogPage.view TopAppBarMsg
+                catalogPageConfig
+                (Demo.TopAppBar.view model.topAppBar)
 
         Demo.Url.StandardTopAppBar ->
-            TopAppBarPage.view StandardTopAppBarMsg (Demo.StandardTopAppBar.view model.standardTopAppBar)
+            TopAppBarPage.view StandardTopAppBarMsg
+                (Demo.StandardTopAppBar.view model.standardTopAppBar)
 
         Demo.Url.FixedTopAppBar ->
-            TopAppBarPage.view FixedTopAppBarMsg (Demo.FixedTopAppBar.view model.fixedTopAppBar)
+            TopAppBarPage.view FixedTopAppBarMsg
+                (Demo.FixedTopAppBar.view model.fixedTopAppBar)
 
         Demo.Url.ProminentTopAppBar ->
-            TopAppBarPage.view ProminentTopAppBarMsg (Demo.ProminentTopAppBar.view model.prominentTopAppBar)
+            TopAppBarPage.view ProminentTopAppBarMsg
+                (Demo.ProminentTopAppBar.view model.prominentTopAppBar)
 
         Demo.Url.ShortTopAppBar ->
-            TopAppBarPage.view ShortTopAppBarMsg (Demo.ShortTopAppBar.view model.shortTopAppBar)
+            TopAppBarPage.view ShortTopAppBarMsg
+                (Demo.ShortTopAppBar.view model.shortTopAppBar)
 
         Demo.Url.DenseTopAppBar ->
-            TopAppBarPage.view DenseTopAppBarMsg (Demo.DenseTopAppBar.view model.denseTopAppBar)
+            TopAppBarPage.view DenseTopAppBarMsg
+                (Demo.DenseTopAppBar.view model.denseTopAppBar)
 
         Demo.Url.ShortCollapsedTopAppBar ->
-            TopAppBarPage.view ShortCollapsedTopAppBarMsg (Demo.ShortCollapsedTopAppBar.view model.shortCollapsedTopAppBar)
+            TopAppBarPage.view ShortCollapsedTopAppBarMsg
+                (Demo.ShortCollapsedTopAppBar.view model.shortCollapsedTopAppBar)
 
         Demo.Url.LayoutGrid ->
-            CatalogPage.view LayoutGridMsg (Demo.LayoutGrid.view model.layoutGrid)
+            CatalogPage.view LayoutGridMsg
+                catalogPageConfig
+                (Demo.LayoutGrid.view model.layoutGrid)
 
         Demo.Url.Ripple ->
-            CatalogPage.view RippleMsg (Demo.Ripple.view model.ripple)
+            CatalogPage.view RippleMsg catalogPageConfig (Demo.Ripple.view model.ripple)
 
         Demo.Url.Typography ->
-            CatalogPage.view TypographyMsg (Demo.Typography.view model.typography)
+            CatalogPage.view TypographyMsg
+                catalogPageConfig
+                (Demo.Typography.view model.typography)
 
         Demo.Url.Error404 requestedHash ->
             Html.div

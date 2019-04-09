@@ -20,7 +20,7 @@ type Url
     | ModalDrawer
     | PermanentDrawer
     | Elevation
-    | Fabs
+    | Fab
     | IconButton
     | ImageList
     | LayoutGrid
@@ -83,7 +83,7 @@ toString url =
         Elevation ->
             "#elevation"
 
-        Fabs ->
+        Fab ->
             "#fab"
 
         IconButton ->
@@ -201,7 +201,7 @@ fromString url =
             Elevation
 
         "fab" ->
-            Fabs
+            Fab
 
         "icon-button" ->
             IconButton

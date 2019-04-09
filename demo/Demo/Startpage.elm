@@ -66,7 +66,7 @@ view =
                   , title = "Elevation"
                   , subtitle = "Shadow for different elevations"
                   }
-                , { url = Fabs
+                , { url = Fab
                   , icon = "images/floating_action_button_180px.svg"
                   , title = "FAB"
                   , subtitle = "The primary action in an application"

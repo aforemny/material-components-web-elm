@@ -1,8 +1,11 @@
 module Demo.CatalogPage exposing (CatalogPage, CatalogPageResources, view)
 
-import Demo.Url as Url
+import Demo.Url as Url exposing (Url)
 import Html exposing (Html, text)
 import Html.Attributes
+import Html.Events
+import Json.Decode as Decode
+import Material.Drawer as Drawer exposing (dismissibleDrawer, drawerConfig, drawerContent)
 import Material.Icon exposing (icon, iconConfig)
 import Material.IconButton exposing (iconButton, iconButtonConfig)
 import Material.List exposing (list, listConfig, listItem, listItemConfig, listItemGraphic)
@@ -26,30 +29,86 @@ type alias CatalogPageResources =
     }
 
 
-view : (msg -> topMsg) -> CatalogPage msg -> Html topMsg
-view lift catalogPage =
-    Html.map lift <|
-        Html.div catalogPageContainer
-            [ topAppBar topAppBarConfig
-                [ TopAppBar.section [ TopAppBar.alignStart ]
-                    [ Html.a
-                        [ Html.Attributes.href (Url.toString Url.StartPage) ]
-                        [ iconButton
-                            { iconButtonConfig
-                                | additionalAttributes = [ TopAppBar.navigationIcon ]
-                            }
-                            "menu"
+type alias CatalogPageConfig topMsg =
+    { openDrawer : topMsg
+    , closeDrawer : topMsg
+    , drawerOpen : Bool
+    , url : Url
+    , navigate : Url -> topMsg
+    }
+
+
+view : (msg -> topMsg) -> CatalogPageConfig topMsg -> CatalogPage msg -> Html topMsg
+view lift catalogPageConfig catalogPage =
+    let
+        toggleCatalogDrawer =
+            if catalogPageConfig.drawerOpen then
+                catalogPageConfig.closeDrawer
+
+            else
+                catalogPageConfig.openDrawer
+    in
+    Html.div catalogPageContainer
+        [ topAppBar topAppBarConfig
+            [ TopAppBar.section [ TopAppBar.alignStart ]
+                [ iconButton
+                    { iconButtonConfig
+                        | additionalAttributes = [ TopAppBar.navigationIcon ]
+                        , onClick = Just toggleCatalogDrawer
+                    }
+                    "menu"
+                , Html.span
+                    [ TopAppBar.title
+                    , Html.Attributes.style "text-transform" "uppercase"
+                    , Html.Attributes.style "font-weight" "400"
+                    ]
+                    [ text "Material Components for Elm" ]
+                ]
+            ]
+        , Html.div demoPanel
+            [ dismissibleDrawer
+                { drawerConfig
+                    | open = catalogPageConfig.drawerOpen
+                    , additionalAttributes =
+                        [ TopAppBar.fixedAdjust
+                        , Html.Attributes.style "z-index" "1"
                         ]
-                    , Html.span
-                        [ TopAppBar.title
-                        , Html.Attributes.style "text-transform" "uppercase"
-                        , Html.Attributes.style "font-weight" "400"
-                        ]
-                        [ text "Material Components for Elm" ]
+                }
+                [ drawerContent []
+                    [ list listConfig
+                        (List.map
+                            (\{ url, label } ->
+                                listItem
+                                    { listItemConfig
+                                        | activated = catalogPageConfig.url == url
+                                        , onClick =
+                                            Just (catalogPageConfig.navigate url)
+                                        , additionalAttributes =
+                                            [ Html.Events.on "keydown"
+                                                (Html.Events.keyCode
+                                                    |> Decode.andThen
+                                                        (\keyCode ->
+                                                            if
+                                                                (keyCode == 32)
+                                                                    || (keyCode == 13)
+                                                            then
+                                                                Decode.succeed
+                                                                    (catalogPageConfig.navigate url)
+
+                                                            else
+                                                                Decode.fail ""
+                                                        )
+                                                )
+                                            ]
+                                    }
+                                    [ text label ]
+                            )
+                            catalogDrawerItems
+                        )
                     ]
                 ]
-            , Html.div demoPanel
-                [ Html.div (TopAppBar.fixedAdjust :: demoContent)
+            , Html.map lift <|
+                Html.div (TopAppBar.fixedAdjust :: Drawer.appContent :: demoContent)
                     [ Html.div demoContentTransition
                         (Html.h1 [ Typography.headline5 ] [ text catalogPage.title ]
                             :: Html.p [ Typography.body1 ] [ text catalogPage.prelude ]
@@ -62,8 +121,8 @@ view lift catalogPage =
                             :: catalogPage.content
                         )
                     ]
-                ]
             ]
+        ]
 
 
 resourcesList : CatalogPageResources -> Html msg
@@ -100,6 +159,37 @@ resourcesList { materialDesignGuidelines, documentation, sourceCode } =
             , text "Source Code"
             ]
         ]
+
+
+catalogDrawerItems : List { label : String, url : Url }
+catalogDrawerItems =
+    [ { label = "Home", url = Url.StartPage }
+    , { label = "Button", url = Url.Button }
+    , { label = "Card", url = Url.Card }
+    , { label = "Checkbox", url = Url.Checkbox }
+    , { label = "Chips", url = Url.Chips }
+    , { label = "Dialog", url = Url.Dialog }
+    , { label = "Drawer", url = Url.Drawer }
+    , { label = "Elevation", url = Url.Elevation }
+    , { label = "FAB", url = Url.Fab }
+    , { label = "Icon Button", url = Url.IconButton }
+    , { label = "Image List", url = Url.ImageList }
+    , { label = "Layout Grid", url = Url.LayoutGrid }
+    , { label = "Linear Progress Indicator", url = Url.LinearProgress }
+    , { label = "List", url = Url.List }
+    , { label = "Menu", url = Url.Menu }
+    , { label = "Radio Button", url = Url.RadioButton }
+    , { label = "Ripple", url = Url.Ripple }
+    , { label = "Select", url = Url.Select }
+    , { label = "Slider", url = Url.Slider }
+    , { label = "Snackbar", url = Url.Snackbar }
+    , { label = "Switch", url = Url.Switch }
+    , { label = "Tab Bar", url = Url.TabBar }
+    , { label = "Text Field", url = Url.TextField }
+    , { label = "Theme", url = Url.Theme }
+    , { label = "Top App Bar", url = Url.TopAppBar }
+    , { label = "Typography", url = Url.Typography }
+    ]
 
 
 catalogPageContainer : List (Html.Attribute msg)

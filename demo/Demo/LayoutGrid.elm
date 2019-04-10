@@ -146,7 +146,7 @@ cellAlignmentGrid =
             [ Html.Attributes.style "min-height" "200px" ]
 
         cellHeight =
-            Html.Attributes.style "min-height" "50px"
+            Html.Attributes.style "max-height" "50px"
     in
     demoGrid
         [ Html.Attributes.style "min-height" "200px"

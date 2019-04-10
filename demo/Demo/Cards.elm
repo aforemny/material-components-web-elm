@@ -4,7 +4,7 @@ import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Button exposing (button, buttonConfig)
+import Material.Button exposing (buttonConfig)
 import Material.Card as Card exposing (CardActions, CardBlock, card, cardActionButton, cardActionIcon, cardActions, cardBlock, cardConfig, cardMedia, cardMediaConfig, cardPrimaryAction, cardPrimaryActionConfig)
 import Material.Icon exposing (icon, iconConfig)
 import Material.Theme as Theme

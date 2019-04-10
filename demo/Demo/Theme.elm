@@ -3,7 +3,7 @@ module Demo.Theme exposing (Model, Msg, defaultModel, update, view)
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Button exposing (buttonConfig, raisedButton)
+import Material.Button exposing (buttonConfig, outlinedButton, raisedButton, textButton)
 import Material.Elevation as Elevation
 import Material.Theme as Theme
 import Material.Typography as Typography
@@ -37,16 +37,21 @@ view model =
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme"
         }
     , hero =
-        [ raisedButton
+        [ textButton
             { buttonConfig
-                | additionalAttributes = [ Html.Attributes.style "margin" "24px" ]
+                | additionalAttributes = heroMargin
             }
-            "Primary"
+            "Text"
         , raisedButton
             { buttonConfig
-                | additionalAttributes = [ Html.Attributes.style "margin" "24px" ]
+                | additionalAttributes = heroMargin
             }
-            "Secondary"
+            "Raised"
+        , outlinedButton
+            { buttonConfig
+                | additionalAttributes = heroMargin
+            }
+            "Outlined"
         ]
     , content =
         [ Html.legend [ Typography.subtitle1 ] [ text "Theme colors as text" ]
@@ -170,6 +175,11 @@ textOnDarkBackground =
                 [ text "favorite" ]
             ]
         ]
+
+
+heroMargin : List (Html.Attribute msg)
+heroMargin =
+    [ Html.Attributes.style "margin" "16px 32px" ]
 
 
 demoThemeColorGroup : List (Html.Attribute msg)

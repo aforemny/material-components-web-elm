@@ -93,7 +93,7 @@ type alias Model =
 defaultModel : Browser.Navigation.Key -> Model
 defaultModel key =
     { key = key
-    , url = Demo.Url.StartPage
+    , url = Demo.Url.Button
     , catalogDrawerOpen = False
     , buttons = Demo.Buttons.defaultModel
     , cards = Demo.Cards.defaultModel
@@ -184,7 +184,17 @@ update msg model =
             ( model, Cmd.none )
 
         UrlChanged url ->
-            ( { model | url = Demo.Url.fromUrl url, catalogDrawerOpen = False }, Cmd.none )
+            ( { model
+                | url = Demo.Url.fromUrl url
+                , catalogDrawerOpen =
+                    if Demo.Url.fromUrl url /= Demo.Url.StartPage then
+                        model.catalogDrawerOpen
+
+                    else
+                        False
+              }
+            , Cmd.none
+            )
 
         Navigate url ->
             ( model, Browser.Navigation.load (Demo.Url.toString url) )

@@ -6,7 +6,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Decode
-import Material.Button exposing (button, buttonConfig)
+import Material.Button exposing (buttonConfig, textButton)
 import Material.List exposing (ListItemConfig, list, listConfig, listItem, listItemConfig, listItemDivider, listItemDividerConfig)
 import Material.Menu exposing (menu, menuConfig, menuSurfaceAnchor)
 import Material.Typography as Typography
@@ -49,7 +49,7 @@ view model =
     , content =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Anchored menu" ]
         , Html.div [ menuSurfaceAnchor ]
-            [ button { buttonConfig | onClick = Just Open } "Open menu"
+            [ textButton { buttonConfig | onClick = Just Open } "Open menu"
             , menu { menuConfig | open = model.open, onClose = Just Close }
                 [ list listConfig
                     [ listItem menuItemConfig [ text "Passionfruit" ]

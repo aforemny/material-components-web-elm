@@ -11,10 +11,7 @@ class MdcTopAppBar extends HTMLElement {
   }
 
   disconnectedCallback() {
-    if (typeof this.mdcComponent !== "undefined") {
-      this.mdcComponent.destroy();
-      delete this.mdcComponent;
-    }
+    this.mdcComponent.destroy();
   }
 };
 

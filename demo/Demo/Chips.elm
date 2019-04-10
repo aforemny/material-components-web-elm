@@ -7,7 +7,7 @@ import Html.Attributes
 import Material.Chip.Choice exposing (choiceChip, choiceChipConfig)
 import Material.Chip.Filter exposing (filterChip, filterChipConfig)
 import Material.Chip.Input exposing (inputChip, inputChipConfig)
-import Material.ChipSet exposing (chipSet)
+import Material.ChipSet exposing (choiceChipSet, filterChipSet, inputChipSet)
 import Material.Typography as Typography
 import Set exposing (Set)
 
@@ -97,7 +97,7 @@ view model =
 
 heroChips : List (Html msg)
 heroChips =
-    [ chipSet []
+    [ choiceChipSet []
         [ choiceChip choiceChipConfig "Chip One"
         , choiceChip choiceChipConfig "Chip Two"
         , choiceChip choiceChipConfig "Chip Three"
@@ -117,7 +117,7 @@ choiceChips model =
                 }
                 label
     in
-    chipSet []
+    choiceChipSet []
         [ chip "chips-choice-extra-small" "Extra Small"
         , chip "chips-choice-small" "Small"
         , chip "chips-choice-medium" "Medium"
@@ -137,7 +137,7 @@ filterChips1 model =
                 }
                 label
     in
-    chipSet []
+    filterChipSet []
         [ chip "chips-filter-chips-tops" "Tops"
         , chip "chips-filter-chips-bottoms" "Bottoms"
         , chip "chips-filter-chips-shoes" "Shoes"
@@ -157,7 +157,7 @@ filterChips2 model =
                 }
                 label
     in
-    chipSet []
+    filterChipSet []
         [ chip "chips-filter-chips-alice" "Alice"
         , chip "chips-filter-chips-bob" "Bob"
         , chip "chips-filter-chips-charlie" "Charlie"
@@ -176,7 +176,7 @@ actionChips model =
                 }
                 label
     in
-    chipSet []
+    choiceChipSet []
         [ chip "chips-action-chips-add-to-calendar" ( "event", "Add to calendar" )
         , chip "chips-action-chips-bookmark" ( "bookmark", "Bookmark" )
         , chip "chips-action-chips-set-alarm" ( "alarm", "Set alarm" )
@@ -195,7 +195,7 @@ shapedChips model =
                 }
                 label
     in
-    chipSet []
+    choiceChipSet []
         [ chip "chips-shaped-chips-bookcase" "Bookcase"
         , chip "chips-shaped-chips-tv-stand" "TV Stand"
         , chip "chips-shaped-chips-sofas" "Sofas"

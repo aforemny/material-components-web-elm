@@ -5,7 +5,7 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 import Html.Events
-import Material.Button exposing (button, buttonConfig)
+import Material.Button exposing (buttonConfig, textButton)
 import Material.Dialog exposing (dialog, dialogConfig)
 import Material.Icon exposing (icon, iconConfig)
 import Material.List exposing (list, listConfig, listItem, listItemConfig, listItemGraphic, listItemText)
@@ -50,19 +50,19 @@ view model =
         }
     , hero = heroDialog
     , content =
-        [ button
+        [ textButton
             { buttonConfig | onClick = Just (Show "dialog-alert-dialog") }
             "Alert"
         , text " "
-        , button
+        , textButton
             { buttonConfig | onClick = Just (Show "dialog-simple-dialog") }
             "Simple"
         , text " "
-        , button
+        , textButton
             { buttonConfig | onClick = Just (Show "dialog-confirmation-dialog") }
             "Confirmation"
         , text " "
-        , button
+        , textButton
             { buttonConfig | onClick = Just (Show "dialog-scrollable-dialog") }
             "Scrollable"
         , text " "
@@ -86,8 +86,8 @@ heroDialog =
             , Html.div [ class "mdc-dialog__content" ]
                 [ text "Turn up the jams and have a good time." ]
             , Html.div [ class "mdc-dialog__actions" ]
-                [ button buttonConfig "Decline"
-                , button buttonConfig "Accept"
+                [ textButton buttonConfig "Decline"
+                , textButton buttonConfig "Accept"
                 ]
             ]
         ]
@@ -105,8 +105,8 @@ alertDialog model =
         , content =
             [ text "Discard draft?" ]
         , actions =
-            [ button { buttonConfig | onClick = Just Close } "Cancel"
-            , button { buttonConfig | onClick = Just Close } "Discard"
+            [ textButton { buttonConfig | onClick = Just Close } "Cancel"
+            , textButton { buttonConfig | onClick = Just Close } "Discard"
             ]
         }
 
@@ -194,8 +194,8 @@ confirmationDialog model =
                 ]
             ]
         , actions =
-            [ button { buttonConfig | onClick = Just Close } "Cancel"
-            , button { buttonConfig | onClick = Just Close } "OK"
+            [ textButton { buttonConfig | onClick = Just Close } "Cancel"
+            , textButton { buttonConfig | onClick = Just Close } "OK"
             ]
         }
 
@@ -297,7 +297,7 @@ scrollableDialog model =
                 ]
             ]
         , actions =
-            [ button { buttonConfig | onClick = Just Close } "Decline"
-            , button { buttonConfig | onClick = Just Close } "Continue"
+            [ textButton { buttonConfig | onClick = Just Close } "Decline"
+            , textButton { buttonConfig | onClick = Just Close } "Continue"
             ]
         }

@@ -16,7 +16,7 @@ import Set exposing (Set)
 
 type alias Model =
     { checkboxIndices : Set Int
-    , radioIndex : Int
+    , radioIndex : Maybe Int
     , activatedIndex : Int
     , shapedActivatedIndex : Int
     }
@@ -25,7 +25,7 @@ type alias Model =
 defaultModel : Model
 defaultModel =
     { checkboxIndices = Set.empty
-    , radioIndex = 3
+    , radioIndex = Nothing
     , activatedIndex = 1
     , shapedActivatedIndex = 1
     }
@@ -52,7 +52,7 @@ update msg model =
             }
 
         SetRadio index ->
-            { model | radioIndex = index }
+            { model | radioIndex = Just index }
 
         SetActivated index ->
             { model | activatedIndex = index }
@@ -350,7 +350,7 @@ listWithTrailingRadioButton model =
         radio_ index =
             radio
                 { radioConfig
-                    | checked = model.radioIndex == index
+                    | checked = model.radioIndex == Just index
                     , onClick = Just (SetRadio index)
                 }
     in

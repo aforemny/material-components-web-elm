@@ -241,7 +241,7 @@ type Button msg
 cardActionButton : ButtonConfig msg -> String -> Button msg
 cardActionButton buttonConfig label =
     Button <|
-        Material.Button.button
+        Material.Button.textButton
             { buttonConfig
                 | additionalAttributes =
                     class "mdc-card__action"

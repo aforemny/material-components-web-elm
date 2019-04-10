@@ -4,7 +4,7 @@ import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Button exposing (ButtonConfig, button, buttonConfig, outlinedButton, raisedButton, unelevatedButton)
+import Material.Button exposing (ButtonConfig, buttonConfig, outlinedButton, raisedButton, textButton, unelevatedButton)
 import Material.Typography as Typography
 
 
@@ -53,7 +53,7 @@ view model =
 
 heroButtons : List (Html msg)
 heroButtons =
-    [ button { buttonConfig | additionalAttributes = heroMargin } "Text"
+    [ textButton { buttonConfig | additionalAttributes = heroMargin } "Text"
     , raisedButton { buttonConfig | additionalAttributes = heroMargin } "Raised"
     , unelevatedButton { buttonConfig | additionalAttributes = heroMargin } "Unelevated"
     , outlinedButton { buttonConfig | additionalAttributes = heroMargin } "Outlined"
@@ -62,7 +62,7 @@ heroButtons =
 
 textButtons : Html msg
 textButtons =
-    buttonsRow button buttonConfig
+    buttonsRow textButton buttonConfig
 
 
 raisedButtons : Html msg

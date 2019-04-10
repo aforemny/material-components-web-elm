@@ -1,9 +1,9 @@
 module Material.Button exposing
     ( ButtonConfig
-    , button
     , buttonConfig
     , outlinedButton
     , raisedButton
+    , textButton
     , unelevatedButton
     )
 
@@ -42,8 +42,8 @@ type Variant
     | Outlined
 
 
-button : ButtonConfig msg -> String -> Html msg
-button config label =
+textButton : ButtonConfig msg -> String -> Html msg
+textButton config label =
     Html.node "mdc-button"
         (List.filterMap identity
             [ rootCs
@@ -64,17 +64,17 @@ button config label =
 
 raisedButton : ButtonConfig msg -> String -> Html msg
 raisedButton config label =
-    button { config | variant = Raised } label
+    textButton { config | variant = Raised } label
 
 
 unelevatedButton : ButtonConfig msg -> String -> Html msg
 unelevatedButton config label =
-    button { config | variant = Unelevated } label
+    textButton { config | variant = Unelevated } label
 
 
 outlinedButton : ButtonConfig msg -> String -> Html msg
 outlinedButton config label =
-    button { config | variant = Outlined } label
+    textButton { config | variant = Outlined } label
 
 
 rootCs : Maybe (Html.Attribute msg)

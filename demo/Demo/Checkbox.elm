@@ -94,4 +94,4 @@ controlledCheckbox index model additionalAttributes =
 
 heroMargin : List (Html.Attribute msg)
 heroMargin =
-    [ Html.Attributes.style "margin" "8px" ]
+    [ Html.Attributes.style "margin" "8px 16px" ]

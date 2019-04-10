@@ -112,7 +112,12 @@ standardItem url =
 
 masonryItem : String -> ImageListItem msg
 masonryItem url =
-    imageListItem { imageListItemConfig | label = Just "Text label" } url
+    imageListItem
+        { imageListItemConfig
+            | label = Just "Text label"
+            , additionalAttributes = [ Html.Attributes.style "margin-bottom" "16px" ]
+        }
+        url
 
 
 standardImages : List String

@@ -21,8 +21,7 @@ type alias DrawerPage msg =
 view : (msg -> topMsg) -> DrawerPage msg -> Html topMsg
 view lift { title, drawer, scrim, onMenuClick } =
     Html.map lift <|
-        Html.div
-            [ Html.Attributes.style "height" "100vh" ]
+        Html.div drawerFrameRoot
             [ drawer
             , Maybe.withDefault (text "") scrim
             , Html.div [ Drawer.appContent ]
@@ -141,3 +140,11 @@ mainContent =
 loremIpsum : String
 loremIpsum =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
+
+drawerFrameRoot : List (Html.Attribute msg)
+drawerFrameRoot =
+    [ Html.Attributes.style "display" "-ms-flexbox"
+    , Html.Attributes.style "display" "flex"
+    , Html.Attributes.style "height" "100vh"
+    ]

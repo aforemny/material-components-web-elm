@@ -50,19 +50,21 @@ view lift catalogPageConfig catalogPage =
     in
     Html.div catalogPageContainer
         [ topAppBar topAppBarConfig
-            [ TopAppBar.section [ TopAppBar.alignStart ]
-                [ iconButton
-                    { iconButtonConfig
-                        | additionalAttributes = [ TopAppBar.navigationIcon ]
-                        , onClick = Just toggleCatalogDrawer
-                    }
-                    "menu"
-                , Html.span
-                    [ TopAppBar.title
-                    , Html.Attributes.style "text-transform" "uppercase"
-                    , Html.Attributes.style "font-weight" "400"
+            [ TopAppBar.row []
+                [ TopAppBar.section [ TopAppBar.alignStart ]
+                    [ iconButton
+                        { iconButtonConfig
+                            | additionalAttributes = [ TopAppBar.navigationIcon ]
+                            , onClick = Just toggleCatalogDrawer
+                        }
+                        "menu"
+                    , Html.span
+                        [ TopAppBar.title
+                        , Html.Attributes.style "text-transform" "uppercase"
+                        , Html.Attributes.style "font-weight" "400"
+                        ]
+                        [ text "Material Components for Elm" ]
                     ]
-                    [ text "Material Components for Elm" ]
                 ]
             ]
         , Html.div demoPanel
@@ -194,7 +196,9 @@ catalogDrawerItems =
 
 catalogPageContainer : List (Html.Attribute msg)
 catalogPageContainer =
-    [ Html.Attributes.style "position" "relative" ]
+    [ Html.Attributes.style "position" "relative"
+    , Typography.typography
+    ]
 
 
 demoPanel : List (Html.Attribute msg)
@@ -232,6 +236,7 @@ demoContent =
 demoContentTransition : List (Html.Attribute msg)
 demoContentTransition =
     [ Html.Attributes.style "max-width" "900px"
+    , Html.Attributes.style "width" "100%"
     ]
 
 

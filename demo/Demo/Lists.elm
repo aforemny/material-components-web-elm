@@ -274,17 +274,6 @@ listWithTrailingCheckbox model =
                          else
                             "false"
                         )
-                    , Html.Events.on "keydown"
-                        (Html.Events.keyCode
-                            |> Decode.andThen
-                                (\keyCode ->
-                                    if keyCode == 32 || keyCode == 13 then
-                                        Decode.succeed (ToggleCheckbox index)
-
-                                    else
-                                        Decode.fail ""
-                                )
-                        )
                     ]
             }
 
@@ -330,22 +319,7 @@ listWithTrailingRadioButton : Model -> Html Msg
 listWithTrailingRadioButton model =
     let
         listItemConfig_ index =
-            { listItemConfig
-                | onClick = Just (SetRadio index)
-                , additionalAttributes =
-                    [ Html.Events.on "keydown"
-                        (Html.Events.keyCode
-                            |> Decode.andThen
-                                (\keyCode ->
-                                    if keyCode == 32 || keyCode == 13 then
-                                        Decode.succeed (SetRadio index)
-
-                                    else
-                                        Decode.fail ""
-                                )
-                        )
-                    ]
-            }
+            { listItemConfig | onClick = Just (SetRadio index) }
 
         radio_ index =
             radio

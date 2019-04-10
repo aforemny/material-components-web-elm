@@ -57,19 +57,6 @@ drawerBody setSelectedIndex selectedIndex =
             { listItemConfig
                 | activated = selectedIndex == index
                 , onClick = Just (setSelectedIndex index)
-                , additionalAttributes =
-                    [ Html.Events.on "keydown"
-                        (Html.Events.keyCode
-                            |> Decode.andThen
-                                (\keyCode ->
-                                    if keyCode == 32 || keyCode == 13 then
-                                        Decode.succeed (setSelectedIndex index)
-
-                                    else
-                                        Decode.fail ""
-                                )
-                        )
-                    ]
             }
     in
     [ drawerHeader

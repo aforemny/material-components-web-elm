@@ -70,22 +70,7 @@ view model =
 
 menuItemConfig : ListItemConfig Msg
 menuItemConfig =
-    { listItemConfig
-        | onClick = Just Close
-        , additionalAttributes =
-            [ Html.Events.on "keydown"
-                (Html.Events.keyCode
-                    |> Decode.andThen
-                        (\keyCode ->
-                            if keyCode == 32 || keyCode == 13 then
-                                Decode.succeed Close
-
-                            else
-                                Decode.fail ""
-                        )
-                )
-            ]
-    }
+    { listItemConfig | onClick = Just Close }
 
 
 heroMenu : Model -> Html msg

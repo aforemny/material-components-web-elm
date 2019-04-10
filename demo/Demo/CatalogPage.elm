@@ -83,25 +83,7 @@ view lift catalogPageConfig catalogPage =
                                 listItem
                                     { listItemConfig
                                         | activated = catalogPageConfig.url == url
-                                        , onClick =
-                                            Just (catalogPageConfig.navigate url)
-                                        , additionalAttributes =
-                                            [ Html.Events.on "keydown"
-                                                (Html.Events.keyCode
-                                                    |> Decode.andThen
-                                                        (\keyCode ->
-                                                            if
-                                                                (keyCode == 32)
-                                                                    || (keyCode == 13)
-                                                            then
-                                                                Decode.succeed
-                                                                    (catalogPageConfig.navigate url)
-
-                                                            else
-                                                                Decode.fail ""
-                                                        )
-                                                )
-                                            ]
+                                        , onClick = Just (catalogPageConfig.navigate url)
                                     }
                                     [ text label ]
                             )

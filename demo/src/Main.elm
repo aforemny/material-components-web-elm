@@ -368,7 +368,7 @@ update msg model =
 
 view : Model -> Browser.Document Msg
 view model =
-    { title = "The elm-mdc library"
+    { title = "Material Components for Elm"
     , body = [ body model ]
     }
 

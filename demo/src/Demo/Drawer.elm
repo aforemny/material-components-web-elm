@@ -112,7 +112,7 @@ iframe label url =
         [ Html.div
             []
             [ Html.a
-                [ Html.Attributes.href ("page.html" ++ url)
+                [ Html.Attributes.href url
                 , Html.Attributes.target "_blank"
                 ]
                 [ Html.h3
@@ -123,7 +123,7 @@ iframe label url =
                 ]
             ]
         , Html.iframe
-            [ Html.Attributes.src ("./page.html" ++ url)
+            [ Html.Attributes.src url
             , Html.Attributes.style "height" "400px"
             , Html.Attributes.style "width" "100vw"
             , Html.Attributes.style "max-width" "780px"

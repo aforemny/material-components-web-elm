@@ -1,8 +1,54 @@
 {
-    "type": "application",
+    "type": "package",
+    "name": "aforemny/material-components-elm",
+    "summary": "TODO",
+    "license": "MIT",
+    "version": "0.0.0",
+    "exposed-modules": [
+        "Material": [
+            "Button",
+            "Card",
+            "Checkbox",
+            "Chip": [
+                "Choice", "Filter", "Input"
+            ],
+            "ChipSet",
+            "Dialog",
+            "Drawer",
+            "Elevation",
+            "Fab",
+            "Fab": [
+                "Extended"
+            ],
+            "FormField",
+            "Icon",
+            "IconButton",
+            "ImageList",
+            "LayoutGrid",
+            "LinearProgress",
+            "List",
+            "Menu",
+            "Radio",
+            "Ripple",
+            "Select",
+            "Select": [
+                "Enhanced"
+            ],
+            "Slider",
+            "Snackbar",
+            "Switch",
+            "TabBar",
+            "TextField",
+            "TextField": [
+                "HelperText"
+            ],
+            "Theme",
+            "TopAppBar",
+            "Typography"
+        ]
+    ],
     "source-directories": [
-        "src",
-        "demo"
+        "src"
     ],
     "elm-version": "0.19.0",
     "dependencies": {

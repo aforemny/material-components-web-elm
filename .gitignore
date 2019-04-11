@@ -1,4 +1,5 @@
 elm-stuff
-demo.js
 node_modules
 dist
+gh-pages
+demo/demo.js

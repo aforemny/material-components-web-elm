@@ -15,6 +15,11 @@ and refer to the [Demo's source code](demo) for documentation.
 <script src="https://aforemny.github.io/material-components-elm/material-components-elm.min.js"></script>
 ```
 
+Refer to the [simple counter example](examples/simple-counter) for a minimal
+starting point, specifically to the files
+[`src/Main.elm`](examples/simple-counter/src/Main.elm) and
+[`page.html`](examples/simple-counter/page.html).
+
 ## Contributions
 
 Please [share your

@@ -14,6 +14,7 @@ pages:
 	cp demo/page.html gh-pages/index.html
 	cp demo/demo.js gh-pages
 	cp dist/material-components-elm.min.js dist/material-components-elm.min.css gh-pages
+	(cd gh-pages && git add . && git commit -m 'Update' && git push)
 
 node_modules:
 	npm install

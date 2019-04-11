@@ -1,6 +1,6 @@
 import { MDCTextFieldHelperText } from "@material/textfield/helper-text/index";
 
-class MdcTextField extends HTMLElement {
+class MdcHelperText extends HTMLElement {
 
   constructor() {
     super();

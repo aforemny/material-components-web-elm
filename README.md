@@ -11,7 +11,7 @@ and refer to the [Demo's source code](demo) for documentation.
 ```html
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" type="text/css" href="https://aforemny.github.io/material-components-elm/material-components-elm.min.css">
+<link rel="stylesheet" href="https://aforemny.github.io/material-components-elm/material-components-elm.min.css">
 <script src="https://aforemny.github.io/material-components-elm/material-components-elm.min.js"></script>
 ```
 

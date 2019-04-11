@@ -117,7 +117,9 @@ class MdcList extends HTMLElement {
       this.querySelector('.mdc-list-item--selected, .mdc-list-item--activated')
         .setAttribute('tabindex', 0);
     } else {
-      this.querySelector('.mdc-list-item').setAttribute('tabindex', 0);
+      if (this.querySelector('.mdc-list-item')) {
+        this.querySelector('.mdc-list-item').setAttribute('tabindex', 0);
+      }
     }
 
     [].slice.call(this.querySelectorAll('.mdc-list-item:not([tabindex])'))

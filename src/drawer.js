@@ -88,6 +88,8 @@ class MdcDrawer extends HTMLElement {
     } else if (this.classList.contains(MODAL)) {
       this.mdcFoundation = new MDCModalDrawerFoundation(this.adapter);
     }
+    if (!this.mdcFoundation) return;
+
     this.mdcFoundation.init();
     if (this.hasAttribute("open")) {
       this.mdcFoundation.open();
@@ -110,10 +112,10 @@ class MdcDrawer extends HTMLElement {
   }
 
   disconnectedCallback() {
-    if (typeof this.mdcFoundation !== "undefined") {
-      this.mdcFoundation.destroy();
-      delete this.mdcFoundation;
-    }
+    if (!this.mdcFoundation) return;
+
+    this.mdcFoundation.destroy();
+    delete this.mdcFoundation;
 
     this.removeEventListener("keydown", this.handleKeydown_);
     this.removeEventListener("transitionend", this.handleTransitionEnd_);

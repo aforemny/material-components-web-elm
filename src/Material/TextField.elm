@@ -28,12 +28,17 @@ type alias TextFieldConfig msg =
     , max : Maybe Int
     , value : Maybe String
     , placeholder : Maybe String
-    , leadingIcon : Maybe (Html msg)
-    , trailingIcon : Maybe (Html msg)
+    , leadingIcon : TextFieldIcon msg
+    , trailingIcon : TextFieldIcon msg
     , additionalAttributes : List (Html.Attribute msg)
     , onInput : Maybe (String -> msg)
     , onChange : Maybe (String -> msg)
     }
+
+
+type TextFieldIcon msg
+    = NoIcon
+    | Icon (Html msg)
 
 
 textFieldConfig : TextFieldConfig msg
@@ -54,8 +59,8 @@ textFieldConfig =
     , value = Nothing
     , placeholder = Nothing
     , additionalAttributes = []
-    , leadingIcon = Nothing
-    , trailingIcon = Nothing
+    , leadingIcon = NoIcon
+    , trailingIcon = NoIcon
     , onInput = Nothing
     , onChange = Nothing
     }
@@ -104,9 +109,9 @@ textField config =
         )
 
 
-textFieldIcon : IconConfig msg -> String -> Maybe (Html msg)
+textFieldIcon : IconConfig msg -> String -> TextFieldIcon msg
 textFieldIcon iconConfig iconName =
-    Just
+    Icon
         (icon
             { iconConfig
                 | additionalAttributes =
@@ -159,7 +164,7 @@ disabledCs { disabled } =
 
 withLeadingIconCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
 withLeadingIconCs { leadingIcon } =
-    if leadingIcon /= Nothing then
+    if leadingIcon /= NoIcon then
         Just (class "mdc-text-field--with-leading-icon")
 
     else
@@ -168,7 +173,7 @@ withLeadingIconCs { leadingIcon } =
 
 withTrailingIconCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
 withTrailingIconCs { trailingIcon } =
-    if trailingIcon /= Nothing then
+    if trailingIcon /= NoIcon then
         Just (class "mdc-text-field--with-trailing-icon")
 
     else
@@ -225,16 +230,22 @@ placeholderAttr { placeholder } =
 
 leadingIconElt : TextFieldConfig msg -> List (Html msg)
 leadingIconElt { leadingIcon } =
-    leadingIcon
-        |> Maybe.map List.singleton
-        |> Maybe.withDefault []
+    case leadingIcon of
+        NoIcon ->
+            []
+
+        Icon html ->
+            [ html ]
 
 
 trailingIconElt : TextFieldConfig msg -> List (Html msg)
 trailingIconElt { trailingIcon } =
-    trailingIcon
-        |> Maybe.map List.singleton
-        |> Maybe.withDefault []
+    case trailingIcon of
+        NoIcon ->
+            []
+
+        Icon html ->
+            [ html ]
 
 
 inputHandler : TextFieldConfig msg -> Maybe (Html.Attribute msg)

@@ -1,6 +1,6 @@
 module Material.Drawer exposing
     ( DrawerConfig
-    , HeaderConfig
+    , DrawerHeaderContent
     , appContent
     , dismissibleDrawer
     , drawerConfig
@@ -74,27 +74,26 @@ drawerContent attributes nodes =
     Html.div (class "mdc-drawer__content" :: attributes) nodes
 
 
-type alias HeaderConfig msg =
+type alias DrawerHeaderContent =
     { title : String
     , subtitle : String
-    , additionalAttributes : List (Html.Attribute msg)
     }
 
 
-drawerHeader : HeaderConfig msg -> Html msg
-drawerHeader config =
-    Html.div (class "mdc-drawer__header" :: config.additionalAttributes)
-        [ titleElt config
-        , subtitleElt config
+drawerHeader : List (Html.Attribute msg) -> DrawerHeaderContent -> Html msg
+drawerHeader additionalAttributes content =
+    Html.div (class "mdc-drawer__header" :: additionalAttributes)
+        [ titleElt content
+        , subtitleElt content
         ]
 
 
-titleElt : HeaderConfig msg -> Html msg
+titleElt : DrawerHeaderContent -> Html msg
 titleElt { title } =
     Html.h3 [ class "mdc-drawer__title" ] [ text title ]
 
 
-subtitleElt : HeaderConfig msg -> Html msg
+subtitleElt : DrawerHeaderContent -> Html msg
 subtitleElt { subtitle } =
     Html.h6 [ class "mdc-drawer__subtitle" ] [ text subtitle ]
 

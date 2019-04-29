@@ -100,10 +100,14 @@ class MdcDrawer extends HTMLElement {
     this.addEventListener("keydown", this.handleKeydown_);
     this.addEventListener("transitionend", this.handleTransitionEnd_);
 
-    if (this.classList.contains(MODAL)) {
-      this.focusTrap = util.createFocusTrapInstance(this, createFocusTrap);
-      this.scrim.addEventListener("click", this.handleScrimClick_);
-    }
+    // Note: It seems Elm might initialize .mdc-drawer before .mdc-drawer-scrim
+    // while applying DOM patches.
+    window.requestAnimationFrame(() => {
+      if (this.classList.contains(MODAL)) {
+        this.focusTrap = util.createFocusTrapInstance(this, createFocusTrap);
+        this.scrim.addEventListener("click", this.handleScrimClick_);
+      }
+    });
   }
 
   get scrim() {

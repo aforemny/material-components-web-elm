@@ -118,9 +118,6 @@ class MdcDrawer extends HTMLElement {
   disconnectedCallback() {
     if (!this.mdcFoundation) return;
 
-    this.mdcFoundation.destroy();
-    delete this.mdcFoundation;
-
     this.removeEventListener("keydown", this.handleKeydown_);
     this.removeEventListener("transitionend", this.handleTransitionEnd_);
 
@@ -129,6 +126,9 @@ class MdcDrawer extends HTMLElement {
       this.scrim.removeEventListener("click", this.handleScrimClick_);
       this.mdcFoundation.close();
     }
+
+    this.mdcFoundation.destroy();
+    delete this.mdcFoundation;
   }
 
   attributeChangedCallback(name, oldValue, newValue) {

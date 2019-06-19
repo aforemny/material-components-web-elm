@@ -1,3 +1,10 @@
+# Do not use this library!
+
+This library currently uses a **patched version of virtual-dom** (#20), and it
+is unclear if it will ever work. If you are looking for Material Design in Elm,
+please take a look at [elm-mdc](https://github.com/aforemny/elm-mdc);
+
+
 # Material Components for Elm
 
 **This library is an early prototype:** It is not published yet and

@@ -6,5 +6,6 @@ mkDerivation {
   buildInputs = [ elmPackages.elm nodejs ];
   shellHook = ''
     export PATH=./node_modules/.bin:$PATH
+    export ELM_HOME=.
   '';
 }

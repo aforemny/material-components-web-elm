@@ -55,10 +55,9 @@ view model =
 heroDrawer : List (Html msg)
 heroDrawer =
     [ permanentDrawer drawerConfig
-        [ drawerHeader
+        [ drawerHeader []
             { title = "Title"
             , subtitle = "subtext"
-            , additionalAttributes = []
             }
         , drawerContent []
             [ list listConfig

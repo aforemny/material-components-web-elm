@@ -59,10 +59,9 @@ drawerBody setSelectedIndex selectedIndex =
                 , onClick = Just (setSelectedIndex index)
             }
     in
-    [ drawerHeader
+    [ drawerHeader []
         { title = "Mail"
         , subtitle = "email@material.io"
-        , additionalAttributes = []
         }
     , drawerContent []
         [ list listConfig

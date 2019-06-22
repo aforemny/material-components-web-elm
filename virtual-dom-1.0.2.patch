@@ -1,5 +1,5 @@
 --- VirtualDom.js.orig	2019-06-19 15:38:09.684857715 +0200
-+++ VirtualDom.js	2019-06-22 14:07:16.326025005 +0200
++++ VirtualDom.js	2019-06-22 14:51:02.547475678 +0200
 @@ -244,6 +244,15 @@ var _VirtualDom_style = F2(function(key,
  		__value: value
  	};
@@ -66,7 +66,28 @@
  // APPLY ATTRS
  
  
-@@ -875,7 +911,7 @@ function _VirtualDom_diffFacts(x, y, cat
+@@ -522,9 +558,17 @@ function _VirtualDom_applyAttrs(domNode,
+ 	for (var key in attrs)
+ 	{
+ 		var value = attrs[key];
+-		typeof value !== 'undefined'
+-			? domNode.setAttribute(key, value)
+-			: domNode.removeAttribute(key);
++    if (key === "a__1_CLASS") {
++      for (var cs in value) {
++        value[cs] !== ''
++          ? domNode.classList.add(cs)
++          : domNode.classList.remove(cs);
++      }
++    } else {
++      typeof value !== 'undefined'
++        ? domNode.setAttribute(key, value)
++        : domNode.removeAttribute(key);
++    }
+ 	}
+ }
+ 
+@@ -875,7 +919,7 @@ function _VirtualDom_diffFacts(x, y, cat
  	// look for changes and removals
  	for (var xKey in x)
  	{
@@ -75,7 +96,7 @@
  		{
  			var subDiff = _VirtualDom_diffFacts(x[xKey], y[xKey] || {}, xKey);
  			if (subDiff)
-@@ -897,6 +933,9 @@ function _VirtualDom_diffFacts(x, y, cat
+@@ -897,6 +941,9 @@ function _VirtualDom_diffFacts(x, y, cat
  				(category === 'a__1_STYLE')
  					? ''
  					:

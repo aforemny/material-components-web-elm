@@ -1,6 +1,7 @@
+import { getClassName, setClassName } from "./utils";
+import { getMatchesProperty } from "@material/ripple/util";
 import { MDCChipFoundation } from "@material/chips/index";
 import { MDCRipple, MDCRippleFoundation } from "@material/ripple/index";
-import { getMatchesProperty } from "@material/ripple/util";
 
 const INTERACTION_EVENTS = [ "click", "keydown" ];
 
@@ -12,10 +13,18 @@ class MdcChip extends HTMLElement {
 
   constructor() {
     super();
-
+    this.className_ = "";
     this.handleInteraction_ = this.handleInteraction.bind(this);
     this.handleTransitionEnd_ = this.handleTransitionEnd.bind(this);
     this.handleTrailingIconInteraction_ = this.handleTrailingIconInteraction.bind(this);
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   get adapter() {

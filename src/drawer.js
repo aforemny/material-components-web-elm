@@ -1,4 +1,5 @@
 import createFocusTrap from "focus-trap";
+import { getClassName, setClassName } from "./utils";
 import { MDCDismissibleDrawerFoundation, MDCModalDrawerFoundation, util } from "@material/drawer/index";
 import { MDCListFoundation } from "@material/list/index";
 import { strings } from "@material/drawer/constants";
@@ -49,10 +50,18 @@ class MdcDrawer extends HTMLElement {
 
   constructor() {
     super();
-
+    this.className_ = "";
     this.handleKeydown_ = this.handleKeydown.bind(this);
     this.handleTransitionEnd_ = this.handleTransitionEnd.bind(this);
     this.handleScrimClick_ = this.handleScrimClick.bind(this);
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   handleKeydown(event) {

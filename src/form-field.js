@@ -1,10 +1,20 @@
+import { getClassName, setClassName } from "./utils";
 import { MDCFormField } from "@material/form-field/index";
 
 class MdcFormField extends HTMLElement {
 
   constructor() {
     super();
+    this.className_ = "";
     this.formField_;
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   connectedCallback() {

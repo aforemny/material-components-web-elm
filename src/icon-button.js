@@ -1,3 +1,4 @@
+import { getClassName, setClassName } from "./utils";
 import { MDCIconButtonToggleFoundation } from "@material/icon-button/index";
 import { MDCRipple } from "@material/ripple/index";
 
@@ -22,6 +23,15 @@ class MdcIconButton extends HTMLElement {
 
   constructor() {
     super();
+    this.className_ = "";
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   connectedCallback() {

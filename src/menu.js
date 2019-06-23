@@ -1,3 +1,4 @@
+import { getClassName, setClassName } from "./utils";
 import { MDCMenuFoundation } from "@material/menu/index";
 import { MDCMenuSurface, MDCMenuSurfaceFoundation } from "@material/menu-surface/index";
 import { strings, cssClasses } from "@material/menu/constants";
@@ -10,9 +11,18 @@ class MdcMenu extends HTMLElement {
 
   constructor() {
     super();
+    this.className_ = "";
     this.handleKeydown_ = this.handleKeydown.bind(this);
     this.handleClick_ = this.handleClick.bind(this);
     this.afterOpenedCallback_ = this.afterOpenedCallback.bind(this);
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   handleKeydown(event) {

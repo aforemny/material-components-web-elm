@@ -1,3 +1,4 @@
+import { getClassName, setClassName } from "./utils";
 import { MDCCheckbox } from "@material/checkbox/index";
 
 class MdcCheckbox extends HTMLElement {
@@ -8,6 +9,15 @@ class MdcCheckbox extends HTMLElement {
 
   constructor() {
     super();
+    this.className_ = "";
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   connectedCallback() {

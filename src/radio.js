@@ -1,4 +1,5 @@
 import { MDCRadio } from "@material/radio/index";
+import { getClassName, setClassName } from "./utils";
 
 class MdcRadio extends HTMLElement {
 
@@ -8,6 +9,15 @@ class MdcRadio extends HTMLElement {
 
   constructor() {
     super();
+    this.className_ = "";
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   connectedCallback() {

@@ -1,3 +1,4 @@
+import { getClassName, setClassName } from "./utils";
 import { cssClasses, strings } from '@material/textfield/constants';
 import { getMatchesProperty } from '@material/ripple/util';
 import { MDCFloatingLabel, MDCFloatingLabelFoundation } from '@material/floating-label/index';
@@ -79,6 +80,15 @@ class MdcTextField extends HTMLElement {
 
   constructor() {
     super();
+    this.className_ = "";
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   connectedCallback() {

@@ -1,3 +1,4 @@
+import { getClassName, setClassName } from "./utils";
 import { MDCSliderFoundation } from "@material/slider/index";
 import { strings } from "@material/slider/constants";
 
@@ -86,6 +87,15 @@ class MdcSlider extends HTMLElement {
 
   constructor() {
     super();
+    this.className_ = "";
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   connectedCallback() {

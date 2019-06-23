@@ -1,4 +1,5 @@
 import * as menuSurfaceConstants from "@material/menu-surface/constants";
+import { getClassName, setClassName } from "./utils";
 import { MDCMenu } from "@material/menu/index";
 import { MDCRipple, MDCRippleFoundation } from "@material/ripple/index";
 import { MDCSelect, MDCSelectFoundation } from "@material/select/index";
@@ -7,7 +8,7 @@ class MdcEnhancedSelect extends HTMLElement {
 
   constructor() {
     super();
-
+    this.className_ = "";
     this.menuOpened_ = false;
     this.handleChange_ = this.handleChange.bind(this);
     this.handleFocus_ = this.handleFocus.bind(this);
@@ -16,6 +17,14 @@ class MdcEnhancedSelect extends HTMLElement {
     this.handleKeydown_ = this.handleKeydown.bind(this);
     this.handleMenuOpened_ = this.handleMenuOpened.bind(this);
     this.handleMenuClosed_ = this.handleMenuClosed.bind(this);
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   get root_() {

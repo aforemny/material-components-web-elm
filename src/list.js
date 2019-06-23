@@ -1,3 +1,4 @@
+import { getClassName, setClassName } from "./utils";
 import { matches } from "@material/dom/ponyfill";
 import { MDCListFoundation } from "@material/list/index";
 
@@ -5,10 +6,18 @@ class MdcList extends HTMLElement {
 
   constructor() {
     super();
-
+    this.className_ = "";
     this.handleKeydown_ = this.handleKeydown.bind(this);
     this.handleFocusIn_ = this.handleFocusIn.bind(this);
     this.handleFocusOut_ = this.handleFocusOut.bind(this);
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   get listElements() {

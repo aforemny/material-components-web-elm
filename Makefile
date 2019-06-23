@@ -1,5 +1,6 @@
 build: node_modules
 	webpack --mode=development
+	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-elm.min.css
 	(cd demo && make)
 
 release: distclean node_modules

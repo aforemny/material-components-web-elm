@@ -1,6 +1,7 @@
 import * as util from "@material/dialog/util";
-import createFocusTrap from "focus-trap";
 import { closest, matches } from "@material/dom/ponyfill";
+import createFocusTrap from "focus-trap";
+import { getClassName, setClassName } from "./utils";
 import { MDCDialogFoundation } from "@material/dialog/index";
 
 class MdcDialog extends HTMLElement {
@@ -67,8 +68,17 @@ class MdcDialog extends HTMLElement {
 
   constructor() {
     super();
+    this.className_ = "";
     this.handleDocumentKeydown_ = this.handleDocumentKeydown.bind(this);
     this.handleInteraction_ = this.handleInteraction.bind(this);
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   connectedCallback() {

@@ -1,3 +1,4 @@
+import { getClassName, setClassName } from "./utils";
 import { MDCTabBarFoundation } from "@material/tab-bar/index";
 import { MDCTab } from "@material/tab/index";
 import { MDCTabScroller } from "@material/tab-scroller/index";
@@ -75,10 +76,19 @@ class MdcTabBar extends HTMLElement {
 
   constructor() {
     super();
+    this.className_ = "";
     this.previousIndex_ = -1;
     this.tabScroller_;
     this.tabList_;
     this.handleKeyDown_ = this.handleKeyDown.bind(this);
+  }
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
   }
 
   connectedCallback() {

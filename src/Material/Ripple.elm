@@ -1,15 +1,69 @@
 module Material.Ripple exposing
-    ( RippleColor(..)
-    , RippleConfig, rippleConfig
+    ( RippleConfig, rippleConfig
     , ripple, unboundedRipple
+    , RippleColor(..)
     )
 
-{-|
+{-| Material “ink ripple” interaction effect.
 
-@docs RippleColor
+  - [Demo: Ripples](https://aforemny.github.io/material-components-elm/#ripples)
+  - [Material Design Guidelines: States](https://material.io/go/design-states)
+  - [MDC Web: Ripple](https://github.com/material-components/material-components-web/tree/master/packages/mdc-ripple)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-ripple#sass-apis)
+
+
+# Example
+
+    import Material.Ripple exposing (ripple, rippleConfig)
+
+    main =
+        Html.div []
+            [ ripple rippleConfig
+            , text "Click me!"
+            ]
+
+
+# Configuration
+
 @docs RippleConfig, rippleConfig
 
+
+# Variants
+
+Ripples come in two variants. Use `ripple` for bounded ripple effects which
+work best when used for contained surfaces, and `unboundedRipple` for unbounded
+ripple effects which work best with icons.
+
 @docs ripple, unboundedRipple
+
+
+## Bounded ripple
+
+    Html.div []
+        [ ripple rippleConfig
+        , text "Click me!"
+        ]
+
+
+## Unbounded ripple
+
+    Html.span []
+        [ unboundedRipple rippleConfig
+        , text "🙌"
+        ]
+
+
+# Color
+
+If you want to set the ripple effect to either primary or secondary color, set
+its color configuration field to a RippleColor.
+
+@docs RippleColor
+
+
+## Primary colored ripple
+
+    ripple { rippleConfig | color = Ripple.PrimaryColor }
 
 -}
 
@@ -17,7 +71,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
-{-| TODO docs
+{-| Ripple configuration
 -}
 type alias RippleConfig msg =
     { unbounded : Bool
@@ -26,7 +80,7 @@ type alias RippleConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default ripple configuration
 -}
 rippleConfig : RippleConfig msg
 rippleConfig =
@@ -36,14 +90,14 @@ rippleConfig =
     }
 
 
-{-| TODO docs
+{-| Ripple color
 -}
 type RippleColor
     = PrimaryColor
     | AccentColor
 
 
-{-| TODO docs
+{-| Bounded ripple variant
 -}
 ripple : RippleConfig msg -> Html msg
 ripple config =
@@ -63,7 +117,7 @@ ripple config =
         []
 
 
-{-| TODO docs
+{-| Unbounded ripple variant
 -}
 unboundedRipple : RippleConfig msg -> Html msg
 unboundedRipple config =

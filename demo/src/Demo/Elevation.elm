@@ -38,13 +38,32 @@ view model =
     , hero = heroElevation
     , content =
         [ Html.div demoContainer
-            (List.map
-                (\z ->
-                    Html.div (Elevation.z z :: demoSurface)
-                        [ text (String.fromInt z ++ "dp") ]
-                )
-                (List.range 0 24)
-            )
+            [ Html.div (Elevation.z0 :: demoSurface) [ text "0dp" ]
+            , Html.div (Elevation.z1 :: demoSurface) [ text "1dp" ]
+            , Html.div (Elevation.z2 :: demoSurface) [ text "2dp" ]
+            , Html.div (Elevation.z3 :: demoSurface) [ text "3dp" ]
+            , Html.div (Elevation.z4 :: demoSurface) [ text "4dp" ]
+            , Html.div (Elevation.z5 :: demoSurface) [ text "5dp" ]
+            , Html.div (Elevation.z6 :: demoSurface) [ text "6dp" ]
+            , Html.div (Elevation.z7 :: demoSurface) [ text "7dp" ]
+            , Html.div (Elevation.z8 :: demoSurface) [ text "8dp" ]
+            , Html.div (Elevation.z9 :: demoSurface) [ text "9dp" ]
+            , Html.div (Elevation.z10 :: demoSurface) [ text "10dp" ]
+            , Html.div (Elevation.z11 :: demoSurface) [ text "11dp" ]
+            , Html.div (Elevation.z12 :: demoSurface) [ text "12dp" ]
+            , Html.div (Elevation.z13 :: demoSurface) [ text "13dp" ]
+            , Html.div (Elevation.z14 :: demoSurface) [ text "14dp" ]
+            , Html.div (Elevation.z15 :: demoSurface) [ text "15dp" ]
+            , Html.div (Elevation.z16 :: demoSurface) [ text "16dp" ]
+            , Html.div (Elevation.z17 :: demoSurface) [ text "17dp" ]
+            , Html.div (Elevation.z18 :: demoSurface) [ text "18dp" ]
+            , Html.div (Elevation.z19 :: demoSurface) [ text "19dp" ]
+            , Html.div (Elevation.z20 :: demoSurface) [ text "20dp" ]
+            , Html.div (Elevation.z21 :: demoSurface) [ text "21dp" ]
+            , Html.div (Elevation.z22 :: demoSurface) [ text "22dp" ]
+            , Html.div (Elevation.z23 :: demoSurface) [ text "23dp" ]
+            , Html.div (Elevation.z24 :: demoSurface) [ text "24dp" ]
+            ]
         ]
     }
 

@@ -1,6 +1,6 @@
 {
     "type": "package",
-    "name": "aforemny/material-components-elm",
+    "name": "aforemny/material-components",
     "summary": "Material Components for Elm",
     "license": "MIT",
     "version": "1.0.0",

@@ -3,10 +3,71 @@ module Material.LinearProgress exposing
     , indeterminateLinearProgress, determinateLinearProgress, bufferedLinearProgress
     )
 
-{-|
+{-| The MDC Linear Progress component is a spec-aligned linear progress
+indicator component adhering to the Material Design progress & activity
+requirements.
+
+  - [Demo: Linear Progress](https://aforemny.github.io/material-components-elm/#linear-progress)
+  - [Material Design Guidelines: Progress indicators](https://material.io/go/design-progress-indicators)
+  - [MDC Web: Linear Progress](https://github.com/material-components/material-components-web/tree/master/packages/mdc-linear-progress)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-linear-progress#sass-mixins)
+
+
+# Example
+
+    import Material.LinearProgress
+        exposing
+            ( indeterminateLinearProgress
+            , linearProgressConfig
+            )
+
+    main =
+        indeterminateLinearProgress linearProgressConfig
+
+
+# Configuration
 
 @docs LinearProgressConfig, linearProgressConfig
+
+
+# Variants
+
 @docs indeterminateLinearProgress, determinateLinearProgress, bufferedLinearProgress
+
+
+## Indeterminate linear progress
+
+    indeterminateLinearProgress linearProgressConfig
+
+
+## Determinate linear progress
+
+    determinateLinearProgress linearProgressConfig
+        { progress = 0.5 }
+
+
+## Buffered linear progress
+
+    bufferedLinearProgress linearProgressConfig
+        { progress = 0.5, buffered = 0.75 }
+
+
+# Reverse
+
+If you want to reverse the direction of the linear progress indicator, set its
+reverse configuration field to True.
+
+    indeterminateLinearProgress
+        { linearProgressConfig | reverse = True }
+
+
+# Closed
+
+If you want to hide the linear progress indicator, set its closed configuration
+field to True.
+
+    indeterminateLinearProgress
+        { linearProgressConfig | closed = True }
 
 -}
 
@@ -14,7 +75,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 
 
-{-| TODO docs
+{-| Linear progress configuration
 -}
 type alias LinearProgressConfig msg =
     { variant : Variant
@@ -30,7 +91,7 @@ type Variant
     | Buffered Float Float
 
 
-{-| TODO docs
+{-| Default linear progress configuration
 -}
 linearProgressConfig : LinearProgressConfig msg
 linearProgressConfig =
@@ -41,8 +102,6 @@ linearProgressConfig =
     }
 
 
-{-| TODO docs
--}
 linearProgress : LinearProgressConfig msg -> Html msg
 linearProgress config =
     Html.node "mdc-linear-progress"
@@ -66,21 +125,26 @@ linearProgress config =
         ]
 
 
-{-| TODO docs
+{-| Indeterminate linear progress variant
 -}
-indeterminateLinearProgress : LinearProgressConfig msg -> Html msg
+indeterminateLinearProgress :
+    LinearProgressConfig msg
+    -> Html msg
 indeterminateLinearProgress config =
     linearProgress { config | variant = Indeterminate }
 
 
-{-| TODO docs
+{-| Determinate linear progress variant
 -}
-determinateLinearProgress : LinearProgressConfig msg -> { progress : Float } -> Html msg
+determinateLinearProgress :
+    LinearProgressConfig msg
+    -> { progress : Float }
+    -> Html msg
 determinateLinearProgress config { progress } =
     linearProgress { config | variant = Determinate progress }
 
 
-{-| TODO docs
+{-| Buffered linear progress variant
 -}
 bufferedLinearProgress :
     LinearProgressConfig msg

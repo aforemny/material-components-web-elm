@@ -1,12 +1,72 @@
 module Material.Checkbox exposing
-    ( CheckboxConfig, checkboxConfig, CheckboxState(..)
+    ( CheckboxConfig, checkboxConfig
     , checkbox
+    , CheckboxState(..)
     )
 
-{-|
+{-| Checkboxes allow the user to select one or more items from a set.
 
-@docs CheckboxConfig, checkboxConfig, CheckboxState
+  - [Demo: Checkboxes](https://aforemny.github.io/material-components-elm/#checkboxes)
+  - [Material Design Guidelines: Selection Controls – Checkbox](https://material.io/go/design-checkboxes)
+  - [MDC Web: Checkbox](https://github.com/material-components/material-components-web/tree/master/packages/mdc-checkbox)
+  - [Style Customization (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-checkbox#style-customization)
+
+
+# Usage
+
+Note that checkboxes are usually used in conjunction with a form field. Refer
+to [FormField](Material-FormField) for more information.
+
+
+# Example
+
+    import Material.Checkbox as Checkbox
+        exposing
+            ( checkbox
+            , checkboxConfig
+            )
+
+    type Msg
+        = CheckboxClicked
+
+    main =
+        checkbox
+            { checkboxConfig
+                | state = Checkbox.Unchecked
+                , onClick = Just CheckboxClicked
+            }
+
+
+# Configuration
+
+@docs CheckboxConfig, checkboxConfig
 @docs checkbox
+
+
+# State
+
+To set the state of a checkbox, set its state configuration field to a value of
+CheckboxState. Checkboxes can be in checked, unchecked or indeterminate
+state.
+
+@docs CheckboxState
+
+
+## Checked chekcbox
+
+    checkbox
+        { checkboxConfig | state = Checkbox.Checked }
+
+
+# Disabled
+
+To disable a checkbox, set its disabled configuration field to True. Disabled
+checkboxes cannot be interacted with and have no visual interaction effect.
+
+
+## Disabled checkbox
+
+    checkbox { checkboxConfig | disabled = True }
 
 -}
 
@@ -19,7 +79,7 @@ import Svg
 import Svg.Attributes
 
 
-{-| TODO
+{-| Configuration of a checkbox
 -}
 type alias CheckboxConfig msg =
     { state : CheckboxState
@@ -29,15 +89,7 @@ type alias CheckboxConfig msg =
     }
 
 
-{-| TODO
--}
-type CheckboxState
-    = Unchecked
-    | Checked
-    | Indeterminate
-
-
-{-| TODO
+{-| Default configuration of a checkbox
 -}
 checkboxConfig : CheckboxConfig msg
 checkboxConfig =
@@ -48,7 +100,14 @@ checkboxConfig =
     }
 
 
-{-| TODO
+{-| -}
+type CheckboxState
+    = Unchecked
+    | Checked
+    | Indeterminate
+
+
+{-| Checkbox view function
 -}
 checkbox : CheckboxConfig msg -> Html msg
 checkbox config =

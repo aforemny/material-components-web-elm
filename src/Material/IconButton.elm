@@ -2,6 +2,7 @@ module Material.IconButton exposing
     ( IconButtonConfig, iconButtonConfig
     , iconButton
     , iconToggleConfig, iconToggle
+    , customIconButton
     )
 
 {-| Icon buttons allow users to take actions, and make choices, with a single
@@ -49,10 +50,42 @@ If you are looking for a button that has an icon as well as text, refer to
 Icon toggles are a variant of icon buttons that signify a may signify a state
 change when clicked.
 
-    iconToggle iconToggleConfig
+    iconToggle { iconToggleConfig | on = True }
         { off = "favorite_border", on = "favorite" }
 
 @docs iconToggleConfig, iconToggle
+
+
+# State
+
+To set the state of a icon toggle, set its on configuration field to a Bool
+value. State only applies to the icon toggle variant, icon buttons ignore this
+configuration field.
+
+    iconToggle { iconToggleConfig | off = True }
+        { off = "favorite_border", on = "favorite" }
+
+
+# Disabled
+
+To disable a icon button, set its disabled configuration field to True.
+Disabled icon buttons cannot be interacted with and have no visual interaction
+effect.
+
+    iconButton { iconButtonConfig | disabled = True } "favorite"
+
+
+# Label
+
+To set the `arial-label` attribute of a icon button, set its label
+configuration field to a String.
+
+    iconButton { iconButtonConfig | label = "Add to favorites" } "favorite"
+
+
+# Variant: Custom icon button
+
+@docs customIconButton
 
 -}
 
@@ -65,6 +98,7 @@ import Html.Events
 -}
 type alias IconButtonConfig msg =
     { on : Bool
+    , disabled : Bool
     , label : Maybe String
     , additionalAttributes : List (Html.Attribute msg)
     , onClick : Maybe msg
@@ -76,8 +110,9 @@ type alias IconButtonConfig msg =
 iconButtonConfig : IconButtonConfig msg
 iconButtonConfig =
     { on = False
-    , additionalAttributes = []
+    , disabled = False
     , label = Nothing
+    , additionalAttributes = []
     , onClick = Nothing
     }
 
@@ -98,6 +133,8 @@ iconButton config iconName =
         [ text iconName ]
 
 
+{-| TODO
+-}
 customIconButton : IconButtonConfig msg -> List (Html msg) -> Html msg
 customIconButton config nodes =
     Html.node "mdc-icon-button"
@@ -131,6 +168,7 @@ iconToggle config { on, off } =
             , ariaLabelAttr config
             , tabIndexAttr
             , clickHandler config
+            , disabledAttr config
             ]
             ++ config.additionalAttributes
         )
@@ -199,3 +237,8 @@ ariaLabelAttr { label } =
 clickHandler : IconButtonConfig msg -> Maybe (Html.Attribute msg)
 clickHandler config =
     Maybe.map Html.Events.onClick config.onClick
+
+
+disabledAttr : IconButtonConfig msg -> Maybe (Html.Attribute msg)
+disabledAttr { disabled } =
+    Just (Html.Attributes.disabled disabled)

@@ -9,13 +9,13 @@ module Material.Checkbox exposing
   - [Demo: Checkboxes](https://aforemny.github.io/material-components-elm/#checkboxes)
   - [Material Design Guidelines: Selection Controls – Checkbox](https://material.io/go/design-checkboxes)
   - [MDC Web: Checkbox](https://github.com/material-components/material-components-web/tree/master/packages/mdc-checkbox)
-  - [Style Customization (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-checkbox#style-customization)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-checkbox#sass-mixins)
 
 
 # Usage
 
-Note that checkboxes are usually used in conjunction with a form field. Refer
-to [FormField](Material-FormField) for more information.
+Note that checkboxes are usually used in conjunction with form fields. Refer to
+[FormField](Material-FormField) for more information.
 
 
 # Example

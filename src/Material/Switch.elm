@@ -3,10 +3,61 @@ module Material.Switch exposing
     , switch
     )
 
-{-|
+{-| Switches toggle the state of a single setting on or off. They are the
+preferred way to adjust settings on mobile.
+
+  - [Demo: Switches](https://aforemny.github.io/material-components-elm/#switches)
+  - [Material Design Guidelines: Selection Controls – Switches](https://material.io/go/design-switches)
+  - [MDC Web: Switch](https://github.com/material-components/material-components-web/tree/master/packages/mdc-switch)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-switch#sass-mixins)
+
+
+# Usage
+
+Note that switches are usually used in conjunction with form fields. Refer to
+[FormField](Material-FormField) for more information.
+
+
+# Example
+
+    import Material.Switch exposing (switch, switchConfig)
+
+    type Msg
+        = SwitchClicked
+
+    main =
+        switch
+            { switchConfig
+                | on = True
+                , onClick = Just SwitchClicked
+            }
+
+
+# Configuration
 
 @docs SwitchConfig, switchConfig
 @docs switch
+
+
+# State
+
+To set the state of a checkbox, set its on configuration field to a Bool value.
+
+
+## Off switch
+
+    switch { switchConfig | on = False }
+
+
+# Disabled
+
+To disable a switch, set its disabled configuration field to True. Disabled
+switches cannot be interacted with and have no visual interaction effect.
+
+
+## Disabled switch
+
+    switch { switchConfig | disabled = True }
 
 -}
 
@@ -16,7 +67,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-{-| TODO docs
+{-| Configuration of a switch
 -}
 type alias SwitchConfig msg =
     { checked : Bool
@@ -26,7 +77,7 @@ type alias SwitchConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a switch
 -}
 switchConfig : SwitchConfig msg
 switchConfig =
@@ -37,7 +88,7 @@ switchConfig =
     }
 
 
-{-| TODO docs
+{-| Switch view function
 -}
 switch : SwitchConfig msg -> Html msg
 switch config =

@@ -3,10 +3,52 @@ module Material.Fab exposing
     , fab
     )
 
-{-|
+{-| A floating action button represents the primary action in an application.
+
+  - [Demo: Floating action buttons](https://aforemny.github.io/material-components-elm/#fabs)
+  - [Material Design Guidelines: Floating Action Button](https://material.io/go/design-fab)
+  - [MDC Web: Floating Action Button](https://github.com/material-components/material-components-web/tree/master/packages/mdc-fab)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-fab#sass-mixins)
+
+
+# Usage
+
+Developers are required to manually position the floating action button within
+their page layout, for instance by setting a fixed position via CSS.
+
+A floating action button may only contain an icon to indicate its action. If
+you are looking for a floating action button variant that contains text, refer
+to [ExtendedFab](Material-Fab-Extended).
+
+
+# Example
+
+    import Material.Fab exposing (fab, fabConfig)
+
+    main =
+        fab fabConfig "favorite"
+
+
+# Configuration
 
 @docs FabConfig, fabConfig
 @docs fab
+
+
+# Mini
+
+If you want the floating action button to appear in smaller size, set its mini
+configuration field to True.
+
+    fab { fabConfig | mini = True } "favorite"
+
+
+# Exited
+
+If you want the floating action button to transition off the screen, set its
+exited configuration field to True.
+
+    fab { fabConfig | exited = True } "favorite"
 
 -}
 
@@ -14,7 +56,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
-{-| TODO
+{-| Floating action button configuration
 -}
 type alias FabConfig msg =
     { mini : Bool
@@ -23,7 +65,7 @@ type alias FabConfig msg =
     }
 
 
-{-| TODO
+{-| Default floating action button configuration
 -}
 fabConfig : FabConfig msg
 fabConfig =
@@ -33,7 +75,7 @@ fabConfig =
     }
 
 
-{-| TODO
+{-| Floating action button view function
 -}
 fab : FabConfig msg -> String -> Html msg
 fab config iconName =

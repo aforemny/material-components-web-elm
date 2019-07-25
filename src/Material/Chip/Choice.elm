@@ -1,4 +1,14 @@
-module Material.Chip.Choice exposing (ChoiceChipConfig, choiceChip, choiceChipConfig)
+module Material.Chip.Choice exposing
+    ( ChoiceChipConfig, choiceChipConfig
+    , choiceChip
+    )
+
+{-|
+
+@docs ChoiceChipConfig, choiceChipConfig
+@docs choiceChip
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -6,6 +16,8 @@ import Html.Events
 import Json.Decode as Decode
 
 
+{-| TODO
+-}
 type alias ChoiceChipConfig msg =
     { selected : Bool
     , additionalAttributes : List (Html.Attribute msg)
@@ -13,6 +25,8 @@ type alias ChoiceChipConfig msg =
     }
 
 
+{-| TODO
+-}
 choiceChipConfig : ChoiceChipConfig msg
 choiceChipConfig =
     { selected = False
@@ -21,6 +35,8 @@ choiceChipConfig =
     }
 
 
+{-| TODO
+-}
 choiceChip : ChoiceChipConfig msg -> String -> Html msg
 choiceChip config label =
     Html.node "mdc-chip"

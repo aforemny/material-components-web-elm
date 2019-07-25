@@ -1,17 +1,31 @@
 module Material.IconButton exposing
-    ( IconButtonConfig
-    , customIconButton
+    ( IconButtonConfig, iconButtonConfig
     , iconButton
-    , iconButtonConfig
-    , iconToggle
     , iconToggleConfig
+    , iconToggle
+    , customIconButton
     )
+
+{-|
+
+@docs IconButtonConfig, iconButtonConfig
+
+@docs iconButton
+
+@docs iconToggleConfig
+@docs iconToggle
+
+@docs customIconButton
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 
 
+{-| TODO docs
+-}
 type alias IconButtonConfig msg =
     { on : Bool
     , label : Maybe String
@@ -20,6 +34,8 @@ type alias IconButtonConfig msg =
     }
 
 
+{-| TODO docs
+-}
 iconButtonConfig : IconButtonConfig msg
 iconButtonConfig =
     { on = False
@@ -29,6 +45,8 @@ iconButtonConfig =
     }
 
 
+{-| TODO docs
+-}
 iconButton : IconButtonConfig msg -> String -> Html msg
 iconButton config iconName =
     Html.node "mdc-icon-button"
@@ -43,6 +61,8 @@ iconButton config iconName =
         [ text iconName ]
 
 
+{-| TODO docs
+-}
 customIconButton : IconButtonConfig msg -> List (Html msg) -> Html msg
 customIconButton config nodes =
     Html.node "mdc-icon-button"
@@ -56,11 +76,15 @@ customIconButton config nodes =
         nodes
 
 
+{-| TODO docs
+-}
 iconToggleConfig : IconButtonConfig msg
 iconToggleConfig =
     iconButtonConfig
 
 
+{-| TODO docs
+-}
 iconToggle : IconButtonConfig msg -> { on : String, off : String } -> Html msg
 iconToggle config { on, off } =
     Html.node "mdc-icon-button"

@@ -1,9 +1,21 @@
-module Material.Fab.Extended exposing (ExtendedFabConfig, extendedFab, extendedFabConfig)
+module Material.Fab.Extended exposing
+    ( ExtendedFabConfig, extendedFabConfig
+    , extendedFab
+    )
+
+{-|
+
+@docs ExtendedFabConfig, extendedFabConfig
+@docs extendedFab
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+{-| TODO
+-}
 type alias ExtendedFabConfig msg =
     { icon : Maybe String
     , trailingIcon : Bool
@@ -12,6 +24,8 @@ type alias ExtendedFabConfig msg =
     }
 
 
+{-| TODO
+-}
 extendedFabConfig : ExtendedFabConfig msg
 extendedFabConfig =
     { icon = Nothing
@@ -21,6 +35,8 @@ extendedFabConfig =
     }
 
 
+{-| TODO
+-}
 extendedFab : ExtendedFabConfig msg -> String -> Html msg
 extendedFab config label =
     Html.node "mdc-fab"

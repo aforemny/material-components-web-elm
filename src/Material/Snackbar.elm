@@ -1,15 +1,20 @@
 module Material.Snackbar exposing
-    ( Message
-    , Msg
-    , Queue
-    , SnackbarConfig
-    , addMessage
-    , initialQueue
+    ( SnackbarConfig, snackbarConfig
     , snackbar
-    , snackbarConfig
-    , snackbarMessage
-    , update
+    , Message, snackbarMessage
+    , Queue, initialQueue, Msg, update, addMessage
     )
+
+{-|
+
+@docs SnackbarConfig, snackbarConfig
+@docs snackbar
+
+@docs Message, snackbarMessage
+
+@docs Queue, initialQueue, Msg, update, addMessage
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -19,6 +24,8 @@ import Process
 import Task
 
 
+{-| TODO docs
+-}
 type alias Queue msg =
     { messages : List (Message msg)
     , messageId : MessageId
@@ -29,6 +36,8 @@ type alias MessageId =
     Int
 
 
+{-| TODO docs
+-}
 initialQueue : Queue msg
 initialQueue =
     { messages = []
@@ -36,6 +45,8 @@ initialQueue =
     }
 
 
+{-| TODO docs
+-}
 update : (Msg msg -> msg) -> Msg msg -> Queue msg -> ( Queue msg, Cmd msg )
 update lift msg queue =
     case msg of
@@ -75,27 +86,37 @@ update lift msg queue =
             )
 
 
+{-| TODO docs
+-}
 type Msg msg
     = AddMessage (Message msg)
     | Close
 
 
+{-| TODO docs
+-}
 addMessage : (Msg msg -> msg) -> Message msg -> Cmd msg
 addMessage lift message =
     Task.perform lift (Task.succeed (AddMessage message))
 
 
+{-| TODO docs
+-}
 type alias SnackbarConfig msg =
     { additionalAttributes : List (Html.Attribute msg)
     }
 
 
+{-| TODO docs
+-}
 snackbarConfig : SnackbarConfig msg
 snackbarConfig =
     { additionalAttributes = []
     }
 
 
+{-| TODO docs
+-}
 snackbar : (Msg msg -> msg) -> SnackbarConfig msg -> Queue msg -> Html msg
 snackbar lift config queue =
     let
@@ -116,6 +137,8 @@ snackbar lift config queue =
         [ surfaceElt message ]
 
 
+{-| TODO docs
+-}
 type alias Message msg =
     { label : String
     , actionButton : Maybe String
@@ -128,6 +151,8 @@ type alias Message msg =
     }
 
 
+{-| TODO docs
+-}
 snackbarMessage : Message msg
 snackbarMessage =
     { label = ""

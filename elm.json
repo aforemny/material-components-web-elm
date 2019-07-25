@@ -1,72 +1,57 @@
 {
     "type": "package",
     "name": "aforemny/material-components-elm",
-    "summary": "TODO",
+    "summary": "Material Components for Elm",
     "license": "MIT",
-    "version": "0.0.0",
-    "exposed-modules": [
-        "Material": [
-            "Button",
-            "Card",
-            "Checkbox",
-            "Chip": [
-                "Choice", "Filter", "Input"
-            ],
-            "ChipSet",
-            "Dialog",
-            "Drawer",
-            "Elevation",
-            "Fab",
-            "Fab": [
-                "Extended"
-            ],
-            "FormField",
-            "Icon",
-            "IconButton",
-            "ImageList",
-            "LayoutGrid",
-            "LinearProgress",
-            "List",
-            "Menu",
-            "Radio",
-            "Ripple",
-            "Select",
-            "Select": [
-                "Enhanced"
-            ],
-            "Slider",
-            "Snackbar",
-            "Switch",
-            "TabBar",
-            "TextField",
-            "TextField": [
-                "HelperText"
-            ],
-            "Theme",
-            "TopAppBar",
-            "Typography"
-        ]
-    ],
+    "version": "1.0.0",
     "source-directories": [
         "src"
     ],
-    "elm-version": "0.19.0",
+    "exposed-modules": {
+      "Material": [
+        "Material.Button",
+        "Material.Card",
+        "Material.Checkbox",
+        "Material.Chip.Choice",
+        "Material.Chip.Filter",
+        "Material.Chip.Input",
+        "Material.ChipSet",
+        "Material.Dialog",
+        "Material.Drawer",
+        "Material.Elevation",
+        "Material.Fab",
+        "Material.Fab.Extended",
+        "Material.FormField",
+        "Material.Icon",
+        "Material.IconButton",
+        "Material.ImageList",
+        "Material.LayoutGrid",
+        "Material.LinearProgress",
+        "Material.List",
+        "Material.Menu",
+        "Material.Radio",
+        "Material.Ripple",
+        "Material.Select",
+        "Material.Select.Enhanced",
+        "Material.Slider",
+        "Material.Snackbar",
+        "Material.Switch",
+        "Material.TabBar",
+        "Material.TextField",
+        "Material.TextField.HelperText",
+        "Material.Theme",
+        "Material.TopAppBar",
+        "Material.Typography"
+      ]
+    },
+    "elm-version": "0.19.0 <= v < 0.19.1",
     "dependencies": {
-        "direct": {
-            "elm/browser": "1.0.1",
-            "elm/core": "1.0.2",
-            "elm/html": "1.0.0",
-            "elm/json": "1.1.2",
-            "elm/svg": "1.0.1",
-            "elm/url": "1.0.0"
-        },
-        "indirect": {
-            "elm/time": "1.0.0",
-            "elm/virtual-dom": "1.0.2"
-        }
+        "elm/core": "1.0.2 <= v < 2.0.0",
+        "elm/html": "1.0.0 <= v < 2.0.0",
+        "elm/json": "1.1.2 <= v < 2.0.0",
+        "elm/svg": "1.0.1 <= v < 2.0.0",
+        "elm/url": "1.0.0 <= v < 2.0.0"
     },
     "test-dependencies": {
-        "direct": {},
-        "indirect": {}
     }
 }

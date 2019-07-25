@@ -1,15 +1,21 @@
 module Material.LinearProgress exposing
-    ( LinearProgressConfig
-    , bufferedLinearProgress
-    , determinateLinearProgress
-    , indeterminateLinearProgress
-    , linearProgressConfig
+    ( LinearProgressConfig, linearProgressConfig
+    , indeterminateLinearProgress, determinateLinearProgress, bufferedLinearProgress
     )
+
+{-|
+
+@docs LinearProgressConfig, linearProgressConfig
+@docs indeterminateLinearProgress, determinateLinearProgress, bufferedLinearProgress
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 
 
+{-| TODO docs
+-}
 type alias LinearProgressConfig msg =
     { variant : Variant
     , reverse : Bool
@@ -24,6 +30,8 @@ type Variant
     | Buffered Float Float
 
 
+{-| TODO docs
+-}
 linearProgressConfig : LinearProgressConfig msg
 linearProgressConfig =
     { variant = Indeterminate
@@ -33,6 +41,8 @@ linearProgressConfig =
     }
 
 
+{-| TODO docs
+-}
 linearProgress : LinearProgressConfig msg -> Html msg
 linearProgress config =
     Html.node "mdc-linear-progress"
@@ -56,17 +66,26 @@ linearProgress config =
         ]
 
 
+{-| TODO docs
+-}
 indeterminateLinearProgress : LinearProgressConfig msg -> Html msg
 indeterminateLinearProgress config =
     linearProgress { config | variant = Indeterminate }
 
 
+{-| TODO docs
+-}
 determinateLinearProgress : LinearProgressConfig msg -> { progress : Float } -> Html msg
 determinateLinearProgress config { progress } =
     linearProgress { config | variant = Determinate progress }
 
 
-bufferedLinearProgress : LinearProgressConfig msg -> { progress : Float, buffered : Float } -> Html msg
+{-| TODO docs
+-}
+bufferedLinearProgress :
+    LinearProgressConfig msg
+    -> { progress : Float, buffered : Float }
+    -> Html msg
 bufferedLinearProgress config { progress, buffered } =
     linearProgress { config | variant = Buffered progress buffered }
 

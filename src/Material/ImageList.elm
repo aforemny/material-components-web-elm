@@ -1,17 +1,26 @@
 module Material.ImageList exposing
-    ( ImageListConfig
-    , ImageListItem
-    , ImageListItemConfig
-    , imageList
-    , imageListConfig
+    ( ImageListConfig, imageListConfig
+    , ImageListItem, imageList
+    , ImageListItemConfig, imageListItemConfig
     , imageListItem
-    , imageListItemConfig
     )
+
+{-|
+
+@docs ImageListConfig, imageListConfig
+@docs ImageListItem, imageList
+
+@docs ImageListItemConfig, imageListItemConfig
+@docs imageListItem
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+{-| TODO docs
+-}
 type alias ImageListConfig msg =
     { masonry : Bool
     , withTextProtection : Bool
@@ -19,6 +28,8 @@ type alias ImageListConfig msg =
     }
 
 
+{-| TODO docs
+-}
 imageListConfig : ImageListConfig msg
 imageListConfig =
     { masonry = False
@@ -27,6 +38,8 @@ imageListConfig =
     }
 
 
+{-| TODO docs
+-}
 imageList : ImageListConfig msg -> List (ImageListItem msg) -> Html msg
 imageList config listItems =
     Html.node "mdc-image-list"
@@ -40,6 +53,8 @@ imageList config listItems =
         (List.map (listItemElt config) listItems)
 
 
+{-| TODO docs
+-}
 type alias ImageListItemConfig msg =
     { label : Maybe String
     , href : Maybe String
@@ -47,6 +62,8 @@ type alias ImageListItemConfig msg =
     }
 
 
+{-| TODO docs
+-}
 imageListItemConfig : ImageListItemConfig msg
 imageListItemConfig =
     { label = Nothing
@@ -55,6 +72,8 @@ imageListItemConfig =
     }
 
 
+{-| TODO docs
+-}
 type ImageListItem msg
     = ImageListItem
         { config : ImageListItemConfig msg
@@ -62,6 +81,8 @@ type ImageListItem msg
         }
 
 
+{-| TODO docs
+-}
 imageListItem : ImageListItemConfig msg -> String -> ImageListItem msg
 imageListItem config image =
     ImageListItem { config = config, image = image }

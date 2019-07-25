@@ -1,4 +1,14 @@
-module Material.Chip.Filter exposing (FilterChipConfig, filterChip, filterChipConfig)
+module Material.Chip.Filter exposing
+    ( FilterChipConfig, filterChipConfig
+    , filterChip
+    )
+
+{-|
+
+@docs FilterChipConfig, filterChipConfig
+@docs filterChip
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -8,6 +18,8 @@ import Svg
 import Svg.Attributes
 
 
+{-| TODO
+-}
 type alias FilterChipConfig msg =
     { icon : Maybe String
     , selected : Bool
@@ -16,6 +28,8 @@ type alias FilterChipConfig msg =
     }
 
 
+{-| TODO
+-}
 filterChipConfig : FilterChipConfig msg
 filterChipConfig =
     { icon = Nothing
@@ -25,6 +39,8 @@ filterChipConfig =
     }
 
 
+{-| TODO
+-}
 filterChip : FilterChipConfig msg -> String -> Html msg
 filterChip config label =
     Html.node "mdc-chip"

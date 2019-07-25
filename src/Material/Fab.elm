@@ -1,9 +1,21 @@
-module Material.Fab exposing (FabConfig, fab, fabConfig)
+module Material.Fab exposing
+    ( FabConfig, fabConfig
+    , fab
+    )
+
+{-|
+
+@docs FabConfig, fabConfig
+@docs fab
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+{-| TODO
+-}
 type alias FabConfig msg =
     { mini : Bool
     , exited : Bool
@@ -11,6 +23,8 @@ type alias FabConfig msg =
     }
 
 
+{-| TODO
+-}
 fabConfig : FabConfig msg
 fabConfig =
     { mini = False
@@ -19,6 +33,8 @@ fabConfig =
     }
 
 
+{-| TODO
+-}
 fab : FabConfig msg -> String -> Html msg
 fab config iconName =
     Html.node "mdc-fab"

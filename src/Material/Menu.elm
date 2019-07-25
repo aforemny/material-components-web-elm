@@ -1,4 +1,14 @@
-module Material.Menu exposing (MenuConfig, menu, menuConfig, menuSurfaceAnchor)
+module Material.Menu exposing
+    ( MenuConfig, menuConfig
+    , menu, menuSurfaceAnchor
+    )
+
+{-|
+
+@docs MenuConfig, menuConfig
+@docs menu, menuSurfaceAnchor
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -6,6 +16,8 @@ import Html.Events
 import Json.Decode as Decode
 
 
+{-| TODO docs
+-}
 type alias MenuConfig msg =
     { open : Bool
     , quickOpen : Bool
@@ -14,6 +26,8 @@ type alias MenuConfig msg =
     }
 
 
+{-| TODO docs
+-}
 menuConfig : MenuConfig msg
 menuConfig =
     { open = False
@@ -23,6 +37,8 @@ menuConfig =
     }
 
 
+{-| TODO docs
+-}
 menu : MenuConfig msg -> List (Html msg) -> Html msg
 menu config nodes =
     Html.node "mdc-menu"
@@ -37,6 +53,8 @@ menu config nodes =
         nodes
 
 
+{-| TODO docs
+-}
 menuSurfaceAnchor : Html.Attribute msg
 menuSurfaceAnchor =
     class "mdc-menu-surface--anchor"

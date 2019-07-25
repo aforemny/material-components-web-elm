@@ -1,4 +1,14 @@
-module Material.Switch exposing (SwitchConfig, switch, switchConfig)
+module Material.Switch exposing
+    ( SwitchConfig, switchConfig
+    , switch
+    )
+
+{-|
+
+@docs SwitchConfig, switchConfig
+@docs switch
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -6,6 +16,8 @@ import Html.Events
 import Json.Decode as Decode
 
 
+{-| TODO docs
+-}
 type alias SwitchConfig msg =
     { checked : Bool
     , disabled : Bool
@@ -14,6 +26,8 @@ type alias SwitchConfig msg =
     }
 
 
+{-| TODO docs
+-}
 switchConfig : SwitchConfig msg
 switchConfig =
     { checked = False
@@ -23,6 +37,8 @@ switchConfig =
     }
 
 
+{-| TODO docs
+-}
 switch : SwitchConfig msg -> Html msg
 switch config =
     Html.node "mdc-switch"

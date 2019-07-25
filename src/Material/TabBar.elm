@@ -1,14 +1,24 @@
 module Material.TabBar exposing
-    ( Tab
-    , TabBarConfig
-    , TabScrollerAlign(..)
-    , TabScrollerConfig
-    , tab
+    ( TabBarConfig, tabBarConfig
     , tabBar
-    , tabBarConfig
-    , tabConfig
-    , tabScrollerConfig
+    , Tab, tabConfig
+    , tab, TabContent
+    , TabScrollerConfig, tabScrollerConfig
+    , TabScrollerAlign(..)
     )
+
+{-|
+
+@docs TabBarConfig, tabBarConfig
+@docs tabBar
+
+@docs Tab, tabConfig
+@docs tab, TabContent
+
+@docs TabScrollerConfig, tabScrollerConfig
+@docs TabScrollerAlign
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -16,12 +26,16 @@ import Html.Events
 import Json.Decode as Decode
 
 
+{-| TODO docs
+-}
 type alias TabBarConfig msg =
     { additionalAttributes : List (Html.Attribute msg)
     , tabScrollerConfig : TabScrollerConfig msg
     }
 
 
+{-| TODO docs
+-}
 tabBarConfig : TabBarConfig msg
 tabBarConfig =
     { additionalAttributes = []
@@ -29,6 +43,8 @@ tabBarConfig =
     }
 
 
+{-| TODO docs
+-}
 tabBar : TabBarConfig msg -> List (Tab msg) -> Html msg
 tabBar config tabs =
     Html.node "mdc-tab-bar"
@@ -66,6 +82,8 @@ activeTabAttr tabs =
     Maybe.map (Html.Attributes.attribute "activetab") activeTabIndex
 
 
+{-| TODO docs
+-}
 type alias TabConfig msg =
     { active : Bool
     , stacked : Bool
@@ -74,6 +92,10 @@ type alias TabConfig msg =
     , additionalAttributes : List (Html.Attribute msg)
     , onClick : Maybe msg
     }
+
+
+{-| TODO docs
+-}
 
 
 
@@ -92,16 +114,22 @@ tabConfig =
     }
 
 
+{-| TODO docs
+-}
 type alias TabContent =
     { label : String
     , icon : Maybe String
     }
 
 
+{-| TODO docs
+-}
 type Tab msg
     = Tab { config : TabConfig msg, content : TabContent }
 
 
+{-| TODO docs
+-}
 tab : TabConfig msg -> TabContent -> Tab msg
 tab config content =
     Tab { config = config, content = content }
@@ -221,18 +249,24 @@ tabRippleElt =
     Just (Html.span [ class "mdc-tab__ripple" ] [])
 
 
+{-| TODO docs
+-}
 type alias TabScrollerConfig msg =
     { align : Maybe TabScrollerAlign
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
+{-| TODO docs
+-}
 type TabScrollerAlign
     = TabScrollerAlignStart
     | TabScrollerAlignEnd
     | TabScrollerAlignCenter
 
 
+{-| TODO docs
+-}
 tabScrollerConfig : TabScrollerConfig msg
 tabScrollerConfig =
     { align = Nothing

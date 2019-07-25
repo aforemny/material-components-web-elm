@@ -1,21 +1,34 @@
 module Material.Card exposing
-    ( CardActions
-    , CardBlock
-    , CardConfig
-    , CardContent
-    , CardMediaAspect(..)
+    ( CardConfig, cardConfig
     , card
-    , cardActionButton
-    , cardActionIcon
-    , cardActions
+    , CardContent
+    , CardBlock
+    , cardMediaConfig, cardMedia, CardMediaAspect(..)
+    , cardPrimaryActionConfig, cardPrimaryAction
     , cardBlock
-    , cardConfig
+    , CardActions, cardActions, cardActionButton, cardActionIcon
     , cardFullBleedActions
-    , cardMedia
-    , cardMediaConfig
-    , cardPrimaryAction
-    , cardPrimaryActionConfig
     )
+
+{-|
+
+@docs CardConfig, cardConfig
+@docs card
+
+@docs CardContent
+
+@docs CardBlock
+
+@docs cardMediaConfig, cardMedia, CardMediaAspect
+
+@docs cardPrimaryActionConfig, cardPrimaryAction
+
+@docs cardBlock
+
+@docs CardActions, cardActions, cardActionButton, cardActionIcon
+@docs cardFullBleedActions
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -24,12 +37,16 @@ import Material.Button exposing (ButtonConfig, buttonConfig)
 import Material.Icon exposing (IconConfig, iconConfig)
 
 
+{-| TODO
+-}
 type alias CardConfig msg =
     { outlined : Bool
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
+{-| TODO
+-}
 cardConfig : CardConfig msg
 cardConfig =
     { outlined = False
@@ -37,6 +54,8 @@ cardConfig =
     }
 
 
+{-| TODO
+-}
 card : CardConfig msg -> CardContent msg -> Html msg
 card config content =
     Html.node "mdc-card"
@@ -109,27 +128,37 @@ outlinedCs { outlined } =
         Nothing
 
 
+{-| TODO
+-}
 type alias CardContent msg =
     { blocks : List (CardBlock msg)
     , actions : Maybe (CardActions msg)
     }
 
 
+{-| TODO
+-}
 type CardBlock msg
     = Block (Html msg)
 
 
+{-| TODO
+-}
 cardBlock : Html msg -> CardBlock msg
 cardBlock =
     Block
 
 
+{-| TODO
+-}
 type alias MediaConfig msg =
     { aspect : Maybe CardMediaAspect
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
+{-| TODO
+-}
 cardMediaConfig : MediaConfig msg
 cardMediaConfig =
     { aspect = Nothing
@@ -137,11 +166,15 @@ cardMediaConfig =
     }
 
 
+{-| TODO
+-}
 type CardMediaAspect
     = Square
     | SixteenToNine
 
 
+{-| TODO
+-}
 cardMedia : MediaConfig msg -> String -> CardBlock msg
 cardMedia config backgroundImage =
     Block <|
@@ -179,12 +212,16 @@ aspectCs { aspect } =
             Nothing
 
 
+{-| TODO
+-}
 type alias PrimaryActionConfig msg =
     { additionalAttributes : List (Html.Attribute msg)
     , onClick : Maybe msg
     }
 
 
+{-| TODO
+-}
 cardPrimaryActionConfig : PrimaryActionConfig msg
 cardPrimaryActionConfig =
     { additionalAttributes = []
@@ -192,6 +229,8 @@ cardPrimaryActionConfig =
     }
 
 
+{-| TODO
+-}
 cardPrimaryAction : PrimaryActionConfig msg -> List (CardBlock msg) -> List (CardBlock msg)
 cardPrimaryAction config blocks =
     [ Block <|
@@ -216,6 +255,8 @@ primaryActionClickHandler { onClick } =
     Maybe.map Html.Events.onClick onClick
 
 
+{-| TODO
+-}
 type CardActions msg
     = Actions
         { buttons : List (Button msg)
@@ -224,20 +265,28 @@ type CardActions msg
         }
 
 
+{-| TODO
+-}
 cardActions : { buttons : List (Button msg), icons : List (Icon msg) } -> CardActions msg
 cardActions { buttons, icons } =
     Actions { buttons = buttons, icons = icons, fullBleed = False }
 
 
+{-| TODO
+-}
 cardFullBleedActions : Button msg -> CardActions msg
 cardFullBleedActions button =
     Actions { buttons = [ button ], icons = [], fullBleed = True }
 
 
+{-| TODO
+-}
 type Button msg
     = Button (Html msg)
 
 
+{-| TODO
+-}
 cardActionButton : ButtonConfig msg -> String -> Button msg
 cardActionButton buttonConfig label =
     Button <|
@@ -255,6 +304,8 @@ type Icon msg
     = Icon (Html msg)
 
 
+{-| TODO
+-}
 cardActionIcon : IconConfig msg -> String -> Icon msg
 cardActionIcon iconConfig iconName =
     Icon <|

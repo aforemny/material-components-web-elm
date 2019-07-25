@@ -1,4 +1,14 @@
-module Material.Dialog exposing (DialogConfig, DialogContent, dialog, dialogConfig)
+module Material.Dialog exposing
+    ( DialogConfig, dialogConfig
+    , dialog, DialogContent
+    )
+
+{-|
+
+@docs DialogConfig, dialogConfig
+@docs dialog, DialogContent
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -6,6 +16,8 @@ import Html.Events
 import Json.Decode as Decode
 
 
+{-| TODO
+-}
 type alias DialogConfig msg =
     { open : Bool
     , additionalAttributes : List (Html.Attribute msg)
@@ -13,6 +25,8 @@ type alias DialogConfig msg =
     }
 
 
+{-| TODO
+-}
 dialogConfig : DialogConfig msg
 dialogConfig =
     { open = False
@@ -21,6 +35,8 @@ dialogConfig =
     }
 
 
+{-| TODO
+-}
 type alias DialogContent msg =
     { title : Maybe String
     , content : List (Html msg)
@@ -28,6 +44,8 @@ type alias DialogContent msg =
     }
 
 
+{-| TODO
+-}
 dialog : DialogConfig msg -> DialogContent msg -> Html msg
 dialog config content =
     Html.node "mdc-dialog"

@@ -1,28 +1,44 @@
 module Material.TopAppBar exposing
-    ( TopAppBarConfig
+    ( TopAppBarConfig, topAppBarConfig
+    , topAppBar, prominentTopAppBar, shortTopAppBar, shortCollapsedTopAppBar
+    , section, row
+    , alignEnd, alignStart
+    , title
+    , navigationIcon
     , actionItem
-    , alignEnd
-    , alignStart
+    , fixedAdjust
     , denseFixedAdjust
     , denseProminentFixedAdjust
-    , fixedAdjust
-    , navigationIcon
     , prominentFixedAdjust
-    , prominentTopAppBar
-    , row
-    , section
-    , shortCollapsedTopAppBar
     , shortFixedAdjust
-    , shortTopAppBar
-    , title
-    , topAppBar
-    , topAppBarConfig
     )
+
+{-|
+
+@docs TopAppBarConfig, topAppBarConfig
+@docs topAppBar, prominentTopAppBar, shortTopAppBar, shortCollapsedTopAppBar
+
+@docs section, row
+@docs alignEnd, alignStart
+
+@docs title
+@docs navigationIcon
+@docs actionItem
+
+@docs fixedAdjust
+@docs denseFixedAdjust
+@docs denseProminentFixedAdjust
+@docs prominentFixedAdjust
+@docs shortFixedAdjust
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+{-| TODO docs
+-}
 type alias TopAppBarConfig msg =
     { variant : Variant
     , dense : Bool
@@ -38,6 +54,8 @@ type Variant
     | Prominent
 
 
+{-| TODO docs
+-}
 topAppBarConfig : TopAppBarConfig msg
 topAppBarConfig =
     { variant = Default
@@ -47,6 +65,8 @@ topAppBarConfig =
     }
 
 
+{-| TODO docs
+-}
 topAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 topAppBar config nodes =
     Html.node "mdc-top-app-bar"
@@ -61,51 +81,71 @@ topAppBar config nodes =
         nodes
 
 
+{-| TODO docs
+-}
 shortTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 shortTopAppBar config nodes =
     topAppBar { config | variant = Short } nodes
 
 
+{-| TODO docs
+-}
 shortCollapsedTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 shortCollapsedTopAppBar config nodes =
     topAppBar { config | variant = ShortCollapsed } nodes
 
 
+{-| TODO docs
+-}
 prominentTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 prominentTopAppBar config nodes =
     topAppBar { config | variant = Prominent } nodes
 
 
+{-| TODO docs
+-}
 row : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 row attributes nodes =
     Html.section ([ class "mdc-top-app-bar__row" ] ++ attributes) nodes
 
 
+{-| TODO docs
+-}
 section : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 section attributes nodes =
     Html.section ([ class "mdc-top-app-bar__section" ] ++ attributes) nodes
 
 
+{-| TODO docs
+-}
 alignStart : Html.Attribute msg
 alignStart =
     class "mdc-top-app-bar__section--align-start"
 
 
+{-| TODO docs
+-}
 alignEnd : Html.Attribute msg
 alignEnd =
     class "mdc-top-app-bar__section--align-end"
 
 
+{-| TODO docs
+-}
 navigationIcon : Html.Attribute msg
 navigationIcon =
     class "mdc-top-app-bar__navigation-icon"
 
 
+{-| TODO docs
+-}
 title : Html.Attribute msg
 title =
     class "mdc-top-app-bar__title"
 
 
+{-| TODO docs
+-}
 actionItem : Html.Attribute msg
 actionItem =
     class "mdc-top-app-bar__action-item"
@@ -150,26 +190,36 @@ fixedCs { fixed } =
         Nothing
 
 
+{-| TODO docs
+-}
 fixedAdjust : Html.Attribute msg
 fixedAdjust =
     class "mdc-top-app-bar--fixed-adjust"
 
 
+{-| TODO docs
+-}
 denseFixedAdjust : Html.Attribute msg
 denseFixedAdjust =
     class "mdc-top-app-bar--dense-fixed-adjust"
 
 
+{-| TODO docs
+-}
 shortFixedAdjust : Html.Attribute msg
 shortFixedAdjust =
     class "mdc-top-app-bar--short-fixed-adjust"
 
 
+{-| TODO docs
+-}
 prominentFixedAdjust : Html.Attribute msg
 prominentFixedAdjust =
     class "mdc-top-app-bar--prominent-fixed-adjust"
 
 
+{-| TODO docs
+-}
 denseProminentFixedAdjust : Html.Attribute msg
 denseProminentFixedAdjust =
     class "mdc-top-app-bar--dense-prominent-fixed-adjust"

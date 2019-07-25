@@ -1,10 +1,22 @@
-module Material.FormField exposing (FormFieldConfig, formField, formFieldConfig)
+module Material.FormField exposing
+    ( FormFieldConfig, formFieldConfig
+    , formField
+    )
+
+{-|
+
+@docs FormFieldConfig, formFieldConfig
+@docs formField
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 
 
+{-| TODO
+-}
 type alias FormFieldConfig msg =
     { label : String
     , for : Maybe String
@@ -14,6 +26,8 @@ type alias FormFieldConfig msg =
     }
 
 
+{-| TODO
+-}
 formFieldConfig : FormFieldConfig msg
 formFieldConfig =
     { label = ""
@@ -24,6 +38,8 @@ formFieldConfig =
     }
 
 
+{-| TODO
+-}
 formField : FormFieldConfig msg -> List (Html msg) -> Html msg
 formField config nodes =
     Html.node "mdc-form-field"

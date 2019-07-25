@@ -1,4 +1,14 @@
-module Material.Slider exposing (SliderConfig, slider, sliderConfig)
+module Material.Slider exposing
+    ( SliderConfig, sliderConfig
+    , slider
+    )
+
+{-|
+
+@docs SliderConfig, sliderConfig
+@docs slider
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
@@ -6,6 +16,10 @@ import Html.Events
 import Json.Decode as Decode
 import Svg
 import Svg.Attributes
+
+
+{-| TODO docs
+-}
 
 
 
@@ -26,6 +40,8 @@ type alias SliderConfig msg =
     }
 
 
+{-| TODO docs
+-}
 sliderConfig : SliderConfig msg
 sliderConfig =
     { discrete = False
@@ -40,6 +56,8 @@ sliderConfig =
     }
 
 
+{-| TODO docs
+-}
 slider : SliderConfig msg -> Html msg
 slider config =
     Html.node "mdc-slider"

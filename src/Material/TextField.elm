@@ -1,9 +1,17 @@
 module Material.TextField exposing
-    ( TextFieldConfig
+    ( TextFieldConfig, textFieldConfig
     , textField
-    , textFieldConfig
     , textFieldIcon
     )
+
+{-|
+
+@docs TextFieldConfig, textFieldConfig
+@docs textField
+
+@docs textFieldIcon
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -12,6 +20,8 @@ import Json.Decode as Decode
 import Material.Icon exposing (IconConfig, icon, iconConfig)
 
 
+{-| TODO docs
+-}
 type alias TextFieldConfig msg =
     { label : String
     , fullwidth : Bool
@@ -41,6 +51,8 @@ type TextFieldIcon msg
     | Icon (Html msg)
 
 
+{-| TODO docs
+-}
 textFieldConfig : TextFieldConfig msg
 textFieldConfig =
     { label = ""
@@ -66,6 +78,8 @@ textFieldConfig =
     }
 
 
+{-| TODO docs
+-}
 textField : TextFieldConfig msg -> Html msg
 textField config =
     Html.node "mdc-text-field"
@@ -109,6 +123,8 @@ textField config =
         )
 
 
+{-| TODO docs
+-}
 textFieldIcon : IconConfig msg -> String -> TextFieldIcon msg
 textFieldIcon iconConfig iconName =
     Icon

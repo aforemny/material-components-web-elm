@@ -1,13 +1,19 @@
 module Material.Select exposing
-    ( SelectConfig
-    , SelectOption
-    , SelectOptionConfig
-    , filledSelect
-    , outlinedSelect
-    , selectConfig
-    , selectOption
-    , selectOptionConfig
+    ( SelectConfig, selectConfig
+    , filledSelect, outlinedSelect
+    , SelectOptionConfig, selectOptionConfig
+    , SelectOption, selectOption
     )
+
+{-|
+
+@docs SelectConfig, selectConfig
+@docs filledSelect, outlinedSelect
+
+@docs SelectOptionConfig, selectOptionConfig
+@docs SelectOption, selectOption
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -15,6 +21,8 @@ import Html.Events
 import Json.Decode as Decode
 
 
+{-| TODO docs
+-}
 type alias SelectConfig msg =
     { label : String
     , value : Maybe String
@@ -24,6 +32,8 @@ type alias SelectConfig msg =
     }
 
 
+{-| TODO docs
+-}
 selectConfig : SelectConfig msg
 selectConfig =
     { label = ""
@@ -39,6 +49,8 @@ type Variant
     | Outlined
 
 
+{-| TODO docs
+-}
 select : SelectConfig msg -> List (SelectOption msg) -> Html msg
 select config nodes =
     Html.node "mdc-select"
@@ -63,11 +75,15 @@ select config nodes =
         )
 
 
+{-| TODO docs
+-}
 filledSelect : SelectConfig msg -> List (SelectOption msg) -> Html msg
 filledSelect config nodes =
     select { config | variant = Filled } nodes
 
 
+{-| TODO docs
+-}
 outlinedSelect : SelectConfig msg -> List (SelectOption msg) -> Html msg
 outlinedSelect config nodes =
     select { config | variant = Outlined } nodes
@@ -114,6 +130,8 @@ nativeControlCs =
     Just (class "mdc-select__native-control")
 
 
+{-| TODO docs
+-}
 type alias SelectOptionConfig msg =
     { disabled : Bool
     , value : String
@@ -121,6 +139,8 @@ type alias SelectOptionConfig msg =
     }
 
 
+{-| TODO docs
+-}
 selectOptionConfig : SelectOptionConfig msg
 selectOptionConfig =
     { disabled = False
@@ -129,10 +149,14 @@ selectOptionConfig =
     }
 
 
+{-| TODO docs
+-}
 type SelectOption msg
     = SelectOption (SelectConfig msg -> Html msg)
 
 
+{-| TODO docs
+-}
 selectOption : SelectOptionConfig msg -> List (Html msg) -> SelectOption msg
 selectOption config nodes =
     SelectOption

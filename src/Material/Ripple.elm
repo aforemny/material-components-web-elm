@@ -1,15 +1,24 @@
 module Material.Ripple exposing
     ( RippleColor(..)
-    , RippleConfig
-    , ripple
-    , rippleConfig
-    , unboundedRipple
+    , RippleConfig, rippleConfig
+    , ripple, unboundedRipple
     )
+
+{-|
+
+@docs RippleColor
+@docs RippleConfig, rippleConfig
+
+@docs ripple, unboundedRipple
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+{-| TODO docs
+-}
 type alias RippleConfig msg =
     { unbounded : Bool
     , color : Maybe RippleColor
@@ -17,6 +26,8 @@ type alias RippleConfig msg =
     }
 
 
+{-| TODO docs
+-}
 rippleConfig : RippleConfig msg
 rippleConfig =
     { unbounded = False
@@ -25,11 +36,15 @@ rippleConfig =
     }
 
 
+{-| TODO docs
+-}
 type RippleColor
     = PrimaryColor
     | AccentColor
 
 
+{-| TODO docs
+-}
 ripple : RippleConfig msg -> Html msg
 ripple config =
     Html.node "mdc-ripple"
@@ -48,6 +63,8 @@ ripple config =
         []
 
 
+{-| TODO docs
+-}
 unboundedRipple : RippleConfig msg -> Html msg
 unboundedRipple config =
     ripple { config | unbounded = True }

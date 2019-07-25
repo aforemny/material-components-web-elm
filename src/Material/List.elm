@@ -1,22 +1,36 @@
 module Material.List exposing
-    ( ListConfig
-    , ListItemConfig
-    , ListItemDividerConfig
+    ( ListConfig, listConfig
     , list
-    , listConfig
-    , listGroup
-    , listGroupDivider
-    , listGroupSubheader
+    , ListItemConfig, listItemConfig
     , listItem
-    , listItemConfig
+    , listItemText, listItemPrimaryText, listItemSecondaryText
+    , listItemGraphic, listItemMeta
+    , ListItemDividerConfig, listItemDividerConfig
     , listItemDivider
-    , listItemDividerConfig
-    , listItemGraphic
-    , listItemMeta
-    , listItemPrimaryText
-    , listItemSecondaryText
-    , listItemText
+    , listGroup
+    , listGroupSubheader
+    , listGroupDivider
     )
+
+{-|
+
+@docs ListConfig, listConfig
+@docs list
+
+@docs ListItemConfig, listItemConfig
+@docs listItem
+@docs listItemText, listItemPrimaryText, listItemSecondaryText
+@docs listItemGraphic, listItemMeta
+
+@docs ListItemDividerConfig, listItemDividerConfig
+@docs listItemDivider
+
+@docs listGroup
+@docs listGroupSubheader
+
+@docs listGroupDivider
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -24,6 +38,8 @@ import Html.Events
 import Json.Decode as Decode
 
 
+{-| TODO docs
+-}
 type alias ListConfig msg =
     { nonInteractive : Bool
     , dense : Bool
@@ -33,6 +49,8 @@ type alias ListConfig msg =
     }
 
 
+{-| TODO docs
+-}
 listConfig : ListConfig msg
 listConfig =
     { nonInteractive = False
@@ -43,6 +61,8 @@ listConfig =
     }
 
 
+{-| TODO docs
+-}
 list : ListConfig msg -> List (Html msg) -> Html msg
 list config nodes =
     Html.node "mdc-list"
@@ -99,6 +119,8 @@ twoLineCs { twoLine } =
         Nothing
 
 
+{-| TODO docs
+-}
 type alias ListItemConfig msg =
     { disabled : Bool
     , selected : Bool
@@ -108,6 +130,8 @@ type alias ListItemConfig msg =
     }
 
 
+{-| TODO docs
+-}
 listItemConfig : ListItemConfig msg
 listItemConfig =
     { disabled = False
@@ -118,6 +142,8 @@ listItemConfig =
     }
 
 
+{-| TODO docs
+-}
 listItem : ListItemConfig msg -> List (Html msg) -> Html msg
 listItem config nodes =
     Html.node "mdc-list-item"
@@ -200,31 +226,43 @@ keydownHandler { onClick } =
         onClick
 
 
+{-| TODO docs
+-}
 listItemText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listItemText additionalAttributes nodes =
     Html.div (class "mdc-list-item__text" :: additionalAttributes) nodes
 
 
+{-| TODO docs
+-}
 listItemPrimaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listItemPrimaryText additionalAttributes nodes =
     Html.div (class "mdc-list-item__primary-text" :: additionalAttributes) nodes
 
 
+{-| TODO docs
+-}
 listItemSecondaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listItemSecondaryText additionalAttributes nodes =
     Html.div (class "mdc-list-item__secondary-text" :: additionalAttributes) nodes
 
 
+{-| TODO docs
+-}
 listItemGraphic : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listItemGraphic additionalAttributes nodes =
     Html.div (class "mdc-list-item__graphic" :: additionalAttributes) nodes
 
 
+{-| TODO docs
+-}
 listItemMeta : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listItemMeta additionalAttributes nodes =
     Html.div (class "mdc-list-item__meta" :: additionalAttributes) nodes
 
 
+{-| TODO docs
+-}
 type alias ListItemDividerConfig msg =
     { inset : Bool
     , padded : Bool
@@ -232,6 +270,8 @@ type alias ListItemDividerConfig msg =
     }
 
 
+{-| TODO docs
+-}
 listItemDividerConfig : ListItemDividerConfig msg
 listItemDividerConfig =
     { inset = False
@@ -240,6 +280,8 @@ listItemDividerConfig =
     }
 
 
+{-| TODO docs
+-}
 listItemDivider : ListItemDividerConfig msg -> Html msg
 listItemDivider config =
     Html.li
@@ -282,6 +324,8 @@ paddedCs { padded } =
         Nothing
 
 
+{-| TODO docs
+-}
 listGroup : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listGroup additionalAttributes nodes =
     Html.div (listGroupCs :: additionalAttributes) nodes
@@ -292,11 +336,15 @@ listGroupCs =
     class "mdc-list-group"
 
 
+{-| TODO docs
+-}
 listGroupDivider : List (Html.Attribute msg) -> Html msg
 listGroupDivider additionalAttributes =
     Html.hr (List.filterMap identity [ listDividerCs ] ++ additionalAttributes) []
 
 
+{-| TODO docs
+-}
 listGroupSubheader : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listGroupSubheader additionalAttributes nodes =
     Html.div (listGroupSubheaderCs :: additionalAttributes) nodes

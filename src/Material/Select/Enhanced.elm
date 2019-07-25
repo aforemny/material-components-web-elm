@@ -1,11 +1,19 @@
 module Material.Select.Enhanced exposing
-    ( EnhancedSelectConfig
-    , enhancedSelectConfig
-    , filledEnhancedSelect
-    , outlinedEnhancedSelect
+    ( EnhancedSelectConfig, enhancedSelectConfig
+    , filledEnhancedSelect, outlinedEnhancedSelect
+    , SelectItemConfig, selectItemConfig
     , selectItem
-    , selectItemConfig
     )
+
+{-|
+
+@docs EnhancedSelectConfig, enhancedSelectConfig
+@docs filledEnhancedSelect, outlinedEnhancedSelect
+
+@docs SelectItemConfig, selectItemConfig
+@docs selectItem
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -14,6 +22,8 @@ import Json.Decode as Decode
 import Material.List exposing (list, listConfig)
 
 
+{-| TODO docs
+-}
 type alias EnhancedSelectConfig msg =
     { variant : Variant
     , label : String
@@ -23,6 +33,8 @@ type alias EnhancedSelectConfig msg =
     }
 
 
+{-| TODO docs
+-}
 enhancedSelectConfig : EnhancedSelectConfig msg
 enhancedSelectConfig =
     { variant = Filled
@@ -65,16 +77,22 @@ enhancedSelect config nodes =
         )
 
 
+{-| TODO docs
+-}
 filledEnhancedSelect : EnhancedSelectConfig msg -> List (Html msg) -> Html msg
 filledEnhancedSelect config nodes =
     enhancedSelect { config | variant = Filled } nodes
 
 
+{-| TODO docs
+-}
 outlinedEnhancedSelect : EnhancedSelectConfig msg -> List (Html msg) -> Html msg
 outlinedEnhancedSelect config nodes =
     enhancedSelect { config | variant = Outlined } nodes
 
 
+{-| TODO docs
+-}
 type alias SelectItemConfig msg =
     { disabled : Bool
     , selected : Bool
@@ -84,6 +102,8 @@ type alias SelectItemConfig msg =
     }
 
 
+{-| TODO docs
+-}
 selectItemConfig : SelectItemConfig msg
 selectItemConfig =
     { disabled = False
@@ -94,6 +114,8 @@ selectItemConfig =
     }
 
 
+{-| TODO docs
+-}
 selectItem : SelectItemConfig msg -> List (Html msg) -> Html msg
 selectItem config nodes =
     Html.li

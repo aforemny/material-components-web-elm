@@ -1,9 +1,14 @@
 module Material.Checkbox exposing
-    ( CheckboxConfig
-    , CheckboxState(..)
+    ( CheckboxConfig, checkboxConfig, CheckboxState(..)
     , checkbox
-    , checkboxConfig
     )
+
+{-|
+
+@docs CheckboxConfig, checkboxConfig, CheckboxState
+@docs checkbox
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -14,6 +19,8 @@ import Svg
 import Svg.Attributes
 
 
+{-| TODO
+-}
 type alias CheckboxConfig msg =
     { state : CheckboxState
     , disabled : Bool
@@ -22,12 +29,16 @@ type alias CheckboxConfig msg =
     }
 
 
+{-| TODO
+-}
 type CheckboxState
     = Unchecked
     | Checked
     | Indeterminate
 
 
+{-| TODO
+-}
 checkboxConfig : CheckboxConfig msg
 checkboxConfig =
     { state = Unchecked
@@ -37,6 +48,8 @@ checkboxConfig =
     }
 
 
+{-| TODO
+-}
 checkbox : CheckboxConfig msg -> Html msg
 checkbox config =
     Html.node "mdc-checkbox"

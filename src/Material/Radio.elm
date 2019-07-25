@@ -1,4 +1,14 @@
-module Material.Radio exposing (RadioConfig, radio, radioConfig)
+module Material.Radio exposing
+    ( RadioConfig, radioConfig
+    , radio
+    )
+
+{-|
+
+@docs RadioConfig, radioConfig
+@docs radio
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -6,6 +16,8 @@ import Html.Events
 import Json.Decode as Decode
 
 
+{-| TODO docs
+-}
 type alias RadioConfig msg =
     { checked : Bool
     , disabled : Bool
@@ -14,6 +26,8 @@ type alias RadioConfig msg =
     }
 
 
+{-| TODO docs
+-}
 radioConfig : RadioConfig msg
 radioConfig =
     { checked = False
@@ -23,6 +37,8 @@ radioConfig =
     }
 
 
+{-| TODO docs
+-}
 radio : RadioConfig msg -> Html msg
 radio config =
     Html.node "mdc-radio"

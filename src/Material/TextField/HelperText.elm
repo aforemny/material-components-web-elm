@@ -1,20 +1,29 @@
 module Material.TextField.HelperText exposing
-    ( HelperTextConfig
+    ( HelperTextConfig, helperTextConfig
     , helperText
-    , helperTextConfig
-    , rootCs
     )
+
+{-|
+
+@docs HelperTextConfig, helperTextConfig
+@docs helperText
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
+{-| TODO docs
+-}
 type alias HelperTextConfig msg =
     { persistent : Bool
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
+{-| TODO docs
+-}
 helperTextConfig : HelperTextConfig msg
 helperTextConfig =
     { persistent = False
@@ -22,6 +31,8 @@ helperTextConfig =
     }
 
 
+{-| TODO docs
+-}
 helperText : HelperTextConfig msg -> String -> Html msg
 helperText config string =
     Html.node "mdc-helper-text"

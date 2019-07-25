@@ -1,17 +1,15 @@
-# Do not use this library!
-
-This library currently uses a **patched version of virtual-dom**
-[(#20)](https://github.com/aforemny/material-components-elm/issues/20), and it is
-unclear if it will ever work. If you are looking for Material Design in Elm,
-please take a look at [elm-mdc](https://github.com/aforemny/elm-mdc).
-
-
 # Material Components for Elm
 
-**This library is an early prototype:** It is not published yet and
-documentation is missing. If you want to try it already, load the CSS and JS
-assets from [GitHub Pages](https://aforemny.github.io/material-components-elm),
-and refer to the [Demo's source code](demo) for documentation.
+A [Material Design](https://material.io/design) framework.
+
+This library is based on [Material Components for the
+web](https://github.com/material-components/material-components-web) (MDC Web).
+
+
+## Important links
+
+- [Getting Started Guide]()
+- [Demo](https://aforemny.github.io/material-component-elm)
 
 
 ## Quick start
@@ -27,6 +25,7 @@ Refer to the [simple counter example](examples/simple-counter) for a minimal
 starting point, specifically to the files
 [`src/Main.elm`](examples/simple-counter/src/Main.elm) and
 [`page.html`](examples/simple-counter/page.html).
+
 
 ## Contributions
 

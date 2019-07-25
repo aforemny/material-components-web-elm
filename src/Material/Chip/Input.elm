@@ -1,4 +1,14 @@
-module Material.Chip.Input exposing (InputConfig, inputChip, inputChipConfig)
+module Material.Chip.Input exposing
+    ( InputChipConfig, inputChipConfig
+    , inputChip
+    )
+
+{-|
+
+@docs InputChipConfig, inputChipConfig
+@docs inputChip
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -6,7 +16,9 @@ import Html.Events
 import Json.Decode as Decode
 
 
-type alias InputConfig msg =
+{-| TODO
+-}
+type alias InputChipConfig msg =
     { icon : String
     , additionalAttributes : List (Html.Attribute msg)
     , onClick : Maybe msg
@@ -14,7 +26,9 @@ type alias InputConfig msg =
     }
 
 
-inputChipConfig : InputConfig msg
+{-| TODO
+-}
+inputChipConfig : InputChipConfig msg
 inputChipConfig =
     { icon = "close"
     , additionalAttributes = []
@@ -23,7 +37,9 @@ inputChipConfig =
     }
 
 
-inputChip : InputConfig msg -> String -> Html msg
+{-| TODO
+-}
+inputChip : InputChipConfig msg -> String -> Html msg
 inputChip config label =
     Html.node "mdc-chip"
         (List.filterMap identity
@@ -43,12 +59,12 @@ rootCs =
     Just (class "mdc-chip")
 
 
-clickHandler : InputConfig msg -> Maybe (Html.Attribute msg)
+clickHandler : InputChipConfig msg -> Maybe (Html.Attribute msg)
 clickHandler config =
     Maybe.map (Html.Events.on "MDCChip:interaction" << Decode.succeed) config.onClick
 
 
-trailingIconClickHandler : InputConfig msg -> Maybe (Html.Attribute msg)
+trailingIconClickHandler : InputChipConfig msg -> Maybe (Html.Attribute msg)
 trailingIconClickHandler config =
     Maybe.map (Html.Events.on "MDCChip:trailingIconInteraction" << Decode.succeed)
         config.onClick
@@ -59,7 +75,7 @@ textElt label =
     Html.div [ class "mdc-chip__text" ] [ text label ]
 
 
-trailingIconElt : InputConfig msg -> Html msg
+trailingIconElt : InputChipConfig msg -> Html msg
 trailingIconElt { icon } =
     Html.i
         [ class "material-icons mdc-chip__icon mdc-chip__icon--trailing" ]

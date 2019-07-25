@@ -1,15 +1,27 @@
 module Material.Drawer exposing
-    ( DrawerConfig
-    , DrawerHeaderContent
-    , appContent
-    , dismissibleDrawer
-    , drawerConfig
-    , drawerContent
-    , drawerHeader
-    , drawerScrim
-    , modalDrawer
+    ( DrawerConfig, drawerConfig
     , permanentDrawer
+    , drawerContent, appContent
+    , DrawerHeaderContent
+    , drawerHeader
+    , dismissibleDrawer
+    , modalDrawer, drawerScrim
     )
+
+{-|
+
+@docs DrawerConfig, drawerConfig
+@docs permanentDrawer
+@docs drawerContent, appContent
+
+@docs DrawerHeaderContent
+@docs drawerHeader
+
+@docs dismissibleDrawer
+
+@docs modalDrawer, drawerScrim
+
+-}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
@@ -17,6 +29,8 @@ import Html.Events
 import Json.Decode as Decode
 
 
+{-| TODO
+-}
 type alias DrawerConfig msg =
     { variant : Variant
     , open : Bool
@@ -25,6 +39,8 @@ type alias DrawerConfig msg =
     }
 
 
+{-| TODO
+-}
 drawerConfig : DrawerConfig msg
 drawerConfig =
     { variant = Permanent
@@ -54,32 +70,44 @@ drawer config nodes =
         nodes
 
 
+{-| TODO
+-}
 permanentDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
 permanentDrawer config nodes =
     drawer { config | variant = Permanent } nodes
 
 
+{-| TODO
+-}
 dismissibleDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
 dismissibleDrawer config nodes =
     drawer { config | variant = Dismissible } nodes
 
 
+{-| TODO
+-}
 modalDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
 modalDrawer config nodes =
     drawer { config | variant = Modal } nodes
 
 
+{-| TODO
+-}
 drawerContent : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 drawerContent attributes nodes =
     Html.div (class "mdc-drawer__content" :: attributes) nodes
 
 
+{-| TODO
+-}
 type alias DrawerHeaderContent =
     { title : String
     , subtitle : String
     }
 
 
+{-| TODO
+-}
 drawerHeader : List (Html.Attribute msg) -> DrawerHeaderContent -> Html msg
 drawerHeader additionalAttributes content =
     Html.div (class "mdc-drawer__header" :: additionalAttributes)
@@ -135,11 +163,15 @@ contentElt nodes =
     Html.div [ class "mdc-drawer__content" ] nodes
 
 
+{-| TODO
+-}
 appContent : Html.Attribute msg
 appContent =
     class "mdc-drawer-app-content"
 
 
+{-| TODO
+-}
 drawerScrim : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 drawerScrim additionalAttributes nodes =
     Html.div ([ class "mdc-drawer-scrim" ] ++ additionalAttributes) nodes

@@ -1,21 +1,58 @@
 module Material.IconButton exposing
     ( IconButtonConfig, iconButtonConfig
     , iconButton
-    , iconToggleConfig
-    , iconToggle
-    , customIconButton
+    , iconToggleConfig, iconToggle
     )
 
-{-|
+{-| Icon buttons allow users to take actions, and make choices, with a single
+tap.
+
+  - [Demo: Icon buttons](https://aforemny.github.io/material-components-elm/#icon-buttons)
+  - [Material Design Guidelines: Toggle buttons](https://material.io/go/design-buttons#toggle-button)
+  - [MDC Web: Icon Button](https://github.com/material-components/material-components-web/tree/master/packages/mdc-icon-button)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-icon-button#sass-mixins)
+
+
+# Usage
+
+If you are looking for a button that has an icon as well as text, refer to
+[Button](Material-Button).
+
+
+# Example
+
+    import Material.IconButton
+        exposing
+            ( iconButton
+            , iconButtonConfig
+            )
+
+    type Msg
+        = IconButtonClicked
+
+    main =
+        iconButton
+            { iconButtonConfig
+                | onClick = Just IconButtonClicked
+            }
+            "favorite"
+
+
+# Configuration
 
 @docs IconButtonConfig, iconButtonConfig
-
 @docs iconButton
 
-@docs iconToggleConfig
-@docs iconToggle
 
-@docs customIconButton
+# Variant: Icon Toggle
+
+Icon toggles are a variant of icon buttons that signify a may signify a state
+change when clicked.
+
+    iconToggle iconToggleConfig
+        { off = "favorite_border", on = "favorite" }
+
+@docs iconToggleConfig, iconToggle
 
 -}
 
@@ -24,7 +61,7 @@ import Html.Attributes exposing (class)
 import Html.Events
 
 
-{-| TODO docs
+{-| Icon button configuration
 -}
 type alias IconButtonConfig msg =
     { on : Bool
@@ -34,7 +71,7 @@ type alias IconButtonConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default icon button configuration
 -}
 iconButtonConfig : IconButtonConfig msg
 iconButtonConfig =
@@ -45,7 +82,7 @@ iconButtonConfig =
     }
 
 
-{-| TODO docs
+{-| Icon button variant
 -}
 iconButton : IconButtonConfig msg -> String -> Html msg
 iconButton config iconName =
@@ -61,8 +98,6 @@ iconButton config iconName =
         [ text iconName ]
 
 
-{-| TODO docs
--}
 customIconButton : IconButtonConfig msg -> List (Html msg) -> Html msg
 customIconButton config nodes =
     Html.node "mdc-icon-button"
@@ -76,14 +111,14 @@ customIconButton config nodes =
         nodes
 
 
-{-| TODO docs
+{-| Default icon toggle configuration
 -}
 iconToggleConfig : IconButtonConfig msg
 iconToggleConfig =
     iconButtonConfig
 
 
-{-| TODO docs
+{-| Icon toggle variant
 -}
 iconToggle : IconButtonConfig msg -> { on : String, off : String } -> Html msg
 iconToggle config { on, off } =

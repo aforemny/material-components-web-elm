@@ -1,7 +1,7 @@
 {
   "name": "material-components-elm",
   "version": "0.0.0",
-  "description": "TODO",
+  "description": "Material Components for Elm",
   "license": "MIT",
   "repository": "https://github.com/aforemny/material-components-elm",
   "devDependencies": {

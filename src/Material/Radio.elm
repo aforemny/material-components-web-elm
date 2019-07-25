@@ -3,10 +3,61 @@ module Material.Radio exposing
     , radio
     )
 
-{-|
+{-| Radio buttons allow the user to select one option from a set while seeing
+all available options.
+
+  - [Demo: Radio Buttons](https://aforemny.github.io/material-components-elm/#radio-buttons)
+  - [Material Design Guidelines: Selection Controls – Radio buttons](https://material.io/go/design-radio-buttons)
+  - [MDC Web: Radio](https://github.com/material-components/material-components-web/tree/master/packages/mdc-radio)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-radio#sass-mixins)
+
+
+# Usage
+
+Note that radio buttons are usually used in conjunction with form fields. Refer
+to [FormField](Material-FormField) for more information.
+
+
+# Example
+
+    import Material.Radio exposing (radio, radioConfig)
+
+    type Msg
+        = RadioClicked
+
+    main =
+        radio
+            { radioConfig
+                | checked = True
+                , onClick = Just RadioClicked
+            }
+
+
+# Configuration
 
 @docs RadioConfig, radioConfig
 @docs radio
+
+
+# State
+
+To set the state of a radio button, set its checked configuration field to a Bool value.
+
+
+## Unchecked radio button
+
+    radio { radioConfig | checked = False }
+
+
+# Disabled
+
+To disable a radio button, set its disabled configuration field to True. Disabled
+radio buttons cannot be interacted with and have no visual interaction effect.
+
+
+## Disabled radio button
+
+    radio { radioConfig | disabed = True }
 
 -}
 
@@ -16,7 +67,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-{-| TODO docs
+{-| Radio button configuration
 -}
 type alias RadioConfig msg =
     { checked : Bool
@@ -26,7 +77,7 @@ type alias RadioConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default radio button configuration
 -}
 radioConfig : RadioConfig msg
 radioConfig =
@@ -37,7 +88,7 @@ radioConfig =
     }
 
 
-{-| TODO docs
+{-| Radio button view function
 -}
 radio : RadioConfig msg -> Html msg
 radio config =

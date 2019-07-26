@@ -7,16 +7,95 @@ module Material.TabBar exposing
     , TabScrollerAlign(..)
     )
 
-{-|
+{-| Tabs organize and allow navigation between groups of content that are
+related and at the same level of hierarchy. The Tab Bar contains the Tab
+Scroller and Tab components.
+
+  - [Demo: Tab Bar](https://aforemny.github.io/material-components-elm/#tab-bars)
+  - [Material Design Guidelines: Tabs](https://material.io/go/design-tabs)
+  - [MDC Web: Tab Bar](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-bar)
+  - [MDC Web: Tab](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab)
+  - [MDC Web: Tab Scroller](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-scroller)
+  - [Sass Mixins (Tab Bar, MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-bar#sass-mixins)
+  - [Sass Mixins (Tab, MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab#sass-mixins)
+  - [Sass Mixins (Tab Scroller, MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-scroller#sass-mixins)
+
+
+# Example
+
+    import Material.TabBar
+        exposing
+            ( tab
+            , tabBar
+            , tabBarConfig
+            , tabConfig
+            )
+
+    type Msg
+        = TabClicked Int
+
+    main =
+        tabBar tabBarConfig
+            [ tab
+                { tabConfig
+                    | active = True
+                    , onClick = Just (TabClicked 0)
+                }
+                { label = "Tab 1", icon = Nothing }
+            , tab
+                { tabConfig
+                    | active = False
+                    , onClick = Just (TabClicked 1)
+                }
+                { label = "Tab 1", icon = Nothing }
+            ]
+
+
+# Configuration
 
 @docs TabBarConfig, tabBarConfig
 @docs tabBar
 
+
+# Tabs
+
 @docs Tab, tabConfig
 @docs tab, TabContent
 
+
+# Tab scroller
+
+The tab bar supports tabs overflowing its width and will enable scrolling in
+that case. You may change the alignment of the elements inside the scroll
+content.
+
 @docs TabScrollerConfig, tabScrollerConfig
 @docs TabScrollerAlign
+
+
+## Center-aligned tab scroller
+
+        tabBar
+            { tabBarConfig
+                | tabScrollerConfig =
+                  { tabScrollerConfig
+                      | align =
+                          Just TabBar.TabScrollerAlignCenter
+                  }
+            }
+            [ tab
+                { tabConfig
+                    | active = True
+                    , onClick = Just (TabClicked 0)
+                }
+                { label = "Tab 1", icon = Nothing }
+            , tab
+                { tabConfig
+                    | active = False
+                    , onClick = Just (TabClicked 1)
+                }
+                { label = "Tab 1", icon = Nothing }
+            ]
 
 -}
 
@@ -26,7 +105,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-{-| TODO docs
+{-| Configuration of a tab bar
 -}
 type alias TabBarConfig msg =
     { additionalAttributes : List (Html.Attribute msg)
@@ -34,7 +113,7 @@ type alias TabBarConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a tab bar
 -}
 tabBarConfig : TabBarConfig msg
 tabBarConfig =
@@ -43,7 +122,7 @@ tabBarConfig =
     }
 
 
-{-| TODO docs
+{-| Tab bar view function
 -}
 tabBar : TabBarConfig msg -> List (Tab msg) -> Html msg
 tabBar config tabs =
@@ -82,7 +161,7 @@ activeTabAttr tabs =
     Maybe.map (Html.Attributes.attribute "activetab") activeTabIndex
 
 
-{-| TODO docs
+{-| Configuration of a tab
 -}
 type alias TabConfig msg =
     { active : Bool
@@ -94,15 +173,13 @@ type alias TabConfig msg =
     }
 
 
-{-| TODO docs
--}
-
-
 
 -- TODO: move indicatorSpansContent to tab bar's TabBarConfig, possibly. also
 -- stacked, minWidth, etc.?
 
 
+{-| Default configuration of a tab
+-}
 tabConfig : TabConfig msg
 tabConfig =
     { active = False
@@ -114,7 +191,7 @@ tabConfig =
     }
 
 
-{-| TODO docs
+{-| Content of a tab
 -}
 type alias TabContent =
     { label : String
@@ -122,13 +199,13 @@ type alias TabContent =
     }
 
 
-{-| TODO docs
+{-| Tab
 -}
 type Tab msg
     = Tab { config : TabConfig msg, content : TabContent }
 
 
-{-| TODO docs
+{-| Tab constructor
 -}
 tab : TabConfig msg -> TabContent -> Tab msg
 tab config content =
@@ -249,7 +326,7 @@ tabRippleElt =
     Just (Html.span [ class "mdc-tab__ripple" ] [])
 
 
-{-| TODO docs
+{-| Configuration of a tab scroller
 -}
 type alias TabScrollerConfig msg =
     { align : Maybe TabScrollerAlign
@@ -257,7 +334,7 @@ type alias TabScrollerConfig msg =
     }
 
 
-{-| TODO docs
+{-| Alignment of a tab scroller
 -}
 type TabScrollerAlign
     = TabScrollerAlignStart
@@ -265,7 +342,7 @@ type TabScrollerAlign
     | TabScrollerAlignCenter
 
 
-{-| TODO docs
+{-| Default configuration of a tab scroller
 -}
 tabScrollerConfig : TabScrollerConfig msg
 tabScrollerConfig =

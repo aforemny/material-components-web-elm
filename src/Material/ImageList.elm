@@ -1,17 +1,66 @@
 module Material.ImageList exposing
-    ( ImageListConfig, imageListConfig
-    , ImageListItem, imageList
+    ( ImageListConfig, imageListConfig, imageList
     , ImageListItemConfig, imageListItemConfig
-    , imageListItem
+    , imageListItem, ImageListItem
     )
 
-{-|
+{-| Image List provides a RTL-aware Material Design image list component. An
+Image List consists of several items, each containing an image and optionally
+supporting content (i.e. a text label).
 
-@docs ImageListConfig, imageListConfig
-@docs ImageListItem, imageList
+
+# Example
+
+    import Html.Attributes exposing (style)
+    import Material.ImageList
+        exposing
+            ( imageList
+            , imageListConfig
+            , imageListItem
+            , imageListItemConfig
+            )
+
+    main =
+        imageList imageListConfig
+            [ imageListItem
+                { imageListItemConfig
+                    | additionalAttributes =
+                        [ style "width"
+                            "calc(100% / 5 - 4.2px)"
+                        , style "margin" "2px"
+                        ]
+                }
+                "images/photos/3x2/1.jpg"
+            ]
+
+
+# Configuration
+
+@docs ImageListConfig, imageListConfig, imageList
+
+
+# Image list items
 
 @docs ImageListItemConfig, imageListItemConfig
-@docs imageListItem
+@docs imageListItem, ImageListItem
+
+
+# Masonry image list
+
+The Masonry Image List variant presents images vertically arranged into several
+columns, using CSS Columns. In this layout, images may be any combination of
+aspect ratios.
+
+        imageList { imageListConfig | masonry = True } []
+
+
+# Image list with text protection
+
+Image's labels are by default positioned below the image. If you want image
+labels to be positioned in a scrim overlaying each image, set the image list's
+textProtection configuration field to True.
+
+        imageList { imageListConfig | textProtection = True } []
 
 -}
 
@@ -19,7 +68,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
-{-| TODO docs
+{-| Configuration of an image list
 -}
 type alias ImageListConfig msg =
     { masonry : Bool
@@ -28,7 +77,7 @@ type alias ImageListConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of an image list
 -}
 imageListConfig : ImageListConfig msg
 imageListConfig =
@@ -38,7 +87,7 @@ imageListConfig =
     }
 
 
-{-| TODO docs
+{-| Image list view function
 -}
 imageList : ImageListConfig msg -> List (ImageListItem msg) -> Html msg
 imageList config listItems =
@@ -53,7 +102,7 @@ imageList config listItems =
         (List.map (listItemElt config) listItems)
 
 
-{-| TODO docs
+{-| Configuration of an image list item
 -}
 type alias ImageListItemConfig msg =
     { label : Maybe String
@@ -62,7 +111,7 @@ type alias ImageListItemConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of an image list item
 -}
 imageListItemConfig : ImageListItemConfig msg
 imageListItemConfig =
@@ -72,7 +121,7 @@ imageListItemConfig =
     }
 
 
-{-| TODO docs
+{-| Image list item
 -}
 type ImageListItem msg
     = ImageListItem
@@ -81,7 +130,7 @@ type ImageListItem msg
         }
 
 
-{-| TODO docs
+{-| Image list item constructor
 -}
 imageListItem : ImageListItemConfig msg -> String -> ImageListItem msg
 imageListItem config image =

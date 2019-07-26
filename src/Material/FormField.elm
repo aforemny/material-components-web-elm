@@ -3,10 +3,44 @@ module Material.FormField exposing
     , formField
     )
 
-{-|
+{-| FormField aligns a form field (for example, a checkbox) with
+its label and makes it RTL-aware. It also activates a ripple effect upon
+interacting with the label.
+
+  - [Demo: Checkbox](https://aforemny.github.io/material-components-elm/#checkboxes)
+  - [MDC Web: Form Field](https://github.com/material-components/material-components-web/tree/master/packages/mdc-form-field)
+
+
+# Example
+
+    import Material.Checkbox
+        exposing
+            ( checkbox
+            , checkboxConfig
+            )
+    import Material.FormField
+        exposing
+            ( formField
+            , formFieldConfig
+            )
+
+    main =
+        formField { formFieldConfig | label = "My checkbox" }
+            [ checkbox checkboxConfig ]
+
+
+# Configuration
 
 @docs FormFieldConfig, formFieldConfig
 @docs formField
+
+
+# Label position
+
+If you want to position the label after the form field (ie. checkbox), set its
+alignEnd configuration field to True:
+
+    formField { label = "My checkbox", alignEnd = True } [ checkbox checkboxConfig ]
 
 -}
 
@@ -15,7 +49,7 @@ import Html.Attributes exposing (class)
 import Html.Events
 
 
-{-| TODO
+{-| Configuration of a form field
 -}
 type alias FormFieldConfig msg =
     { label : String
@@ -26,7 +60,7 @@ type alias FormFieldConfig msg =
     }
 
 
-{-| TODO
+{-| Default configuration of a form field
 -}
 formFieldConfig : FormFieldConfig msg
 formFieldConfig =
@@ -38,7 +72,7 @@ formFieldConfig =
     }
 
 
-{-| TODO
+{-| Form field view function
 -}
 formField : FormFieldConfig msg -> List (Html msg) -> Html msg
 formField config nodes =

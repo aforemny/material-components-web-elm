@@ -3,7 +3,47 @@ module Material.Dialog exposing
     , dialog, DialogContent
     )
 
-{-|
+{-| Dialogs inform users about a task and can contain critical information, require decisions, or involve multiple tasks.
+
+  - [Demo: Dialogs](https://aforemny.github.io/material-components-elm/#dialogs)
+  - [Material Design Guidelines: Dialogs](https://material.io/go/design-dialogs)
+  - [MDC Web: Dialog](https://github.com/material-components/material-components-web/tree/master/packages/mdc-dialog)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-dialog#sass-mixins)
+
+
+# Example
+
+    import Material.Button exposing (buttonConfig, textButton)
+    import Material.Dialog exposing (dialog, dialogConfig)
+
+    type Msg
+        = DialogClosed
+
+    main =
+        dialog
+            { dialogConfig
+                | open = True
+                , onClose = Just DialogClosed
+            }
+            { title = Nothing
+            , content =
+                [ text "Discard draft?" ]
+            , actions =
+                [ textButton
+                    { buttonConfig
+                        | onClick = Just DialogClosed
+                    }
+                    "Cancel"
+                , textButton
+                    { buttonConfig
+                        | onClick = Just DialogClosed
+                    }
+                    "Discard"
+                ]
+            }
+
+
+# Configuration
 
 @docs DialogConfig, dialogConfig
 @docs dialog, DialogContent
@@ -16,7 +56,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-{-| TODO
+{-| Configuration of a dialog
 -}
 type alias DialogConfig msg =
     { open : Bool
@@ -25,7 +65,7 @@ type alias DialogConfig msg =
     }
 
 
-{-| TODO
+{-| Default configuration of a dialog
 -}
 dialogConfig : DialogConfig msg
 dialogConfig =
@@ -35,7 +75,7 @@ dialogConfig =
     }
 
 
-{-| TODO
+{-| Dialog content
 -}
 type alias DialogContent msg =
     { title : Maybe String
@@ -44,7 +84,7 @@ type alias DialogContent msg =
     }
 
 
-{-| TODO
+{-| Dialog view function
 -}
 dialog : DialogConfig msg -> DialogContent msg -> Html msg
 dialog config content =

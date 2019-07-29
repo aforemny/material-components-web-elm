@@ -1,12 +1,79 @@
 module Material.Menu exposing
-    ( MenuConfig, menuConfig
-    , menu, menuSurfaceAnchor
+    ( menu, menuConfig, MenuConfig
+    , menuSurfaceAnchor
     )
 
-{-|
+{-| A menu displays a list of choices on a temporary surface. They appear when
+users interact with a button, action, or other control.
 
-@docs MenuConfig, menuConfig
-@docs menu, menuSurfaceAnchor
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic usage](#basic-usage)
+  - [Quick-opening menu](#quick-opening-menu)
+
+
+# Resources
+
+  - [Demo: Menus](https://aforemny.github.io/material-components-elm/#menus)
+  - [Material Design Guidelines: Menus](https://material.io/go/design-menus)
+  - [MDC Web: Menu](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu#sass-mixins)
+
+
+# Basic usage
+
+A menu is usually tied to an element that opens it, such as a button. For
+positioning, wrap the button and the menu within an element that sets the
+`menuSurfaceAnchor` attribute. The menu's items are simply a
+[list](Material-List).
+
+    import Material.Button exposing (textButton, buttonConfig)
+    import Material.List
+        exposing
+            ( list
+            , listConfig
+            , listItem
+            , listItemConfig
+            )
+    import Material.Menu
+        exposing
+            ( menu
+            , menuConfig
+            , menuSurfaceAnchor
+            )
+
+    type Msg
+        = MenuOpened
+        | MenuClosed
+
+    Html.div [ menuSurfaceAnchor ]
+        [ textButton
+            { buttonConfig | onClick = Just MenuOpened }
+            "Open menu"
+        , menu
+            { menuConfig
+                | open = True
+                , onClose = Just MenuClosed
+            }
+            [ list listConfig
+                [ listItem menuItemConfig [ text "Menu item" ]
+                , listItem menuItemConfig [ text "Menu item" ]
+                ]
+            ]
+        ]
+
+@docs menu, menuConfig, MenuConfig
+@docs menuSurfaceAnchor
+
+
+# Quick-opening menu
+
+A menu may not show a transition when opening by setting its `quickOpen`
+configuration field to `True`.
+
+    menu { menuConfig | quickOpen = True } []
 
 -}
 
@@ -16,7 +83,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-{-| TODO docs
+{-| Configuration of a menu
 -}
 type alias MenuConfig msg =
     { open : Bool
@@ -26,7 +93,7 @@ type alias MenuConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a menu
 -}
 menuConfig : MenuConfig msg
 menuConfig =
@@ -37,7 +104,7 @@ menuConfig =
     }
 
 
-{-| TODO docs
+{-| Menu view function
 -}
 menu : MenuConfig msg -> List (Html msg) -> Html msg
 menu config nodes =
@@ -53,7 +120,7 @@ menu config nodes =
         nodes
 
 
-{-| TODO docs
+{-| Menu surface anchor attribute
 -}
 menuSurfaceAnchor : Html.Attribute msg
 menuSurfaceAnchor =

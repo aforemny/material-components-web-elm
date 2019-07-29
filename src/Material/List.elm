@@ -1,34 +1,245 @@
 module Material.List exposing
-    ( ListConfig, listConfig
-    , list
-    , ListItemConfig, listItemConfig
-    , listItem
+    ( list, listConfig, ListConfig
+    , listItem, listItemConfig, ListItemConfig
     , listItemText, listItemPrimaryText, listItemSecondaryText
-    , listItemGraphic, listItemMeta
-    , ListItemDividerConfig, listItemDividerConfig
-    , listItemDivider
     , listGroup
     , listGroupSubheader
     , listGroupDivider
+    , listItemGraphic
+    , listItemMeta
+    , listItemDivider, listItemDividerConfig, ListItemDividerConfig
     )
 
-{-|
+{-| Lists are continuous, vertical indexes of text or images.
 
-@docs ListConfig, listConfig
-@docs list
 
-@docs ListItemConfig, listItemConfig
-@docs listItem
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic usage](#basic-usage)
+  - [Lists](#lists)
+  - [List items](#list-items)
+  - [List variants](#list-variants)
+      - [Two-Line lists](#two-line-lists)
+      - [Non-interactive lists](#non-interactive-lists)
+      - [Dense lists](#dense-lists)
+      - [Avatar lists](#avatar-lists)
+      - [List groups](#list-groups)
+          - [List group dividers](#list-group-dividers)
+  - [List item variants](#list-item-variants)
+      - [List item variants](#list-items-with-graphic)
+      - [List item variants](#list-items-with-meta)
+      - [Disabled list items](#disabled-list-items)
+      - [Selected list items](#selected-list-items)
+      - [Activated list items](#activated-list-items)
+      - [List item dividers](#list-item-dividers)
+
+
+# Resources
+
+  - [Demo: Lists](https://aforemny.github.io/material-components-elm/#lists)
+  - [Material Design Guidelines: Lists](https://material.io/design/components/lists.html)
+  - [MDC Web: List](https://github.com/material-components/material-components-web/tree/master/packages/mdc-list)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-list#sass-mixins)
+
+
+# Basic usage
+
+    import Material.List
+        exposing
+            ( list
+            , listConfig
+            , listItem
+            , listItemConfig
+            )
+
+    main =
+        list listConfig
+            [ listItem listItemConfig [ text "Line item" ]
+            , listItem listItemConfig [ text "Line item" ]
+            ]
+
+
+# Lists
+
+@docs list, listConfig, ListConfig
+
+
+# List items
+
+@docs listItem, listItemConfig, ListItemConfig
+
+
+# List variants
+
+
+## Two-Line lists
+
+Lists may be two-line lists by settings the `twoLine` configuration field to
+`True`. In that case, list items should wrap their contents inside
+`listItemText` and their first line in `listItemPrimaryText` and their second
+line in `listItemSecondaryText`.
+
+    list { listConfig | twoLine = True }
+        [ listItem listItemConfig
+            [ listItemText []
+                [ listItemPrimaryText []
+                    [ text "First line" ]
+                , listItemSecondaryText []
+                    [ text "Second line" ]
+                ]
+            ]
+        ]
+
 @docs listItemText, listItemPrimaryText, listItemSecondaryText
-@docs listItemGraphic, listItemMeta
 
-@docs ListItemDividerConfig, listItemDividerConfig
-@docs listItemDivider
+
+## Non-interactive lists
+
+Lists may be non-interactive by setting the `nonInteractive` configuration
+field to `True`.
+
+    list { listConfig | nonInteractive = True }
+        [ listItem listItemConfig [ text "List item" ] ]
+
+
+## Dense lists
+
+Lists may be styled more compact by setting the `dense` configuration field to
+`True`.
+
+    list { listConfig | dense = True }
+        [ listItem listItemConfig [ text "List item" ] ]
+
+
+## Avatar lists
+
+List item's graphics may be configured to appear larger by setting the
+`avatarList` configuration field to `True`.
+
+This is particularly useful when a list item's graphic includes an image rather
+than an icon.
+
+    list { listConfig | dense = True }
+        [ listItem listItemConfig
+            [ listItemGraphic [] [ Html.img [] [] ]
+            , text "List item"
+            ]
+        ]
+
+
+## List groups
+
+Multiple related lists, such as folders and files in a file hierarchy, may be
+grouped using `listGroup` and labeled by `listGroupSubheader`.
+
+    listGroup []
+        [ listGroupSubheader [] [ text "Folders" ]
+        , list listConfig
+            [ listItem [] [ text "Folder" ]
+            , listItem [] [ text "Folder" ]
+            ]
+        , listGroupSubheader [] [ text "Files" ]
+        , list listConfig
+            [ listItem [] [ text "File" ]
+            , listItem [] [ text "File" ]
+            ]
+        ]
 
 @docs listGroup
 @docs listGroupSubheader
 
+
+### List group dividers
+
+Multiple lists within a group may be visually seperated by a list group divider.
+
+    listGroup []
+        [ list listConfig
+            [ listItem [] [ text "Folder" ]
+            , listItem [] [ text "Folder" ]
+            ]
+        , listGroupDivider []
+        , list listConfig
+            [ listItem [] [ text "File" ]
+            , listItem [] [ text "File" ]
+            ]
+        ]
+
 @docs listGroupDivider
+
+
+## List item variants
+
+In addition to their text child, lists may optionally contain a starting tile
+referred to as _graphic_ and/ or a last tile referred to as _meta_.
+
+
+### List items with graphic
+
+Common examples for graphics are icons and images, avatar images and selection
+controls such as checkboxes.
+
+    listItem listItemConf
+        [ listItemGraphic [] [ icon iconConf "star" ]
+        , text "List item"
+        ]
+
+@docs listItemGraphic
+
+
+### List items with meta
+
+Common examples for metas are text, icons and images and selection controls.
+
+    listItem listItemConf
+        [ text "List item"
+        , listItemMeta [] [ icon iconConf "star" ]
+        ]
+
+@docs listItemMeta
+
+
+### Disabled list items
+
+List items may be disabled by setting their `disabled` configuration field to
+`True`.
+
+    listItem { listItemConf | disabled = True }
+        [ text "List item" ]
+
+
+### Selected list items
+
+List items may be disabled by setting their `selected` configuration field to
+`True`.
+
+    listItem { listItemConf | selected = True }
+        [ text "List item" ]
+
+
+### Activated list items
+
+List items may be disabled by setting their `activated` configuration field to
+`True`.
+
+    listItem { listItemConf | activated = True }
+        [ text "List item" ]
+
+
+## List item dividers
+
+List items may be seperated by a divider. The divider may optionally be `inset`
+so that it does not intersect the list item's graphic, or `padded` so that it
+does not intersect the list item's meta.
+
+    list listConfig
+        [ listItem [] [ text "List item" ]
+        , listItemDivider listItemDividerConfig
+        , listItem [] [ text "List item" ]
+        ]
+
+@docs listItemDivider, listItemDividerConfig, ListItemDividerConfig
 
 -}
 
@@ -38,7 +249,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-{-| TODO docs
+{-| Configuration of a list
 -}
 type alias ListConfig msg =
     { nonInteractive : Bool
@@ -49,7 +260,7 @@ type alias ListConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a list
 -}
 listConfig : ListConfig msg
 listConfig =
@@ -61,7 +272,7 @@ listConfig =
     }
 
 
-{-| TODO docs
+{-| List view function
 -}
 list : ListConfig msg -> List (Html msg) -> Html msg
 list config nodes =
@@ -119,7 +330,7 @@ twoLineCs { twoLine } =
         Nothing
 
 
-{-| TODO docs
+{-| Configuration of a list item
 -}
 type alias ListItemConfig msg =
     { disabled : Bool
@@ -130,7 +341,7 @@ type alias ListItemConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a list item
 -}
 listItemConfig : ListItemConfig msg
 listItemConfig =
@@ -142,7 +353,7 @@ listItemConfig =
     }
 
 
-{-| TODO docs
+{-| List item view function
 -}
 listItem : ListItemConfig msg -> List (Html msg) -> Html msg
 listItem config nodes =
@@ -226,42 +437,42 @@ keydownHandler { onClick } =
         onClick
 
 
-{-| TODO docs
+{-| List item's text for list items in a two-line list
 -}
 listItemText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listItemText additionalAttributes nodes =
     Html.div (class "mdc-list-item__text" :: additionalAttributes) nodes
 
 
-{-| TODO docs
+{-| First line of a two-line list item's text
 -}
 listItemPrimaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listItemPrimaryText additionalAttributes nodes =
     Html.div (class "mdc-list-item__primary-text" :: additionalAttributes) nodes
 
 
-{-| TODO docs
+{-| Second line of a two-line list item's text
 -}
 listItemSecondaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listItemSecondaryText additionalAttributes nodes =
     Html.div (class "mdc-list-item__secondary-text" :: additionalAttributes) nodes
 
 
-{-| TODO docs
+{-| A list item's graphic tile
 -}
 listItemGraphic : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listItemGraphic additionalAttributes nodes =
     Html.div (class "mdc-list-item__graphic" :: additionalAttributes) nodes
 
 
-{-| TODO docs
+{-| A list item's meta tile
 -}
 listItemMeta : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listItemMeta additionalAttributes nodes =
     Html.div (class "mdc-list-item__meta" :: additionalAttributes) nodes
 
 
-{-| TODO docs
+{-| Configuration of a list item divider
 -}
 type alias ListItemDividerConfig msg =
     { inset : Bool
@@ -270,7 +481,7 @@ type alias ListItemDividerConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a list item divider
 -}
 listItemDividerConfig : ListItemDividerConfig msg
 listItemDividerConfig =
@@ -280,7 +491,7 @@ listItemDividerConfig =
     }
 
 
-{-| TODO docs
+{-| List item divider view function
 -}
 listItemDivider : ListItemDividerConfig msg -> Html msg
 listItemDivider config =
@@ -324,7 +535,7 @@ paddedCs { padded } =
         Nothing
 
 
-{-| TODO docs
+{-| List group view function
 -}
 listGroup : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listGroup additionalAttributes nodes =
@@ -336,14 +547,14 @@ listGroupCs =
     class "mdc-list-group"
 
 
-{-| TODO docs
+{-| List group divider view function
 -}
 listGroupDivider : List (Html.Attribute msg) -> Html msg
 listGroupDivider additionalAttributes =
     Html.hr (List.filterMap identity [ listDividerCs ] ++ additionalAttributes) []
 
 
-{-| TODO docs
+{-| List group subheader view function
 -}
 listGroupSubheader : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 listGroupSubheader additionalAttributes nodes =

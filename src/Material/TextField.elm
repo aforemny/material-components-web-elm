@@ -1,15 +1,136 @@
 module Material.TextField exposing
-    ( TextFieldConfig, textFieldConfig
-    , textField
+    ( textField, textFieldConfig, TextFieldConfig
     , textFieldIcon
     )
 
-{-|
+{-| Text fields allow users to input, edit, and select text.
 
-@docs TextFieldConfig, textFieldConfig
-@docs textField
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic usage](#basic-usage)
+  - [Full width text field](#full-width-text-field)
+  - [Multiline text field](#multiline-text-field)
+  - [Disabled text field](#disabled-text-field)
+  - [Required text field](#disabled-text-field)
+  - [Invalid text field](#disabled-text-field)
+  - [Outlined text field](#outlined-text-field)
+  - [Text field with leading icon](#text-field-with-leading-icon)
+  - [Text field with trailing icon](#text-field-with-trailing-icon)
+
+
+# Resources
+
+  - [Demo: Text Fields](https://aforemny.github.io/material-components-elm/#text-fields)
+  - [Material Design Guidelines: Menus](https://material.io/go/design-menus)
+  - [MDC Web: Menu](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu#sass-mixins)
+
+
+# Basic usage
+
+    import Material.TextField
+        exposing
+            ( textField
+            , textFieldConfig
+            )
+
+    type Msg
+        = ValueChanged String
+
+    main =
+        textField
+            { textFieldConfig
+                | label = "My text field"
+                , value = Just "hello world"
+                , onInput = Just ValueChanged
+            }
+
+@docs textField, textFieldConfig, TextFieldConfig
+
+
+# Full width text field
+
+To make a text field span all of its available width, set its `fullwidth`
+configuration field to `True`.
+
+    textField { textFieldConfig | fullWidth = True }
+
+Full width text fields do not support `label` and will ignore this
+configuration field. You may set `placeholder` or provide an extraneous label
+for a full width text field.
+
+Full width text fields do not support `outlined` and will ignore this
+configuration field.
+
+
+# Multiline text field
+
+A text field may be used to enter multiple lines of user input. To use a
+textarea instead of an input element, set the text field's `textarea`
+configuration field to `True`.
+
+    textField { textFieldConfig | textarea = True }
+
+You may set `row` and `column` attributes as well.
+
+
+# Disabled text field
+
+To disable a text field set its `disabled` configuration field to `True`.
+
+    textField { textFieldConfig | textarea = True }
+
+
+# Required text field
+
+To mark a text field as required, set its `required` configuration field to
+`True`.
+
+    textField { textFieldConfig | required = True }
+
+
+# Invalid text field
+
+To mark a text field as invalid, set its `invalid` configuration field to
+`True`.
+
+    textField { textFieldConfig | invalid = True }
+
+
+# Outlined text fields
+
+Text fields may have a visible outlined around them by setting their `outlined`
+configuration field to `True`.
+
+    textField { textFieldConfig | outlined = True }
+
+Note that this does not have any effect for fullwidth text fields.
+
+
+# Text field with leading icon
+
+To have a text field display a leading icon, set its `leadingIcon`
+configuration field to a `TextFieldIcon`.
+
+    textField
+        { textFieldConfig
+            | leadingIcon = textFieldIcon iconConfig "wifi"
+        }
 
 @docs textFieldIcon
+
+
+# Text field with trailing icon
+
+To have a text field display a trailing icon, set its `trailingIcon`
+configuration field to a `TextFieldIcon`.
+
+    textField
+        { textFieldConfig
+            | trailingIcon = textFieldIcon iconConfig "clear"
+        }
 
 -}
 
@@ -20,7 +141,7 @@ import Json.Decode as Decode
 import Material.Icon exposing (IconConfig, icon, iconConfig)
 
 
-{-| TODO docs
+{-| Configuration of a text field
 -}
 type alias TextFieldConfig msg =
     { label : String
@@ -51,7 +172,7 @@ type TextFieldIcon msg
     | Icon (Html msg)
 
 
-{-| TODO docs
+{-| Default configuration of a text field
 -}
 textFieldConfig : TextFieldConfig msg
 textFieldConfig =
@@ -78,7 +199,7 @@ textFieldConfig =
     }
 
 
-{-| TODO docs
+{-| Text field view function
 -}
 textField : TextFieldConfig msg -> Html msg
 textField config =
@@ -123,7 +244,7 @@ textField config =
         )
 
 
-{-| TODO docs
+{-| A text field's icon, either leading or trailing
 -}
 textFieldIcon : IconConfig msg -> String -> TextFieldIcon msg
 textFieldIcon iconConfig iconName =

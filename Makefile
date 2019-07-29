@@ -23,7 +23,9 @@ node_modules:
 clean:
 	rm -rf dist
 	(cd demo && make clean)
+	(cd examples/simple-counter && make clean)
 
 distclean: clean
 	rm -rf elm-stuff node_modules
 	(cd demo && make distclean)
+	(cd examples/simple-counter && make distclean)

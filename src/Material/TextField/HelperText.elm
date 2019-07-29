@@ -1,12 +1,45 @@
-module Material.TextField.HelperText exposing
-    ( HelperTextConfig, helperTextConfig
-    , helperText
-    )
+module Material.TextField.HelperText exposing (helperText, helperTextConfig, HelperTextConfig)
 
-{-|
+{-| Helper text gives context about a field’s input, such as how the input will
+be used. It should be visible either persistently or only on focus.
 
-@docs HelperTextConfig, helperTextConfig
-@docs helperText
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Persistent helper text](#persisten-helper-text)
+
+
+# Resources
+
+  - [Demo: Text fields](https://aforemny.github.io/material-components-elm/#text-fields)
+  - [Material Design Guidelines: Text Fields Layout](https://material.io/go/design-text-fields#text-fields-layout)
+  - [MDC Web: Text Field Helper Text](https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield/helper-text)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield/helper-text#sass-mixins)
+
+
+# Basic Usage
+
+    import Material.TextField exposing (textField, textFieldConf)
+    import Material.TextField.HelperText exposing (helperText, helperTextConf)
+
+    main =
+        Html.div
+            [ textField { textFieldConf | label = "Your name" }
+            , helperText helperTextConf "Please fill this"
+            ]
+
+The helper text is expected to be the direct sibling of the text field it belongs to.
+
+@docs helperText, helperTextConfig, HelperTextConfig
+
+
+# Persistent helper text
+
+A text field's helper text may show unconditionally by setting its `persistent`
+configuration field to `True`. By default a text field's helper text only shows
+when the text field has focus.
 
 -}
 
@@ -14,7 +47,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
-{-| TODO docs
+{-| Configuration of a helper text
 -}
 type alias HelperTextConfig msg =
     { persistent : Bool
@@ -22,7 +55,7 @@ type alias HelperTextConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a helper text
 -}
 helperTextConfig : HelperTextConfig msg
 helperTextConfig =
@@ -31,7 +64,7 @@ helperTextConfig =
     }
 
 
-{-| TODO docs
+{-| Helper text view function
 -}
 helperText : HelperTextConfig msg -> String -> Html msg
 helperText config string =

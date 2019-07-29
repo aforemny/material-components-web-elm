@@ -1,17 +1,106 @@
 module Material.Select exposing
-    ( SelectConfig, selectConfig
-    , filledSelect, outlinedSelect
-    , SelectOptionConfig, selectOptionConfig
-    , SelectOption, selectOption
+    ( filledSelect, selectConfig, SelectConfig
+    , selectOption, selectOptionConfig, SelectOptionConfig, SelectOption
+    , outlinedSelect
     )
 
-{-|
+{-| MDC Select provides Material Design single-option select menus. It supports
+using the browser's native `<select>` element, or a MDC Menu. It is fully
+accessible, and fully RTL-aware.
 
-@docs SelectConfig, selectConfig
-@docs filledSelect, outlinedSelect
 
-@docs SelectOptionConfig, selectOptionConfig
-@docs SelectOption, selectOption
+# Table of contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Outlined select](#outlined-select)
+  - [Disabled select](#disabled-select)
+  - [Disabled options](#disabled-options)
+  - [Select with helper text](#select-with-helper-text)
+  - [Select with leading icon](#select-with-leading-icon)
+
+
+# Resources
+
+  - [Demo: Selects](https://aforemny.github.io/material-components-elm/#selects)
+  - [Material Design Guidelines: Text Fields](https://material.io/go/design-text-fields)
+  - [MDC Web: List](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select#sass-mixins)
+
+
+# Basic Usage
+
+    import Material.Select
+        exposing
+            ( select
+            , selectConfig
+            , selectOption
+            , selectOptionConfig
+            )
+
+    type Msg
+        = ValueChanged String
+
+    main =
+        filledSelect
+            { selectConfig
+                | label = "Fruit"
+                , value = Just ""
+                , onChange = Just ValueChanged
+            }
+            [ selectOption
+                { selectOptionConfig | value = "" }
+                [ text "" ]
+            , selectOption
+                { selectOptionConfig | value = "Apple" }
+                [ text "Apple" ]
+            ]
+
+@docs filledSelect, selectConfig, SelectConfig
+@docs selectOption, selectOptionConfig, SelectOptionConfig, SelectOption
+
+
+# Outlined select
+
+Instead of a filled select, you may choose a select with a outline by using the
+`outlinedSelect` view function.
+
+    outlinedSelect selectConf
+        [ selectOption selectOptionConf "" ]
+
+@docs outlinedSelect
+
+
+# Disabled select
+
+To disable a select, set its `disabled` configuration field to `True`.
+
+    filledSelect
+        { selectConfig | disabled = True }
+        [ selectOption { selectOptionConfig | value = "" }
+            [ text "" ]
+        ]
+
+
+# Disabled options
+
+To disable one select's option, set its `disabled` configuration field to `True`.
+
+    selectOption { selectOptionConfig | disabled = True }
+        [ text "" ]
+
+This is particularly useful on the first emply option if you have a select that
+must be filled but is not initially filled.
+
+
+# Select with helper text
+
+TODO
+
+
+# Select with leading icon
+
+TODO
 
 -}
 
@@ -21,7 +110,7 @@ import Html.Events
 import Json.Decode as Decode
 
 
-{-| TODO docs
+{-| Configuration of a select
 -}
 type alias SelectConfig msg =
     { label : String
@@ -32,7 +121,7 @@ type alias SelectConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a select
 -}
 selectConfig : SelectConfig msg
 selectConfig =
@@ -49,8 +138,6 @@ type Variant
     | Outlined
 
 
-{-| TODO docs
--}
 select : SelectConfig msg -> List (SelectOption msg) -> Html msg
 select config nodes =
     Html.node "mdc-select"
@@ -75,14 +162,14 @@ select config nodes =
         )
 
 
-{-| TODO docs
+{-| Filled select view function
 -}
 filledSelect : SelectConfig msg -> List (SelectOption msg) -> Html msg
 filledSelect config nodes =
     select { config | variant = Filled } nodes
 
 
-{-| TODO docs
+{-| Outlined select view function
 -}
 outlinedSelect : SelectConfig msg -> List (SelectOption msg) -> Html msg
 outlinedSelect config nodes =
@@ -130,7 +217,7 @@ nativeControlCs =
     Just (class "mdc-select__native-control")
 
 
-{-| TODO docs
+{-| Configuration of a select option
 -}
 type alias SelectOptionConfig msg =
     { disabled : Bool
@@ -139,7 +226,7 @@ type alias SelectOptionConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a select option
 -}
 selectOptionConfig : SelectOptionConfig msg
 selectOptionConfig =
@@ -149,13 +236,13 @@ selectOptionConfig =
     }
 
 
-{-| TODO docs
+{-| Select option type
 -}
 type SelectOption msg
     = SelectOption (SelectConfig msg -> Html msg)
 
 
-{-| TODO docs
+{-| Select option view function
 -}
 selectOption : SelectOptionConfig msg -> List (Html msg) -> SelectOption msg
 selectOption config nodes =

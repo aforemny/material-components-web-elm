@@ -8,8 +8,8 @@ web](https://github.com/material-components/material-components-web) (MDC Web).
 
 ## Important links
 
-- [Getting Started Guide]()
-- [Demo](https://aforemny.github.io/material-component-elm)
+- Getting Started Guide (TODO)
+- [Demo](https://aforemny.github.io/material-components-elm)
 
 
 ## Quick start

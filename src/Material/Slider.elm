@@ -1,12 +1,87 @@
-module Material.Slider exposing
-    ( SliderConfig, sliderConfig
-    , slider
-    )
+module Material.Slider exposing (slider, sliderConfig, SliderConfig)
 
-{-|
+{-| MDC Slider provides an implementation of the Material Design slider
+component.
 
-@docs SliderConfig, sliderConfig
-@docs slider
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Continuous Slider](#continuous-slider)
+  - [Custom range values](#using-a-step-value)
+  - [Using a step value](#using-a-step-value)
+  - [Disabled Slider](#disabled-slider)
+  - [Discrete Slider](#discrete-slider)
+      - [Track Markers](#track-markers)
+
+
+# Resources
+
+  - [Demo: Sliders](https://aforemny.github.io/material-components-elm/#sliders)
+  - [Material Design Guidelines: Sliders](https://material.io/go/design-sliders)
+  - [MDC Web: Slider](https://github.com/material-components/material-components-web/tree/master/packages/mdc-slider)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-slider#sass-mixins)
+
+
+# Basic Usage
+
+    import Material.Slider exposing (slider, sliderConfig)
+
+    type Msg
+        = ValueChanged Float
+
+    main =
+        slider
+            { sliderConfig
+                | value = 50
+                , onChange = Just ValueChanged
+            }
+
+
+# Continuous Slider
+
+@docs slider, sliderConfig, SliderConfig
+
+
+# Custom range values
+
+To set a custom range, set the slider's `min` and `max` configuration fields to
+a `Float`.
+
+    slider { sliderConfig | min = 0, max = 100 }
+
+
+# Using a step value
+
+To allow for quantization of the user input, set the slider's `step`
+configuration field to a `Float`.
+
+    slider { sliderConfig | step = 4.5 }
+
+
+# Disabled Slider
+
+To disable a slider, set its `disabled` configuration field to `True`. Disabled
+sliders cannot be interacted with and have no visual interaction effect.
+
+    slider { sliderConfig | disabled = True }
+
+
+# Discrete Slider
+
+To treat a slider as a discrete slider, set its `discrete` configuration field
+to `True`.
+
+    slider { sliderConfig | disabled = True }
+
+
+## Track Markers
+
+To have a discrete slider show track markers, set its `displayMarkers`
+configuration field to `True`.
+
+    slider { sliderConfig | displayMarkers = True }
 
 -}
 
@@ -18,15 +93,13 @@ import Svg
 import Svg.Attributes
 
 
-{-| TODO docs
--}
-
-
 
 -- TODO: Prevent FOUC
 -- TODO: Default values for min, max, step
 
 
+{-| Configuration of a slider
+-}
 type alias SliderConfig msg =
     { discrete : Bool
     , displayMarkers : Bool
@@ -40,7 +113,7 @@ type alias SliderConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a slider
 -}
 sliderConfig : SliderConfig msg
 sliderConfig =
@@ -56,7 +129,7 @@ sliderConfig =
     }
 
 
-{-| TODO docs
+{-| Slider view function
 -}
 slider : SliderConfig msg -> Html msg
 slider config =

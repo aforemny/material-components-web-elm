@@ -1,18 +1,190 @@
 module Material.Snackbar exposing
-    ( SnackbarConfig, snackbarConfig
-    , snackbar
-    , Message, snackbarMessage
-    , Queue, initialQueue, Msg, update, addMessage
+    ( snackbar, snackbarConfig, SnackbarConfig
+    , Queue, initialQueue, Msg, update
+    , addMessage
+    , snackbarMessage, Message
     )
 
-{-|
+{-| Snackbars provide brief messages about app processes at the bottom of the
+screen.
 
-@docs SnackbarConfig, snackbarConfig
-@docs snackbar
 
-@docs Message, snackbarMessage
+# Table of Contents
 
-@docs Queue, initialQueue, Msg, update, addMessage
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Snackbar](#snackbar)
+  - [Queue](#queue)
+      - [Adding Messages](#adding-messages)
+  - [Messages](#messages)
+
+
+# Resources
+
+  - [Demo: Snackbars](https://aforemny.github.io/material-components-elm/#snackbars)
+  - [Material Design Guidelines: Snackbars](https://material.io/go/design-snackbar)
+  - [MDC Web: Snackbar](https://github.com/material-components/material-components-web/tree/master/packages/mdc-snackbar)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-snackbar#sass-mixins)
+
+
+# Basic Usage
+
+    import Material.Snackbar as Snackbar
+        exposing
+            ( snackbar
+            , snackbarConfig
+            )
+
+    type alias Model =
+        { queue : Snackbar.Queue }
+
+    type Msg
+        = SnackbarMsg Snackbar.Msg
+
+    update : Msg -> Model -> ( Model, Cmd Msg )
+    update msg model =
+        case msg of
+            SnackbarMsg snackbarMsg ->
+                let
+                    ( newQueue, cmd ) =
+                        Snackbar.update SnackbarMsg
+                            snackbarMsg
+                            model.queue
+                in
+                ( { model | queue = newQueue }, cmd )
+
+    main =
+        snackbar SnackbarMsg snackbarConfig model.queue
+
+
+# Snackbar
+
+@docs snackbar, snackbarConfig, SnackbarConfig
+
+
+# Queue
+
+You will have to maintain a queue of snackbar messages inside your
+application's model. To do so, add a field `queue : Queue` and initialize it to
+`initialQueue`.
+
+    type alias Model =
+        { queue : Snackbar.Queue }
+
+    initialModel =
+        { queue = Snackbar.initialQueue }
+
+To add messages to the queue, you have to tag `Snackbar.Msg`s within your
+application's `Msg` type.
+
+    type Msg
+        = SnackbarMsg Snackbar.Msg
+
+Then from your application's update function, call `update` to handle
+`Snackbar.Msg`. Note that the first argument to `update` is `SnackbarMsg`.
+
+    update msg model =
+        case msg of
+            SnackbarMsg snackbarMsg ->
+                Snackbar.update SnackbarMsg snackbarMsg model
+                    |> Tuple.mapFirst
+                        (\newQueue ->
+                            { model | queue = newQueue }
+                        )
+
+Now you are ready to call `addMessage` from your application update function.
+
+@docs Queue, initialQueue, Msg, update
+
+
+## Adding Messages
+
+Note that `addMessage` takes `SnackbarMsg` as first parameter.
+
+    update : Msg -> ( Model, Cmd Msg )
+    update msg model =
+        SomethingHappened ->
+            let
+                message =
+                    { snackbarMessage
+                        | label = "Something happened"
+                    }
+            in
+            ( model, addMessage SnackbarMsg message )
+
+@docs addMessage
+
+
+# Messages
+
+At the minimum, a message contains only a label. To specify the label, set the
+`label` configuration field to a `String`.
+
+    { snackbarMessage | label = "Something happened" }
+
+@docs snackbarMessage, Message
+
+
+## Message with action button
+
+Messages may contain an action button that the user can click. To display an
+action button, set the message's `actionButton` configuration field to a
+`String`, and handle the event in `onActionButtonClick`.
+
+    { snackbarMessage
+        | label = "Something happened"
+        , actionButton = Just "Take action"
+        , onActionButtonClick = Just ActionButtonClicked
+    }
+
+
+## Message with action icon
+
+Messages may contain an action icon that the user can click. To display an
+action icon, set the message's `actionIcon` configuration field to a
+`String`, and handle the event in `onActionIconClick`.
+
+    { snackbarMessage
+        | label = "Something happened"
+        , actionIcon = Just "close"
+        , onActionIconClick = Just Dismissed
+    }
+
+
+## Stacked messages
+
+Messages with a long label and action button should display the action button
+below the label. To archieve this, set the message's `stacked` configuration
+field to `True`.
+
+    { snackbarMessage
+        | label = "Something happened"
+        , actionButton = Just "Take action"
+        , stacked = True
+    }
+
+
+## Leading messages
+
+Messages are by default centered within the viewport. On larger screens, they
+can optionally be displyed on the _leading_ edge of the screen. To display a
+message as leading, set its `leading` configuration field to `True`.
+
+    { snackbarMessage
+        | label = "Something happened"
+        , leading = True
+    }
+
+
+## Custom timeout
+
+To set a custom timeout for a message, set its `timeoutMs` configuration field
+to a `Float`, representing the on-screen time in milliseconds.
+
+    { snackbarMessage
+        | label = "Something happened"
+        , timeoutMs = 5000
+    }
 
 -}
 
@@ -24,7 +196,7 @@ import Process
 import Task
 
 
-{-| TODO docs
+{-| Queue of messages
 -}
 type alias Queue msg =
     { messages : List (Message msg)
@@ -36,7 +208,7 @@ type alias MessageId =
     Int
 
 
-{-| TODO docs
+{-| Initial empty queue
 -}
 initialQueue : Queue msg
 initialQueue =
@@ -45,7 +217,7 @@ initialQueue =
     }
 
 
-{-| TODO docs
+{-| Queue update function
 -}
 update : (Msg msg -> msg) -> Msg msg -> Queue msg -> ( Queue msg, Cmd msg )
 update lift msg queue =
@@ -86,28 +258,28 @@ update lift msg queue =
             )
 
 
-{-| TODO docs
+{-| Snackbar message type
 -}
 type Msg msg
     = AddMessage (Message msg)
     | Close
 
 
-{-| TODO docs
+{-| Adds a message to the queue
 -}
 addMessage : (Msg msg -> msg) -> Message msg -> Cmd msg
 addMessage lift message =
     Task.perform lift (Task.succeed (AddMessage message))
 
 
-{-| TODO docs
+{-| Configuration of a snackbar
 -}
 type alias SnackbarConfig msg =
     { additionalAttributes : List (Html.Attribute msg)
     }
 
 
-{-| TODO docs
+{-| Default configuration of a snackbar
 -}
 snackbarConfig : SnackbarConfig msg
 snackbarConfig =
@@ -115,7 +287,7 @@ snackbarConfig =
     }
 
 
-{-| TODO docs
+{-| Snackbar view function
 -}
 snackbar : (Msg msg -> msg) -> SnackbarConfig msg -> Queue msg -> Html msg
 snackbar lift config queue =
@@ -137,7 +309,7 @@ snackbar lift config queue =
         [ surfaceElt message ]
 
 
-{-| TODO docs
+{-| Snackbar message
 -}
 type alias Message msg =
     { label : String
@@ -151,7 +323,7 @@ type alias Message msg =
     }
 
 
-{-| TODO docs
+{-| Default snackbar message (empty label)
 -}
 snackbarMessage : Message msg
 snackbarMessage =

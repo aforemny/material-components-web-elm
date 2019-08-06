@@ -5,8 +5,7 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.Fab exposing (fab, fabConfig)
-import Material.Fab.Extended exposing (extendedFab, extendedFabConfig)
+import Material.Fab exposing (extendedFab, extendedFabConfig, fab, fabConfig)
 import Material.Typography as Typography
 
 

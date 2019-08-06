@@ -4,10 +4,7 @@ import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Chip.Choice exposing (choiceChip, choiceChipConfig)
-import Material.Chip.Filter exposing (filterChip, filterChipConfig)
-import Material.Chip.Input exposing (inputChip, inputChipConfig)
-import Material.ChipSet exposing (choiceChipSet, filterChipSet, inputChipSet)
+import Material.Chips exposing (choiceChip, choiceChipConfig, choiceChipSet, filterChip, filterChipConfig, filterChipSet, inputChip, inputChipConfig, inputChipSet)
 import Material.Typography as Typography
 import Set exposing (Set)
 
@@ -169,8 +166,8 @@ actionChips : Model -> Html Msg
 actionChips model =
     let
         chip index ( icon, label ) =
-            filterChip
-                { filterChipConfig
+            choiceChip
+                { choiceChipConfig
                     | icon = Just icon
                     , onClick = Just (ToggleChip Action index)
                 }

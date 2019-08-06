@@ -1,9 +1,25 @@
 module Material.Button exposing
-    ( ButtonConfig, buttonConfig
-    , textButton, outlinedButton, raisedButton, unelevatedButton
+    ( textButton, buttonConfig, ButtonConfig
+    , outlinedButton, raisedButton, unelevatedButton
     )
 
 {-| Buttons allow users to take actions, and make choices, with a single tap.
+
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Text Button](#text-button)
+  - [Button Variants](#button-variants)
+  - [Button with Icons](#button-with-icons)
+      - [Button with Leading Icon](#button-with-leading-icon)
+      - [Button with Trailing Icon](#button-with-trailing-icon)
+  - [Disabled Button](#disabled-button)
+  - [Dense Button](#disabled-button)
+
+
+# Resources
 
   - [Demo: Buttons](https://aforemny.github.io/material-components-elm/#buttons)
   - [Material Design Guidelines: Button](https://material.io/go/design-buttons)
@@ -11,7 +27,7 @@ module Material.Button exposing
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-button#sass-mixins)
 
 
-# Example
+# Basic Usage
 
     import Material.Button exposing (buttonConfig, textButton)
 
@@ -24,21 +40,21 @@ module Material.Button exposing
             "Text"
 
 
-# Configuration
+# Text Button
 
-@docs ButtonConfig, buttonConfig
+@docs textButton, buttonConfig, ButtonConfig
 
 
-# Variants
+# Button Variants
 
 Buttons may appear in different variants. Use `textButton` or `outlinedButton`
 if you want a button that is flush with the surface, and `raisedButton` or
 `unelevatedButton` for a button that is contained.
 
-@docs textButton, outlinedButton, raisedButton, unelevatedButton
+@docs outlinedButton, raisedButton, unelevatedButton
 
 
-# Icons
+# Button with Icons
 
 To add an icon to a button, set its `icon` configuration field to the name of a
 [Material Icon](https://material.io/icons). If you want the icon to be
@@ -46,14 +62,14 @@ positioned after the button's label, also set the `trailingIcon` configuration
 field to `True`.
 
 
-## Button with leading icon
+## Button with Leading Icon
 
     textButton
         { buttonConfig | icon = Just "favorite" }
         "Like"
 
 
-## Button with trailing icon
+## Button with Trailing Icon
 
     textButton
         { buttonConfig
@@ -63,26 +79,20 @@ field to `True`.
         "Like"
 
 
-# Disabled
+# Disabled Button
 
 To disable a button, set its `disabled` configuration field to `True`. Disabled
 buttons cannot be interacted with and have no visual interaction effect.
 
-
-## Disabled button
-
     textButton { buttonConfig | disabled = True } "Disabled"
 
 
-# Dense
+# Dense Button
 
 To make a button's text and container margins slightly smaller, set the `dense`
 configuration field to `True`.
 
-
-## Dense button
-
-    textButton { buttonConfig | dense = True } "Dense button"
+    textButton { buttonConfig | dense = True } "Dense"
 
 -}
 

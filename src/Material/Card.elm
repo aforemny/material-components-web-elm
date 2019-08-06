@@ -1,31 +1,172 @@
 module Material.Card exposing
-    ( CardConfig, cardConfig
-    , card
-    , CardContent
+    ( card, cardConfig, CardConfig, CardContent
     , CardBlock
-    , cardMediaConfig, cardMedia, CardMediaAspect(..)
-    , cardPrimaryActionConfig, cardPrimaryAction
     , cardBlock
-    , CardActions, cardActions, cardActionButton, cardActionIcon
+    , cardMedia, cardMediaConfig, CardMediaConfig, CardMediaAspect(..)
+    , cardPrimaryActionConfig, cardPrimaryAction
+    , cardActions, CardActions, cardActionButton, cardActionIcon
     , cardFullBleedActions
     )
 
-{-|
+{-| Cards contain content and actions about a single subject.
 
-@docs CardConfig, cardConfig
-@docs card
 
-@docs CardContent
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Card](#card)
+      - [Outlined card](#outlined-card)
+  - [Card Blocks](#card-blocks)
+      - [Generic Block](#generic-block)
+      - [Media Block](#media-block)
+      - [Primary Action Block](#primary-action-block)
+  - [Card Actions](#card-actions)
+      - [Full Bleed Actions](#full-bleed-actions)
+
+
+# Resources
+
+  - [Demo: Cards](https://aforemny.github.io/material-components-elm/#cards)
+  - [Material Design Guidelines: Cards](https://material.io/go/design-cards)
+  - [MDC Web: Card](https://github.com/material-components/material-components-web/tree/master/packages/mdc-card)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-card#sass-mixins)
+
+
+# Basic Usage
+
+    import Html exposing (Html, text)
+    import Material.Button exposing (buttonConfig)
+    import Material.Card
+        exposing
+            ( card
+            , cardActionButton
+            , cardActionIcon
+            , cardActions
+            , cardBlock
+            , cardConfig
+            )
+    import Material.Icon exposing (iconConfig)
+
+    main =
+        card cardConfig
+            { blocks =
+                [ cardBlock <|
+                    Html.div []
+                        [ Html.h2 [] [ text "Title" ]
+                        , Html.h3 [] [ text "Subtitle" ]
+                        ]
+                , cardBlock <|
+                    Html.div []
+                        [ Html.p [] [ text "Lorem ipsum…" ] ]
+                ]
+            , actions =
+                Just <|
+                    cardActions
+                        { buttons =
+                            [ cardActionButton buttonConfig
+                                "Visit"
+                            ]
+                        , icons =
+                            [ cardActionIcon iconConfig
+                                "favorite"
+                            ]
+                        }
+            }
+
+
+# Card
+
+@docs card, cardConfig, CardConfig, CardContent
+
+
+## Outlined Card
+
+A card may have a border by settings its `outlined` configuration field to
+`True`.
+
+    card { cardConfig | outlined = True }
+        { blocks =
+            [ cardBlock <|
+                Html.div [] [ Html.h1 [] [ text "Card" ] ]
+            ]
+        , actions = Nothing
+        }
+
+
+# Card Blocks
+
+A card's content is primary comprised of blocks. Blocks may be comprised of
+arbitrary HTML (generic `cardBlock`) or a media element (`cardMedia`).
+Optionally, a group of card blocks can be marked as the card's primary action
+which makes the group of card blocks interactable.
 
 @docs CardBlock
 
-@docs cardMediaConfig, cardMedia, CardMediaAspect
 
-@docs cardPrimaryActionConfig, cardPrimaryAction
+## Generic Block
+
+Generic card blocks are the most common and allow you to specify card content
+using arbitrary HTML. Note that you will have to carefully adjust styling such
+as padding and typography yourself.
+
+    cardBlock <|
+        Html.div []
+            [ Html.h2 [] [ text "Title" ]
+            , Html.h3 [] [ text "Subtitle" ]
+            ]
 
 @docs cardBlock
 
-@docs CardActions, cardActions, cardActionButton, cardActionIcon
+
+## Media Block
+
+Card may contain a media block usually as the first content block. The media
+will be displayed using a background image, and you may chose from square or a
+16 to 9 aspect ratio.
+
+@docs cardMedia, cardMediaConfig, CardMediaConfig, CardMediaAspect
+
+
+## Primary Action Block
+
+A group of card blocks can be marked as the primary action of the card. A
+primary action block may be clicked upon and displays a visual interaction
+effect.
+
+    cardPrimaryAction
+        { cardPrimaryActionConfig
+            | onClick = Just CardClicked
+        }
+        [ cardBlock <|
+            Html.h2 [] [ text "Title" ]
+        , cardBlock <|
+            Html.p [] [ text "Lorem ipsum…" ]
+        ]
+
+@docs cardPrimaryActionConfig, cardPrimaryAction
+
+
+# Card Actions
+
+Card actions are comprised of buttons and icons. These are exposed as variants
+to the standard buttons and icons, but they do share the same configuration.
+
+    cardActions
+        { buttons =
+            [ cardActionButton buttonConfig "View" ]
+        , actions =
+            [ cardActionIcon iconConfig "favorite" ]
+        }
+
+@docs cardActions, CardActions, cardActionButton, cardActionIcon
+
+
+## Card Full Bleed Actions
+
+While a card's action buttons are usually left-aligned, a special case exists
+when there is only a single button as card action.
+
 @docs cardFullBleedActions
 
 -}
@@ -37,7 +178,7 @@ import Material.Button exposing (ButtonConfig, buttonConfig)
 import Material.Icon exposing (IconConfig, iconConfig)
 
 
-{-| TODO
+{-| Configuration of a card
 -}
 type alias CardConfig msg =
     { outlined : Bool
@@ -45,7 +186,7 @@ type alias CardConfig msg =
     }
 
 
-{-| TODO
+{-| Card view function
 -}
 cardConfig : CardConfig msg
 cardConfig =
@@ -54,7 +195,7 @@ cardConfig =
     }
 
 
-{-| TODO
+{-| Card view function
 -}
 card : CardConfig msg -> CardContent msg -> Html msg
 card config content =
@@ -128,7 +269,7 @@ outlinedCs { outlined } =
         Nothing
 
 
-{-| TODO
+{-| The content of a card is comprised of _blocks_ and _actions_.
 -}
 type alias CardContent msg =
     { blocks : List (CardBlock msg)
@@ -136,46 +277,53 @@ type alias CardContent msg =
     }
 
 
-{-| TODO
+{-| Card's content block
 -}
 type CardBlock msg
     = Block (Html msg)
 
 
-{-| TODO
+{-| An arbitrary card block
+
+    cardBlock <|
+        Html.div [] [ text "Lorem ipsum…" ]
+
 -}
 cardBlock : Html msg -> CardBlock msg
 cardBlock =
     Block
 
 
-{-| TODO
+{-| Configuration of a card's media block
 -}
-type alias MediaConfig msg =
+type alias CardMediaConfig msg =
     { aspect : Maybe CardMediaAspect
     , additionalAttributes : List (Html.Attribute msg)
     }
 
 
-{-| TODO
+{-| Default configuration of a card's media block
 -}
-cardMediaConfig : MediaConfig msg
+cardMediaConfig : CardMediaConfig msg
 cardMediaConfig =
     { aspect = Nothing
     , additionalAttributes = []
     }
 
 
-{-| TODO
+{-| Card media block's aspect ratio
 -}
 type CardMediaAspect
     = Square
     | SixteenToNine
 
 
-{-| TODO
+{-| Card media block view function
+
+    cardMedia cardMediaConfig "media-image.jpg"
+
 -}
-cardMedia : MediaConfig msg -> String -> CardBlock msg
+cardMedia : CardMediaConfig msg -> String -> CardBlock msg
 cardMedia config backgroundImage =
     Block <|
         Html.div
@@ -199,7 +347,7 @@ backgroundImageAttr url =
     Just (Html.Attributes.style "background-image" ("url(\"" ++ url ++ "\")"))
 
 
-aspectCs : MediaConfig msg -> Maybe (Html.Attribute msg)
+aspectCs : CardMediaConfig msg -> Maybe (Html.Attribute msg)
 aspectCs { aspect } =
     case aspect of
         Just Square ->
@@ -212,7 +360,7 @@ aspectCs { aspect } =
             Nothing
 
 
-{-| TODO
+{-| Configuration of a card's primary action block
 -}
 type alias PrimaryActionConfig msg =
     { additionalAttributes : List (Html.Attribute msg)
@@ -220,7 +368,7 @@ type alias PrimaryActionConfig msg =
     }
 
 
-{-| TODO
+{-| Default configuration of a card's primary action block
 -}
 cardPrimaryActionConfig : PrimaryActionConfig msg
 cardPrimaryActionConfig =
@@ -229,7 +377,20 @@ cardPrimaryActionConfig =
     }
 
 
-{-| TODO
+{-| A card's primary action block
+
+    cardPrimaryAction
+        { cardPrimaryActionConfig
+            | onClick = Just CardClicked
+        }
+        [ cardBlock <|
+            Html.div []
+                [ Html.h1 [] [ text "Title" ] ]
+        , cardBlock <|
+            Html.div []
+                [ Html.p [] [ text "Lorem ipsum…" ] ]
+        ]
+
 -}
 cardPrimaryAction : PrimaryActionConfig msg -> List (CardBlock msg) -> List (CardBlock msg)
 cardPrimaryAction config blocks =
@@ -255,7 +416,7 @@ primaryActionClickHandler { onClick } =
     Maybe.map Html.Events.onClick onClick
 
 
-{-| TODO
+{-| Card actions type
 -}
 type CardActions msg
     = Actions
@@ -265,27 +426,40 @@ type CardActions msg
         }
 
 
-{-| TODO
+{-| Card actions
+
+A card may contain as actions buttons as well as icons.
+
 -}
 cardActions : { buttons : List (Button msg), icons : List (Icon msg) } -> CardActions msg
 cardActions { buttons, icons } =
     Actions { buttons = buttons, icons = icons, fullBleed = False }
 
 
-{-| TODO
+{-| Card full bleed action
+
+If a card's action is comprised of a single button, that button can be made
+full width by using `cardFullBleedActions`.
+
+    cardFullBleedActions
+        (cardActionButton buttonConfig [ text "Visit" ])
+
 -}
 cardFullBleedActions : Button msg -> CardActions msg
 cardFullBleedActions button =
     Actions { buttons = [ button ], icons = [], fullBleed = True }
 
 
-{-| TODO
+{-| Card action's button type
 -}
 type Button msg
     = Button (Html msg)
 
 
-{-| TODO
+{-| A card action button
+
+    cardActionButton buttonConfig "Visit"
+
 -}
 cardActionButton : ButtonConfig msg -> String -> Button msg
 cardActionButton buttonConfig label =
@@ -304,7 +478,10 @@ type Icon msg
     = Icon (Html msg)
 
 
-{-| TODO
+{-| Card action icon
+
+    cardActionIcon iconConfig "favorite"
+
 -}
 cardActionIcon : IconConfig msg -> String -> Icon msg
 cardActionIcon iconConfig iconName =

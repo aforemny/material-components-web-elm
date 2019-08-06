@@ -9,7 +9,7 @@ using the browser's native `<select>` element, or a MDC Menu. It is fully
 accessible, and fully RTL-aware.
 
 
-# Table of contents
+# Table of Contents
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
@@ -24,7 +24,7 @@ accessible, and fully RTL-aware.
 
   - [Demo: Selects](https://aforemny.github.io/material-components-elm/#selects)
   - [Material Design Guidelines: Text Fields](https://material.io/go/design-text-fields)
-  - [MDC Web: List](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select)
+  - [MDC Web: Select](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select#sass-mixins)
 
 

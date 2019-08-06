@@ -1,17 +1,124 @@
 module Material.Select.Enhanced exposing
-    ( EnhancedSelectConfig, enhancedSelectConfig
-    , filledEnhancedSelect, outlinedEnhancedSelect
-    , SelectItemConfig, selectItemConfig
-    , selectItem
+    ( filledEnhancedSelect, enhancedSelectConfig, EnhancedSelectConfig
+    , selectItem, selectItemConfig, SelectItemConfig
+    , outlinedEnhancedSelect
     )
 
-{-|
+{-| The enhanced select uses a menu component instance to contain the list
+of options. The enhanced select provides a look and feel more consistent with
+the rest of Material Design, but there are some trade-offs to consider when
+choosing it over the native `<select>` element (see [Usability
+Notes](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select#usability-notes)).
 
-@docs EnhancedSelectConfig, enhancedSelectConfig
-@docs filledEnhancedSelect, outlinedEnhancedSelect
 
-@docs SelectItemConfig, selectItemConfig
-@docs selectItem
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Filled Select](#filled-select)
+  - [Outlined Select](#outlined-select)
+  - [Disabled Select](#disabled-select)
+  - [Disabled Items](#disabled-items)
+
+
+# Resources
+
+  - [Demo: Selects](https://aforemny.github.io/material-components-elm/#selects)
+  - [Material Design Guidelines: Fields](https://material.io/go/design-text-fields)
+  - [MDC Web: Select](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select#sass-mixins)
+
+
+# Basic Usage
+
+    import Material.List exposing (list, listConfig)
+    import Material.Select.Enhanced
+        exposing
+            ( filledEnhancedSelect
+            , selectItem
+            , selectItemConfig
+            )
+
+    type Msg
+        = ValueChanged String
+
+    main =
+        filledEnhancedSelect
+            { enhancedSelectConfig | label = "Fruit" }
+            [ list listConfig
+                [ selectItem
+                    { selectItemConfig
+                        | onClick = Just (ValueChanged "")
+                    }
+                    [ text "" ]
+                , selectItem
+                    { selectItemConfig
+                        | onClick =
+                            Just (ValueChanged "Apple")
+                    }
+                    selectItemConfig
+                    [ text "Apple" ]
+                ]
+            ]
+
+
+# Filled Select
+
+@docs filledEnhancedSelect, enhancedSelectConfig, EnhancedSelectConfig
+@docs selectItem, selectItemConfig, SelectItemConfig
+
+
+# Outlined Select
+
+The enhanced select component can be used with a notched outline rather than
+the default ine ripple to indicate focus.
+
+    outlinedEnhancedSelect
+        { enhancedSelectConfig | outlined = True }
+        []
+
+@docs outlinedEnhancedSelect
+
+
+# Disabled Select
+
+To disable the select component, set its `disabled` configuration field to
+`True`. A disabled select cannot be interacted with and will have not visual
+interaction indicator.
+
+    filledEnhancedSelect
+        { enhancedSelectConfig | disabled = True }
+        []
+
+
+# Disabled Items
+
+To disable a select item, set its `disabled` configuration field to `True`. A
+disabled select item cannot be selected.
+
+    selectItem
+        { selectItemConfig | disabled = True }
+        [ text "" ]
+
+
+# Selected Items
+
+To mark a select item as selected, set its `selected` configuration field to
+`True`.
+
+    selectItem
+        { selectItemConfig | selected = True }
+        [ text "" ]
+
+
+# Activated Items
+
+To mark a select item as activated, set its `activated` configuration field to
+`True`.
+
+    selectItem
+        { selectItemConfig | activated = True }
+        [ text "" ]
 
 -}
 
@@ -22,7 +129,7 @@ import Json.Decode as Decode
 import Material.List exposing (list, listConfig)
 
 
-{-| TODO docs
+{-| Configuration of an enhanced select
 -}
 type alias EnhancedSelectConfig msg =
     { variant : Variant
@@ -33,7 +140,7 @@ type alias EnhancedSelectConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of an enhanced select
 -}
 enhancedSelectConfig : EnhancedSelectConfig msg
 enhancedSelectConfig =
@@ -77,21 +184,21 @@ enhancedSelect config nodes =
         )
 
 
-{-| TODO docs
+{-| Filled enhanced select view function
 -}
 filledEnhancedSelect : EnhancedSelectConfig msg -> List (Html msg) -> Html msg
 filledEnhancedSelect config nodes =
     enhancedSelect { config | variant = Filled } nodes
 
 
-{-| TODO docs
+{-| Outlined enhanced select view function
 -}
 outlinedEnhancedSelect : EnhancedSelectConfig msg -> List (Html msg) -> Html msg
 outlinedEnhancedSelect config nodes =
     enhancedSelect { config | variant = Outlined } nodes
 
 
-{-| TODO docs
+{-| Configuration of a select item
 -}
 type alias SelectItemConfig msg =
     { disabled : Bool
@@ -102,7 +209,7 @@ type alias SelectItemConfig msg =
     }
 
 
-{-| TODO docs
+{-| Default configuration of a select item
 -}
 selectItemConfig : SelectItemConfig msg
 selectItemConfig =
@@ -114,7 +221,7 @@ selectItemConfig =
     }
 
 
-{-| TODO docs
+{-| Select item view function
 -}
 selectItem : SelectItemConfig msg -> List (Html msg) -> Html msg
 selectItem config nodes =

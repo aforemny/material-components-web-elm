@@ -1,4 +1,4 @@
-module Material.TextField.HelperText exposing (helperText, helperTextConfig, HelperTextConfig)
+module Material.HelperText exposing (helperText, helperTextConfig, HelperTextConfig)
 
 {-| Helper text gives context about a field’s input, such as how the input will
 be used. It should be visible either persistently or only on focus.
@@ -21,8 +21,8 @@ be used. It should be visible either persistently or only on focus.
 
 # Basic Usage
 
+    import Material.HelperText exposing (helperText, helperTextConf)
     import Material.TextField exposing (textField, textFieldConf)
-    import Material.TextField.HelperText exposing (helperText, helperTextConf)
 
     main =
         Html.div

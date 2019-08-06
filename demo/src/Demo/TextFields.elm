@@ -6,9 +6,9 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
+import Material.HelperText exposing (helperText, helperTextConfig)
 import Material.Icon exposing (icon, iconConfig)
 import Material.TextField exposing (textField, textFieldConfig, textFieldIcon)
-import Material.TextField.HelperText exposing (helperText, helperTextConfig)
 import Material.Typography as Typography
 
 

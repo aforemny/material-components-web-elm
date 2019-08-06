@@ -18,6 +18,7 @@
         "Material.Elevation",
         "Material.Fab",
         "Material.FormField",
+        "Material.HelperText",
         "Material.Icon",
         "Material.IconButton",
         "Material.ImageList",
@@ -34,7 +35,6 @@
         "Material.Switch",
         "Material.TabBar",
         "Material.TextField",
-        "Material.TextField.HelperText",
         "Material.Theme",
         "Material.TopAppBar",
         "Material.Typography"

@@ -22,13 +22,13 @@ defaultModel =
 
 
 type Msg
-    = SetValue String
+    = NoOp
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetValue value ->
+        NoOp ->
             model
 
 
@@ -65,9 +65,20 @@ heroTextFields : Model -> Html Msg
 heroTextFields model =
     Html.div heroTextFieldContainer
         [ Html.div textFieldContainerHero
-            [ textField { textFieldConfig | label = "Standard", value = Just model.value, onInput = Just SetValue } ]
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , type_ = "password"
+                }
+            ]
         , Html.div textFieldContainerHero
-            [ textField { textFieldConfig | label = "Standard", outlined = True, value = Just model.value, onInput = Just SetValue } ]
+            [ textField
+                { textFieldConfig
+                    | label = "Standard"
+                    , outlined = True
+                    , type_ = "password"
+                }
+            ]
         ]
 
 

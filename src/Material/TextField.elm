@@ -13,6 +13,7 @@ module Material.TextField exposing
   - [Full width text field](#full-width-text-field)
   - [Multiline text field](#multiline-text-field)
   - [Disabled text field](#disabled-text-field)
+  - [Password text field](#password-text-field)
   - [Required text field](#disabled-text-field)
   - [Invalid text field](#disabled-text-field)
   - [Outlined text field](#outlined-text-field)
@@ -83,6 +84,16 @@ To disable a text field set its `disabled` configuration field to `True`.
     textField { textFieldConfig | textarea = True }
 
 
+# Password text field
+
+To mark a text field as an input for entering a passwort, set its `type_`
+configuration field to the String `"password"`.
+
+    textField { textFieldConfig | type_ = "password" }
+
+Note: Other input types besides password may or may not be supported.
+
+
 # Required text field
 
 To mark a text field as required, set its `required` configuration field to
@@ -145,20 +156,23 @@ import Material.Icon exposing (IconConfig, icon, iconConfig)
 -}
 type alias TextFieldConfig msg =
     { label : String
+    , outlined : Bool
     , fullwidth : Bool
+    , value : Maybe String
+    , placeholder : Maybe String
     , textarea : Bool
     , rows : Maybe Int
     , cols : Maybe Int
-    , outlined : Bool
     , disabled : Bool
     , required : Bool
     , invalid : Bool
     , minLength : Maybe Int
     , maxLength : Maybe Int
+    , pattern : Maybe String
+    , type_ : String
     , min : Maybe Int
     , max : Maybe Int
-    , value : Maybe String
-    , placeholder : Maybe String
+    , step : Maybe Int
     , leadingIcon : TextFieldIcon msg
     , trailingIcon : TextFieldIcon msg
     , additionalAttributes : List (Html.Attribute msg)
@@ -177,23 +191,26 @@ type TextFieldIcon msg
 textFieldConfig : TextFieldConfig msg
 textFieldConfig =
     { label = ""
+    , outlined = False
     , fullwidth = False
+    , value = Nothing
+    , placeholder = Nothing
     , textarea = False
     , rows = Nothing
     , cols = Nothing
-    , outlined = False
     , disabled = False
     , required = False
     , invalid = False
     , minLength = Nothing
     , maxLength = Nothing
+    , pattern = Nothing
+    , type_ = "text"
     , min = Nothing
     , max = Nothing
-    , value = Nothing
-    , placeholder = Nothing
-    , additionalAttributes = []
+    , step = Nothing
     , leadingIcon = NoIcon
     , trailingIcon = NoIcon
+    , additionalAttributes = []
     , onInput = Nothing
     , onChange = Nothing
     }
@@ -406,15 +423,18 @@ inputElt config =
     )
         (List.filterMap identity
             [ inputCs
+            , typeAttr config
             , rowsAttr config
             , colsAttr config
             , disabledAttr config
             , requiredAttr config
             , invalidAttr config
+            , patternAttr config
             , minLengthAttr config
             , maxLengthAttr config
             , minAttr config
             , maxAttr config
+            , stepAttr config
             , placeholderAttr config
             , inputHandler config
             , changeHandler config
@@ -441,6 +461,25 @@ colsAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
 colsAttr { textarea, cols } =
     if textarea then
         Maybe.map Html.Attributes.cols cols
+
+    else
+        Nothing
+
+
+stepAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+stepAttr { step } =
+    Maybe.map (Html.Attributes.step << String.fromInt) step
+
+
+patternAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+patternAttr { pattern } =
+    Maybe.map Html.Attributes.pattern pattern
+
+
+typeAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+typeAttr { textarea, type_ } =
+    if not textarea then
+        Just (Html.Attributes.type_ type_)
 
     else
         Nothing

@@ -378,8 +378,13 @@ valueAttr { value } =
 
 
 placeholderAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-placeholderAttr { placeholder } =
-    Maybe.map Html.Attributes.placeholder placeholder
+placeholderAttr { fullwidth, placeholder, label } =
+    if fullwidth then
+        Just <|
+            Html.Attributes.placeholder (Maybe.withDefault label placeholder)
+
+    else
+        Maybe.map Html.Attributes.placeholder placeholder
 
 
 leadingIconElt : TextFieldConfig msg -> List (Html msg)
@@ -424,6 +429,7 @@ inputElt config =
         (List.filterMap identity
             [ inputCs
             , typeAttr config
+            , ariaLabelAttr config
             , rowsAttr config
             , colsAttr config
             , disabledAttr config
@@ -480,6 +486,17 @@ typeAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
 typeAttr { textarea, type_ } =
     if not textarea then
         Just (Html.Attributes.type_ type_)
+
+    else
+        Nothing
+
+
+ariaLabelAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+ariaLabelAttr { fullwidth, placeholder, label } =
+    if fullwidth then
+        Just <|
+            Html.Attributes.attribute "aria-label"
+                (Maybe.withDefault label placeholder)
 
     else
         Nothing

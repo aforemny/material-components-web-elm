@@ -65,20 +65,9 @@ heroTextFields : Model -> Html Msg
 heroTextFields model =
     Html.div heroTextFieldContainer
         [ Html.div textFieldContainerHero
-            [ textField
-                { textFieldConfig
-                    | label = "Standard"
-                    , type_ = "password"
-                }
-            ]
+            [ textField { textFieldConfig | label = "Standard" } ]
         , Html.div textFieldContainerHero
-            [ textField
-                { textFieldConfig
-                    | label = "Standard"
-                    , outlined = True
-                    , type_ = "password"
-                }
-            ]
+            [ textField { textFieldConfig | label = "Standard", outlined = True } ]
         ]
 
 

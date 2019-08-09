@@ -1,9 +1,16 @@
-module Material.Dialog exposing
-    ( DialogConfig, dialogConfig
-    , dialog, DialogContent
-    )
+module Material.Dialog exposing (dialog, dialogConfig, DialogConfig, DialogContent)
 
 {-| Dialogs inform users about a task and can contain critical information, require decisions, or involve multiple tasks.
+
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Dialog](#dialog)
+
+
+# Resources
 
   - [Demo: Dialogs](https://aforemny.github.io/material-components-elm/#dialogs)
   - [Material Design Guidelines: Dialogs](https://material.io/go/design-dialogs)
@@ -11,7 +18,7 @@ module Material.Dialog exposing
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-dialog#sass-mixins)
 
 
-# Example
+# Basic Usage
 
     import Material.Button exposing (buttonConfig, textButton)
     import Material.Dialog exposing (dialog, dialogConfig)
@@ -43,10 +50,9 @@ module Material.Dialog exposing
             }
 
 
-# Configuration
+# Dialog
 
-@docs DialogConfig, dialogConfig
-@docs dialog, DialogContent
+@docs dialog, dialogConfig, DialogConfig, DialogContent
 
 -}
 

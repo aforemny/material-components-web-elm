@@ -1,12 +1,27 @@
 module Material.IconButton exposing
-    ( IconButtonConfig, iconButtonConfig
-    , iconButton
-    , iconToggleConfig, iconToggle
+    ( iconButton, iconButtonConfig, IconButtonConfig
+    , iconToggle, iconToggleConfig
     , customIconButton
     )
 
 {-| Icon buttons allow users to take actions, and make choices, with a single
 tap.
+
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Icon Button](#icon-button)
+  - [Disabled Icon Button](#disabled-icon-button)
+  - [Labeled Icon Button](#labeled-icon-button)
+  - [Icon Toggle](#icon-toggle)
+  - [On Icon Toggle](#on-icon-toggle)
+  - [Disabled Icon Toggle](#disabled-icon-toggle)
+  - [Labeled Icon Toggle](#labeled-icon-toggle)
+
+
+# Resources
 
   - [Demo: Icon buttons](https://aforemny.github.io/material-components-elm/#icon-buttons)
   - [Material Design Guidelines: Toggle buttons](https://material.io/go/design-buttons#toggle-button)
@@ -14,13 +29,10 @@ tap.
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-icon-button#sass-mixins)
 
 
-# Usage
+# Basic Usage
 
 If you are looking for a button that has an icon as well as text, refer to
 [Button](Material-Button).
-
-
-# Example
 
     import Material.IconButton
         exposing
@@ -39,24 +51,44 @@ If you are looking for a button that has an icon as well as text, refer to
             "favorite"
 
 
-# Configuration
+# Icon Button
 
-@docs IconButtonConfig, iconButtonConfig
-@docs iconButton
+@docs iconButton, iconButtonConfig, IconButtonConfig
 
 
-# Variant: Icon Toggle
+# Disabled Icon Button
 
-Icon toggles are a variant of icon buttons that signify a may signify a state
-change when clicked.
+To disable a icon button, set its disabled configuration field to True.
+Disabled icon buttons cannot be interacted with and have no visual interaction
+effect.
+
+    iconButton
+        { iconButtonConfig | disabled = True }
+        "favorite"
+
+
+# Labeled Icon Button
+
+To set the `arial-label` attribute of a icon button, set its label
+configuration field to a String.
+
+    iconButton
+        { iconButtonConfig | label = "Add to favorites" }
+        "favorite"
+
+
+# Icon Toggle
+
+Icon toggles are a variant of icon buttons that change their state when
+clicked.
 
     iconToggle { iconToggleConfig | on = True }
         { off = "favorite_border", on = "favorite" }
 
-@docs iconToggleConfig, iconToggle
+@docs iconToggle, iconToggleConfig
 
 
-# State
+# On Icon Toggle
 
 To set the state of a icon toggle, set its on configuration field to a Bool
 value. State only applies to the icon toggle variant, icon buttons ignore this
@@ -66,21 +98,24 @@ configuration field.
         { off = "favorite_border", on = "favorite" }
 
 
-# Disabled
+# Disabled Icon Toggle
 
 To disable a icon button, set its disabled configuration field to True.
 Disabled icon buttons cannot be interacted with and have no visual interaction
 effect.
 
-    iconButton { iconButtonConfig | disabled = True } "favorite"
+    iconToggle { iconButtonConfig | disabled = True }
+        { off = "favorite_border", on = "favorite" }
 
 
-# Label
+# Labeled Icon Toggle
 
 To set the `arial-label` attribute of a icon button, set its label
 configuration field to a String.
 
-    iconButton { iconButtonConfig | label = "Add to favorites" } "favorite"
+    iconToggle
+        { iconButtonConfig | label = "Add to favorites" }
+        { off = "favorite_border", on = "favorite" }
 
 
 # Variant: Custom icon button

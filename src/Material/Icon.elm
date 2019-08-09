@@ -1,14 +1,21 @@
-module Material.Icon exposing
-    ( IconConfig, iconConfig
-    , icon
-    )
+module Material.Icon exposing (icon, iconConfig, IconConfig)
 
-{-| Icons render an icon.
+{-| Icons render a Material Icon.
+
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Icon](#icon)
+
+
+# Resources
 
   - [Material Icons](https://material.io/tools/icons/)
 
 
-# Example
+# Basic Usage
 
     import Material.Icon exposing (icon, iconConfig)
 
@@ -16,10 +23,9 @@ module Material.Icon exposing
         icon iconConfig "favorite"
 
 
-# Configuration
+# Icon
 
-@docs IconConfig, iconConfig
-@docs icon
+@docs icon, iconConfig, IconConfig
 
 -}
 

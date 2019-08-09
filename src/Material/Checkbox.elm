@@ -1,10 +1,19 @@
-module Material.Checkbox exposing
-    ( CheckboxConfig, checkboxConfig
-    , checkbox
-    , CheckboxState(..)
-    )
+module Material.Checkbox exposing (checkbox, checkboxConfig, CheckboxConfig, CheckboxState(..))
 
 {-| Checkboxes allow the user to select one or more items from a set.
+
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Checkbox](#checkbox)
+  - [Checked Checkbox](#checked-Checkbox)
+  - [Indeterminate Checkbox](#indeterminate-checkbox)
+  - [Disabled Checkbox](#disabled-checkbox)
+
+
+# Resources
 
   - [Demo: Checkboxes](https://aforemny.github.io/material-components-elm/#checkboxes)
   - [Material Design Guidelines: Selection Controls – Checkbox](https://material.io/go/design-checkboxes)
@@ -12,13 +21,10 @@ module Material.Checkbox exposing
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-checkbox#sass-mixins)
 
 
-# Usage
+# Basic Usage
 
 Note that checkboxes are usually used in conjunction with form fields. Refer to
 [FormField](Material-FormField) for more information.
-
-
-# Example
 
     import Material.Checkbox as Checkbox
         exposing
@@ -37,34 +43,32 @@ Note that checkboxes are usually used in conjunction with form fields. Refer to
             }
 
 
-# Configuration
+# Checkbox
 
-@docs CheckboxConfig, checkboxConfig
-@docs checkbox
-
-
-# State
-
-To set the state of a checkbox, set its state configuration field to a value of
-CheckboxState. Checkboxes can be in checked, unchecked or indeterminate
-state.
-
-@docs CheckboxState
+@docs checkbox, checkboxConfig, CheckboxConfig, CheckboxState
 
 
-## Checked chekcbox
+# Checked Checkbox
+
+To set the state of a checkbox to checked, set its `state` configuration field
+to `Checked`. To set its state to unchecked, use `Unchecked`.
+
+    checkbox { checkboxConfig | state = Checkbox.Checked }
+
+
+# Indeterminate Checkbox
+
+To set the state of a checkbox to indeterminate, set its `state` configuration
+field to `Indeterminate`.
 
     checkbox
-        { checkboxConfig | state = Checkbox.Checked }
+        { checkboxConfig | state = Checkbox.Indeterminate }
 
 
-# Disabled
+# Disabled Checkbox
 
 To disable a checkbox, set its disabled configuration field to True. Disabled
 checkboxes cannot be interacted with and have no visual interaction effect.
-
-
-## Disabled checkbox
 
     checkbox { checkboxConfig | disabled = True }
 

@@ -1,17 +1,25 @@
-module Material.FormField exposing
-    ( FormFieldConfig, formFieldConfig
-    , formField
-    )
+module Material.FormField exposing (formField, formFieldConfig, FormFieldConfig)
 
 {-| FormField aligns a form field (for example, a checkbox) with
 its label and makes it RTL-aware. It also activates a ripple effect upon
 interacting with the label.
 
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Form Field](#form-field)
+  - [Label Position](#label-position)
+
+
+# Resources
+
   - [Demo: Checkbox](https://aforemny.github.io/material-components-elm/#checkboxes)
   - [MDC Web: Form Field](https://github.com/material-components/material-components-web/tree/master/packages/mdc-form-field)
 
 
-# Example
+# Basic Usage
 
     import Material.Checkbox
         exposing
@@ -29,13 +37,12 @@ interacting with the label.
             [ checkbox checkboxConfig ]
 
 
-# Configuration
+# Form Field
 
-@docs FormFieldConfig, formFieldConfig
-@docs formField
+@docs formField, formFieldConfig, FormFieldConfig
 
 
-# Label position
+# Label Position
 
 If you want to position the label after the form field (ie. checkbox), set its
 alignEnd configuration field to True:

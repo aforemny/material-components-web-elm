@@ -153,7 +153,7 @@ button variant config label =
         )
 
 
-{-| Text button variant (flush without outlined)
+{-| Text button variant (flush without outline)
 -}
 textButton : ButtonConfig msg -> String -> Html msg
 textButton config label =

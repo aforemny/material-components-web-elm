@@ -1,8 +1,6 @@
 module Material.TabBar exposing
-    ( TabBarConfig, tabBarConfig
-    , tabBar
-    , Tab, tabConfig
-    , tab, TabContent
+    ( tabBar, tabBarConfig, TabBarConfig
+    , tab, tabConfig, TabConfig, TabContent, Tab
     , TabScrollerConfig, tabScrollerConfig
     , TabScrollerAlign(..)
     )
@@ -11,17 +9,35 @@ module Material.TabBar exposing
 related and at the same level of hierarchy. The Tab Bar contains the Tab
 Scroller and Tab components.
 
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Tab Bar](#tab-bar)
+  - [Tabs](#tabs)
+  - [Stacked Tabs](#stacked-tabs)
+  - [Minimum Width Tabs](#minimum-width-tabs)
+  - [Content-Spanning Tab Indicator](#content-spanning-tab-indicator)
+  - [Tab Scroller](#tab-scroller)
+      - [Tab Scroller Alignment](#tab-scroller-alignment)
+
+
+# Resources
+
   - [Demo: Tab Bar](https://aforemny.github.io/material-components-elm/#tab-bars)
   - [Material Design Guidelines: Tabs](https://material.io/go/design-tabs)
-  - [MDC Web: Tab Bar](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-bar)
-  - [MDC Web: Tab](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab)
-  - [MDC Web: Tab Scroller](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-scroller)
-  - [Sass Mixins (Tab Bar, MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-bar#sass-mixins)
-  - [Sass Mixins (Tab, MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab#sass-mixins)
-  - [Sass Mixins (Tab Scroller, MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-scroller#sass-mixins)
+  - MDC Web:
+    [Tab Bar](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-bar),
+    [Tab](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab),
+    [Tab Scroller](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-scroller)
+  - Sass Mixins:
+    [Tab Bar](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-bar#sass-mixins),
+    [Tab](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab#sass-mixins),
+    [Tab Scroller](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-scroller#sass-mixins)
 
 
-# Example
+# Basic Usage
 
     import Material.TabBar
         exposing
@@ -51,16 +67,54 @@ Scroller and Tab components.
             ]
 
 
-# Configuration
+# Tab Bar
 
-@docs TabBarConfig, tabBarConfig
-@docs tabBar
+@docs tabBar, tabBarConfig, TabBarConfig
 
 
 # Tabs
 
-@docs Tab, tabConfig
-@docs tab, TabContent
+@docs tab, tabConfig, TabConfig, TabContent, Tab
+
+
+# Stacked Tabs
+
+In a stacked tab bar, the label and icon of a tab flow vertically instead of
+horizontally. To make a tab bar stacked, set its `stacked` configuration
+field to `True`.
+
+Requires that the `tab`s have both `label` and `icon`.
+
+        tabBar
+            { tabBarConfig | stacked = True }
+            [ tab tabConfig
+            { label = "Favorites", icon = Just "favorite" }
+            ]
+
+
+# Minimum Width Tabs
+
+Tabs by defauls span a minimum width. If you want tabs to be as narrow as
+possible, set the tab bar's `minWidth` configuration field to `True`.
+
+        tabBar
+            { tabBarConfig | minWidth = True }
+            [ tab tabConfig
+                { label = "Favorites", icon = Nothing }
+            ]
+
+
+# Content-Spanning Tab Indicator
+
+The tab's active indicator by default spans the entire tab. If you want active
+indicators to only span their tab's content, set the tab bar's
+`indicatorSpansContent` configuration field to `True`.
+
+        tabBar
+            { tabBarConfig | indicatorSpansContent = True }
+            [ tab tabConfig
+                { label = "Favorites", icon = Nothing }
+            ]
 
 
 # Tab scroller
@@ -108,7 +162,10 @@ import Json.Decode as Decode
 {-| Configuration of a tab bar
 -}
 type alias TabBarConfig msg =
-    { additionalAttributes : List (Html.Attribute msg)
+    { stacked : Bool
+    , minWidth : Bool
+    , indicatorSpansContent : Bool
+    , additionalAttributes : List (Html.Attribute msg)
     , tabScrollerConfig : TabScrollerConfig msg
     }
 
@@ -117,7 +174,10 @@ type alias TabBarConfig msg =
 -}
 tabBarConfig : TabBarConfig msg
 tabBarConfig =
-    { additionalAttributes = []
+    { stacked = False
+    , minWidth = False
+    , indicatorSpansContent = False
+    , additionalAttributes = []
     , tabScrollerConfig = tabScrollerConfig
     }
 
@@ -134,7 +194,7 @@ tabBar config tabs =
             ]
             ++ config.additionalAttributes
         )
-        [ tabScroller config.tabScrollerConfig tabs
+        [ tabScroller config config.tabScrollerConfig tabs
         ]
 
 
@@ -165,17 +225,9 @@ activeTabAttr tabs =
 -}
 type alias TabConfig msg =
     { active : Bool
-    , stacked : Bool
-    , minWidth : Bool
-    , indicatorSpansContent : Bool
     , additionalAttributes : List (Html.Attribute msg)
     , onClick : Maybe msg
     }
-
-
-
--- TODO: move indicatorSpansContent to tab bar's TabBarConfig, possibly. also
--- stacked, minWidth, etc.?
 
 
 {-| Default configuration of a tab
@@ -183,9 +235,6 @@ type alias TabConfig msg =
 tabConfig : TabConfig msg
 tabConfig =
     { active = False
-    , stacked = False
-    , minWidth = False
-    , indicatorSpansContent = False
     , additionalAttributes = []
     , onClick = Nothing
     }
@@ -212,26 +261,26 @@ tab config content =
     Tab { config = config, content = content }
 
 
-viewTab : Tab msg -> Html msg
-viewTab (Tab { config, content }) =
+viewTab : TabBarConfig msg -> Tab msg -> Html msg
+viewTab barConfig (Tab { config, content }) =
     Html.button
         (List.filterMap identity
             [ tabCs
             , tabRoleAttr
-            , tabStackedCs config
-            , tabMinWidthCs config
+            , tabStackedCs barConfig
+            , tabMinWidthCs barConfig
             , tabClickHandler config
             ]
             ++ config.additionalAttributes
         )
         (List.filterMap identity <|
-            if config.indicatorSpansContent then
-                [ tabContentElt config content
+            if barConfig.indicatorSpansContent then
+                [ tabContentElt barConfig config content
                 , tabRippleElt
                 ]
 
             else
-                [ tabContentElt config content
+                [ tabContentElt barConfig config content
                 , tabIndicatorElt config
                 , tabRippleElt
                 ]
@@ -243,7 +292,7 @@ tabCs =
     Just (class "mdc-tab")
 
 
-tabStackedCs : TabConfig msg -> Maybe (Html.Attribute msg)
+tabStackedCs : TabBarConfig msg -> Maybe (Html.Attribute msg)
 tabStackedCs { stacked } =
     if stacked then
         Just (class "mdc-tab--stacked")
@@ -252,7 +301,7 @@ tabStackedCs { stacked } =
         Nothing
 
 
-tabMinWidthCs : TabConfig msg -> Maybe (Html.Attribute msg)
+tabMinWidthCs : TabBarConfig msg -> Maybe (Html.Attribute msg)
 tabMinWidthCs { minWidth } =
     if minWidth then
         Just (class "mdc-tab--min-width")
@@ -271,11 +320,11 @@ tabClickHandler { onClick } =
     Maybe.map (Html.Events.on "MDCTab:interacted" << Decode.succeed) onClick
 
 
-tabContentElt : TabConfig msg -> TabContent -> Maybe (Html msg)
-tabContentElt config content =
+tabContentElt : TabBarConfig msg -> TabConfig msg -> TabContent -> Maybe (Html msg)
+tabContentElt barConfig config content =
     Just
         (Html.div [ class "mdc-tab__content" ]
-            (if config.indicatorSpansContent then
+            (if barConfig.indicatorSpansContent then
                 List.filterMap identity
                     [ tabIconElt content
                     , tabTextLabelElt content
@@ -351,8 +400,8 @@ tabScrollerConfig =
     }
 
 
-tabScroller : TabScrollerConfig msg -> List (Tab msg) -> Html msg
-tabScroller config tabs =
+tabScroller : TabBarConfig msg -> TabScrollerConfig msg -> List (Tab msg) -> Html msg
+tabScroller barConfig config tabs =
     Html.div
         (List.filterMap identity
             [ tabScrollerCs
@@ -360,8 +409,7 @@ tabScroller config tabs =
             ]
             ++ config.additionalAttributes
         )
-        [ tabScrollerScrollAreaElt tabs
-        ]
+        [ tabScrollerScrollAreaElt barConfig tabs ]
 
 
 tabScrollerCs : Maybe (Html.Attribute msg)
@@ -385,12 +433,13 @@ tabScrollerAlignCs { align } =
             Nothing
 
 
-tabScrollerScrollAreaElt : List (Tab msg) -> Html msg
-tabScrollerScrollAreaElt tabs =
+tabScrollerScrollAreaElt : TabBarConfig msg -> List (Tab msg) -> Html msg
+tabScrollerScrollAreaElt barConfig tabs =
     Html.div [ class "mdc-tab-scroller__scroll-area" ]
-        [ tabScrollerScrollContentElt tabs ]
+        [ tabScrollerScrollContentElt barConfig tabs ]
 
 
-tabScrollerScrollContentElt : List (Tab msg) -> Html msg
-tabScrollerScrollContentElt tabs =
-    Html.div [ class "mdc-tab-scroller__scroll-content" ] (List.map viewTab tabs)
+tabScrollerScrollContentElt : TabBarConfig msg -> List (Tab msg) -> Html msg
+tabScrollerScrollContentElt barConfig tabs =
+    Html.div [ class "mdc-tab-scroller__scroll-content" ]
+        (List.map (viewTab barConfig) tabs)

@@ -120,13 +120,15 @@ tabsWithStackedIcons model =
     let
         tabConfig_ index =
             { tabConfig
-                | stacked = True
-                , indicatorSpansContent = True
-                , active = model.activeStackedTab == index
+                | active = model.activeStackedTab == index
                 , onClick = Just (SetActiveStackedTab index)
             }
     in
-    tabBar tabBarConfig
+    tabBar
+        { tabBarConfig
+            | stacked = True
+            , indicatorSpansContent = True
+        }
         [ tab (tabConfig_ 0) { label = "Recents", icon = Just "access_time" }
         , tab (tabConfig_ 1) { label = "Nearby", icon = Just "near_me" }
         , tab (tabConfig_ 2) { label = "Favorites", icon = Just "favorite" }

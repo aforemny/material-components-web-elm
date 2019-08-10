@@ -115,7 +115,6 @@ import Json.Decode as Decode
 type alias SelectConfig msg =
     { label : String
     , value : Maybe String
-    , variant : Variant
     , additionalAttributes : List (Html.Attribute msg)
     , onChange : Maybe (String -> msg)
     }
@@ -127,7 +126,6 @@ selectConfig : SelectConfig msg
 selectConfig =
     { label = ""
     , value = Nothing
-    , variant = Filled
     , additionalAttributes = []
     , onChange = Nothing
     }
@@ -138,12 +136,12 @@ type Variant
     | Outlined
 
 
-select : SelectConfig msg -> List (SelectOption msg) -> Html msg
-select config nodes =
+select : Variant -> SelectConfig msg -> List (SelectOption msg) -> Html msg
+select variant config nodes =
     Html.node "mdc-select"
         (List.filterMap identity
             [ rootCs
-            , variantCs config
+            , variantCs variant
             ]
             ++ config.additionalAttributes
         )
@@ -151,7 +149,7 @@ select config nodes =
             [ [ dropdownIconElt
               , nativeControlElt config nodes
               ]
-            , if config.variant == Outlined then
+            , if variant == Outlined then
                 [ notchedOutlineElt config ]
 
               else
@@ -166,14 +164,14 @@ select config nodes =
 -}
 filledSelect : SelectConfig msg -> List (SelectOption msg) -> Html msg
 filledSelect config nodes =
-    select { config | variant = Filled } nodes
+    select Filled config nodes
 
 
 {-| Outlined select view function
 -}
 outlinedSelect : SelectConfig msg -> List (SelectOption msg) -> Html msg
 outlinedSelect config nodes =
-    select { config | variant = Outlined } nodes
+    select Outlined config nodes
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -181,8 +179,8 @@ rootCs =
     Just (class "mdc-select")
 
 
-variantCs : SelectConfig msg -> Maybe (Html.Attribute msg)
-variantCs { variant } =
+variantCs : Variant -> Maybe (Html.Attribute msg)
+variantCs variant =
     if variant == Outlined then
         Just (class "mdc-select--outlined")
 

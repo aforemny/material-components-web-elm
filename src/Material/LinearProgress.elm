@@ -86,8 +86,7 @@ import Html.Attributes exposing (class, style)
 {-| Linear progress configuration
 -}
 type alias LinearProgressConfig msg =
-    { variant : Variant
-    , reverse : Bool
+    { reverse : Bool
     , closed : Bool
     , additionalAttributes : List (Html.Attribute msg)
     }
@@ -103,24 +102,23 @@ type Variant
 -}
 linearProgressConfig : LinearProgressConfig msg
 linearProgressConfig =
-    { variant = Indeterminate
-    , reverse = False
+    { reverse = False
     , closed = False
     , additionalAttributes = []
     }
 
 
-linearProgress : LinearProgressConfig msg -> Html msg
-linearProgress config =
+linearProgress : Variant -> LinearProgressConfig msg -> Html msg
+linearProgress variant config =
     Html.node "mdc-linear-progress"
         (List.filterMap identity
             [ rootCs
             , displayCss
             , roleAttr
-            , variantCs config
-            , determinateAttr config
-            , progressAttr config
-            , bufferAttr config
+            , variantCs variant
+            , determinateAttr variant
+            , progressAttr variant
+            , bufferAttr variant
             , reverseAttr config
             , closedAttr config
             ]
@@ -139,7 +137,7 @@ indeterminateLinearProgress :
     LinearProgressConfig msg
     -> Html msg
 indeterminateLinearProgress config =
-    linearProgress { config | variant = Indeterminate }
+    linearProgress Indeterminate config
 
 
 {-| Determinate linear progress variant
@@ -149,7 +147,7 @@ determinateLinearProgress :
     -> { progress : Float }
     -> Html msg
 determinateLinearProgress config { progress } =
-    linearProgress { config | variant = Determinate progress }
+    linearProgress (Determinate progress) config
 
 
 {-| Buffered linear progress variant
@@ -159,7 +157,7 @@ bufferedLinearProgress :
     -> { progress : Float, buffered : Float }
     -> Html msg
 bufferedLinearProgress config { progress, buffered } =
-    linearProgress { config | variant = Buffered progress buffered }
+    linearProgress (Buffered progress buffered) config
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -177,8 +175,8 @@ roleAttr =
     Just (Html.Attributes.attribute "role" "progressbar")
 
 
-variantCs : LinearProgressConfig msg -> Maybe (Html.Attribute msg)
-variantCs { variant } =
+variantCs : Variant -> Maybe (Html.Attribute msg)
+variantCs variant =
     case variant of
         Indeterminate ->
             Just (class "mdc-linear-progress--indeterminate")
@@ -187,8 +185,8 @@ variantCs { variant } =
             Nothing
 
 
-determinateAttr : LinearProgressConfig msg -> Maybe (Html.Attribute msg)
-determinateAttr { variant } =
+determinateAttr : Variant -> Maybe (Html.Attribute msg)
+determinateAttr variant =
     if variant /= Indeterminate then
         Just (Html.Attributes.attribute "determinate" "")
 
@@ -196,8 +194,8 @@ determinateAttr { variant } =
         Nothing
 
 
-progressAttr : LinearProgressConfig msg -> Maybe (Html.Attribute msg)
-progressAttr { variant } =
+progressAttr : Variant -> Maybe (Html.Attribute msg)
+progressAttr variant =
     case variant of
         Determinate progress ->
             Just (Html.Attributes.attribute "progress" (String.fromFloat progress))
@@ -209,8 +207,8 @@ progressAttr { variant } =
             Nothing
 
 
-bufferAttr : LinearProgressConfig msg -> Maybe (Html.Attribute msg)
-bufferAttr { variant } =
+bufferAttr : Variant -> Maybe (Html.Attribute msg)
+bufferAttr variant =
     case variant of
         Buffered _ buffer ->
             Just (Html.Attributes.attribute "buffer" (String.fromFloat buffer))

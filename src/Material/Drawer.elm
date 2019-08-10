@@ -111,8 +111,7 @@ dismissible drawer variant. Only the modal drawer uses both `open` and
 
 -}
 type alias DrawerConfig msg =
-    { variant : Variant
-    , open : Bool
+    { open : Bool
     , additionalAttributes : List (Html.Attribute msg)
     , onClose : Maybe msg
     }
@@ -122,8 +121,7 @@ type alias DrawerConfig msg =
 -}
 drawerConfig : DrawerConfig msg
 drawerConfig =
-    { variant = Permanent
-    , open = False
+    { open = False
     , additionalAttributes = []
     , onClose = Nothing
     }
@@ -135,13 +133,13 @@ type Variant
     | Modal
 
 
-drawer : DrawerConfig msg -> List (Html msg) -> Html msg
-drawer config nodes =
+drawer : Variant -> DrawerConfig msg -> List (Html msg) -> Html msg
+drawer variant config nodes =
     Html.node "mdc-drawer"
         (List.filterMap identity
             [ rootCs
-            , variantCs config
-            , openAttr config
+            , variantCs variant
+            , openAttr variant config
             , closeHandler config
             ]
             ++ config.additionalAttributes
@@ -163,7 +161,7 @@ drawer config nodes =
 -}
 permanentDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
 permanentDrawer config nodes =
-    drawer { config | variant = Permanent } nodes
+    drawer Permanent config nodes
 
 
 {-| Dismissible drawer view function
@@ -179,7 +177,7 @@ permanentDrawer config nodes =
 -}
 dismissibleDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
 dismissibleDrawer config nodes =
-    drawer { config | variant = Dismissible } nodes
+    drawer Dismissible config nodes
 
 
 {-| Modal drawer view function
@@ -198,7 +196,7 @@ dismissibleDrawer config nodes =
 -}
 modalDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
 modalDrawer config nodes =
-    drawer { config | variant = Modal } nodes
+    drawer Modal config nodes
 
 
 {-| Drawer content
@@ -250,8 +248,8 @@ rootCs =
     Just (class "mdc-drawer")
 
 
-variantCs : DrawerConfig msg -> Maybe (Html.Attribute msg)
-variantCs { variant } =
+variantCs : Variant -> Maybe (Html.Attribute msg)
+variantCs variant =
     case variant of
         Permanent ->
             Nothing
@@ -263,8 +261,8 @@ variantCs { variant } =
             Just (class "mdc-drawer--modal")
 
 
-openAttr : DrawerConfig msg -> Maybe (Html.Attribute msg)
-openAttr { variant, open } =
+openAttr : Variant -> DrawerConfig msg -> Maybe (Html.Attribute msg)
+openAttr variant { open } =
     if open && variant /= Permanent then
         Just (Html.Attributes.attribute "open" "")
 

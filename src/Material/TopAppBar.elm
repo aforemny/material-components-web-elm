@@ -169,8 +169,7 @@ import Html.Attributes exposing (class)
 {-| Configuration of a top app bar
 -}
 type alias TopAppBarConfig msg =
-    { variant : Variant
-    , dense : Bool
+    { dense : Bool
     , fixed : Bool
     , additionalAttributes : List (Html.Attribute msg)
     }
@@ -187,21 +186,18 @@ type Variant
 -}
 topAppBarConfig : TopAppBarConfig msg
 topAppBarConfig =
-    { variant = Default
-    , dense = False
+    { dense = False
     , fixed = False
     , additionalAttributes = []
     }
 
 
-{-| Top app bar view function
--}
-topAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
-topAppBar config nodes =
+genericTopAppBar : Variant -> TopAppBarConfig msg -> List (Html msg) -> Html msg
+genericTopAppBar variant config nodes =
     Html.node "mdc-top-app-bar"
         (List.filterMap identity
             [ rootCs
-            , variantCs config
+            , variantCs variant
             , denseCs config
             , fixedCs config
             ]
@@ -210,25 +206,32 @@ topAppBar config nodes =
         nodes
 
 
+{-| Top app bar view function
+-}
+topAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
+topAppBar config nodes =
+    genericTopAppBar Default config nodes
+
+
 {-| Short top app bar view function
 -}
 shortTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 shortTopAppBar config nodes =
-    topAppBar { config | variant = Short } nodes
+    genericTopAppBar Short config nodes
 
 
 {-| Short always closed top app bar view function
 -}
 shortCollapsedTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 shortCollapsedTopAppBar config nodes =
-    topAppBar { config | variant = ShortCollapsed } nodes
+    genericTopAppBar ShortCollapsed config nodes
 
 
 {-| Prominent top app bar view function
 -}
 prominentTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
 prominentTopAppBar config nodes =
-    topAppBar { config | variant = Prominent } nodes
+    genericTopAppBar Prominent config nodes
 
 
 {-| A row is the first child of a top app bar. It contains the top app bar's
@@ -290,8 +293,8 @@ rootCs =
     Just (class "mdc-top-app-bar")
 
 
-variantCs : TopAppBarConfig msg -> Maybe (Html.Attribute msg)
-variantCs { variant } =
+variantCs : Variant -> Maybe (Html.Attribute msg)
+variantCs variant =
     case variant of
         Default ->
             Nothing

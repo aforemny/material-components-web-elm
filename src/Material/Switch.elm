@@ -1,10 +1,19 @@
-module Material.Switch exposing
-    ( SwitchConfig, switchConfig
-    , switch
-    )
+module Material.Switch exposing (switch, SwitchConfig, switchConfig)
 
 {-| Switches toggle the state of a single setting on or off. They are the
 preferred way to adjust settings on mobile.
+
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Switch](#switch)
+  - [On Switch](#on-switch)
+  - [Disabled Switch](#disabled-switch)
+
+
+# Resources
 
   - [Demo: Switches](https://aforemny.github.io/material-components-elm/#switches)
   - [Material Design Guidelines: Selection Controls – Switches](https://material.io/go/design-switches)
@@ -12,13 +21,10 @@ preferred way to adjust settings on mobile.
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-switch#sass-mixins)
 
 
-# Usage
+# Basic Usage
 
 Note that switches are usually used in conjunction with form fields. Refer to
 [FormField](Material-FormField) for more information.
-
-
-# Example
 
     import Material.Switch exposing (switch, switchConfig)
 
@@ -33,29 +39,23 @@ Note that switches are usually used in conjunction with form fields. Refer to
             }
 
 
-# Configuration
+# Switch
 
-@docs SwitchConfig, switchConfig
-@docs switch
-
-
-# State
-
-To set the state of a checkbox, set its on configuration field to a Bool value.
+@docs switch, SwitchConfig, switchConfig
 
 
-## Off switch
+# On Switch
 
-    switch { switchConfig | on = False }
+To set the state of a switch, set its `on` configuration field to a `Bool`
+value.
+
+    switch { switchConfig | on = True }
 
 
-# Disabled
+# Disabled Switch
 
-To disable a switch, set its disabled configuration field to True. Disabled
+To disable a switch, set its `disabled` configuration field to `True`. Disabled
 switches cannot be interacted with and have no visual interaction effect.
-
-
-## Disabled switch
 
     switch { switchConfig | disabled = True }
 

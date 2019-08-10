@@ -9,27 +9,34 @@ module Material.Typography exposing
 {-| Material Design's text sizes and styles were developed to balance content
 density and reading comfort under typical usage conditions.
 
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Typography Variants](#typography-variants)
+
+
+# Resources
+
   - [Demo: Typography](https://aforemny.github.io/material-components-elm/#typography)
   - [Material Design Guidelines: Typography](https://material.io/go/design-typography)
   - [MDC Web: Typography](https://github.com/material-components/material-components-web/tree/master/packages/mdc-typography)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-typography#sass-variables-and-mixins)
 
 
-# Usage
+# Basic Usage
 
 For typography to work best, it is necessary to set the font to Roboto. This is
 archieved by the `mdc-typography` class, and we recommend to set it globally to
 the root of your page.
-
-
-# Example
 
     import Material.Typography as Typography
 
     Html.h1 [ Typography.headline1 ] [ text "Headline" ]
 
 
-# Variants
+# Typography Variants
 
 Typography elements come in the following thirteen variants.
 

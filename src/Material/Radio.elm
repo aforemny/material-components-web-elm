@@ -1,10 +1,19 @@
-module Material.Radio exposing
-    ( RadioConfig, radioConfig
-    , radio
-    )
+module Material.Radio exposing (radio, radioConfig, RadioConfig)
 
 {-| Radio buttons allow the user to select one option from a set while seeing
 all available options.
+
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Radio](#radio)
+  - [Checked Radio](#checked-radio)
+  - [Disabled Radio](#disabled-radio)
+
+
+# Resources
 
   - [Demo: Radio Buttons](https://aforemny.github.io/material-components-elm/#radio-buttons)
   - [Material Design Guidelines: Selection Controls – Radio buttons](https://material.io/go/design-radio-buttons)
@@ -12,13 +21,10 @@ all available options.
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-radio#sass-mixins)
 
 
-# Usage
+# Basic Usage
 
 Note that radio buttons are usually used in conjunction with form fields. Refer
 to [FormField](Material-FormField) for more information.
-
-
-# Example
 
     import Material.Radio exposing (radio, radioConfig)
 
@@ -33,29 +39,22 @@ to [FormField](Material-FormField) for more information.
             }
 
 
-# Configuration
+# Radio
 
-@docs RadioConfig, radioConfig
-@docs radio
+@docs radio, radioConfig, RadioConfig
 
 
-# State
+# Checked Radio
 
 To set the state of a radio button, set its checked configuration field to a Bool value.
-
-
-## Unchecked radio button
 
     radio { radioConfig | checked = False }
 
 
-# Disabled
+# Disabled Radio
 
 To disable a radio button, set its disabled configuration field to True. Disabled
 radio buttons cannot be interacted with and have no visual interaction effect.
-
-
-## Disabled radio button
 
     radio { radioConfig | disabed = True }
 

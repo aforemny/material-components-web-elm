@@ -13,14 +13,6 @@ module Material.Theme exposing
 {-| The Material Design color system can be used to create a color scheme that
 reflects your brand or style.
 
-  - [Demo: Theme](https://aforemny.github.io/material-components-elm/#theme)
-  - [Material Design Guidelines: Color](https://material.io/go/design-theming)
-  - [MDC Web: Theme](https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme)
-  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme#sass-mixins-variables-and-functions)
-
-
-# Usage
-
 Material Components Web use a theme comprised of a primary and a secondary
 color. Those colors can be conveniently override via Sass (see below), and
 [less conveniently via
@@ -33,7 +25,37 @@ themeing since it is a lot more flexible. I highly recommend you [check it
 out](https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme#sass-mixins-variables-and-functions)!
 
 
-## Changing theme via Sass
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Changing Theme via SASS](#chaging-theme-via-sass)
+  - [Colors](#colors)
+      - [Text Colors](#text-colors)
+      - [Background Colors](#background-colors)
+  - [Text Styles](#text-styles)
+      - [Text Styles on Background](#text-styles-on-background)
+      - [Text Styles on Light Background](#text-styles-on-light-background)
+      - [Text Styles on Dark Background](#text-styles-on-dark-background)
+
+
+# Resources
+
+  - [Demo: Theme](https://aforemny.github.io/material-components-elm/#theme)
+  - [Material Design Guidelines: Color](https://material.io/go/design-theming)
+  - [MDC Web: Theme](https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme#sass-mixins-variables-and-functions)
+
+
+# Basic Usage
+
+    import Material.Theme as Theme
+
+    main =
+        Html.span [ Theme.primary ] [ text "Primary color" ]
+
+
+# Changing Theme via SASS
 
 ```scss
 $mdc-theme-primary: #fcb8ab;
@@ -45,29 +67,21 @@ $mdc-theme-on-secondary: #442b2d;
 ```
 
 
-# Example
-
-    import Material.Theme as Theme
-
-    main =
-        Html.span [ Theme.primary ] [ text "Primary color" ]
-
-
 # Colors
 
 
-## Text colors
+## Text Colors
 
 @docs primary, secondary, background
 @docs onPrimary, onSecondary, onSurface
 
 
-## Background colors
+## Background Colors
 
 @docs primaryBg, secondaryBg, surface
 
 
-# Text styles
+# Text Styles
 
 MDC Web use a system that defines five **text styles**. In addition to the
 theme's background color, they can be used on either light or dark background.
@@ -86,19 +100,19 @@ Please note that the primary and secondary text style _do not_ correspond to
 the theme's primary or secondary colors.
 
 
-# Text styles on background
+## Text Styles on Background
 
 @docs textPrimaryOnBackground, textSecondaryOnBackground, textHintOnBackground
 @docs textDisabledOnBackground, textIconOnBackground
 
 
-# Text styles on light backgrounds
+## Text Styles on Light Background
 
 @docs textPrimaryOnLight, textSecondaryOnLight, textHintOnLight
 @docs textDisabledOnLight, textIconOnLight
 
 
-# Text styles on dark backgrounds
+## Text Styles on Dark Background
 
 @docs textPrimaryOnDark, textSecondaryOnDark, textHintOnDark
 @docs textDisabledOnDark, textIconOnDark

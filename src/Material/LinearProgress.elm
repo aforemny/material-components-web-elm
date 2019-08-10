@@ -1,11 +1,25 @@
 module Material.LinearProgress exposing
-    ( LinearProgressConfig, linearProgressConfig
-    , indeterminateLinearProgress, determinateLinearProgress, bufferedLinearProgress
+    ( indeterminateLinearProgress, linearProgressConfig, LinearProgressConfig
+    , determinateLinearProgress
+    , bufferedLinearProgress
     )
 
-{-| The MDC Linear Progress component is a spec-aligned linear progress
-indicator component adhering to the Material Design progress & activity
-requirements.
+{-| Linear progress indicators visualize the linear progression of either
+determinate or indeterminate activities.
+
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Indeterminate Linear Progress](#indeterminate-linear-progress)
+  - [Determinate Linear Progress](#determinate-linear-progress)
+  - [Buffered Linear Progress](#buffered-linear-progress)
+  - [Closed Linear Progress](#closed-linear-progress)
+  - [Reversed Linear Progress](#reversed-linear-progress)
+
+
+# Resources
 
   - [Demo: Linear Progress](https://aforemny.github.io/material-components-elm/#linear-progress)
   - [Material Design Guidelines: Progress indicators](https://material.io/go/design-progress-indicators)
@@ -13,7 +27,7 @@ requirements.
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-linear-progress#sass-mixins)
 
 
-# Example
+# Basic Usage
 
     import Material.LinearProgress
         exposing
@@ -25,49 +39,43 @@ requirements.
         indeterminateLinearProgress linearProgressConfig
 
 
-# Configuration
+# Indeterminate Linear Progress
 
-@docs LinearProgressConfig, linearProgressConfig
-
-
-# Variants
-
-@docs indeterminateLinearProgress, determinateLinearProgress, bufferedLinearProgress
+@docs indeterminateLinearProgress, linearProgressConfig, LinearProgressConfig
 
 
-## Indeterminate linear progress
-
-    indeterminateLinearProgress linearProgressConfig
-
-
-## Determinate linear progress
+# Determinate Linear Progress
 
     determinateLinearProgress linearProgressConfig
         { progress = 0.5 }
 
+@docs determinateLinearProgress
 
-## Buffered linear progress
+
+## Buffered Linear Progress
 
     bufferedLinearProgress linearProgressConfig
         { progress = 0.5, buffered = 0.75 }
 
-
-# Reverse
-
-If you want to reverse the direction of the linear progress indicator, set its
-reverse configuration field to True.
-
-    indeterminateLinearProgress
-        { linearProgressConfig | reverse = True }
+@docs bufferedLinearProgress
 
 
-# Closed
+# Closed Linear Progress
 
 If you want to hide the linear progress indicator, set its closed configuration
 field to True.
 
     indeterminateLinearProgress
         { linearProgressConfig | closed = True }
+
+
+# Reverse Linear Progress
+
+If you want to reverse the direction of the linear progress indicator, set its
+reverse configuration field to True.
+
+    indeterminateLinearProgress
+        { linearProgressConfig | reverse = True }
 
 -}
 

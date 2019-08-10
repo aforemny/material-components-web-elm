@@ -1,10 +1,26 @@
 module Material.Ripple exposing
-    ( RippleConfig, rippleConfig
-    , ripple, unboundedRipple
+    ( ripple, rippleConfig, RippleConfig
+    , unboundedRipple
     , RippleColor(..)
     )
 
 {-| Material “ink ripple” interaction effect.
+
+Ripples come in two variants. Use `ripple` for bounded ripple effects which
+work best when used for contained surfaces, and `unboundedRipple` for unbounded
+ripple effects which work best with icons.
+
+
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Bounded Ripple](#bounded-ripple)
+  - [Unbounded Ripple](#unbounded-ripple)
+  - [Colored Ripple](#colored-ripple)
+
+
+# Resources
 
   - [Demo: Ripples](https://aforemny.github.io/material-components-elm/#ripples)
   - [Material Design Guidelines: States](https://material.io/go/design-states)
@@ -12,7 +28,7 @@ module Material.Ripple exposing
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-ripple#sass-apis)
 
 
-# Example
+# Basic Usage
 
     import Material.Ripple exposing (ripple, rippleConfig)
 
@@ -23,47 +39,29 @@ module Material.Ripple exposing
             ]
 
 
-# Configuration
+# Bounded Ripple
 
-@docs RippleConfig, rippleConfig
-
-
-# Variants
-
-Ripples come in two variants. Use `ripple` for bounded ripple effects which
-work best when used for contained surfaces, and `unboundedRipple` for unbounded
-ripple effects which work best with icons.
-
-@docs ripple, unboundedRipple
+@docs ripple, rippleConfig, RippleConfig
 
 
-## Bounded ripple
-
-    Html.div []
-        [ ripple rippleConfig
-        , text "Click me!"
-        ]
-
-
-## Unbounded ripple
+# Unbounded Ripple
 
     Html.span []
         [ unboundedRipple rippleConfig
         , text "🙌"
         ]
 
+@docs unboundedRipple
 
-# Color
+
+# Colored Ripple
 
 If you want to set the ripple effect to either primary or secondary color, set
 its color configuration field to a RippleColor.
 
-@docs RippleColor
-
-
-## Primary colored ripple
-
     ripple { rippleConfig | color = Ripple.PrimaryColor }
+
+@docs RippleColor
 
 -}
 

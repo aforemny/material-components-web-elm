@@ -1,15 +1,34 @@
 module Material.ImageList exposing
-    ( ImageListConfig, imageListConfig, imageList
-    , ImageListItemConfig, imageListItemConfig
-    , imageListItem, ImageListItem
+    ( imageList, imageListConfig, ImageListConfig
+    , imageListItem, imageListItemConfig, ImageListItemConfig, ImageListItem
     )
 
-{-| Image List provides a RTL-aware Material Design image list component. An
-Image List consists of several items, each containing an image and optionally
-supporting content (i.e. a text label).
+{-| An Image List consists of several items, each containing an image and
+optionally supporting a text label.
 
 
-# Example
+# Table of Contents
+
+  - [Resources](#resources)
+  - [Basic Usage](#basic-usage)
+  - [Image List](#image-list)
+  - [Image List Item](#image-list-item)
+  - [Masonry Image List](#masonry-image-list)
+  - [Image List with Text Label](#image-list-with-text-label)
+
+
+# Resources
+
+  - [Demo: Image Lists](https://aforemny.github.io/material-components-elm/#image-lists)
+  - [Material Design Guidelines: Image list](https://material.io/go/design-image-list)
+  - [MDC Web: Image List](https://github.com/material-components/material-components-web/tree/master/packages/mdc-image-list)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-image-list#sass-mixins)
+
+
+# Basic Usage
+
+Note that you will have to set the width and margin of image list items
+yourself, preferably through SASS.
 
     import Html.Attributes exposing (style)
     import Material.ImageList
@@ -34,18 +53,17 @@ supporting content (i.e. a text label).
             ]
 
 
-# Configuration
+# Image List
 
-@docs ImageListConfig, imageListConfig, imageList
-
-
-# Image list items
-
-@docs ImageListItemConfig, imageListItemConfig
-@docs imageListItem, ImageListItem
+@docs imageList, imageListConfig, ImageListConfig
 
 
-# Masonry image list
+# Image list Item
+
+@docs imageListItem, imageListItemConfig, ImageListItemConfig, ImageListItem
+
+
+# Masonry Image List
 
 The Masonry Image List variant presents images vertically arranged into several
 columns, using CSS Columns. In this layout, images may be any combination of
@@ -54,13 +72,17 @@ aspect ratios.
         imageList { imageListConfig | masonry = True } []
 
 
-# Image list with text protection
+# Image List with Label
 
 Image's labels are by default positioned below the image. If you want image
 labels to be positioned in a scrim overlaying each image, set the image list's
 textProtection configuration field to True.
 
-        imageList { imageListConfig | textProtection = True } []
+        imageList { imageListConfig | textProtection = True }
+            [ imageListItem
+                { imageListItemConfig | label = "Photo" }
+                "images/photos/3x2/1.jpg"
+            ]
 
 -}
 

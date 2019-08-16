@@ -109,6 +109,7 @@ set its exited configuration field to True.
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
+import Html.Events
 
 
 {-| Floating action button configuration
@@ -116,6 +117,7 @@ import Html.Attributes exposing (class)
 type alias FabConfig msg =
     { mini : Bool
     , exited : Bool
+    , onClick : Maybe msg
     , additionalAttributes : List (Html.Attribute msg)
     }
 
@@ -126,6 +128,7 @@ fabConfig : FabConfig msg
 fabConfig =
     { mini = False
     , exited = False
+    , onClick = Nothing
     , additionalAttributes = []
     }
 
@@ -139,6 +142,7 @@ fab config iconName =
             [ rootCs
             , miniCs config
             , exitedCs config
+            , clickHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -152,6 +156,7 @@ type alias ExtendedFabConfig msg =
     { icon : Maybe String
     , trailingIcon : Bool
     , exited : Bool
+    , onClick : Maybe msg
     , additionalAttributes : List (Html.Attribute msg)
     }
 
@@ -163,6 +168,7 @@ extendedFabConfig =
     { icon = Nothing
     , trailingIcon = False
     , exited = False
+    , onClick = Nothing
     , additionalAttributes = []
     }
 
@@ -176,6 +182,7 @@ extendedFab config label =
             [ rootCs
             , extendedFabCs
             , exitedCs config
+            , clickHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -249,3 +256,8 @@ exitedCs { exited } =
 iconElt : String -> Html msg
 iconElt iconName =
     Html.span [ class "material-icons", class "mdc-fab__icon" ] [ text iconName ]
+
+
+clickHandler : { config | onClick : Maybe msg } -> Maybe (Html.Attribute msg)
+clickHandler { onClick } =
+    Maybe.map Html.Events.onClick onClick

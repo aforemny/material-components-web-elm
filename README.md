@@ -15,8 +15,7 @@ web](https://github.com/material-components/material-components-web) (MDC Web).
 ## Quick start
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="https://aforemny.github.io/material-components-elm/material-components-elm.min.css">
 <script src="https://aforemny.github.io/material-components-elm/material-components-elm.min.js"></script>
 ```

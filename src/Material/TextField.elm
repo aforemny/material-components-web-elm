@@ -155,7 +155,7 @@ import Material.Icon exposing (IconConfig, icon, iconConfig)
 {-| Configuration of a text field
 -}
 type alias TextFieldConfig msg =
-    { label : String
+    { label : Maybe String
     , outlined : Bool
     , fullwidth : Bool
     , value : Maybe String
@@ -190,7 +190,7 @@ type TextFieldIcon msg
 -}
 textFieldConfig : TextFieldConfig msg
 textFieldConfig =
-    { label = ""
+    { label = Nothing
     , outlined = False
     , fullwidth = False
     , value = Nothing
@@ -223,6 +223,7 @@ textField config =
     Html.node "mdc-text-field"
         (List.filterMap identity
             [ rootCs
+            , noLabelCs config
             , outlinedCs config
             , fullwidthCs config
             , textareaCs config
@@ -378,13 +379,8 @@ valueAttr { value } =
 
 
 placeholderAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-placeholderAttr { fullwidth, placeholder, label } =
-    if fullwidth then
-        Just <|
-            Html.Attributes.placeholder (Maybe.withDefault label placeholder)
-
-    else
-        Maybe.map Html.Attributes.placeholder placeholder
+placeholderAttr { placeholder } =
+    Maybe.map Html.Attributes.placeholder placeholder
 
 
 leadingIconElt : TextFieldConfig msg -> List (Html msg)
@@ -494,9 +490,7 @@ typeAttr { textarea, type_ } =
 ariaLabelAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
 ariaLabelAttr { fullwidth, placeholder, label } =
     if fullwidth then
-        Just <|
-            Html.Attributes.attribute "aria-label"
-                (Maybe.withDefault label placeholder)
+        Maybe.map (Html.Attributes.attribute "aria-label") label
 
     else
         Nothing
@@ -509,14 +503,28 @@ disabledAttr { disabled } =
 
 labelElt : TextFieldConfig msg -> Html msg
 labelElt { label, value } =
-    Html.div
-        (if Maybe.withDefault "" value /= "" then
-            [ class "mdc-floating-label mdc-floating-label--float-above" ]
+    case label of
+        Just str ->
+            Html.div
+                (if Maybe.withDefault "" value /= "" then
+                    [ class "mdc-floating-label mdc-floating-label--float-above" ]
 
-         else
-            [ class "mdc-floating-label" ]
-        )
-        [ text label ]
+                 else
+                    [ class "mdc-floating-label" ]
+                )
+                [ text str ]
+
+        Nothing ->
+            text ""
+
+
+noLabelCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+noLabelCs { label } =
+    if label == Nothing then
+        Just (class "mdc-text-field--no-label")
+
+    else
+        Nothing
 
 
 lineRippleElt : Html msg

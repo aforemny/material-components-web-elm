@@ -1,9 +1,9 @@
 module Material.Drawer exposing
-    ( permanentDrawer, drawerConfig, DrawerConfig
+    ( permanentDrawer, permanentDrawerConfig, PermanentDrawerConfig
     , drawerContent
     , drawerHeader, DrawerHeaderContent
-    , dismissibleDrawer, appContent
-    , modalDrawer, drawerScrim
+    , dismissibleDrawer, dismissibleDrawerConfig, DismissibleDrawerConfig, appContent
+    , modalDrawer, modalDrawerConfig, ModalDrawerConfig, drawerScrim
     )
 
 {-| The MDC Navigation Drawer is used to organize access to destinations and
@@ -33,8 +33,8 @@ other functionality on an app.
     import Html.Attributes exposing (style)
     import Material.Drawer as Drawer
         exposing
-            ( drawerConfig
-            , permanentDrawer
+            ( permanentDrawer
+            , permanentDrawerConfig
             )
     import Material.List
         exposing
@@ -49,7 +49,7 @@ other functionality on an app.
             [ style "display" "flex"
             , style "flex-flow" "row nowrap"
             ]
-            [ permanentDrawer drawerConfig
+            [ permanentDrawer permanentDrawerConfig
                 [ drawerContent []
                     [ list listConfig
                         [ listItem listItemConfig
@@ -65,7 +65,7 @@ other functionality on an app.
 
 # Permanent Drawer
 
-@docs permanentDrawer, drawerConfig, DrawerConfig
+@docs permanentDrawer, permanentDrawerConfig, PermanentDrawerConfig
 @docs drawerContent
 
 
@@ -84,7 +84,7 @@ Dismissible drawers are by default hidden off screen, and can slide into view.
 Dismissible drawers should be used when navigation is not common, and the main
 app content is prioritized.
 
-@docs dismissibleDrawer, appContent
+@docs dismissibleDrawer, dismissibleDrawerConfig, DismissibleDrawerConfig, appContent
 
 
 # Modal Drawer
@@ -92,7 +92,7 @@ app content is prioritized.
 Modal drawers are elevated above most of the app's UI and don't affect the
 screen's layout grid.
 
-@docs modalDrawer, drawerScrim
+@docs modalDrawer, modalDrawerConfig, ModalDrawerConfig, drawerScrim
 
 -}
 
@@ -102,49 +102,55 @@ import Html.Events
 import Json.Decode as Decode
 
 
-{-| Configuration of a drawer
-
-The configuration fields `open` and `onClose` are ignored for the permanent
-drawer variant. The configuration field `onClose` is ignored for the
-dismissible drawer variant. Only the modal drawer uses both `open` and
-`onClose`.
-
+{-| Configuration of a permanent drawer
 -}
-type alias DrawerConfig msg =
+type alias PermanentDrawerConfig msg =
+    { additionalAttributes : List (Html.Attribute msg)
+    }
+
+
+{-| Default configuration of a permanent drawer
+-}
+permanentDrawerConfig : PermanentDrawerConfig msg
+permanentDrawerConfig =
+    { additionalAttributes = []
+    }
+
+
+{-| Configuration of a dismissible drawer
+-}
+type alias DismissibleDrawerConfig msg =
+    { open : Bool
+    , additionalAttributes : List (Html.Attribute msg)
+    }
+
+
+{-| Default configuration of a dismissible drawer
+-}
+dismissibleDrawerConfig : DismissibleDrawerConfig msg
+dismissibleDrawerConfig =
+    { open = False
+    , additionalAttributes = []
+    }
+
+
+{-| Configuration of a model drawer
+-}
+type alias ModalDrawerConfig msg =
     { open : Bool
     , additionalAttributes : List (Html.Attribute msg)
     , onClose : Maybe msg
     }
 
 
-{-| Default configuration of a drawer
+{-| Default configuration of a modal drawer
 -}
-drawerConfig : DrawerConfig msg
-drawerConfig =
+modalDrawerConfig : ModalDrawerConfig msg
+modalDrawerConfig =
     { open = False
     , additionalAttributes = []
     , onClose = Nothing
     }
-
-
-type Variant
-    = Permanent
-    | Dismissible
-    | Modal
-
-
-drawer : Variant -> DrawerConfig msg -> List (Html msg) -> Html msg
-drawer variant config nodes =
-    Html.node "mdc-drawer"
-        (List.filterMap identity
-            [ rootCs
-            , variantCs variant
-            , openAttr variant config
-            , closeHandler config
-            ]
-            ++ config.additionalAttributes
-        )
-        nodes
 
 
 {-| Permanent drawer view function
@@ -153,38 +159,48 @@ drawer variant config nodes =
         [ style "display" "flex"
         , style "flex-flow" "row nowrap"
         ]
-        [ permanentDrawer drawerConfig
+        [ permanentDrawer permanentDrawerConfig
             [ drawerContent [] [] ]
         , Html.div [] [ text "Main Content" ]
         ]
 
 -}
-permanentDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
+permanentDrawer : PermanentDrawerConfig msg -> List (Html msg) -> Html msg
 permanentDrawer config nodes =
-    drawer Permanent config nodes
+    Html.node "mdc-drawer"
+        (List.filterMap identity [ rootCs ] ++ config.additionalAttributes)
+        nodes
 
 
 {-| Dismissible drawer view function
 
     Html.div []
         [ dismissibleDrawer
-            { drawerConfig | open = True }
+            { dismissibleDrawerConfig | open = True }
             [ drawerContent [] [] ]
         , Html.div [ Drawer.appContent ]
             [ text "Main Content" ]
         ]
 
 -}
-dismissibleDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
+dismissibleDrawer : DismissibleDrawerConfig msg -> List (Html msg) -> Html msg
 dismissibleDrawer config nodes =
-    drawer Dismissible config nodes
+    Html.node "mdc-drawer"
+        (List.filterMap identity
+            [ rootCs
+            , dismissibleCs
+            , openAttr config
+            ]
+            ++ config.additionalAttributes
+        )
+        nodes
 
 
 {-| Modal drawer view function
 
     Html.div []
         [ modalDrawer
-            { drawerConfig
+            { modalDrawerConfig
                 | open = True
                 , onClick = Just DrawerClosed
             }
@@ -194,9 +210,18 @@ dismissibleDrawer config nodes =
         ]
 
 -}
-modalDrawer : DrawerConfig msg -> List (Html msg) -> Html msg
+modalDrawer : ModalDrawerConfig msg -> List (Html msg) -> Html msg
 modalDrawer config nodes =
-    drawer Modal config nodes
+    Html.node "mdc-drawer"
+        (List.filterMap identity
+            [ rootCs
+            , modalCs
+            , openAttr config
+            , closeHandler config
+            ]
+            ++ config.additionalAttributes
+        )
+        nodes
 
 
 {-| Drawer content
@@ -216,7 +241,7 @@ type alias DrawerHeaderContent =
 
 {-| Drawer header view function
 
-    permanentDrawer drawerConfig
+    permanentDrawer permanentDrawerConfig
         [ drawerHeader []
             { title = "Title"
             , subtitle = "Subtitle"
@@ -248,29 +273,26 @@ rootCs =
     Just (class "mdc-drawer")
 
 
-variantCs : Variant -> Maybe (Html.Attribute msg)
-variantCs variant =
-    case variant of
-        Permanent ->
-            Nothing
-
-        Dismissible ->
-            Just (class "mdc-drawer--dismissible")
-
-        Modal ->
-            Just (class "mdc-drawer--modal")
+modalCs : Maybe (Html.Attribute msg)
+modalCs =
+    Just (class "mdc-drawer--modal")
 
 
-openAttr : Variant -> DrawerConfig msg -> Maybe (Html.Attribute msg)
-openAttr variant { open } =
-    if open && variant /= Permanent then
+dismissibleCs : Maybe (Html.Attribute msg)
+dismissibleCs =
+    Just (class "mdc-drawer--dismissible")
+
+
+openAttr : { config | open : Bool } -> Maybe (Html.Attribute msg)
+openAttr { open } =
+    if open then
         Just (Html.Attributes.attribute "open" "")
 
     else
         Nothing
 
 
-closeHandler : DrawerConfig msg -> Maybe (Html.Attribute msg)
+closeHandler : ModalDrawerConfig msg -> Maybe (Html.Attribute msg)
 closeHandler { onClose } =
     Maybe.map (Html.Events.on "MDCDrawer:close" << Decode.succeed) onClose
 

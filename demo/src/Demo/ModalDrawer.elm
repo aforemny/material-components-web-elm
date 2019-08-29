@@ -12,7 +12,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Decode
-import Material.Drawer as Drawer exposing (drawerConfig, drawerScrim, modalDrawer)
+import Material.Drawer as Drawer exposing (drawerScrim, modalDrawer, modalDrawerConfig)
 import Material.Icon exposing (icon, iconConfig)
 import Material.Theme as Theme
 import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
@@ -57,7 +57,7 @@ view model =
     { title = "Modal Drawer"
     , drawer =
         modalDrawer
-            { drawerConfig
+            { modalDrawerConfig
                 | open = model.drawerOpen
                 , onClose = Just CloseDrawer
             }

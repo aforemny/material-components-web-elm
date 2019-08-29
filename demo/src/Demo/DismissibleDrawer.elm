@@ -11,7 +11,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Json
-import Material.Drawer as Drawer exposing (dismissibleDrawer, drawerConfig)
+import Material.Drawer as Drawer exposing (dismissibleDrawer, dismissibleDrawerConfig)
 import Material.Icon exposing (icon, iconConfig)
 import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
 import Material.Typography as Typography
@@ -50,7 +50,7 @@ view : Model -> DrawerPage Msg
 view model =
     { title = "Dismissible Drawer"
     , drawer =
-        dismissibleDrawer { drawerConfig | open = model.drawerOpen }
+        dismissibleDrawer { dismissibleDrawerConfig | open = model.drawerOpen }
             (DrawerPage.drawerBody SetSelectedIndex model.selectedIndex)
     , onMenuClick = Just ToggleDrawer
     , scrim = Nothing

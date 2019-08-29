@@ -10,7 +10,7 @@ import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.Drawer as Drawer exposing (drawerConfig, drawerContent, drawerHeader, permanentDrawer)
+import Material.Drawer as Drawer exposing (drawerContent, drawerHeader, permanentDrawer, permanentDrawerConfig)
 import Material.Icon exposing (icon, iconConfig)
 import Material.List exposing (list, listConfig, listItem, listItemConfig, listItemGraphic)
 import Material.Typography as Typography
@@ -54,7 +54,7 @@ view model =
 
 heroDrawer : List (Html msg)
 heroDrawer =
-    [ permanentDrawer drawerConfig
+    [ permanentDrawer permanentDrawerConfig
         [ drawerHeader []
             { title = "Title"
             , subtitle = "subtext"

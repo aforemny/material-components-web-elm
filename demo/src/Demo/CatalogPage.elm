@@ -5,7 +5,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Decode
-import Material.Drawer as Drawer exposing (dismissibleDrawer, drawerConfig, drawerContent)
+import Material.Drawer as Drawer exposing (dismissibleDrawer, dismissibleDrawerConfig, drawerContent)
 import Material.Icon exposing (icon, iconConfig)
 import Material.IconButton exposing (iconButton, iconButtonConfig)
 import Material.List exposing (list, listConfig, listItem, listItemConfig, listItemGraphic)
@@ -69,7 +69,7 @@ view lift catalogPageConfig catalogPage =
             ]
         , Html.div demoPanel
             [ dismissibleDrawer
-                { drawerConfig
+                { dismissibleDrawerConfig
                     | open = catalogPageConfig.drawerOpen
                     , additionalAttributes =
                         [ TopAppBar.fixedAdjust

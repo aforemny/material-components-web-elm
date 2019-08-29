@@ -98,6 +98,10 @@ class MdcSlider extends HTMLElement {
     setClassName.call(this, className);
   }
 
+  get value() {
+    return this.mdcFoundation.getValue();
+  }
+
   connectedCallback() {
     this.mdcFoundation = new MDCSliderFoundation(this.adapter);
     this.mdcFoundation.init();

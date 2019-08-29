@@ -264,12 +264,8 @@ changeHandler : SliderConfig msg -> Maybe (Html.Attribute msg)
 changeHandler config =
     Maybe.map
         (\handler ->
-            Html.Events.on "change"
-                (Decode.map handler
-                    (Decode.map (Maybe.withDefault 0)
-                        (Decode.map String.toFloat Html.Events.targetValue)
-                    )
-                )
+            Html.Events.on "MDCSlider:change"
+                (Decode.map handler (Decode.at [ "target", "value" ] Decode.float))
         )
         config.onChange
 

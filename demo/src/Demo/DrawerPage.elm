@@ -4,7 +4,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Decode
-import Material.Drawer as Drawer exposing (drawerContent, drawerHeader)
+import Material.Drawer as Drawer exposing (drawerContent, drawerHeader, drawerSubtitle, drawerTitle)
 import Material.Icon exposing (icon, iconConfig)
 import Material.List exposing (list, listConfig, listGroupSubheader, listItem, listItemConfig, listItemDivider, listItemDividerConfig, listItemGraphic)
 import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
@@ -60,9 +60,9 @@ drawerBody setSelectedIndex selectedIndex =
             }
     in
     [ drawerHeader []
-        { title = "Mail"
-        , subtitle = "email@material.io"
-        }
+        [ Html.h3 [ drawerTitle ] [ text "Mail" ]
+        , Html.h6 [ drawerSubtitle ] [ text "email@material.io" ]
+        ]
     , drawerContent []
         [ list listConfig
             [ listItem (listItemConfig_ 0)

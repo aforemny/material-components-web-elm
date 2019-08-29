@@ -1,7 +1,7 @@
 module Material.Drawer exposing
     ( permanentDrawer, permanentDrawerConfig, PermanentDrawerConfig
     , drawerContent
-    , drawerHeader, DrawerHeaderContent
+    , drawerHeader, drawerTitle, drawerSubtitle
     , dismissibleDrawer, dismissibleDrawerConfig, DismissibleDrawerConfig, appContent
     , modalDrawer, modalDrawerConfig, ModalDrawerConfig, drawerScrim
     )
@@ -75,7 +75,7 @@ Drawers can contain a header element which will not scroll with the rest of the
 drawer content. Things like account switchers and titles should live in the
 header element.
 
-@docs drawerHeader, DrawerHeaderContent
+@docs drawerHeader, drawerTitle, drawerSubtitle
 
 
 # Dismissible Drawer
@@ -231,41 +231,34 @@ drawerContent attributes nodes =
     Html.div (class "mdc-drawer__content" :: attributes) nodes
 
 
-{-| Content of a drawer header
--}
-type alias DrawerHeaderContent =
-    { title : String
-    , subtitle : String
-    }
-
-
 {-| Drawer header view function
 
     permanentDrawer permanentDrawerConfig
         [ drawerHeader []
-            { title = "Title"
-            , subtitle = "Subtitle"
-            }
+            [ Html.h3 [ drawerTitle ] [ text "Title" ]
+            , Html.h6 [ drawerSubtitle ] [ text "Subtitle" ]
+            ]
         , drawerContent [] []
         ]
 
 -}
-drawerHeader : List (Html.Attribute msg) -> DrawerHeaderContent -> Html msg
-drawerHeader additionalAttributes content =
-    Html.div (class "mdc-drawer__header" :: additionalAttributes)
-        [ titleElt content
-        , subtitleElt content
-        ]
+drawerHeader : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+drawerHeader additionalAttributes nodes =
+    Html.div (class "mdc-drawer__header" :: additionalAttributes) nodes
 
 
-titleElt : DrawerHeaderContent -> Html msg
-titleElt { title } =
-    Html.h3 [ class "mdc-drawer__title" ] [ text title ]
+{-| Attribute to mark the title text element of the drawer header
+-}
+drawerTitle : Html.Attribute msg
+drawerTitle =
+    class "mdc-drawer__title"
 
 
-subtitleElt : DrawerHeaderContent -> Html msg
-subtitleElt { subtitle } =
-    Html.h6 [ class "mdc-drawer__subtitle" ] [ text subtitle ]
+{-| Attribute to mark the subtitle text element of the drawer header
+-}
+drawerSubtitle : Html.Attribute msg
+drawerSubtitle =
+    class "mdc-drawer__subtitle"
 
 
 rootCs : Maybe (Html.Attribute msg)

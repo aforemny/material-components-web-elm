@@ -6,7 +6,8 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.IconButton exposing (iconButton, iconButtonConfig, iconToggle, iconToggleConfig)
+import Material.IconButton exposing (iconButton, iconButtonConfig)
+import Material.IconToggle exposing (iconToggle, iconToggleConfig)
 import Material.Typography as Typography
 
 
@@ -57,8 +58,8 @@ view model =
                 | on = isOn "icon-button-hero" model
                 , onClick = Just (Toggle "icon-button-hero")
             }
-            { off = "favorite_border"
-            , on = "favorite"
+            { offIcon = "favorite_border"
+            , onIcon = "favorite"
             }
         ]
     , content =
@@ -72,8 +73,8 @@ view model =
                 | on = isOn "icon-button-toggle" model
                 , onClick = Just (Toggle "icon-button-toggle")
             }
-            { off = "favorite_border"
-            , on = "favorite"
+            { offIcon = "favorite_border"
+            , onIcon = "favorite"
             }
         ]
     }

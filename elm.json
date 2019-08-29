@@ -21,6 +21,7 @@
         "Material.HelperText",
         "Material.Icon",
         "Material.IconButton",
+        "Material.IconToggle",
         "Material.ImageList",
         "Material.LayoutGrid",
         "Material.LinearProgress",

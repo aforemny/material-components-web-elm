@@ -16,23 +16,23 @@ module Material.List exposing
 # Table of Contents
 
   - [Resources](#resources)
-  - [Basic usage](#basic-usage)
-  - [Lists](#lists)
-  - [List items](#list-items)
-  - [List variants](#list-variants)
-      - [Two-Line lists](#two-line-lists)
-      - [Non-interactive lists](#non-interactive-lists)
-      - [Dense lists](#dense-lists)
-      - [Avatar lists](#avatar-lists)
-      - [List groups](#list-groups)
-          - [List group dividers](#list-group-dividers)
-  - [List item variants](#list-item-variants)
-      - [List item variants](#list-items-with-graphic)
-      - [List item variants](#list-items-with-meta)
-      - [Disabled list items](#disabled-list-items)
-      - [Selected list items](#selected-list-items)
-      - [Activated list items](#activated-list-items)
-      - [List item dividers](#list-item-dividers)
+  - [Basic Usage](#basic-usage)
+  - [List](#list)
+  - [List Item](#list-item)
+  - [List Variants](#list-variants)
+      - [Two-Line List](#two-line-list)
+      - [Non-interactive List](#non-interactive-list)
+      - [Dense List](#dense-list)
+      - [Avatar List](#avatar-list)
+      - [List Group](#list-group)
+          - [List Group Divider](#list-group-divider)
+  - [List Item Variants](#list-item-variants)
+      - [List Item with Graphic](#list-item-with-graphic)
+      - [List Item with Meta](#list-item-with-meta)
+      - [Disabled List Item](#disabled-list-item)
+      - [Selected List Item](#selected-list-item)
+      - [Activated List Item](#activated-list-item)
+      - [List Item Divider](#list-item-divider)
 
 
 # Resources
@@ -43,7 +43,7 @@ module Material.List exposing
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-list#sass-mixins)
 
 
-# Basic usage
+# Basic Usage
 
     import Material.List
         exposing
@@ -60,20 +60,20 @@ module Material.List exposing
             ]
 
 
-# Lists
+# List
 
 @docs list, listConfig, ListConfig
 
 
-# List items
+# List Item
 
 @docs listItem, listItemConfig, ListItemConfig
 
 
-# List variants
+# List Variants
 
 
-## Two-Line lists
+## Two-Line List
 
 Lists may be two-line lists by settings the `twoLine` configuration field to
 `True`. In that case, list items should wrap their contents inside
@@ -94,7 +94,7 @@ line in `listItemSecondaryText`.
 @docs listItemText, listItemPrimaryText, listItemSecondaryText
 
 
-## Non-interactive lists
+## Non-interactive List
 
 Lists may be non-interactive by setting the `nonInteractive` configuration
 field to `True`.
@@ -103,7 +103,7 @@ field to `True`.
         [ listItem listItemConfig [ text "List item" ] ]
 
 
-## Dense lists
+## Dense List
 
 Lists may be styled more compact by setting the `dense` configuration field to
 `True`.
@@ -112,7 +112,7 @@ Lists may be styled more compact by setting the `dense` configuration field to
         [ listItem listItemConfig [ text "List item" ] ]
 
 
-## Avatar lists
+## Avatar List
 
 List item's graphics may be configured to appear larger by setting the
 `avatarList` configuration field to `True`.
@@ -128,7 +128,7 @@ than an icon.
         ]
 
 
-## List groups
+## List Group
 
 Multiple related lists, such as folders and files in a file hierarchy, may be
 grouped using `listGroup` and labeled by `listGroupSubheader`.
@@ -150,7 +150,7 @@ grouped using `listGroup` and labeled by `listGroupSubheader`.
 @docs listGroupSubheader
 
 
-### List group dividers
+### List Group Divider
 
 Multiple lists within a group may be visually seperated by a list group divider.
 
@@ -169,13 +169,13 @@ Multiple lists within a group may be visually seperated by a list group divider.
 @docs listGroupDivider
 
 
-## List item variants
+## List Item Variants
 
 In addition to their text child, lists may optionally contain a starting tile
 referred to as _graphic_ and/ or a last tile referred to as _meta_.
 
 
-### List items with graphic
+### List Item with Graphic
 
 Common examples for graphics are icons and images, avatar images and selection
 controls such as checkboxes.
@@ -188,7 +188,7 @@ controls such as checkboxes.
 @docs listItemGraphic
 
 
-### List items with meta
+### List Item with Meta
 
 Common examples for metas are text, icons and images and selection controls.
 
@@ -200,7 +200,7 @@ Common examples for metas are text, icons and images and selection controls.
 @docs listItemMeta
 
 
-### Disabled list items
+### Disabled List Item
 
 List items may be disabled by setting their `disabled` configuration field to
 `True`.
@@ -209,7 +209,7 @@ List items may be disabled by setting their `disabled` configuration field to
         [ text "List item" ]
 
 
-### Selected list items
+### Selected List Item
 
 List items may be disabled by setting their `selected` configuration field to
 `True`.
@@ -218,7 +218,7 @@ List items may be disabled by setting their `selected` configuration field to
         [ text "List item" ]
 
 
-### Activated list items
+### Activated List Item
 
 List items may be disabled by setting their `activated` configuration field to
 `True`.
@@ -227,7 +227,7 @@ List items may be disabled by setting their `activated` configuration field to
         [ text "List item" ]
 
 
-## List item dividers
+## List Item Divider
 
 List items may be seperated by a divider. The divider may optionally be `inset`
 so that it does not intersect the list item's graphic, or `padded` so that it
@@ -247,6 +247,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 
 
 {-| Configuration of a list
@@ -256,6 +257,7 @@ type alias ListConfig msg =
     , dense : Bool
     , avatarList : Bool
     , twoLine : Bool
+    , wrapFocus : Bool
     , additionalAttributes : List (Html.Attribute msg)
     }
 
@@ -268,6 +270,7 @@ listConfig =
     , dense = False
     , avatarList = False
     , twoLine = False
+    , wrapFocus = False
     , additionalAttributes = []
     }
 
@@ -283,6 +286,7 @@ list config nodes =
             , denseCs config
             , avatarListCs config
             , twoLineCs config
+            , wrapFocusProp config
             ]
             ++ config.additionalAttributes
         )
@@ -564,3 +568,8 @@ listGroupSubheader additionalAttributes nodes =
 listGroupSubheaderCs : Html.Attribute msg
 listGroupSubheaderCs =
     class "mdc-list-group__subheader"
+
+
+wrapFocusProp : ListConfig msg -> Maybe (Html.Attribute msg)
+wrapFocusProp { wrapFocus } =
+    Just (Html.Attributes.property "wrapFocus" (Encode.bool wrapFocus))

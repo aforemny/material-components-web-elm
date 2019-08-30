@@ -51,7 +51,7 @@ view model =
         , Html.div [ menuSurfaceAnchor ]
             [ textButton { buttonConfig | onClick = Just Open } "Open menu"
             , menu { menuConfig | open = model.open, onClose = Just Close }
-                [ list listConfig
+                [ list { listConfig | wrapFocus = True }
                     [ listItem menuItemConfig [ text "Passionfruit" ]
                     , listItem menuItemConfig [ text "Orange" ]
                     , listItem menuItemConfig [ text "Guava" ]

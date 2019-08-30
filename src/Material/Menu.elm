@@ -57,7 +57,7 @@ positioning, wrap the button and the menu within an element that sets the
                 | open = True
                 , onClose = Just MenuClosed
             }
-            [ list listConfig
+            [ list { listConfig | wrapFocus = True }
                 [ listItem menuItemConfig [ text "Menu item" ]
                 , listItem menuItemConfig [ text "Menu item" ]
                 ]

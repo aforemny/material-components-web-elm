@@ -10,6 +10,7 @@ class MdcList extends HTMLElement {
     this.handleKeydown_ = this.handleKeydown.bind(this);
     this.handleFocusIn_ = this.handleFocusIn.bind(this);
     this.handleFocusOut_ = this.handleFocusOut.bind(this);
+    this.wrapFocus_ = false;
   }
 
   connectedCallback() {
@@ -22,6 +23,8 @@ class MdcList extends HTMLElement {
     this.addEventListener("focusout", this.handleFocusOut_);
 
     this.layout();
+
+    this.foundation_.setWrapFocus(this.wrapFocus_);
   }
 
   disconnectedCallback() {
@@ -188,6 +191,17 @@ class MdcList extends HTMLElement {
     }
 
     return index;
+  }
+
+  get wrapFocus() {
+    return this.wrapFocus_;
+  }
+
+  set wrapFocus(newValue) {
+    this.wrapFocus_ = newValue;
+    if (this.foundation_) {
+      this.foundation_.setWrapFocus(this.wrapFocus_);
+    }
   }
 };
 

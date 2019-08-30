@@ -1,4 +1,5 @@
 import { getClassName, setClassName } from "./utils";
+import { MDCListFoundation } from "@material/list/index";
 import { MDCMenuFoundation } from "@material/menu/index";
 import { MDCMenuSurface, MDCMenuSurfaceFoundation } from "@material/menu-surface/index";
 import { strings, cssClasses } from "@material/menu/constants";
@@ -11,10 +12,101 @@ class MdcMenu extends HTMLElement {
 
   constructor() {
     super();
+    this.root_;
     this.className_ = "";
-    this.handleKeydown_ = this.handleKeydown.bind(this);
-    this.handleClick_ = this.handleClick.bind(this);
-    this.afterOpenedCallback_ = this.afterOpenedCallback.bind(this);
+    this.foundation_;
+    this.menuSurface_;
+    this.handleKeydown_;
+    this.handleItemAction_;
+    this.afterOpenedCallback_;
+  }
+
+  get list_() {
+    const listElement = this.root_.querySelector(strings.LIST_SELECTOR);
+    return listElement.foundation_;
+  }
+
+  connectedCallback() {
+    this.root_ = this;
+
+    this.menuSurface_ = new MDCMenuSurface(this.root_);
+    this.menuSurface_.foundation_.doClose = this.menuSurface_.foundation_.close;
+    this.menuSurface_.foundation_.close = () => {
+      if (this.hasAttribute("open")) {
+        this.root_.dispatchEvent(new CustomEvent("MDCMenu:close"));
+      }
+    };
+
+    this.handleKeydown_ = evt => this.foundation_.handleKeydown(evt);
+    this.handleItemAction_ = evt => this.foundation_.handleItemAction(this.getItems()[evt.detail]);
+    this.afterOpenedCallback_ = () => this.handleAfterOpened_();
+
+    this.menuSurface_.listen(MDCMenuSurfaceFoundation.strings.OPENED_EVENT, this.afterOpenedCallback_);
+    this.addEventListener("keydown", this.handleKeydown_);
+    this.addEventListener(MDCListFoundation.strings.ACTION_EVENT, this.handleItemAction_);
+
+    this.foundation_ = new MDCMenuFoundation(this.getAdapter_());
+    this.foundation_.init();
+
+    this.menuSurface_.quickOpen = this.hasAttribute("quickopen");
+    this.menuSurface_.open = this.hasAttribute("open");
+  }
+
+  disconnectedCallback() {
+    this.menuSurface_.destroy();
+    this.menuSurface_.unlisten(MDCMenuSurfaceFoundation.strings.OPENED_EVENT, this.afterOpenedCallback_);
+    this.removeEventListener("keydown", this.handleKeydown_);
+    this.removeEventListener(MDCListFoundation.strings.ACTION_EVENT, this.handleItemAction_);
+
+    this.foundation_.destroy();
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (!this.menuSurface_) return;
+    if (name === "open") {
+      if (this.hasAttribute("open")) {
+        this.menuSurface_.open = true;
+      } else {
+        this.menuSurface_.foundation_.doClose();
+      }
+    } else if (name === "quickopen") {
+      this.menuSurface_.quickOpen = this.hasAttribute("quickopen");
+    }
+  }
+
+  getAdapter_() {
+    return {
+      addClassToElementAtIndex: (index, className) => {
+        const list = this.getItems_();
+        list[index].classList.add(className);
+      },
+      removeClassFromElementAtIndex: (index, className) => {
+        const list = this.getItems_();
+        list[index].classList.remove(className);
+      },
+      addAttributeToElementAtIndex: (index, attr, value) => {
+        const list = this.getItems_();
+        list[index].setAttribute(attr, value);
+      },
+      removeAttributeFromElementAtIndex: (index, attr) => {
+        const list = this.getItems_();
+        list[index].removeAttribute(attr);
+      },
+      elementContainsClass: (element, className) => element.classList.contains(className),
+      closeSurface: () => this.menuSurface_.open = false,
+      getElementIndex: element => this.getItems_().indexOf(element),
+      getParentElement: element => element.parentElement,
+      getSelectedElementIndex: selectionGroup => {
+        return this.getItems_().indexOf(
+          selectionGroup.querySelector(`.${cssClasses.MENU_SELECTED_LIST_ITEM}`)
+        );
+      },
+      notifySelected: evtData => this.dispatchEvent(new CustomEvent(
+        strings.SELECTED_EVENT, {
+        index: evtData.index,
+        item: this.getItems_()[evtData.index],
+      }))
+    };
   }
 
   get className() {
@@ -25,115 +117,15 @@ class MdcMenu extends HTMLElement {
     setClassName.call(this, className);
   }
 
-  handleKeydown(event) {
-    this.mdcFoundation.handleKeydown(event);
-  }
-
-  handleClick(event) {
-    this.mdcFoundation.handleClick(event);
-  }
-
-  afterOpenedCallback(event) {
-    const list = this.items;
+  handleAfterOpened_(event) {
+    const list = this.getItems_();
     if (list.length > 0) {
       list[0].focus();
     }
   }
 
-  get items() {
+  getItems_() {
     return this.querySelector(".mdc-list").listElements;
-  }
-
-  get adapter() {
-    return {
-      addClassToElementAtIndex: (index, className) => {
-        const list = this.items;
-        list[index].classList.add(className);
-      },
-      removeClassFromElementAtIndex: (index, className) => {
-        const list = this.items;
-        list[index].classList.remove(className);
-      },
-      addAttributeToElementAtIndex: (index, attr, value) => {
-        const list = this.items;
-        list[index].setAttribute(attr, value);
-      },
-      removeAttributeFromElementAtIndex: (index, attr) => {
-        const list = this.items;
-        list[index].removeAttribute(attr);
-      },
-      elementContainsClass: (element, className) => element.classList.contains(className),
-      closeSurface: () => this.open = false,
-      getElementIndex: element => this.items.indexOf(element),
-      getParentElement: element => element.parentElement,
-      getSelectedElementIndex: selectionGroup => {
-        return this.items.indexOf(
-          selectionGroup.querySelector(`.${cssClasses.MENU_SELECTED_LIST_ITEM}`)
-        );
-      },
-      notifySelected: evtData => this.dispatchEvent(new CustomEvent(
-        strings.SELECTED_EVENT, {
-        index: evtData.index,
-        item: this.items[evtData.index],
-      }))
-    };
-  }
-
-  connectedCallback() {
-    this.anchorElement = this.parentElement;
-
-    this.mdcMenuSurface = new MDCMenuSurface(this);
-
-    this.mdcMenuSurface.foundation_.doClose = this.mdcMenuSurface.foundation_.close;
-    this.mdcMenuSurface.foundation_.close = () => {
-      this.dispatchEvent(new CustomEvent("MDCMenu:close"));
-    };
-
-    this.mdcFoundation = new MDCMenuFoundation(this.adapter);
-    this.mdcFoundation.init();
-
-    this.mdcMenuSurface.listen(
-      MDCMenuSurfaceFoundation.strings.OPENED_EVENT,
-      this.afterOpenedCallback_
-    );
-    this.addEventListener("keydown", this.handleKeydown_);
-    this.addEventListener("click", this.handleClick_);
-
-    this.mdcMenuSurface.quickOpen = this.hasAttribute("quickopen");
-    if (this.hasAttribute("open")) {
-      this.mdcMenuSurface.open = true;
-    }
-  }
-
-  disconnectedCallback() {
-    if (this.mdcFoundation) {
-      this.mdcFoundation.destroy();
-      delete this.mdcFoundation;
-    }
-
-    if (this.mdcMenuSurface) {
-      this.mdcMenuSurface.destroy();
-      this.mdcMenuSurface.unlisten(
-        MDCMenuSurfaceFoundation.strings.OPENED_EVENT,
-        this.afterOpenedCallback_
-      );
-      delete this.mdcMenuSurface;
-    }
-    this.removeEventListener("keydown", this.handleKeydown_);
-    this.removeEventListener("click", this.handleClick_);
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (!this.mdcMenuSurface) return;
-    if (name === "open") {
-      if (this.hasAttribute("open")) {
-        this.mdcMenuSurface.open = true;
-      } else {
-        this.mdcMenuSurface.foundation_.doClose();
-      }
-    } else if (name === "quickopen") {
-      this.mdcMenuSurface.quickOpen = this.hasAttribute("quickopen");
-    }
   }
 };
 

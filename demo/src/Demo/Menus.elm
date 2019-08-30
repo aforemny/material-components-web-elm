@@ -75,12 +75,14 @@ menuItemConfig =
 
 heroMenu : Model -> Html msg
 heroMenu model =
-    menu
-        { menuConfig
-            | open = True
-            , quickOpen = True
-            , additionalAttributes = [ Html.Attributes.style "position" "relative" ]
-        }
+    Html.div
+        [ Html.Attributes.class "mdc-menu mdc-menu-surface mdc-menu-surface--open"
+        , Html.Attributes.style "position" "relative"
+        , Html.Attributes.style "transform-origin" "left top 0px"
+        , Html.Attributes.style "left" "0px"
+        , Html.Attributes.style "top" "0px"
+        , Html.Attributes.style "z-index" "0"
+        ]
         [ list listConfig
             [ listItem listItemConfig [ text "A Menu Item" ]
             , listItem listItemConfig [ text "Another Menu Item" ]

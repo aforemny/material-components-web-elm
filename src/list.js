@@ -12,21 +12,27 @@ class MdcList extends HTMLElement {
     this.handleFocusOut_ = this.handleFocusOut.bind(this);
   }
 
-  get className() {
-    return getClassName.call(this);
+  connectedCallback() {
+    this.foundation_ = new MDCListFoundation(this.getAdapter_());
+    this.foundation_.init();
+    this.style.display = "block";
+
+    this.addEventListener("keydown", this.handleKeydown_);
+    this.addEventListener("focusin", this.handleFocusIn_);
+    this.addEventListener("focusout", this.handleFocusOut_);
+
+    this.layout();
   }
 
-  set className(className) {
-    setClassName.call(this, className);
+  disconnectedCallback() {
+    this.foundation_.destroy();
+
+    this.removeEventListener("keydown", this.handleKeydown_);
+    this.removeEventListener("focusin", this.focusInEventListener_);
+    this.removeEventListener("focusout", this.focusOutEventListener_);
   }
 
-  get listElements() {
-    return [].slice.call(this.querySelectorAll(
-      MDCListFoundation.strings.ENABLED_ITEMS_SELECTOR)
-    );
-  }
-
-  get adapter() {
+  getAdapter_() {
     return {
       getListItemCount: () => this.listElements.length,
       getFocusedElementIndex: () => this.listElements.indexOf(document.activeElement),
@@ -105,22 +111,48 @@ class MdcList extends HTMLElement {
     };
   }
 
-  connectedCallback() {
-    this.mdcFoundation = new MDCListFoundation(this.adapter);
-    this.mdcFoundation.init();
-    this.style.display = "block";
+  get className() {
+    return getClassName.call(this);
+  }
 
-    this.addEventListener("keydown", this.handleKeydown_);
-    this.addEventListener("focusin", this.handleFocusIn_);
-    this.addEventListener("focusout", this.handleFocusOut_);
+  set className(className) {
+    setClassName.call(this, className);
+  }
 
-    this.layout();
+  get listElements() {
+    return [].slice.call(this.querySelectorAll(
+      MDCListFoundation.strings.ENABLED_ITEMS_SELECTOR)
+    );
+  }
+
+  handleFocusIn(event) {
+    const index = this.getListItemIndex(event);
+    this.foundation_.handleFocusIn(event, index);
+  }
+
+  handleFocusOut(event) {
+    const index = this.getListItemIndex(event);
+    this.foundation_.handleFocusOut(event, index);
+  }
+
+  handleKeydown(event) {
+    const isEnter = event.key === 'Enter' || event.keyCode === 13;
+    const isSpace = event.key === 'Space' || event.keyCode === 32;
+    if (isEnter || isSpace) return;
+
+    const index = this.getListItemIndex(event);
+    if (index >= 0) {
+      this.foundation_.handleKeydown(
+        event,
+        event.target.classList.contains("mdc-list-item"),
+        index);
+    }
   }
 
   layout() {
     const direction = this.getAttribute(MDCListFoundation.strings.ARIA_ORIENTATION);
     const vertical = direction !== MDCListFoundation.strings.ARIA_ORIENTATION_HORIZONTAL;
-    this.mdcFoundation.setVerticalOrientation(vertical);
+    this.foundation_.setVerticalOrientation(vertical);
 
     if (this.querySelector('.mdc-list-item--selected, .mdc-list-item--activated')) {
       this.querySelector('.mdc-list-item--selected, .mdc-list-item--activated')
@@ -139,7 +171,7 @@ class MdcList extends HTMLElement {
     )
       .forEach(element => element.setAttribute('tabindex', -1));
 
-    this.mdcFoundation.layout();
+    this.foundation_.layout();
   }
 
   getListItemIndex(event) {
@@ -156,41 +188,6 @@ class MdcList extends HTMLElement {
     }
 
     return index;
-  }
-
-  handleFocusIn(event) {
-    const index = this.getListItemIndex(event);
-    this.mdcFoundation.handleFocusIn(event, index);
-  }
-
-  handleFocusOut(event) {
-    const index = this.getListItemIndex(event);
-    this.mdcFoundation.handleFocusOut(event, index);
-  }
-
-  handleKeydown(event) {
-    const isEnter = event.key === 'Enter' || event.keyCode === 13;
-    const isSpace = event.key === 'Space' || event.keyCode === 32;
-    if (isEnter || isSpace) return;
-
-    const index = this.getListItemIndex(event);
-    if (index >= 0) {
-      this.mdcFoundation.handleKeydown(
-        event,
-        event.target.classList.contains("mdc-list-item"),
-        index);
-    }
-  }
-
-  disconnectedCallback() {
-    if (typeof this.mdcFoundation !== "undefined") {
-      this.mdcFoundation.destroy();
-      delete this.mdcFoundation;
-    }
-
-    this.removeEventListener("keydown", this.handleKeydown_);
-    this.removeEventListener("focusin", this.focusInEventListener_);
-    this.removeEventListener("focusout", this.focusOutEventListener_);
   }
 };
 

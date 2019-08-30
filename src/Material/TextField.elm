@@ -1,6 +1,7 @@
 module Material.TextField exposing
     ( textField, textFieldConfig, TextFieldConfig
     , textFieldIcon
+    , characterCounter
     )
 
 {-| Text fields allow users to input, edit, and select text.
@@ -9,16 +10,17 @@ module Material.TextField exposing
 # Table of Contents
 
   - [Resources](#resources)
-  - [Basic usage](#basic-usage)
-  - [Full width text field](#full-width-text-field)
-  - [Multiline text field](#multiline-text-field)
-  - [Disabled text field](#disabled-text-field)
-  - [Password text field](#password-text-field)
-  - [Required text field](#disabled-text-field)
-  - [Invalid text field](#disabled-text-field)
-  - [Outlined text field](#outlined-text-field)
-  - [Text field with leading icon](#text-field-with-leading-icon)
-  - [Text field with trailing icon](#text-field-with-trailing-icon)
+  - [Basic Usage](#basic-usage)
+  - [Full Width Text Field](#full-width-text-field)
+  - [Multiline Text Field](#multiline-text-field)
+  - [Disabled Text Field](#disabled-text-field)
+  - [Password Text Field](#password-text-field)
+  - [Required Text Field](#disabled-text-field)
+  - [Invalid Text Field](#disabled-text-field)
+  - [Outlined Text Field](#outlined-text-field)
+  - [Text Field with Leading Icon](#text-field-with-leading-icon)
+  - [Text Field with Trailing Icon](#text-field-with-trailing-icon)
+  - [Text Field with Character Counter](#text-field-with-character-counter)
 
 
 # Resources
@@ -29,7 +31,7 @@ module Material.TextField exposing
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu#sass-mixins)
 
 
-# Basic usage
+# Basic Usage
 
     import Material.TextField
         exposing
@@ -51,7 +53,7 @@ module Material.TextField exposing
 @docs textField, textFieldConfig, TextFieldConfig
 
 
-# Full width text field
+# Full Width Text Field
 
 To make a text field span all of its available width, set its `fullwidth`
 configuration field to `True`.
@@ -66,7 +68,7 @@ Full width text fields do not support `outlined` and will ignore this
 configuration field.
 
 
-# Multiline text field
+# Multiline Text Field
 
 A text field may be used to enter multiple lines of user input. To use a
 textarea instead of an input element, set the text field's `textarea`
@@ -77,14 +79,14 @@ configuration field to `True`.
 You may set `row` and `column` attributes as well.
 
 
-# Disabled text field
+# Disabled Text Field
 
 To disable a text field set its `disabled` configuration field to `True`.
 
     textField { textFieldConfig | textarea = True }
 
 
-# Password text field
+# Password Text Field
 
 To mark a text field as an input for entering a passwort, set its `type_`
 configuration field to the String `"password"`.
@@ -94,7 +96,7 @@ configuration field to the String `"password"`.
 Note: Other input types besides password may or may not be supported.
 
 
-# Required text field
+# Required Text Field
 
 To mark a text field as required, set its `required` configuration field to
 `True`.
@@ -102,7 +104,7 @@ To mark a text field as required, set its `required` configuration field to
     textField { textFieldConfig | required = True }
 
 
-# Invalid text field
+# Invalid Text Field
 
 To mark a text field as invalid, set its `invalid` configuration field to
 `True`.
@@ -110,7 +112,7 @@ To mark a text field as invalid, set its `invalid` configuration field to
     textField { textFieldConfig | invalid = True }
 
 
-# Outlined text fields
+# Outlined Text Fields
 
 Text fields may have a visible outlined around them by setting their `outlined`
 configuration field to `True`.
@@ -120,7 +122,7 @@ configuration field to `True`.
 Note that this does not have any effect for fullwidth text fields.
 
 
-# Text field with leading icon
+# Text Field with Leading Icon
 
 To have a text field display a leading icon, set its `leadingIcon`
 configuration field to a `TextFieldIcon`.
@@ -133,7 +135,7 @@ configuration field to a `TextFieldIcon`.
 @docs textFieldIcon
 
 
-# Text field with trailing icon
+# Text Field with Trailing Icon
 
 To have a text field display a trailing icon, set its `trailingIcon`
 configuration field to a `TextFieldIcon`.
@@ -142,6 +144,24 @@ configuration field to a `TextFieldIcon`.
         { textFieldConfig
             | trailingIcon = textFieldIcon iconConfig "clear"
         }
+
+
+# Text Field with Character Counter
+
+To have a text field display a character counter, set its `maxLength`
+configuration field, and also add a `characterCounter` as a child of
+`helperTextLine`.
+
+    [ textField
+        { textFieldConfig
+            | maxLength = Just 18
+        }
+    , helperTextLine
+        [ characterCounter []
+        ]
+    ]
+
+@docs characterCounter
 
 -}
 
@@ -554,3 +574,13 @@ notchedOutlineTrailingElt =
 notchedOutlineNotchElt : TextFieldConfig msg -> Html msg
 notchedOutlineNotchElt config =
     Html.div [ class "mdc-notched-outline__notch" ] [ labelElt config ]
+
+
+characterCounter : List (Html.Attribute msg) -> Html msg
+characterCounter additionalAttributes =
+    Html.div (characterCounterCs :: additionalAttributes) []
+
+
+characterCounterCs : Html.Attribute msg
+characterCounterCs =
+    class "mdc-text-field-character-counter"

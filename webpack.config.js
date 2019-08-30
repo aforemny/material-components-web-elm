@@ -12,7 +12,6 @@ module.exports =
     "enhanced-select",
     "fab",
     "form-field",
-    "helper-text",
     "icon",
     "icon-button",
     "image-list",

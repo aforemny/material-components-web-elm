@@ -1,5 +1,6 @@
 import "custom-event-polyfill";
 import "@webcomponents/custom-elements";
+
 import "./button";
 import "./card";
 import "./checkbox";
@@ -10,7 +11,6 @@ import "./drawer";
 import "./enhanced-select";
 import "./fab";
 import "./form-field";
-import "./helper-text";
 import "./icon";
 import "./icon-button";
 import "./image-list";

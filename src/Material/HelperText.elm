@@ -1,4 +1,4 @@
-module Material.HelperText exposing (helperText, helperTextConfig, HelperTextConfig)
+module Material.HelperText exposing (helperLine, helperText, helperTextConfig, HelperTextConfig)
 
 {-| Helper text gives context about a field’s input, such as how the input will
 be used. It should be visible either persistently or only on focus.
@@ -8,7 +8,8 @@ be used. It should be visible either persistently or only on focus.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
-  - [Persistent helper text](#persisten-helper-text)
+  - [Helper Text](#helper-text)
+  - [Persistent Helper Text](#persisten-helper-text)
 
 
 # Resources
@@ -27,15 +28,20 @@ be used. It should be visible either persistently or only on focus.
     main =
         Html.div
             [ textField { textFieldConf | label = "Your name" }
-            , helperText helperTextConf "Please fill this"
+            , helperLine [] [ helperText helperTextConf "Please fill this" ]
             ]
 
-The helper text is expected to be the direct sibling of the text field it belongs to.
 
-@docs helperText, helperTextConfig, HelperTextConfig
+# Helper Text
+
+The helper line is expected to be a direct sibling of the text field it belongs
+to and the helper text is expected to be a direct child of the helper text
+line.
+
+@docs helperLine, helperText, helperTextConfig, HelperTextConfig
 
 
-# Persistent helper text
+# Persistent Helper Text
 
 A text field's helper text may show unconditionally by setting its `persistent`
 configuration field to `True`. By default a text field's helper text only shows
@@ -65,12 +71,15 @@ helperTextConfig =
 
 
 {-| Helper text view function
+
+The helper text is expected to be a direct child of the text line.
+
 -}
 helperText : HelperTextConfig msg -> String -> Html msg
 helperText config string =
-    Html.node "mdc-helper-text"
+    Html.div
         (List.filterMap identity
-            [ rootCs
+            [ helperTextCs
             , persistentCs config
             , ariaHiddenAttr
             ]
@@ -79,9 +88,25 @@ helperText config string =
         [ text string ]
 
 
-rootCs : Maybe (Html.Attribute msg)
-rootCs =
+{-| Helper text line view function
+
+The text line is expected to be the wrapping element of the helper text. It is
+expected to be a direct sibling of the text field that it belongs to.
+
+-}
+helperLine : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+helperLine additionalAttributes nodes =
+    Html.div (helperLineCs :: additionalAttributes) nodes
+
+
+helperTextCs : Maybe (Html.Attribute msg)
+helperTextCs =
     Just (class "mdc-text-field-helper-text")
+
+
+helperLineCs : Html.Attribute msg
+helperLineCs =
+    class "mdc-text-field-helper-line"
 
 
 persistentCs : HelperTextConfig msg -> Maybe (Html.Attribute msg)

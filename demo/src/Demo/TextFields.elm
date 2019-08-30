@@ -6,9 +6,9 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.HelperText exposing (helperText, helperTextConfig)
+import Material.HelperText exposing (helperLine, helperText, helperTextConfig)
 import Material.Icon exposing (icon, iconConfig)
-import Material.TextField exposing (textField, textFieldConfig, textFieldIcon)
+import Material.TextField exposing (characterCounter, textField, textFieldConfig, textFieldIcon)
 import Material.Typography as Typography
 
 
@@ -53,6 +53,8 @@ view model =
         , shapedOutlinedTextFields model
         , Html.h3 [ Typography.subtitle1 ] [ text "Text Fields without Label" ]
         , textFieldsWithoutLabel model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Text Fields with Character Counter" ]
+        , textFieldsWithCharacterCounter model
         , Html.h3 [ Typography.subtitle1 ] [ text "Textarea" ]
         , textareaTextField model
         , Html.h3 [ Typography.subtitle1 ] [ text "Full Width" ]
@@ -216,6 +218,34 @@ textFieldsWithoutLabel model =
         ]
 
 
+textFieldsWithCharacterCounter : Model -> Html msg
+textFieldsWithCharacterCounter model =
+    Html.div textFieldRow
+        [ Html.div textFieldContainer
+            [ textField { textFieldConfig | outlined = True, maxLength = Just 18 }
+            , demoHelperTextWithCharacterCounter
+            ]
+        , Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | outlined = True
+                    , leadingIcon = textFieldIcon iconConfig "event"
+                    , maxLength = Just 18
+                }
+            , demoHelperTextWithCharacterCounter
+            ]
+        , Html.div textFieldContainer
+            [ textField
+                { textFieldConfig
+                    | outlined = True
+                    , trailingIcon = textFieldIcon iconConfig "delete"
+                    , maxLength = Just 18
+                }
+            , demoHelperTextWithCharacterCounter
+            ]
+        ]
+
+
 textareaTextField : Model -> Html msg
 textareaTextField model =
     Html.div textFieldContainer
@@ -294,4 +324,13 @@ textFieldRowFullwidth =
 
 demoHelperText : Html msg
 demoHelperText =
-    helperText { helperTextConfig | persistent = True } "Helper Text"
+    helperLine []
+        [ helperText { helperTextConfig | persistent = True } "Helper Text" ]
+
+
+demoHelperTextWithCharacterCounter : Html msg
+demoHelperTextWithCharacterCounter =
+    helperLine []
+        [ helperText { helperTextConfig | persistent = True } "Helper Text"
+        , characterCounter []
+        ]

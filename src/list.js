@@ -48,12 +48,6 @@ class MdcList extends HTMLElement {
           element.setAttribute(attr, value);
         }
       },
-      removeAttributeForElementIndex: (index, attr) => {
-        const element = this.listElements[index];
-        if (element) {
-          element.removeAttribute(attr);
-        }
-      },
       addClassForElementIndex: (index, className) => {
         const element = this.listElements[index];
         if (element) {
@@ -109,7 +103,7 @@ class MdcList extends HTMLElement {
         this.listElements[index].dispatchEvent(new CustomEvent(
           MDCListFoundation.strings.ACTION_EVENT,
           {
-            detail: index,
+            detail: { index },
             bubbles: true,
           }
         ));

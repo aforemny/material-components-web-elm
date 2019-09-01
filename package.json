@@ -15,6 +15,6 @@
   "dependencies": {
     "@webcomponents/custom-elements": "^1.2.2",
     "custom-event-polyfill": "^1.0.7",
-    "material-components-web": "^0.44.1"
+    "material-components-web": "^1.1.1"
   }
 }

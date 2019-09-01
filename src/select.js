@@ -21,14 +21,11 @@ class MdcSelect extends HTMLElement {
   }
 
   connectedCallback() {
-    this.MDCSelect = new MDCSelect(this);
+    this.select_ = new MDCSelect(this);
   }
 
   disconnectedCallback() {
-    if (typeof this.MDCSelect !== "undefined") {
-      this.MDCSelect.destroy();
-      delete this.MDCSelect;
-    }
+    this.select_.destroy();
   }
 };
 

@@ -63,7 +63,7 @@ class MdcDrawer extends HTMLElement {
   }
 
   handleKeydown(event) {
-    if (!this.mdcFoundation) return;
+    if (!this.foundation_) return;
     const isEscape = event.key === 'Escape' || event.keyCode === 27;
     if (isEscape) {
       this.dispatchEvent(new CustomEvent(
@@ -74,12 +74,12 @@ class MdcDrawer extends HTMLElement {
   }
 
   handleTransitionEnd(event) {
-    if (!this.mdcFoundation) return;
-    this.mdcFoundation.handleTransitionEnd(event);
+    if (!this.foundation_) return;
+    this.foundation_.handleTransitionEnd(event);
   }
 
   handleScrimClick(event) {
-    if (!this.mdcFoundation) return;
+    if (!this.foundation_) return;
     this.dispatchEvent(new CustomEvent(
       "MDCDrawer:close",
       { bubbles: true }
@@ -89,17 +89,17 @@ class MdcDrawer extends HTMLElement {
   connectedCallback() {
     const { MODAL, DISMISSIBLE } = MDCDismissibleDrawerFoundation.cssClasses;
     if (this.classList.contains(DISMISSIBLE)) {
-      this.mdcFoundation = new MDCDismissibleDrawerFoundation(this.adapter);
+      this.foundation_ = new MDCDismissibleDrawerFoundation(this.adapter);
     } else if (this.classList.contains(MODAL)) {
-      this.mdcFoundation = new MDCModalDrawerFoundation(this.adapter);
+      this.foundation_ = new MDCModalDrawerFoundation(this.adapter);
     }
-    if (!this.mdcFoundation) return;
+    if (!this.foundation_) return;
 
-    this.mdcFoundation.init();
+    this.foundation_.init();
     if (this.hasAttribute("open")) {
-      this.mdcFoundation.open();
+      this.foundation_.open();
     } else {
-      this.mdcFoundation.close();
+      this.foundation_.close();
     }
 
     this.addEventListener("keydown", this.handleKeydown_);
@@ -121,28 +121,25 @@ class MdcDrawer extends HTMLElement {
   }
 
   disconnectedCallback() {
-    if (!this.mdcFoundation) return;
-
     this.removeEventListener("keydown", this.handleKeydown_);
     this.removeEventListener("transitionend", this.handleTransitionEnd_);
 
     const { MODAL } = MDCDismissibleDrawerFoundation.cssClasses;
     if (this.classList.contains(MODAL)) {
       this.scrim.removeEventListener("click", this.handleScrimClick_);
-      this.mdcFoundation.close();
+      this.foundation_.close();
     }
 
-    this.mdcFoundation.destroy();
-    delete this.mdcFoundation;
+    this.foundation_.destroy();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (!this.mdcFoundation) return;
+    if (!this.foundation_) return;
     if (name === "open") {
       if (this.hasAttribute("open")) {
-        this.mdcFoundation.open();
+        this.foundation_.open();
       } else {
-        this.mdcFoundation.close();
+        this.foundation_.close();
       }
     }
   }

@@ -17,14 +17,11 @@ class MdcFab extends HTMLElement {
   }
 
   connectedCallback() {
-    this.MDCRipple = new MDCRipple(this);
+    this.ripple_ = new MDCRipple(this);
   }
 
   disconnectedCallback() {
-    if (typeof this.MDCRipple !== "undefined") {
-      this.MDCRipple.destroy();
-      delete this.MDCRipple;
-    }
+    this.ripple_.destroy();
   }
 };
 

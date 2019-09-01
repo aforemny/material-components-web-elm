@@ -17,14 +17,11 @@ class MdcListItem extends HTMLElement {
   }
 
   connectedCallback() {
-    this.mdcRipple = new MDCRipple(this);
+    this.ripple_ = new MDCRipple(this);
   }
 
   disconnectedCallback() {
-    if (typeof this.mdcRipple !== "undefined") {
-      this.mdcRipple.destroy();
-      delete this.mdcRipple;
-    }
+    this.ripple_.destroy();
   }
 };
 

@@ -35,11 +35,11 @@ class MdcIconButton extends HTMLElement {
   }
 
   connectedCallback() {
-    this.mdcFoundation = new MDCIconButtonToggleFoundation(this.adapter);
-    this.mdcFoundation.init();
-    this.mdcFoundation.toggle(this.hasAttribute("on"));
-    this.mdcRipple = new MDCRipple(this);
-    this.mdcRipple.unbounded = true;
+    this.foundation_ = new MDCIconButtonToggleFoundation(this.adapter);
+    this.foundation_.init();
+    this.foundation_.toggle(this.hasAttribute("on"));
+    this.ripple_ = new MDCRipple(this);
+    this.ripple_.unbounded = true;
     this.addEventListener("click", this.handleClick);
   }
 
@@ -50,21 +50,15 @@ class MdcIconButton extends HTMLElement {
   }
 
   disconnectedCallback() {
-    if (this.mdcFoundation) {
-      this.mdcFoundation.destroy();
-      delete this.mdcFoundation;
-    }
-    if (this.mdcRipple) {
-      this.mdcRipple.destroy();
-      delete this.mdcRipple;
-    }
+    this.foundation_.destroy();
+    this.ripple_.destroy();
     this.removeEventListener("click", this.handleClick);
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (!this.mdcFoundation) return;
+    if (!this.foundation_) return;
     if (name === "data-on") {
-      this.mdcFoundation.handleClick.call(this.mdcFoundation);
+      this.foundation_.handleClick.call(this.foundation_);
     }
   }
 };

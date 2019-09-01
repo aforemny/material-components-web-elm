@@ -17,11 +17,11 @@ class MdcTopAppBar extends HTMLElement {
   }
 
   connectedCallback() {
-    this.mdcComponent = new MDCTopAppBar(this);
+    this.topAppBar_ = new MDCTopAppBar(this);
   }
 
   disconnectedCallback() {
-    this.mdcComponent.destroy();
+    this.topAppBar_.destroy();
   }
 };
 

@@ -17,15 +17,12 @@ class MdcButton extends HTMLElement {
   }
 
   connectedCallback() {
-    this.mdcRipple = MDCRipple.attachTo(this);
+    this.ripple_ = MDCRipple.attachTo(this);
     this.tabIndex = 0;
   }
 
   disconnectedCallback() {
-    if (typeof this.mdcRipple !== "undefined") {
-      this.mdcRipple.destroy();
-      delete this.mdcRipple;
-    }
+    this.ripple_.destroy();
   }
 };
 

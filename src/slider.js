@@ -99,39 +99,39 @@ class MdcSlider extends HTMLElement {
   }
 
   get value() {
-    return this.mdcFoundation.getValue();
+    return this.foundation_.getValue();
   }
 
   connectedCallback() {
-    this.mdcFoundation = new MDCSliderFoundation(this.adapter);
-    this.mdcFoundation.init();
-    this.mdcFoundation.setMin(parseFloat(this.getAttribute("min")));
-    this.mdcFoundation.setMax(parseFloat(this.getAttribute("max")));
-    this.mdcFoundation.setValue(parseFloat(this.getAttribute("value")));
-    this.mdcFoundation.setStep(parseFloat(this.getAttribute("step")));
-    this.mdcFoundation.setDisabled(this.hasAttribute("disabled"));
-    this.mdcFoundation.setupTrackMarker();
+    this.foundation_ = new MDCSliderFoundation(this.adapter);
+    this.foundation_.init();
+    this.foundation_.setMin(parseFloat(this.getAttribute("min")));
+    this.foundation_.setMax(parseFloat(this.getAttribute("max")));
+    this.foundation_.setValue(parseFloat(this.getAttribute("value")));
+    this.foundation_.setStep(parseFloat(this.getAttribute("step")));
+    this.foundation_.setDisabled(this.hasAttribute("disabled"));
+    this.foundation_.setupTrackMarker();
   }
 
   disconnectedCallback() {
-    if (this.mdcFoundation) {
-      this.mdcFoundation.destroy();
-      delete this.mdcFoundation;
+    if (this.foundation_) {
+      this.foundation_.destroy();
+      delete this.foundation_;
     }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (!this.mdcFoundation) return;
+    if (!this.foundation_) return;
     if (name === "value") {
-      this.mdcFoundation.setValue(parseFloat(this.getAttribute("value")));
+      this.foundation_.setValue(parseFloat(this.getAttribute("value")));
     } else if (name === "min") {
-      this.mdcFoundation.setMin(parseFloat(this.getAttribute("min")));
+      this.foundation_.setMin(parseFloat(this.getAttribute("min")));
     } else if (name === "max") {
-      this.mdcFoundation.setMax(parseFloat(this.getAttribute("max")));
+      this.foundation_.setMax(parseFloat(this.getAttribute("max")));
     } else if (name === "step") {
-      this.mdcFoundation.setStep(parseFloat(this.getAttribute("step")));
+      this.foundation_.setStep(parseFloat(this.getAttribute("step")));
     } else if (name === "disabled") {
-      this.mdcFoundation.setDisabled(this.hasAttribute("disabled"));
+      this.foundation_.setDisabled(this.hasAttribute("disabled"));
     }
   }
 };

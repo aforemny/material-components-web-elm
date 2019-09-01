@@ -86,14 +86,14 @@ class MdcDialog extends HTMLElement {
   }
 
   connectedCallback() {
-    this.mdcFoundation = new MDCDialogFoundation(this.adapter);
-    this.mdcFoundation.init();
+    this.foundation_ = new MDCDialogFoundation(this.adapter);
+    this.foundation_.init();
     if (this.hasAttribute("open")) {
-      this.mdcFoundation.open();
+      this.foundation_.open();
     }
 
-    this.mdcFoundation.doClose = this.mdcFoundation.close.bind(this.mdcFoundation);
-    this.mdcFoundation.close = () => {
+    this.foundation_.doClose = this.foundation_.close.bind(this.foundation_);
+    this.foundation_.close = () => {
       this.dispatchEvent(new CustomEvent("MDCDialog:close"));
     };
 
@@ -112,7 +112,7 @@ class MdcDialog extends HTMLElement {
   }
 
   handleInteraction(event) {
-    this.mdcFoundation.handleInteraction.call(this.mdcFoundation, event);
+    this.foundation_.handleInteraction.call(this.foundation_, event);
   }
 
   handleOpening() {
@@ -128,18 +128,15 @@ class MdcDialog extends HTMLElement {
   }
 
   handleDocumentKeydown(event) {
-    this.mdcFoundation.handleDocumentKeydown.call(this.mdcFoundation, event);
+    this.foundation_.handleDocumentKeydown.call(this.foundation_, event);
   }
 
   layout() {
-    this.mdcFoundation.layout();
+    this.foundation_.layout();
   }
 
   disconnectedCallback() {
-    if (this.mdcFoundation) {
-      this.mdcFoundation.destroy();
-      delete this.mdcFoundation;
-    }
+    this.foundation_.destroy();
 
     const { OPENING_EVENT, CLOSING_EVENT } = MDCDialogFoundation.strings;
     this.removeEventListener("click", this.handleInteraction_);
@@ -150,12 +147,12 @@ class MdcDialog extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (!this.mdcFoundation) return;
+    if (!this.foundation_) return;
     if (name === "open") {
       if (this.hasAttribute("open")) {
-        this.mdcFoundation.open();
+        this.foundation_.open();
       } else {
-        this.mdcFoundation.doClose();
+        this.foundation_.doClose();
       }
     }
   }

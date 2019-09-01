@@ -21,40 +21,37 @@ class MdcLinearProgress extends HTMLElement {
   }
 
   connectedCallback() {
-    this.mdcLinearProgress = new MDCLinearProgress(this);
-    this.mdcLinearProgress.determinate = this.hasAttribute("determinate");
-    this.mdcLinearProgress.progress = parseFloat(this.getAttribute("progress"));
-    this.mdcLinearProgress.buffer = parseFloat(this.getAttribute("buffer"));
-    this.mdcLinearProgress.reverse = this.hasAttribute("reverse");
+    this.linearProgress_ = new MDCLinearProgress(this);
+    this.linearProgress_.determinate = this.hasAttribute("determinate");
+    this.linearProgress_.progress = parseFloat(this.getAttribute("progress"));
+    this.linearProgress_.buffer = parseFloat(this.getAttribute("buffer"));
+    this.linearProgress_.reverse = this.hasAttribute("reverse");
     if (this.hasAttribute("closed")) {
-      this.mdcLinearProgress.close();
+      this.linearProgress_.close();
     } else {
-      this.mdcLinearProgress.open();
+      this.linearProgress_.open();
     }
   }
 
   disconnectedCallback() {
-    if (this.mdcLinearProgress) {
-      this.mdcLinearProgress.destroy();
-      delete this.mdcLinearProgress;
-    }
+    this.linearProgress_.destroy();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (!this.mdcLinearProgress) return;
+    if (!this.linearProgress_) return;
     if (name === "determinate") {
-      this.mdcLinearProgress.determinate = this.hasAttribute("determinate");
+      this.linearProgress_.determinate = this.hasAttribute("determinate");
     } else if (name === "progress") {
-      this.mdcLinearProgress.progress = parseFloat(this.getAttribute("progress"));
+      this.linearProgress_.progress = parseFloat(this.getAttribute("progress"));
     } else if (name === "buffer") {
-      this.mdcLinearProgress.buffer = parseFloat(this.getAttribute("buffer"));
+      this.linearProgress_.buffer = parseFloat(this.getAttribute("buffer"));
     } else if (name === "reverse") {
-      this.mdcLinearProgress.reverse = this.hasAttribute("reverse");
+      this.linearProgress_.reverse = this.hasAttribute("reverse");
     } else if (name === "closed") {
       if (this.hasAttribute("closed")) {
-        this.mdcLinearProgress.close();
+        this.linearProgress_.close();
       } else {
-        this.mdcLinearProgress.open();
+        this.linearProgress_.open();
       }
     }
   }

@@ -1,6 +1,6 @@
+import * as ponyfill from "@material/dom/ponyfill";
 import { cssClasses, strings } from '@material/textfield/constants';
 import { getClassName, setClassName } from "./utils";
-import { getMatchesProperty } from '@material/ripple/util';
 import { MDCFloatingLabel, MDCFloatingLabelFoundation } from '@material/floating-label/index';
 import { MDCLineRipple, MDCLineRippleFoundation } from '@material/line-ripple/index';
 import { MDCNotchedOutline, MDCNotchedOutlineFoundation } from '@material/notched-outline/index';
@@ -81,20 +81,17 @@ class MdcTextField extends HTMLElement {
     }
 
     this.ripple_ = null;
-    if (!this.root_.classList.contains(cssClasses.TEXTAREA) && !this.root_.classList.contains(cssClasses.OUTLINED)) {
-      const MATCHES = getMatchesProperty(HTMLElement.prototype);
-      const adapter = Object.assign(
-        MDCRipple.createAdapter(this),
-        {
-          isSurfaceActive: () =>
-            this.querySelector(strings.INPUT_SELECTOR)[MATCHES](":active"),
-          registerInteractionHandler: (type, handler) =>
-            this.querySelector(strings.INPUT_SELECTOR).addEventListener(type, handler),
-          deregisterInteractionHandler: (type, handler) =>
-            this.querySelector(strings.INPUT_SELECTOR).removeEventListener(type, handler)
-        }
-      );
-      this.ripple_ = new MDCRipple(this, new MDCRippleFoundation(adapter));
+    const isTextArea = this.classList.contains(cssClasses.TEXTAREA);
+    const isOutlined = this.classList.contains(cssClasses.OUTLINED);
+    if (!isTextArea && !isOutlined) {
+      this.ripple_ = new MDCRipple(this, new MDCRippleFoundation({
+        ...MDCRipple.createAdapter(this),
+        isSurfaceActive: () => ponyfill.matches(this.input_, ":active"),
+        registerInteractionHandler: (eventType, handler) =>
+          this.input_.addEventListener(eventType, handler),
+        deregisterInteractionHandler: (eventType, handler) =>
+          this.input_.removeEventListener(eventType, handler),
+      }));
     }
 
     this.foundation_ = new MDCTextFieldFoundation(

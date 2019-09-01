@@ -27,7 +27,7 @@ class MdcChip extends HTMLElement {
     setClassName.call(this, className);
   }
 
-  get adapter() {
+  getAdapter_() {
     return {
       addClass: className => this.classList.add(className),
       removeClass: className => this.classList.remove(className),
@@ -76,14 +76,26 @@ class MdcChip extends HTMLElement {
       getComputedStyleValue: propertyName =>
         window.getComputedStyle(this).getPropertyValue(propertyName),
       setStyleProperty: (propertyName, value) =>
-        this.style.setProperty(propertyName, value)
+        this.style.setProperty(propertyName, value),
+      hasLeadingIcon: () => !!this.leadingIcon_,
+      getRootBoundingClientRect: () => this.getBoundingClientRect(),
+      getCheckmarkBoundingClientRect: () =>
+        this.checkmark_ ? this.checkmark_.getBoundingClientRect() : null,
     };
   }
 
+  get leadingIcon_() {
+    return this.querySelector(MDCChipFoundation.strings.LEADING_ICON_SELECTOR);
+  }
+
+  get checkmark_() {
+    return this.querySelector(MDCChipFoundation.strings.CHECKMARK_SELECTOR);
+  }
+
   connectedCallback() {
-    this.mdcFoundation = new MDCChipFoundation(this.adapter);
-    this.mdcFoundation.init();
-    this.mdcFoundation.setSelected(this.hasAttribute("selected"));
+    this.foundation_ = new MDCChipFoundation(this.getAdapter_());
+    this.foundation_.init();
+    this.foundation_.setSelected(this.hasAttribute("selected"));
 
     this.initRipple();
 
@@ -101,15 +113,15 @@ class MdcChip extends HTMLElement {
   }
 
   handleInteraction(event) {
-    this.mdcFoundation.handleInteraction(event);
+    this.foundation_.handleInteraction(event);
   }
 
   handleTransitionEnd(event) {
-    this.mdcFoundation.handleTransitionEnd(event);
+    this.foundation_.handleTransitionEnd(event);
   }
 
   handleTrailingIconInteraction(event) {
-    this.mdcFoundation.handleTrailingIconInteraction(event);
+    this.foundation_.handleTrailingIconInteraction(event);
   }
 
   initRipple() {
@@ -136,21 +148,18 @@ class MdcChip extends HTMLElement {
           return {height, width};
         }
       });
-      this.mdcRipple = new MDCRipple(this, new MDCRippleFoundation(adapter));
+      this.ripple_ = new MDCRipple(this, new MDCRippleFoundation(adapter));
     } else {
-      this.mdcRipple = new MDCRipple(this);
+      this.ripple_ = new MDCRipple(this);
     }
   }
 
   disconnectedCallback() {
-    if (typeof this.mdcFoundation !== "undefined") {
-      this.mdcFoundation.destroy();
-      delete this.mdcFoundation;
+    if (this.foundation_) {
+      this.foundation_.destroy();
     }
-
-    if (typeof this.mdcRipple !== "undefined") {
-      this.mdcRipple.destroy();
-      delete this.mdcRipple;
+    if (this.ripple_) {
+      this.ripple_.destroy();
     }
 
     INTERACTION_EVENTS.forEach(evtType =>
@@ -167,9 +176,9 @@ class MdcChip extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (!this.mdcFoundation) return;
+    if (!this.foundation_) return;
     if (name === "selected") {
-      this.mdcFoundation.setSelected(this.hasAttribute("selected"));
+      this.foundation_.setSelected(this.hasAttribute("selected"));
     }
   };
 };

@@ -1,5 +1,5 @@
 import { getClassName, setClassName } from "./utils";
-import { getMatchesProperty } from "@material/ripple/util";
+import { matches } from "@material/dom/ponyfill";
 import { MDCChipFoundation } from "@material/chips/index";
 import { MDCRipple, MDCRippleFoundation } from "@material/ripple/index";
 
@@ -14,163 +14,48 @@ class MdcChip extends HTMLElement {
   constructor() {
     super();
     this.className_ = "";
-    this.handleInteraction_ = this.handleInteraction.bind(this);
-    this.handleTransitionEnd_ = this.handleTransitionEnd.bind(this);
-    this.handleTrailingIconInteraction_ = this.handleTrailingIconInteraction.bind(this);
-  }
-
-  get className() {
-    return getClassName.call(this);
-  }
-
-  set className(className) {
-    setClassName.call(this, className);
-  }
-
-  getAdapter_() {
-    return {
-      addClass: className => this.classList.add(className),
-      removeClass: className => this.classList.remove(className),
-      hasClass: className => this.classList.contains(className),
-      addClassToLeadingIcon: className => {
-        if (this.querySelector(MDCChipFoundation.strings.LEADING_ICON_SELECTOR)) {
-          this.querySelector(MDCChipFoundation.strings.LEADING_ICON_SELECTOR)
-            .classList.add(className);
-        }
-      },
-      removeClassFromLeadingIcon: className => {
-        if (this.querySelector(MDCChipFoundation.strings.LEADING_ICON_SELECTOR)) {
-          this.querySelector(MDCChipFoundation.strings.LEADING_ICON_SELECTOR)
-            .classList.remove(className);
-        }
-      },
-      eventTargetHasClass: (target, className) => target.classList.contains(className),
-      notifyInteraction: () => {
-        this.dispatchEvent(new CustomEvent(
-          MDCChipFoundation.strings.INTERACTION_EVENT,
-          {chipId: this.id},
-          true /* shouldBubble */
-        ))
-      },
-      notifySelection: selected => {
-        this.dispatchEvent(new CustomEvent(
-          MDCChipFoundation.strings.SELECTION_EVENT,
-          {chipId: this.id, selected: selected},
-          true /* shouldBubble */
-        ))
-      },
-      notifyTrailingIconInteraction: () => {
-        this.dispatchEvent(new CustomEvent(
-          MDCChipFoundation.strings.TRAILING_ICON_INTERACTION_EVENT,
-          {chipId: this.id},
-          true /* shouldBubble */
-        ))
-      },
-      notifyRemoval: () => {
-        this.dispatchEvent(new CustomEvent(
-          MDCChipFoundation.strings.REMOVAL_EVENT,
-          {chipId: this.id, root: this},
-          true /* shouldBubble */
-        ))
-      },
-      getComputedStyleValue: propertyName =>
-        window.getComputedStyle(this).getPropertyValue(propertyName),
-      setStyleProperty: (propertyName, value) =>
-        this.style.setProperty(propertyName, value),
-      hasLeadingIcon: () => !!this.leadingIcon_,
-      getRootBoundingClientRect: () => this.getBoundingClientRect(),
-      getCheckmarkBoundingClientRect: () =>
-        this.checkmark_ ? this.checkmark_.getBoundingClientRect() : null,
-    };
-  }
-
-  get leadingIcon_() {
-    return this.querySelector(MDCChipFoundation.strings.LEADING_ICON_SELECTOR);
-  }
-
-  get checkmark_() {
-    return this.querySelector(MDCChipFoundation.strings.CHECKMARK_SELECTOR);
   }
 
   connectedCallback() {
+    this.root_ = this;
     this.foundation_ = new MDCChipFoundation(this.getAdapter_());
     this.foundation_.init();
     this.foundation_.setSelected(this.hasAttribute("selected"));
 
-    this.initRipple();
+    this.ripple_ = new MDCRipple(this, new MDCRippleFoundation({
+      ...MDCRipple.createAdapter(this),
+      computeBoundingRect: () => this.foundation_.getDimensions(),
+    }));
 
-    INTERACTION_EVENTS.forEach(evtType =>
-      this.addEventListener(evtType, this.handleInteraction_)
+    this.handleInteraction_ = event => this.foundation_.handleInteraction(event);
+    this.handleTransitionEnd_ = event => this.foundation_.handleTransitionEnd(event);
+    this.handleTrailingIconInteraction_ = event =>
+      this.foundation_.handleTrailingIconInteraction(event);
+
+    INTERACTION_EVENTS.forEach(eventType =>
+      this.addEventListener(eventType, this.handleInteraction_)
     );
     this.addEventListener("transitionend", this.handleTransitionEnd_);
 
-    if (this.querySelector(MDCChipFoundation.strings.TRAILING_ICON_SELECTOR)) {
-      INTERACTION_EVENTS.forEach(evtType =>
-      this.querySelector(MDCChipFoundation.strings.TRAILING_ICON_SELECTOR)
-        .addEventListener(evtType, handleTrailingIconInteraction_)
+    if (this.trailingIcon_) {
+      INTERACTION_EVENTS.forEach(eventType =>
+        this.trailingIcon_.addEventListener(eventType, handleTrailingIconInteraction_)
       );
     }
   }
 
-  handleInteraction(event) {
-    this.foundation_.handleInteraction(event);
-  }
-
-  handleTransitionEnd(event) {
-    this.foundation_.handleTransitionEnd(event);
-  }
-
-  handleTrailingIconInteraction(event) {
-    this.foundation_.handleTrailingIconInteraction(event);
-  }
-
-  initRipple() {
-    const checkmarkEl = this.querySelector(MDCChipFoundation.strings.CHECKMARK_SELECTOR);
-    if (checkmarkEl &&
-      !this.querySelector(MDCChipFoundation.strings.LEADING_ICON_SELECTOR)) {
-      const MATCHES = getMatchesProperty(HTMLElement.prototype);
-      const adapter = Object.assign(MDCRipple.createAdapter(this), {
-        isUnbounded: () => false,
-        isSurfaceActive: this[MATCHES](":active"),
-        addClass: className => this.classList.add(className),
-        removeClass: className => this.classList.remove(className),
-        containsEventTarget: target => this.contains(target),
-        registerInteractionHandler: (type, handler) =>
-          this.addEventListener(type, handler),
-        deregisterInteractionHandler: (type, handler) =>
-          this.removeEventListener(type, handler),
-        updateCssVariable: (varName, value) =>
-          this.style.setProperty(varName, value),
-        computeBoundingRect: () => {
-          const height = this.getBoundingClientRect().height;
-          const width = this.getBoundingClientRect().width +
-            checkmarkEl.getBoundingClientRect().height;
-          return {height, width};
-        }
-      });
-      this.ripple_ = new MDCRipple(this, new MDCRippleFoundation(adapter));
-    } else {
-      this.ripple_ = new MDCRipple(this);
-    }
-  }
-
   disconnectedCallback() {
-    if (this.foundation_) {
-      this.foundation_.destroy();
-    }
-    if (this.ripple_) {
-      this.ripple_.destroy();
-    }
+    this.foundation_.destroy();
+    this.ripple_.destroy();
 
-    INTERACTION_EVENTS.forEach(evtType =>
-      this.removeEventListener(evtType, this.handleInteraction_)
+    INTERACTION_EVENTS.forEach(eventType =>
+      this.removeEventListener(eventType, this.handleInteraction_)
     );
     this.removeEventListener("transitionend", this.handleTransitionEnd_);
 
-    if (this.querySelector(MDCChipFoundation.strings.TRAILING_ICON_SELECTOR)) {
-      INTERACTION_EVENTS.forEach(evtType =>
-      this.querySelector(MDCChipFoundation.strings.TRAILING_ICON_SELECTOR)
-        .removeEventListener(evtType, handleTrailingIconInteraction_)
+    if (this.trailingIcon_) {
+      INTERACTION_EVENTS.forEach(eventType =>
+        this.trailingIcon_.removeEventListener(eventType, handleTrailingIconInteraction_)
       );
     }
   }
@@ -181,6 +66,92 @@ class MdcChip extends HTMLElement {
       this.foundation_.setSelected(this.hasAttribute("selected"));
     }
   };
+
+  get className() {
+    return getClassName.call(this);
+  }
+
+  set className(className) {
+    setClassName.call(this, className);
+  }
+
+  get leadingIcon_() {
+    return this.querySelector(MDCChipFoundation.strings.LEADING_ICON_SELECTOR);
+  }
+
+  get trailingIcon_() {
+    return this.querySelector(MDCChipFoundation.strings.TRAILING_ICON_SELECTOR);
+  }
+
+  get checkmark_() {
+    return this.querySelector(MDCChipFoundation.strings.CHECKMARK_SELECTOR);
+  }
+
+  getAdapter_() {
+    return {
+      addClass: className => this.classList.add(className),
+      addClassToLeadingIcon: className => {
+        if (this.leadingIcon_) {
+          this.leadingIcon_.classList.add(className);
+        }
+      },
+      eventTargetHasClass: (target, className) =>
+        target ? target.classList.contains(className) : false,
+      getCheckmarkBoundingClientRect: () =>
+        this.checkmark_ ? this.checkmark_.getBoundingClientRect() : null,
+      getComputedStyleValue: propertyName =>
+        window.getComputedStyle(this).getPropertyValue(propertyName),
+      getRootBoundingClientRect: () => this.getBoundingClientRect(),
+      hasClass: className => this.classList.contains(className),
+      hasLeadingIcon: () => !!this.leadingIcon_,
+      notifyInteraction: () => {
+        this.dispatchEvent(new CustomEvent(
+          MDCChipFoundation.strings.INTERACTION_EVENT,
+          {
+            chipId: this.id,
+            bubbles: true,
+          },
+        ))
+      },
+      notifyRemoval: () => {
+        this.dispatchEvent(new CustomEvent(
+          MDCChipFoundation.strings.REMOVAL_EVENT,
+          {
+            chipId: this.id,
+            root: this,
+            bubbles: true,
+          },
+        ))
+      },
+      notifySelection: selected => {
+        this.dispatchEvent(new CustomEvent(
+          MDCChipFoundation.strings.SELECTION_EVENT,
+          {
+            chipId: this.id,
+            selected,
+            bubbles: true,
+          },
+        ))
+      },
+      notifyTrailingIconInteraction: () => {
+        this.dispatchEvent(new CustomEvent(
+          MDCChipFoundation.strings.TRAILING_ICON_INTERACTION_EVENT,
+          {
+            chipId: this.id,
+            bubbles: true,
+          },
+        ))
+      },
+      removeClass: className => this.classList.remove(className),
+      removeClassFromLeadingIcon: className => {
+        if (this.leadingIcon_) {
+          this.leadingIcon_.classList.remove(className);
+        }
+      },
+      setStyleProperty: (propertyName, value) =>
+        this.style.setProperty(propertyName, value),
+    };
+  }
 };
 
 customElements.define("mdc-chip", MdcChip);

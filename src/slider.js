@@ -44,10 +44,10 @@ class MdcSlider extends HTMLElement {
         window.removeEventListener('resize', handler);
       },
       notifyInput: () => {
-        this.dispatchEvent(new CustomEvent(strings.INPUT_EVENT, this));
+        this.dispatchEvent(new CustomEvent(strings.INPUT_EVENT));
       },
       notifyChange: () => {
-        this.dispatchEvent(new CustomEvent(strings.CHANGE_EVENT, this));
+        this.dispatchEvent(new CustomEvent(strings.CHANGE_EVENT));
       },
       setThumbContainerStyleProperty: (propertyName, value) => {
         this.querySelector(".mdc-slider__thumb-container")

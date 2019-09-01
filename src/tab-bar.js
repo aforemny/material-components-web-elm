@@ -66,7 +66,7 @@ class MdcTabBar extends HTMLElement {
         this.dispatchEvent(new CustomEvent(
            MDCTabBarFoundation.strings.TAB_ACTIVATED_EVENT,
            {
-             detail: {index},
+             detail: { index },
              bubbles: true
            }
         ));

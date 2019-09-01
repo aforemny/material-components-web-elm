@@ -107,8 +107,7 @@ class MdcChip extends HTMLElement {
       notifyInteraction: () => {
         this.dispatchEvent(new CustomEvent(
           MDCChipFoundation.strings.INTERACTION_EVENT,
-          {
-            chipId: this.id,
+          { detail: { chipId: this.id },
             bubbles: true,
           },
         ))
@@ -116,9 +115,10 @@ class MdcChip extends HTMLElement {
       notifyRemoval: () => {
         this.dispatchEvent(new CustomEvent(
           MDCChipFoundation.strings.REMOVAL_EVENT,
-          {
-            chipId: this.id,
-            root: this,
+          { detail: {
+              chipId: this.id,
+              root: this,
+            },
             bubbles: true,
           },
         ))
@@ -127,8 +127,10 @@ class MdcChip extends HTMLElement {
         this.dispatchEvent(new CustomEvent(
           MDCChipFoundation.strings.SELECTION_EVENT,
           {
-            chipId: this.id,
-            selected,
+            detail: {
+              chipId: this.id,
+              selected,
+            },
             bubbles: true,
           },
         ))
@@ -137,7 +139,7 @@ class MdcChip extends HTMLElement {
         this.dispatchEvent(new CustomEvent(
           MDCChipFoundation.strings.TRAILING_ICON_INTERACTION_EVENT,
           {
-            chipId: this.id,
+            detail: { chipId: this.id, },
             bubbles: true,
           },
         ))

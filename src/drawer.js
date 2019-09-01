@@ -35,13 +35,11 @@ class MdcDrawer extends HTMLElement {
       },
       notifyClose: () => this.dispatchEvent(new CustomEvent(
         strings.CLOSE_EVENT,
-        {},
-        true /* shouldBubble */
+        { bubbles: true }
       )),
       notifyOpen: () => this.dispatchEvent(new CustomEvent(
         strings.OPEN_EVENT,
-        {},
-        true /* shouldBubble */
+        { bubbles: true }
       )),
       trapFocus: () => this.focusTrap.activate(),
       releaseFocus: () => this.focusTrap.deactivate(),
@@ -70,8 +68,7 @@ class MdcDrawer extends HTMLElement {
     if (isEscape) {
       this.dispatchEvent(new CustomEvent(
         "MDCDrawer:close",
-        {},
-        true /* shouldBubble */
+        { bubbles: true }
       ));
     }
   }
@@ -85,8 +82,7 @@ class MdcDrawer extends HTMLElement {
     if (!this.mdcFoundation) return;
     this.dispatchEvent(new CustomEvent(
       "MDCDrawer:close",
-      {},
-      true /* shouldBubble */
+      { bubbles: true }
     ));
   }
 

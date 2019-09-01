@@ -103,8 +103,10 @@ class MdcMenu extends HTMLElement {
       },
       notifySelected: evtData => this.dispatchEvent(new CustomEvent(
         strings.SELECTED_EVENT, {
-        index: evtData.index,
-        item: this.getItems_()[evtData.index],
+          detail: {
+            index: evtData.index,
+            item: this.getItems_()[evtData.index],
+          }
       }))
     };
   }

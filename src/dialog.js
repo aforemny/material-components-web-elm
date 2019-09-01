@@ -49,19 +49,23 @@ class MdcDialog extends HTMLElement {
       },
       notifyOpening: () => {
         const {OPENING_EVENT} = MDCDialogFoundation.strings;
-        this.dispatchEvent(new CustomEvent(OPENING_EVENT, {}));
+        this.dispatchEvent(new CustomEvent(OPENING_EVENT));
       },
       notifyOpened: () => {
         const {OPENED_EVENT} = MDCDialogFoundation.strings;
-        this.dispatchEvent(new CustomEvent(OPENED_EVENT, {}));
+        this.dispatchEvent(new CustomEvent(OPENED_EVENT));
       },
       notifyClosing: (action) => {
         const {CLOSING_EVENT} = MDCDialogFoundation.strings;
-        this.dispatchEvent(new CustomEvent(CLOSING_EVENT, action ? {action} : {}));
+        this.dispatchEvent(new CustomEvent(CLOSING_EVENT, {
+          detail: action ? {action} : {}
+        }));
       },
       notifyClosed: (action) => {
         const {CLOSED_EVENT} = MDCDialogFoundation.strings;
-        this.dispatchEvent(new CustomEvent(CLOSED_EVENT, action ? {action} : {}));
+        this.dispatchEvent(new CustomEvent(CLOSED_EVENT, {
+          detail: action ? {action} : {}
+        }));
       },
     }
   }

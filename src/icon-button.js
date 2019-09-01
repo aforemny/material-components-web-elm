@@ -14,9 +14,9 @@ class MdcIconButton extends HTMLElement {
       removeClass: className => this.classList.remove(className),
       hasClass: className => this.classList.contains(className),
       setAttr: (attrName, attrValue) => this.setAttribute(attrName, attrValue),
-      notifyChange: evtData => {
+      notifyChange: eventData => {
         const {CHANGE_EVENT} = MDCIconButtonToggleFoundation.strings;
-        this.dispatchEvent(new CustomEvent(CHANGE_EVENT), evtData);
+        this.dispatchEvent(new CustomEvent(CHANGE_EVENT), { detail: eventData });
       },
     }
   }

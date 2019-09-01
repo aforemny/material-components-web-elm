@@ -108,7 +108,10 @@ class MdcList extends HTMLElement {
       notifyAction: (index) => {
         this.listElements[index].dispatchEvent(new CustomEvent(
           MDCListFoundation.strings.ACTION_EVENT,
-          { detail: index, bubbles: true }
+          {
+            detail: index,
+            bubbles: true,
+          }
         ));
       },
       isFocusInsideList: () => {

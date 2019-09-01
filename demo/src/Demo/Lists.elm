@@ -265,8 +265,7 @@ listWithTrailingCheckbox model =
     let
         listItemConfig_ index =
             { listItemConfig
-                | onClick = Just (ToggleCheckbox 0)
-                , additionalAttributes =
+                | additionalAttributes =
                     [ Html.Attributes.attribute "aria-checked"
                         (if Set.member index model.checkboxIndices then
                             "true"
@@ -319,7 +318,7 @@ listWithTrailingRadioButton : Model -> Html Msg
 listWithTrailingRadioButton model =
     let
         listItemConfig_ index =
-            { listItemConfig | onClick = Just (SetRadio index) }
+            listItemConfig
 
         radio_ index =
             radio

@@ -10,6 +10,7 @@ class MdcList extends HTMLElement {
     this.handleKeydown_ = this.handleKeydown.bind(this);
     this.handleFocusIn_ = this.handleFocusIn.bind(this);
     this.handleFocusOut_ = this.handleFocusOut.bind(this);
+    this.handleClick_ = this.handleClick.bind(this);
     this.wrapFocus_ = false;
   }
 
@@ -21,6 +22,7 @@ class MdcList extends HTMLElement {
     this.addEventListener("keydown", this.handleKeydown_);
     this.addEventListener("focusin", this.handleFocusIn_);
     this.addEventListener("focusout", this.handleFocusOut_);
+    this.addEventListener("click", this.handleClick_);
 
     this.layout();
 
@@ -31,8 +33,9 @@ class MdcList extends HTMLElement {
     this.foundation_.destroy();
 
     this.removeEventListener("keydown", this.handleKeydown_);
-    this.removeEventListener("focusin", this.focusInEventListener_);
-    this.removeEventListener("focusout", this.focusOutEventListener_);
+    this.removeEventListener("focusin", this.handleFocusIn_);
+    this.removeEventListener("focusout", this.handleFocusOut_);
+    this.removeEventListener("click", this.handleClick_);
   }
 
   getAdapter_() {
@@ -76,12 +79,6 @@ class MdcList extends HTMLElement {
         );
         listItemChildren.forEach((ele) => ele.setAttribute('tabindex', tabIndexValue));
       },
-      followHref: (index) => {
-        const listItem = this.listElements[index];
-        if (listItem && listItem.href) {
-          listItem.click();
-        }
-      },
       hasCheckboxAtIndex: (index) => {
         const listItem = this.listElements[index];
         return !!listItem.querySelector(MDCListFoundation.strings.CHECKBOX_SELECTOR);
@@ -107,6 +104,12 @@ class MdcList extends HTMLElement {
         const event = document.createEvent('Event');
         event.initEvent('change', true, true);
         toggleEl.dispatchEvent(event);
+      },
+      notifyAction: (index) => {
+        this.listElements[index].dispatchEvent(new CustomEvent(
+          MDCListFoundation.strings.ACTION_EVENT,
+          { detail: index, bubbles: true }
+        ));
       },
       isFocusInsideList: () => {
         return this.contains(document.activeElement);
@@ -139,17 +142,24 @@ class MdcList extends HTMLElement {
   }
 
   handleKeydown(event) {
-    const isEnter = event.key === 'Enter' || event.keyCode === 13;
-    const isSpace = event.key === 'Space' || event.keyCode === 32;
-    if (isEnter || isSpace) return;
-
     const index = this.getListItemIndex(event);
+
     if (index >= 0) {
       this.foundation_.handleKeydown(
         event,
-        event.target.classList.contains("mdc-list-item"),
-        index);
+        event.target.classList.contains(MDCListFoundation.cssClasses.LIST_ITEM_CLASS),
+        index
+      );
     }
+  }
+
+  handleClick(event) {
+    const index = this.getListItemIndex(event);
+    const toggleCheckbox = !matches(
+      event.target,
+      MDCListFoundation.strings.CHECKBOX_RADIO_SELECTOR
+    );
+    this.foundation_.handleClick(index, toggleCheckbox);
   }
 
   layout() {

@@ -369,7 +369,6 @@ listItem config nodes =
             , activatedCs config
             , ariaSelectedAttr config
             , clickHandler config
-            , keydownHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -419,26 +418,7 @@ ariaSelectedAttr { selected, activated } =
 
 clickHandler : ListItemConfig msg -> Maybe (Html.Attribute msg)
 clickHandler { onClick } =
-    Maybe.map Html.Events.onClick onClick
-
-
-keydownHandler : ListItemConfig msg -> Maybe (Html.Attribute msg)
-keydownHandler { onClick } =
-    Maybe.map
-        (\msg ->
-            Html.Events.on "keydown"
-                (Html.Events.keyCode
-                    |> Decode.andThen
-                        (\keyCode ->
-                            if (keyCode == 32) || (keyCode == 13) then
-                                Decode.succeed msg
-
-                            else
-                                Decode.fail ""
-                        )
-                )
-        )
-        onClick
+    Maybe.map (Html.Events.on "MDCList:action" << Decode.succeed) onClick
 
 
 {-| List item's text for list items in a two-line list

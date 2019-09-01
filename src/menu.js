@@ -37,8 +37,9 @@ class MdcMenu extends HTMLElement {
       }
     };
 
-    this.handleKeydown_ = evt => this.foundation_.handleKeydown(evt);
-    this.handleItemAction_ = evt => this.foundation_.handleItemAction(this.getItems()[evt.detail]);
+    this.handleKeydown_ = event => this.foundation_.handleKeydown(event);
+    this.handleItemAction_ = event =>
+      this.foundation_.handleItemAction(this.getItems_()[event.detail]);
     this.afterOpenedCallback_ = () => this.handleAfterOpened_();
 
     this.menuSurface_.listen(MDCMenuSurfaceFoundation.strings.OPENED_EVENT, this.afterOpenedCallback_);

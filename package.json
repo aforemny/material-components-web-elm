@@ -2,8 +2,12 @@
   "name": "material-components-web-elm",
   "version": "1.0.0",
   "description": "Material Components for Elm",
+  "author": "Alexander Foremny <aforemny@posteo.de>",
   "license": "MIT",
   "repository": "https://github.com/aforemny/material-components-web-elm",
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/polyfill": "^7.6.0",

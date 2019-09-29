@@ -16,8 +16,8 @@ web](https://github.com/material-components/material-components-web) (MDC Web).
 
 ```html
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="https://aforemny.github.io/material-components-web-elm/material-components-web-elm.min.css">
-<script src="https://aforemny.github.io/material-components-web-elm/material-components-web-elm.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/material-components-web-elm@latest/dist/material-components-web-elm.min.css">
+<script src="https://unpkg.com/material-components-web-elm@latest/dist/material-components-web-elm.min.js"></script>
 ```
 
 Refer to the [simple counter

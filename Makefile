@@ -8,6 +8,9 @@ build: node_modules
 	cp dist/material-components-elm.min.js gh-pages
 	cp node_modules/material-components-web/dist/material-components-web.min.css dist
 
+docs: node_modules
+	elm-doc-preview
+
 
 pages: distclean node_modules
 	mkdir -p gh-pages

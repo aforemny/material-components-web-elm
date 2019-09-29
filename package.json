@@ -1,9 +1,9 @@
 {
-  "name": "material-components-elm",
-  "version": "0.0.0",
+  "name": "material-components-web-elm",
+  "version": "1.0.0",
   "description": "Material Components for Elm",
   "license": "MIT",
-  "repository": "https://github.com/aforemny/material-components-elm",
+  "repository": "https://github.com/aforemny/material-components-web-elm",
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/polyfill": "^7.6.0",

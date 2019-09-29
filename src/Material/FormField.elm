@@ -15,7 +15,7 @@ interacting with the label.
 
 # Resources
 
-  - [Demo: Checkbox](https://aforemny.github.io/material-components-elm/#checkboxes)
+  - [Demo: Checkbox](https://aforemny.github.io/material-components-web-elm/#checkboxes)
   - [MDC Web: Form Field](https://github.com/material-components/material-components-web/tree/master/packages/mdc-form-field)
 
 

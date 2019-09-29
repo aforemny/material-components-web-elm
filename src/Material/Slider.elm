@@ -18,7 +18,7 @@ component.
 
 # Resources
 
-  - [Demo: Sliders](https://aforemny.github.io/material-components-elm/#sliders)
+  - [Demo: Sliders](https://aforemny.github.io/material-components-web-elm/#sliders)
   - [Material Design Guidelines: Sliders](https://material.io/go/design-sliders)
   - [MDC Web: Slider](https://github.com/material-components/material-components-web/tree/master/packages/mdc-slider)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-slider#sass-mixins)

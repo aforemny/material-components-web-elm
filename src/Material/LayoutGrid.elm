@@ -29,7 +29,7 @@ It has 12 columns on desktop, 8 columns on tablet and 4 columns on phone.
 
 # Resources
 
-  - [Demo: Layout Grids](https://aforemny.github.io/material-components-elm/#layout-grids)
+  - [Demo: Layout Grids](https://aforemny.github.io/material-components-web-elm/#layout-grids)
   - [Material Design Guidelines: Layout Grid](https://material.io/guidelines/layout/responsive-ui.html#responsive-ui-grid)
   - [MDC Web: Layout Grid](https://github.com/material-components/material-components-web/tree/master/packages/mdc-layout-grid)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-layout-grid#sass-mixins)

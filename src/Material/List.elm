@@ -37,7 +37,7 @@ module Material.List exposing
 
 # Resources
 
-  - [Demo: Lists](https://aforemny.github.io/material-components-elm/#lists)
+  - [Demo: Lists](https://aforemny.github.io/material-components-web-elm/#lists)
   - [Material Design Guidelines: Lists](https://material.io/design/components/lists.html)
   - [MDC Web: List](https://github.com/material-components/material-components-web/tree/master/packages/mdc-list)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-list#sass-mixins)

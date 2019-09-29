@@ -15,7 +15,7 @@ module Material.Checkbox exposing (checkbox, checkboxConfig, CheckboxConfig, Che
 
 # Resources
 
-  - [Demo: Checkboxes](https://aforemny.github.io/material-components-elm/#checkboxes)
+  - [Demo: Checkboxes](https://aforemny.github.io/material-components-web-elm/#checkboxes)
   - [Material Design Guidelines: Selection Controls – Checkbox](https://material.io/go/design-checkboxes)
   - [MDC Web: Checkbox](https://github.com/material-components/material-components-web/tree/master/packages/mdc-checkbox)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-checkbox#sass-mixins)

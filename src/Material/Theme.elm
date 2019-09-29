@@ -41,7 +41,7 @@ out](https://github.com/material-components/material-components-web/tree/master/
 
 # Resources
 
-  - [Demo: Theme](https://aforemny.github.io/material-components-elm/#theme)
+  - [Demo: Theme](https://aforemny.github.io/material-components-web-elm/#theme)
   - [Material Design Guidelines: Color](https://material.io/go/design-theming)
   - [MDC Web: Theme](https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme#sass-mixins-variables-and-functions)

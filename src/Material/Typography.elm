@@ -19,7 +19,7 @@ density and reading comfort under typical usage conditions.
 
 # Resources
 
-  - [Demo: Typography](https://aforemny.github.io/material-components-elm/#typography)
+  - [Demo: Typography](https://aforemny.github.io/material-components-web-elm/#typography)
   - [Material Design Guidelines: Typography](https://material.io/go/design-typography)
   - [MDC Web: Typography](https://github.com/material-components/material-components-web/tree/master/packages/mdc-typography)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-typography#sass-variables-and-mixins)

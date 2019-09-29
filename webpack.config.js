@@ -31,12 +31,12 @@ module.exports =
     "text-field",
     "top-app-bar",
     */
-    "material-components-elm",
+    "material-components-web-elm",
   ].map(name => ({
     entry: `./src/${name}.js`,
     output: {
       path: path.resolve(__dirname, "dist"),
-      filename: name === "material-components-elm"
+      filename: name === "material-components-web-elm"
         ? `${name}.min.js`
         : `mdc-${name}.min.js`
     },

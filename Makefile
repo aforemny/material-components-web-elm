@@ -5,8 +5,8 @@ build: node_modules
 	rsync --delete -r demo/images gh-pages
 	cp demo/page.html gh-pages/index.html
 	cp demo/demo.js gh-pages
-	cp dist/material-components-elm.min.js gh-pages
-	cp node_modules/material-components-web/dist/material-components-web.min.css dist
+	cp dist/material-components-web-elm.min.js gh-pages
+	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-web-elm.min.css
 
 docs: node_modules
 	elm-doc-preview
@@ -19,8 +19,8 @@ pages: distclean node_modules
 	rsync --delete -r demo/images gh-pages
 	cp demo/page.html gh-pages/index.html
 	cp demo/demo.js gh-pages
-	cp dist/material-components-elm.min.js gh-pages
-	cp node_modules/material-components-web/dist/material-components-web.min.css dist
+	cp dist/material-components-web-elm.min.js gh-pages
+	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-web-elm.min.css
 	(cd gh-pages && git add . && git commit -m 'Update' && git push)
 
 
@@ -29,7 +29,7 @@ release: distclean node_modules
 	(cd examples/simple-counter && make)
 	mkdir -p dist
 	webpack --mode=production
-	cp node_modules/material-components-web/dist/material-components-web.min.css dist
+	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-web-elm.min.css
 
 
 node_modules:

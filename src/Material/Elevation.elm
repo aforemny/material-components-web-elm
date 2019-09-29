@@ -20,7 +20,7 @@ shadow. The elevation values are mapped out in a "z-space" and range from 0
 
 # Resources
 
-  - [Demo: Elevations](https://aforemny.github.io/material-components-elm/#elevations)
+  - [Demo: Elevations](https://aforemny.github.io/material-components-web-elm/#elevations)
   - [Material Design Guidelines: Shadows & elevation](https://material.io/go/design-elevation)
   - [MDC Web: Elevation](https://github.com/material-components/material-components-web/tree/master/packages/mdc-elevation)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-elevation#sass-mixins-variables-and-functions)

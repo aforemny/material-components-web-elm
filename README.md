@@ -9,28 +9,28 @@ web](https://github.com/material-components/material-components-web) (MDC Web).
 ## Important links
 
 - Getting Started Guide (TODO)
-- [Demo](https://aforemny.github.io/material-components-elm)
+- [Demo](https://aforemny.github.io/material-components-web-elm)
 
 
 ## Quick start
 
 ```html
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="https://aforemny.github.io/material-components-elm/material-components-elm.min.css">
-<script src="https://aforemny.github.io/material-components-elm/material-components-elm.min.js"></script>
+<link rel="stylesheet" href="https://aforemny.github.io/material-components-web-elm/material-components-web-elm.min.css">
+<script src="https://aforemny.github.io/material-components-web-elm/material-components-web-elm.min.js"></script>
 ```
 
 Refer to the [simple counter
-example](https://github.com/aforemny/material-components-elm/blob/master/examples/simple-counter)
+example](https://github.com/aforemny/material-components-web-elm/blob/master/examples/simple-counter)
 for a minimal starting point, specifically to the files
-[`src/Main.elm`](https://github.com/aforemny/material-components-elm/blob/master/examples/simple-counter/src/Main.elm)
+[`src/Main.elm`](https://github.com/aforemny/material-components-web-elm/blob/master/examples/simple-counter/src/Main.elm)
 and
-[`page.html`](https://github.com/aforemny/material-components-elm/blob/master/examples/simple-counter/page.html).
+[`page.html`](https://github.com/aforemny/material-components-web-elm/blob/master/examples/simple-counter/page.html).
 
 
 ## Contributions
 
 Please [share your
-experience](https://github.com/aforemny/material-components-elm/issues) using
+experience](https://github.com/aforemny/material-components-web-elm/issues) using
 this library! Use GitHub to [report bugs or ask
-questions](https://github.com/aforemny/material-components-elm/issues), too.
+questions](https://github.com/aforemny/material-components-web-elm/issues), too.

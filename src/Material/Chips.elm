@@ -19,7 +19,7 @@ choice, filter content, or trigger an action.
 
 # Resources
 
-  - [Demo: Chips](https://aforemny.github.io/material-components-elm/#chips)
+  - [Demo: Chips](https://aforemny.github.io/material-components-web-elm/#chips)
   - [Material Design Guidelines: Chips](https://material.io/go/design-chips)
   - [MDC Web: Chips](https://github.com/material-components/material-components-web/tree/master/packages/mdc-chips)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-chips#sass-mixins)

@@ -21,7 +21,7 @@ module Material.Button exposing
 
 # Resources
 
-  - [Demo: Buttons](https://aforemny.github.io/material-components-elm/#buttons)
+  - [Demo: Buttons](https://aforemny.github.io/material-components-web-elm/#buttons)
   - [Material Design Guidelines: Button](https://material.io/go/design-buttons)
   - [MDC Web: Button](https://github.com/material-components/material-components-web/tree/master/packages/mdc-button)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-button#sass-mixins)

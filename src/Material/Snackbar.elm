@@ -21,7 +21,7 @@ screen.
 
 # Resources
 
-  - [Demo: Snackbars](https://aforemny.github.io/material-components-elm/#snackbars)
+  - [Demo: Snackbars](https://aforemny.github.io/material-components-web-elm/#snackbars)
   - [Material Design Guidelines: Snackbars](https://material.io/go/design-snackbar)
   - [MDC Web: Snackbar](https://github.com/material-components/material-components-web/tree/master/packages/mdc-snackbar)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-snackbar#sass-mixins)

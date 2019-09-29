@@ -21,7 +21,7 @@ determinate or indeterminate activities.
 
 # Resources
 
-  - [Demo: Linear Progress](https://aforemny.github.io/material-components-elm/#linear-progress)
+  - [Demo: Linear Progress](https://aforemny.github.io/material-components-web-elm/#linear-progress)
   - [Material Design Guidelines: Progress indicators](https://material.io/go/design-progress-indicators)
   - [MDC Web: Linear Progress](https://github.com/material-components/material-components-web/tree/master/packages/mdc-linear-progress)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-linear-progress#sass-mixins)

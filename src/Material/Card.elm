@@ -27,7 +27,7 @@ module Material.Card exposing
 
 # Resources
 
-  - [Demo: Cards](https://aforemny.github.io/material-components-elm/#cards)
+  - [Demo: Cards](https://aforemny.github.io/material-components-web-elm/#cards)
   - [Material Design Guidelines: Cards](https://material.io/go/design-cards)
   - [MDC Web: Card](https://github.com/material-components/material-components-web/tree/master/packages/mdc-card)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-card#sass-mixins)

@@ -32,7 +32,7 @@ navigation icon, and action items.
 
 # Resources
 
-  - [Demo: Top App Bars](https://aforemny.github.io/material-components-elm/#top-app-bars)
+  - [Demo: Top App Bars](https://aforemny.github.io/material-components-web-elm/#top-app-bars)
   - [Material Design Guidelines: Top App Bar](https://material.io/go/design-app-bar-top)
   - [MDC Web: List](https://github.com/material-components/material-components-web/tree/master/packages/mdc-top-app-bar)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-top-app-bar#sass-mixins)

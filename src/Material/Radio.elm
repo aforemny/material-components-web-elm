@@ -15,7 +15,7 @@ all available options.
 
 # Resources
 
-  - [Demo: Radio Buttons](https://aforemny.github.io/material-components-elm/#radio-buttons)
+  - [Demo: Radio Buttons](https://aforemny.github.io/material-components-web-elm/#radio-buttons)
   - [Material Design Guidelines: Selection Controls – Radio buttons](https://material.io/go/design-radio-buttons)
   - [MDC Web: Radio](https://github.com/material-components/material-components-web/tree/master/packages/mdc-radio)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-radio#sass-mixins)

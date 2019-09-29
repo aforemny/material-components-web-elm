@@ -1,4 +1,7 @@
-module Material.HelperText exposing (helperLine, helperText, helperTextConfig, HelperTextConfig)
+module Material.HelperText exposing
+    ( helperText, helperTextConfig, HelperTextConfig
+    , helperLine, characterCounter
+    )
 
 {-| Helper text gives context about a field’s input, such as how the input will
 be used. It should be visible either persistently or only on focus.
@@ -10,6 +13,7 @@ be used. It should be visible either persistently or only on focus.
   - [Basic Usage](#basic-usage)
   - [Helper Text](#helper-text)
   - [Persistent Helper Text](#persisten-helper-text)
+  - [Helper Text with Character Counter](#helper-text-with-character-counter)
 
 
 # Resources
@@ -28,7 +32,7 @@ be used. It should be visible either persistently or only on focus.
     main =
         Html.div
             [ textField { textFieldConf | label = "Your name" }
-            , helperLine [] [ helperText helperTextConf "Please fill this" ]
+            , helperText helperTextConf "Please fill this"
             ]
 
 
@@ -38,7 +42,7 @@ The helper line is expected to be a direct sibling of the text field it belongs
 to and the helper text is expected to be a direct child of the helper text
 line.
 
-@docs helperLine, helperText, helperTextConfig, HelperTextConfig
+@docs helperText, helperTextConfig, HelperTextConfig
 
 
 # Persistent Helper Text
@@ -46,6 +50,22 @@ line.
 A text field's helper text may show unconditionally by setting its `persistent`
 configuration field to `True`. By default a text field's helper text only shows
 when the text field has focus.
+
+
+# Helper Text with Character Counter
+
+To have a text field or text area display a character counter, set its
+`maxLength` configuration field, and also add a `characterCounter` as a child
+of `helperLine`.
+
+    [ textField
+        { textFieldConfig
+            | maxLength = Just 18
+        }
+    , helperLine [] [ characterCounter [] ]
+    ]
+
+@docs helperLine, characterCounter
 
 -}
 
@@ -121,3 +141,15 @@ persistentCs config =
 ariaHiddenAttr : Maybe (Html.Attribute msg)
 ariaHiddenAttr =
     Just (Html.Attributes.attribute "aria-hidden" "true")
+
+
+{-| Character counter view function
+-}
+characterCounter : List (Html.Attribute msg) -> Html msg
+characterCounter additionalAttributes =
+    Html.div (characterCounterCs :: additionalAttributes) []
+
+
+characterCounterCs : Html.Attribute msg
+characterCounterCs =
+    class "mdc-text-field-character-counter"

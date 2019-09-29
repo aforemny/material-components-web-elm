@@ -6,9 +6,10 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.HelperText exposing (helperLine, helperText, helperTextConfig)
+import Material.HelperText exposing (characterCounter, helperLine, helperText, helperTextConfig)
 import Material.Icon exposing (icon, iconConfig)
-import Material.TextField exposing (characterCounter, textField, textFieldConfig, textFieldIcon)
+import Material.TextArea exposing (textArea, textAreaConfig)
+import Material.TextField exposing (textField, textFieldConfig, textFieldIcon)
 import Material.Typography as Typography
 
 
@@ -249,8 +250,7 @@ textFieldsWithCharacterCounter model =
 textareaTextField : Model -> Html msg
 textareaTextField model =
     Html.div textFieldContainer
-        [ textField
-            { textFieldConfig | label = Just "Standard", textarea = True, outlined = True }
+        [ textArea { textAreaConfig | label = Just "Standard", outlined = True }
         , demoHelperText
         ]
 
@@ -267,10 +267,9 @@ fullwidthTextareaTextField : Model -> Html msg
 fullwidthTextareaTextField model =
     Html.div textFieldRowFullwidth
         [ Html.div textFieldContainer
-            [ textField
-                { textFieldConfig
+            [ textArea
+                { textAreaConfig
                     | label = Just "Standard"
-                    , textarea = True
                     , fullwidth = True
                     , outlined = True
                 }

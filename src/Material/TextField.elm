@@ -1,7 +1,6 @@
 module Material.TextField exposing
     ( textField, textFieldConfig, TextFieldConfig
     , textFieldIcon
-    , characterCounter
     )
 
 {-| Text fields allow users to input, edit, and select text.
@@ -68,22 +67,11 @@ Full width text fields do not support `outlined` and will ignore this
 configuration field.
 
 
-# Multiline Text Field
-
-A text field may be used to enter multiple lines of user input. To use a
-textarea instead of an input element, set the text field's `textarea`
-configuration field to `True`.
-
-    textField { textFieldConfig | textarea = True }
-
-You may set `row` and `column` attributes as well.
-
-
 # Disabled Text Field
 
 To disable a text field set its `disabled` configuration field to `True`.
 
-    textField { textFieldConfig | textarea = True }
+    textField { textFieldConfig | disabled = True }
 
 
 # Password Text Field
@@ -112,7 +100,7 @@ To mark a text field as invalid, set its `invalid` configuration field to
     textField { textFieldConfig | invalid = True }
 
 
-# Outlined Text Fields
+# Outlined Text Field
 
 Text fields may have a visible outlined around them by setting their `outlined`
 configuration field to `True`.
@@ -159,8 +147,6 @@ configuration field, and also add a `characterCounter` as a child of
     , helperLine [] [ characterCounter [] ]
     ]
 
-@docs characterCounter
-
 -}
 
 import Html exposing (Html, text)
@@ -178,9 +164,6 @@ type alias TextFieldConfig msg =
     , fullwidth : Bool
     , value : Maybe String
     , placeholder : Maybe String
-    , textarea : Bool
-    , rows : Maybe Int
-    , cols : Maybe Int
     , disabled : Bool
     , required : Bool
     , invalid : Bool
@@ -213,9 +196,6 @@ textFieldConfig =
     , fullwidth = False
     , value = Nothing
     , placeholder = Nothing
-    , textarea = False
-    , rows = Nothing
-    , cols = Nothing
     , disabled = False
     , required = False
     , invalid = False
@@ -244,7 +224,6 @@ textField config =
             , noLabelCs config
             , outlinedCs config
             , fullwidthCs config
-            , textareaCs config
             , disabledCs config
             , withLeadingIconCs config
             , withTrailingIconCs config
@@ -255,7 +234,7 @@ textField config =
         (List.concat
             [ leadingIconElt config
             , if config.fullwidth then
-                if config.textarea || config.outlined then
+                if config.outlined then
                     [ inputElt config
                     , notchedOutlineElt config
                     ]
@@ -265,7 +244,7 @@ textField config =
                     , lineRippleElt
                     ]
 
-              else if config.textarea || config.outlined then
+              else if config.outlined then
                 [ inputElt config
                 , notchedOutlineElt config
                 ]
@@ -312,15 +291,6 @@ fullwidthCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
 fullwidthCs { fullwidth } =
     if fullwidth then
         Just (class "mdc-text-field--fullwidth")
-
-    else
-        Nothing
-
-
-textareaCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-textareaCs { textarea } =
-    if textarea then
-        Just (class "mdc-text-field--textarea")
 
     else
         Nothing
@@ -434,18 +404,11 @@ changeHandler { onChange } =
 
 inputElt : TextFieldConfig msg -> Html msg
 inputElt config =
-    (if config.textarea then
-        Html.textarea
-
-     else
-        Html.input
-    )
+    Html.input
         (List.filterMap identity
             [ inputCs
             , typeAttr config
             , ariaLabelAttr config
-            , rowsAttr config
-            , colsAttr config
             , disabledAttr config
             , requiredAttr config
             , invalidAttr config
@@ -468,24 +431,6 @@ inputCs =
     Just (class "mdc-text-field__input")
 
 
-rowsAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-rowsAttr { textarea, rows } =
-    if textarea then
-        Maybe.map Html.Attributes.rows rows
-
-    else
-        Nothing
-
-
-colsAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-colsAttr { textarea, cols } =
-    if textarea then
-        Maybe.map Html.Attributes.cols cols
-
-    else
-        Nothing
-
-
 stepAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
 stepAttr { step } =
     Maybe.map (Html.Attributes.step << String.fromInt) step
@@ -497,12 +442,8 @@ patternAttr { pattern } =
 
 
 typeAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-typeAttr { textarea, type_ } =
-    if not textarea then
-        Just (Html.Attributes.type_ type_)
-
-    else
-        Nothing
+typeAttr { type_ } =
+    Just (Html.Attributes.type_ type_)
 
 
 ariaLabelAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
@@ -572,15 +513,3 @@ notchedOutlineTrailingElt =
 notchedOutlineNotchElt : TextFieldConfig msg -> Html msg
 notchedOutlineNotchElt config =
     Html.div [ class "mdc-notched-outline__notch" ] [ labelElt config ]
-
-
-{-| Character counter view function
--}
-characterCounter : List (Html.Attribute msg) -> Html msg
-characterCounter additionalAttributes =
-    Html.div (characterCounterCs :: additionalAttributes) []
-
-
-characterCounterCs : Html.Attribute msg
-characterCounterCs =
-    class "mdc-text-field-character-counter"

@@ -150,15 +150,13 @@ configuration field to a `TextFieldIcon`.
 
 To have a text field display a character counter, set its `maxLength`
 configuration field, and also add a `characterCounter` as a child of
-`helperTextLine`.
+`helperLine`.
 
     [ textField
         { textFieldConfig
             | maxLength = Just 18
         }
-    , helperTextLine
-        [ characterCounter []
-        ]
+    , helperLine [] [ characterCounter [] ]
     ]
 
 @docs characterCounter
@@ -576,6 +574,8 @@ notchedOutlineNotchElt config =
     Html.div [ class "mdc-notched-outline__notch" ] [ labelElt config ]
 
 
+{-| Character counter view function
+-}
 characterCounter : List (Html.Attribute msg) -> Html msg
 characterCounter additionalAttributes =
     Html.div (characterCounterCs :: additionalAttributes) []

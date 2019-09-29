@@ -25,6 +25,8 @@ pages: distclean node_modules
 
 
 release: distclean node_modules
+	(cd demo && make)
+	(cd examples/simple-counter && make)
 	mkdir -p dist
 	webpack --mode=production
 	cp node_modules/material-components-web/dist/material-components-web.min.css dist

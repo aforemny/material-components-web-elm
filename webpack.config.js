@@ -2,6 +2,7 @@ const path = require("path");
 
 module.exports =
   [
+    /*
     "button",
     "card",
     "checkbox",
@@ -19,7 +20,6 @@ module.exports =
     "linear-progress",
     "list",
     "list-item",
-    "material-components-elm",
     "menu",
     "radio",
     "ripple",
@@ -30,6 +30,8 @@ module.exports =
     "tab-bar",
     "text-field",
     "top-app-bar",
+    */
+    "material-components-elm",
   ].map(name => ({
     entry: `./src/${name}.js`,
     output: {

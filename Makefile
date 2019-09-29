@@ -8,6 +8,7 @@ build: node_modules
 	cp dist/material-components-web-elm.min.js gh-pages
 	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-web-elm.min.css
 
+
 docs: node_modules
 	elm-doc-preview
 
@@ -20,6 +21,7 @@ pages: distclean node_modules
 	cp demo/page.html gh-pages/index.html
 	cp demo/demo.js gh-pages
 	cp dist/material-components-web-elm.min.js gh-pages
+	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-web-elm.min.css
 	cp node_modules/material-components-web/dist/material-components-web.min.css gh-pages/material-components-web-elm.min.css
 	(cd gh-pages && git add . && git commit -m 'Update' && git push)
 

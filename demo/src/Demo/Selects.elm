@@ -8,7 +8,6 @@ import Html.Attributes
 import Html.Events
 import Material.List exposing (list, listConfig, listItem, listItemConfig)
 import Material.Select exposing (SelectOption, filledSelect, outlinedSelect, selectConfig, selectOption, selectOptionConfig)
-import Material.Select.Enhanced exposing (enhancedSelectConfig, filledEnhancedSelect, outlinedEnhancedSelect, selectItem, selectItemConfig)
 import Material.Typography as Typography
 
 
@@ -27,7 +26,6 @@ defaultModel =
 
 type Msg
     = SetValue String
-    | SetEnhancedValue String
 
 
 update : Msg -> Model -> Model
@@ -35,9 +33,6 @@ update msg model =
     case msg of
         SetValue value ->
             { model | value = value }
-
-        SetEnhancedValue value ->
-            { model | enhancedValue = value }
 
 
 view : Model -> CatalogPage Msg
@@ -51,19 +46,13 @@ view model =
         }
     , hero = [ heroSelects model ]
     , content =
-        [ Html.div selectRow
-            [ filledSelects model
-            , enhancedFilledSelects model
-            ]
+        [ Html.div selectRow [ filledSelects model ]
         , Html.h3 [ Typography.subtitle1 ] [ text "Outlined" ]
-        , Html.div selectRow
-            [ outlinedSelects model ]
+        , Html.div selectRow [ outlinedSelects model ]
         , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Filled" ]
-        , Html.div selectRow
-            [ shapedFilledSelects model ]
+        , Html.div selectRow [ shapedFilledSelects model ]
         , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Outlined (TODO)" ]
-        , Html.div selectRow
-            [ shapedOutlinedSelects model ]
+        , Html.div selectRow [ shapedOutlinedSelects model ]
         ]
     }
 
@@ -89,28 +78,6 @@ filledSelects model =
                 , additionalAttributes = marginRight
             }
             items
-        ]
-
-
-enhancedFilledSelects : Model -> Html Msg
-enhancedFilledSelects model =
-    let
-        selectItemConfig_ value =
-            { selectItemConfig
-                | activated = model.enhancedValue == value
-                , onClick = Just (SetEnhancedValue value)
-            }
-    in
-    Html.div []
-        [ Html.h3 [ Typography.subtitle1 ] [ text "Filled Enhanced" ]
-        , filledEnhancedSelect { enhancedSelectConfig | label = "Fruit" }
-            [ list listConfig
-                [ selectItem (selectItemConfig_ "") [ text "" ]
-                , selectItem (selectItemConfig_ "Apple") [ text "Apple" ]
-                , selectItem (selectItemConfig_ "Orange") [ text "Orange" ]
-                , selectItem (selectItemConfig_ "Banana") [ text "Banana" ]
-                ]
-            ]
         ]
 
 

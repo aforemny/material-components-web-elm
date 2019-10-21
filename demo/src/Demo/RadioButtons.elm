@@ -49,9 +49,9 @@ view model =
     { title = "Radio Button"
     , prelude = "Buttons communicate an action a user can take. They are typically placed throughout your UI, in places like dialogs, forms, cards, and toolbars."
     , resources =
-        { materialDesignGuidelines = Just "https://material.io/go/design-buttons"
-        , documentation = Just "https://material.io/components/web/catalog/buttons/"
-        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-button"
+        { materialDesignGuidelines = Just "https://material.io/go/design-radio-buttons"
+        , documentation = Just "https://material.io/components/web/catalog/input-controls/radio-buttons/"
+        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-radio"
         }
     , hero = [ heroRadioGroup model ]
     , content =

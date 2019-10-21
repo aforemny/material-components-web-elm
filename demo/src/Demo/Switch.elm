@@ -50,7 +50,7 @@ view model =
     , prelude = "Switches communicate an action a user can take. They are typically placed throughout your UI, in places like dialogs, forms, cards, and toolbars."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-switches"
-        , documentation = Just "https://material.io/components/web/catalog/input-controls/switches/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Switch"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-switch"
         }
     , hero = heroSwitch model

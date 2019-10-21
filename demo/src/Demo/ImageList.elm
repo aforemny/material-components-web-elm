@@ -32,7 +32,7 @@ view model =
     , prelude = "Image lists display a collection of images in an organized grid."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-image-list"
-        , documentation = Just "https://material.io/components/web/catalog/image-lists/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-ImageList"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-image-list"
         }
     , hero =

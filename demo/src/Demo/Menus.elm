@@ -42,7 +42,7 @@ view model =
     , prelude = "Menus display a list of choices on a transient sheet of material."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-menus"
-        , documentation = Just "https://material.io/components/web/catalog/menus/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Menu"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu"
         }
     , hero = [ heroMenu model ]

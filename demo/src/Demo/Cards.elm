@@ -36,7 +36,7 @@ view model =
     , prelude = "Cards contain content and actions about a single subject."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-cards"
-        , documentation = Just "https://material.io/components/web/catalog/cards/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Card"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-card"
         }
     , hero = heroCard

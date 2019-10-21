@@ -41,7 +41,7 @@ view model =
     , prelude = "Selects allow users to select from a single-option menu. It functions as a wrapper around the browser's native <select> element."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-text-fields"
-        , documentation = Just "https://material.io/components/web/catalog/input-controls/select-menus/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Select"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-select"
         }
     , hero = [ heroSelects model ]

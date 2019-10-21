@@ -42,7 +42,7 @@ view model =
     , prelude = "Material design’s responsive UI is based on a 12-column grid layout."
     , resources =
         { materialDesignGuidelines = Nothing
-        , documentation = Just "https://material.io/components/web/catalog/layout-grid/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-LayoutGrid"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-layout-grid"
         }
     , hero = heroGrid

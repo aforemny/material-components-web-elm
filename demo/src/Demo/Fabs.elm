@@ -33,7 +33,7 @@ view model =
     , prelude = "Floating action buttons represents the primary action in an application. Only one floating action button is recommended per screen to represent the most common action."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-fab"
-        , documentation = Just "https://material.io/components/web/catalog/buttons/floating-action-buttons/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Fab"
         , sourceCode = Just "https://github.com/material-components/material-components-web/blob/master/packages/mdc-fab/"
         }
     , hero = [ fab fabConfig "favorite_border" ]

@@ -33,7 +33,7 @@ view model =
     , prelude = "Color in Material Design is inspired by bold hues juxtaposed with muted environments, deep shadows, and bright highlights."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-color-theming"
-        , documentation = Just "https://material.io/components/web/catalog/theme/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Theme"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme"
         }
     , hero =

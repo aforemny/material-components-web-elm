@@ -31,7 +31,7 @@ view model =
     , prelude = "Roboto is the standard typeface on Android and Chrome."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-typography"
-        , documentation = Just "https://material.io/components/web/catalog/typography/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Typography"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-typography"
         }
     , hero = [ Html.h1 [ Typography.headline1 ] [ text "Typography" ] ]

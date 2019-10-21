@@ -33,7 +33,7 @@ view model =
     , prelude = "Ripples are visual representations used to communicate the status of a component or interactive element."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-states"
-        , documentation = Just "https://material.io/components/web/catalog/ripples/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Ripple"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-ripple"
         }
     , hero = [ Html.div demoBox [ ripple rippleConfig, text "Click here!" ] ]

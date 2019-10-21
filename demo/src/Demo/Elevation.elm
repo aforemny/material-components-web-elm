@@ -32,7 +32,7 @@ view model =
     , prelude = "Elevation is the relative depth, or distance, between two surfaces along the z-axis."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-elevation"
-        , documentation = Just "https://material.io/components/web/catalog/elevation/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Elevation"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-elevation"
         }
     , hero = heroElevation

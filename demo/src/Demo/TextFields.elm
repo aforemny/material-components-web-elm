@@ -39,7 +39,7 @@ view model =
     , prelude = "Text fields allow users to input, edit, and select text. Text fields typically reside in forms but can appear in other places, like dialog boxes and search."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-text-fields"
-        , documentation = Just "https://material.io/components/web/catalog/input-controls/text-field/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-TextField"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield"
         }
     , hero = [ heroTextFields model ]

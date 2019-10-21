@@ -67,7 +67,7 @@ view model =
     , prelude = "Lists present multiple line items vertically as a single continuous element."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-lists"
-        , documentation = Just "https://material.io/components/web/catalog/lists/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-List"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-list"
         }
     , hero = heroList

@@ -85,7 +85,7 @@ view model =
     , prelude = "Snackbars provide brief feedback about an operation through a message at the bottom of the screen."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-snackbar"
-        , documentation = Just "https://material.io/components/web/catalog/snackbars/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Snackbar"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-snackbar"
         }
     , hero = [ heroMessage ]

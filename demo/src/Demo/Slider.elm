@@ -46,7 +46,7 @@ view model =
     , prelude = "Sliders let users select from a range of values by moving the slider thumb."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-sliders"
-        , documentation = Just "https://material.io/components/web/catalog/input-controls/sliders/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Slider"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-slider"
         }
     , hero = [ heroSlider model ]

@@ -58,7 +58,7 @@ view model =
     , prelude = "Tabs organize and allow navigation between groups of content that are related and at the same level of hierarchy. The Tab Bar contains the Tab Scroller and Tab components."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-tabs"
-        , documentation = Just "https://material.io/components/web/catalog/tabs/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-TabBar"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-bar"
         }
     , hero = [ heroTabs model "tabs-hero-tabs" ]

@@ -32,7 +32,7 @@ view model =
     , prelude = "Progress indicators display the length of a process or express an unspecified wait time."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-progress-indicators"
-        , documentation = Just "https://material.io/components/web/catalog/linear-progress/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-LinearProgress"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-linear-progress"
         }
     , hero = [ determinateLinearProgress linearProgressConfig { progress = 0.5 } ]

@@ -49,7 +49,7 @@ view model =
     , prelude = "Icons are appropriate for buttons that allow a user to take actions or make a selection, such as adding or removing a star to an item."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/design/components/buttons.html#toggle-button"
-        , documentation = Just "https://material.io/components/web/catalog/buttons/icon-buttons/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-IconButton"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-icon-button"
         }
     , hero =

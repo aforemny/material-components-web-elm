@@ -44,7 +44,7 @@ view model =
     , prelude = "Top App Bars are a container for items such as application title, navigation icon, and action items."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-app-bar-top"
-        , documentation = Just "https://material.io/components/web/catalog/top-app-bar/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-TopAppBar"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-top-app-bar"
         }
     , hero =

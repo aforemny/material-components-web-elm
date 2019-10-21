@@ -40,7 +40,7 @@ view model =
     , prelude = "The navigation drawer slides in from the left and contains the navigation destinations for your app."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-navigation-drawer"
-        , documentation = Just "https://material.io/components/web/catalog/drawers/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Drawer"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-drawer"
         }
     , hero = heroDrawer

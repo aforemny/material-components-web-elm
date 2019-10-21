@@ -45,7 +45,7 @@ view model =
     , prelude = "Dialogs inform users about a specific task and may contain critical information, require decisions, or involve multiple tasks."
     , resources =
         { materialDesignGuidelines = Just "https://material.io/go/design-dialogs"
-        , documentation = Just "https://material.io/components/web/catalog/dialogs/"
+        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Dialog"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-dialog"
         }
     , hero = heroDialog

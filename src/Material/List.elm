@@ -32,6 +32,7 @@ module Material.List exposing
       - [Disabled List Item](#disabled-list-item)
       - [Selected List Item](#selected-list-item)
       - [Activated List Item](#activated-list-item)
+      - [Link List Item](#link-list-item)
       - [List Item Divider](#list-item-divider)
 
 
@@ -227,6 +228,16 @@ List items may be disabled by setting their `activated` configuration field to
         [ text "List item" ]
 
 
+## Link List Item
+
+List items may specify the `href` attribute in which case the list item
+essentially behaves like a HTML `a` element. You may specify the configuration
+`target` target as well.
+
+    listItem [ href "https://elm-lang.org" ]
+        [ text "Elm programming language" ]
+
+
 ## List Item Divider
 
 List items may be seperated by a divider. The divider may optionally be `inset`
@@ -340,6 +351,8 @@ type alias ListItemConfig msg =
     { disabled : Bool
     , selected : Bool
     , activated : Bool
+    , href : Maybe String
+    , target : Maybe String
     , additionalAttributes : List (Html.Attribute msg)
     , onClick : Maybe msg
     }
@@ -352,6 +365,8 @@ listItemConfig =
     { disabled = False
     , selected = False
     , activated = False
+    , href = Nothing
+    , target = Nothing
     , additionalAttributes = []
     , onClick = Nothing
     }
@@ -361,18 +376,38 @@ listItemConfig =
 -}
 listItem : ListItemConfig msg -> List (Html msg) -> Html msg
 listItem config nodes =
-    Html.node "mdc-list-item"
-        (List.filterMap identity
-            [ listItemCs
-            , disabledCs config
-            , selectedCs config
-            , activatedCs config
-            , ariaSelectedAttr config
-            , clickHandler config
+    if config.href /= Nothing then
+        Html.node "mdc-list-item"
+            []
+            [ Html.a
+                (List.filterMap identity
+                    [ listItemCs
+                    , hrefAttr config
+                    , targetAttr config
+                    , disabledCs config
+                    , selectedCs config
+                    , activatedCs config
+                    , ariaSelectedAttr config
+                    , clickHandler config
+                    ]
+                    ++ config.additionalAttributes
+                )
+                nodes
             ]
-            ++ config.additionalAttributes
-        )
-        nodes
+
+    else
+        Html.node "mdc-list-item"
+            (List.filterMap identity
+                [ listItemCs
+                , disabledCs config
+                , selectedCs config
+                , activatedCs config
+                , ariaSelectedAttr config
+                , clickHandler config
+                ]
+                ++ config.additionalAttributes
+            )
+            nodes
 
 
 listItemCs : Maybe (Html.Attribute msg)
@@ -414,6 +449,16 @@ ariaSelectedAttr { selected, activated } =
 
     else
         Nothing
+
+
+hrefAttr : ListItemConfig msg -> Maybe (Html.Attribute msg)
+hrefAttr { href } =
+    Maybe.map Html.Attributes.href href
+
+
+targetAttr : ListItemConfig msg -> Maybe (Html.Attribute msg)
+targetAttr { target } =
+    Maybe.map Html.Attributes.target target
 
 
 clickHandler : ListItemConfig msg -> Maybe (Html.Attribute msg)

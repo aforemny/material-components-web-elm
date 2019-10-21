@@ -111,7 +111,11 @@ view lift catalogPageConfig catalogPage =
 resourcesList : CatalogPageResources -> Html msg
 resourcesList { materialDesignGuidelines, documentation, sourceCode } =
     list listConfig
-        [ listItem listItemConfig
+        [ listItem
+            { listItemConfig
+                | href = materialDesignGuidelines
+                , target = Just "_blank"
+            }
             [ listItemGraphic resourcesGraphic
                 [ Html.img
                     (Html.Attributes.src "images/ic_material_design_24px.svg"
@@ -121,7 +125,11 @@ resourcesList { materialDesignGuidelines, documentation, sourceCode } =
                 ]
             , text "Material Design Guidelines"
             ]
-        , listItem listItemConfig
+        , listItem
+            { listItemConfig
+                | href = documentation
+                , target = Just "_blank"
+            }
             [ listItemGraphic resourcesGraphic
                 [ Html.img
                     (Html.Attributes.src "images/ic_drive_document_24px.svg"
@@ -131,7 +139,11 @@ resourcesList { materialDesignGuidelines, documentation, sourceCode } =
                 ]
             , text "Documentation"
             ]
-        , listItem listItemConfig
+        , listItem
+            { listItemConfig
+                | href = sourceCode
+                , target = Just "_blank"
+            }
             [ listItemGraphic resourcesGraphic
                 [ Html.img
                     (Html.Attributes.src "images/ic_code_24px.svg"

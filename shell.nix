@@ -1,4 +1,7 @@
 { pkgs ? import <nixpkgs> {} }:
+let
+  elmPackages = (import <nixos-unstable> {}).elmPackages;
+in
 with pkgs;
 with stdenv;
 mkDerivation {

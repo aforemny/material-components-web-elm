@@ -34,7 +34,6 @@ type alias CatalogPageConfig topMsg =
     , closeDrawer : topMsg
     , drawerOpen : Bool
     , url : Url
-    , navigate : Url -> topMsg
     }
 
 
@@ -83,7 +82,7 @@ view lift catalogPageConfig catalogPage =
                                 listItem
                                     { listItemConfig
                                         | activated = catalogPageConfig.url == url
-                                        , onClick = Just (catalogPageConfig.navigate url)
+                                        , href = Just (Url.toString url)
                                     }
                                     [ text label ]
                             )

@@ -138,7 +138,6 @@ type Msg
     = NoOp
     | UrlChanged Url.Url
     | UrlRequested Browser.UrlRequest
-    | Navigate Demo.Url.Url
     | OpenCatalogDrawer
     | CloseCatalogDrawer
     | ButtonsMsg Demo.Buttons.Msg
@@ -205,9 +204,6 @@ update msg model =
               else
                 Cmd.none
             )
-
-        Navigate url ->
-            ( model, Browser.Navigation.load (Demo.Url.toString url) )
 
         OpenCatalogDrawer ->
             ( { model | catalogDrawerOpen = True }, Cmd.none )
@@ -391,7 +387,6 @@ body model =
             , closeDrawer = CloseCatalogDrawer
             , drawerOpen = model.catalogDrawerOpen
             , url = model.url
-            , navigate = Navigate
             }
     in
     case model.url of

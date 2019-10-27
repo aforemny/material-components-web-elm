@@ -195,7 +195,8 @@ demoPanel =
 
 demoContent : List (Html.Attribute msg)
 demoContent =
-    [ Html.Attributes.style "height" "100%"
+    [ Html.Attributes.id "demo-content"
+    , Html.Attributes.style "height" "100%"
     , Html.Attributes.style "-webkit-box-sizing" "border-box"
     , Html.Attributes.style "box-sizing" "border-box"
     , Html.Attributes.style "max-width" "100%"

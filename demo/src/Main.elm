@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Browser
+import Browser.Dom
 import Browser.Navigation
 import Demo.Buttons
 import Demo.Cards
@@ -46,6 +47,7 @@ import Html.Attributes
 import Material.TopAppBar as TopAppBar exposing (topAppBarConfig)
 import Material.Typography as Typography
 import Platform.Cmd exposing (..)
+import Task
 import Url
 
 
@@ -133,7 +135,8 @@ defaultModel key =
 
 
 type Msg
-    = UrlChanged Url.Url
+    = NoOp
+    | UrlChanged Url.Url
     | UrlRequested Browser.UrlRequest
     | Navigate Demo.Url.Url
     | OpenCatalogDrawer
@@ -177,6 +180,9 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
         UrlRequested (Browser.Internal url) ->
             ( model, Browser.Navigation.load (Demo.Url.toString (Demo.Url.fromUrl url)) )
 
@@ -193,7 +199,11 @@ update msg model =
                     else
                         False
               }
-            , Cmd.none
+            , if Demo.Url.fromUrl url /= model.url then
+                Task.attempt (\_ -> NoOp) (Browser.Dom.setViewportOf "demo-content" 0 0)
+
+              else
+                Cmd.none
             )
 
         Navigate url ->

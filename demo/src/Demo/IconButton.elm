@@ -67,7 +67,7 @@ view model =
         , iconButton
             { iconButtonConfig | onClick = Just (Toggle "icon-button") }
             "wifi"
-        , Html.h3 [ Typography.subtitle1 ] [ text "Icon Button" ]
+        , Html.h3 [ Typography.subtitle1 ] [ text "Icon Toggle" ]
         , iconToggle
             { iconToggleConfig
                 | on = isOn "icon-button-toggle" model

@@ -17,7 +17,11 @@ class MdcListItem extends HTMLElement {
   }
 
   connectedCallback() {
-    this.ripple_ = new MDCRipple(this);
+    if (this.classList.contains("mdc-list-item")) {
+      this.ripple_ = new MDCRipple(this);
+    } else {
+      this.ripple_ = new MDCRipple(this.querySelector(".mdc-list-item"));
+    }
   }
 
   disconnectedCallback() {

@@ -130,7 +130,9 @@ class MdcDrawer extends HTMLElement {
       this.foundation_.close();
     }
 
-    this.foundation_.destroy();
+    if (this.foundation_) {
+      this.foundation_.destroy();
+    }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {

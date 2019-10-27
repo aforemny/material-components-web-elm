@@ -194,7 +194,8 @@ listItemElt ({ masonry } as config_) ((ImageListItem { config }) as listItem) =
             , supportingElt listItem
             ]
     in
-    Html.li (class "mdc-image-list__item" :: config.additionalAttributes)
+    Html.node "mdc-image-list-item"
+        (class "mdc-image-list__item" :: config.additionalAttributes)
         (config.href
             |> Maybe.map (\href -> [ Html.a [ Html.Attributes.href href ] inner ])
             |> Maybe.withDefault inner
@@ -202,20 +203,32 @@ listItemElt ({ masonry } as config_) ((ImageListItem { config }) as listItem) =
 
 
 imageAspectContainerElt : ImageListConfig msg -> ImageListItem msg -> Html msg
-imageAspectContainerElt config listItem =
+imageAspectContainerElt config_ ((ImageListItem { config }) as listItem) =
     Html.div
-        [ class "mdc-image-list__image-aspect-container" ]
-        [ imageElt config listItem ]
+        (List.filterMap identity
+            [ Just (class "mdc-image-list__image-aspect-container")
+            , Maybe.map (\_ -> class "mdc-ripple-surface") config.href
+            ]
+        )
+        [ imageElt config_ listItem ]
 
 
 imageElt : ImageListConfig msg -> ImageListItem msg -> Html msg
-imageElt { masonry } (ImageListItem { image }) =
+imageElt { masonry } (ImageListItem { config, image }) =
+    let
+        img =
+            Html.img
+                [ class "mdc-image-list__image"
+                , Html.Attributes.src image
+                ]
+                []
+    in
     if masonry then
-        Html.img
-            [ class "mdc-image-list__image"
-            , Html.Attributes.src image
-            ]
-            []
+        if config.href /= Nothing then
+            Html.div [ class "mdc-ripple-surface" ] [ img ]
+
+        else
+            img
 
     else
         Html.div

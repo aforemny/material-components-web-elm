@@ -14,6 +14,7 @@ import "./form-field";
 import "./icon";
 import "./icon-button";
 import "./image-list";
+import "./image-list-item";
 import "./layout-grid";
 import "./linear-progress";
 import "./list";

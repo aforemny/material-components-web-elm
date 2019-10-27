@@ -14,10 +14,18 @@ web](https://github.com/material-components/material-components-web) (MDC Web).
 
 ## Quick start
 
+You should [compile your Elm program to
+JavaScript](https://guide.elm-lang.org/install/elm.html#elm-make) and embed it
+in a custom HTML document. From your HTML document, you have to include the
+following assets to use this library.
+
+Please make sure that the last two assets match this library's version (ie.
+1.0.1) exactly.
+
 ```html
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/material-components-web-elm@latest/dist/material-components-web-elm.min.css">
-<script src="https://unpkg.com/material-components-web-elm@latest/dist/material-components-web-elm.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/material-components-web-elm@1.0.1/dist/material-components-web-elm.min.css">
+<script src="https://unpkg.com/material-components-web-elm@1.0.1/dist/material-components-web-elm.min.js"></script>
 ```
 
 Refer to the [simple counter

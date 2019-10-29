@@ -4,7 +4,7 @@ import "@webcomponents/custom-elements";
 import "./button/custom-element";
 import "./card/custom-element";
 import "./checkbox/custom-element";
-import "./chip";
+import "./chip/custom-element";
 import "./chip-set/custom-element";
 import "./dialog";
 import "./drawer";

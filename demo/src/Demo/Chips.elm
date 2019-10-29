@@ -29,7 +29,7 @@ defaultModel =
 
 
 type Msg
-    = ToggleChip ChipType String
+    = ChipClicked ChipType String
 
 
 type ChipType
@@ -41,7 +41,7 @@ type ChipType
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        ToggleChip chipType index ->
+        ChipClicked chipType index ->
             case chipType of
                 Choice ->
                     { model
@@ -110,7 +110,7 @@ choiceChips model =
             choiceChip
                 { choiceChipConfig
                     | selected = Just index == model.choiceChip
-                    , onClick = Just (ToggleChip Choice index)
+                    , onClick = Just (ChipClicked Choice index)
                 }
                 label
     in
@@ -130,7 +130,7 @@ filterChips1 model =
             filterChip
                 { filterChipConfig
                     | selected = Set.member index model.selectedChips
-                    , onClick = Just (ToggleChip Filter index)
+                    , onClick = Just (ChipClicked Filter index)
                 }
                 label
     in
@@ -150,7 +150,7 @@ filterChips2 model =
                 { filterChipConfig
                     | selected = Set.member index model.selectedChips
                     , icon = Just "face"
-                    , onClick = Just (ToggleChip Filter index)
+                    , onClick = Just (ChipClicked Filter index)
                 }
                 label
     in
@@ -166,12 +166,7 @@ actionChips : Model -> Html Msg
 actionChips model =
     let
         chip index ( icon, label ) =
-            choiceChip
-                { choiceChipConfig
-                    | icon = Just icon
-                    , onClick = Just (ToggleChip Action index)
-                }
-                label
+            choiceChip { choiceChipConfig | icon = Just icon } label
     in
     choiceChipSet []
         [ chip "chips-action-chips-add-to-calendar" ( "event", "Add to calendar" )

@@ -117,6 +117,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 import Svg
 import Svg.Attributes
 
@@ -167,7 +168,7 @@ choiceChip config label =
                 [ chipRootCs
 
                 -- , selectedCs config
-                , selectedAttr config
+                , selectedProp config
                 , clickHandler config
                 ]
                 ++ config.additionalAttributes
@@ -189,13 +190,9 @@ selectedCs { selected } =
         Nothing
 
 
-selectedAttr : { chipConfig | selected : Bool } -> Maybe (Html.Attribute msg)
-selectedAttr { selected } =
-    if selected then
-        Just (Html.Attributes.attribute "selected" "")
-
-    else
-        Nothing
+selectedProp : { chipConfig | selected : Bool } -> Maybe (Html.Attribute msg)
+selectedProp { selected } =
+    Just (Html.Attributes.property "selected" (Encode.bool selected))
 
 
 clickHandler : { chipConfig | onClick : Maybe msg } -> Maybe (Html.Attribute msg)
@@ -254,7 +251,7 @@ filterChip config label =
                 [ chipRootCs
 
                 -- , selectedCs config
-                , selectedAttr config
+                , selectedProp config
                 , clickHandler config
                 ]
                 ++ config.additionalAttributes
@@ -380,7 +377,7 @@ inputChip config label =
 trailingIconClickHandler : InputChipConfig msg -> Maybe (Html.Attribute msg)
 trailingIconClickHandler config =
     Maybe.map (Html.Events.on "MDCChip:trailingIconInteraction" << Decode.succeed)
-        config.onClick
+        config.onTrailingIconClick
 
 
 trailingIconElt : InputChipConfig msg -> Html msg

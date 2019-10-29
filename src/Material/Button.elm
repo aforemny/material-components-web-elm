@@ -99,6 +99,7 @@ configuration field to `True`.
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
+import Json.Encode as Encode
 
 
 {-| Configuration of a button
@@ -140,7 +141,8 @@ button variant config label =
             [ rootCs
             , variantCs variant
             , denseCs config
-            , disabledAttr config
+            , disabledProp config
+            , tabIndexProp config
             , clickHandler config
             ]
             ++ config.additionalAttributes
@@ -186,9 +188,18 @@ rootCs =
     Just (class "mdc-button")
 
 
-disabledAttr : ButtonConfig msg -> Maybe (Html.Attribute msg)
-disabledAttr { disabled } =
-    Just (Html.Attributes.disabled disabled)
+disabledProp : ButtonConfig msg -> Maybe (Html.Attribute msg)
+disabledProp { disabled } =
+    Just (Html.Attributes.property "disabled" (Encode.bool disabled))
+
+
+tabIndexProp : ButtonConfig msg -> Maybe (Html.Attribute msg)
+tabIndexProp { disabled } =
+    if disabled then
+        Just (Html.Attributes.property "tabIndex" (Encode.int -1))
+
+    else
+        Just (Html.Attributes.property "tabIndex" (Encode.int 0))
 
 
 clickHandler : ButtonConfig msg -> Maybe (Html.Attribute msg)

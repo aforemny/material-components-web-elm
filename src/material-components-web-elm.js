@@ -1,7 +1,7 @@
 import "custom-event-polyfill";
 import "@webcomponents/custom-elements";
 
-import "./button";
+import "./button/custom-element";
 import "./card";
 import "./checkbox/custom-element";
 import "./chip";

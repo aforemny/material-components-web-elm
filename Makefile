@@ -1,5 +1,6 @@
 build: node_modules
 	mkdir -p gh-pages
+	tsc --project ./tsconfig.json --module esnext --importHelpers
 	webpack --mode=development
 	(cd demo && make)
 	rsync --delete -r demo/images gh-pages

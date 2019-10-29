@@ -28,13 +28,13 @@ defaultModel =
 
 
 type Msg
-    = Click String
+    = Changed String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Click index ->
+        Changed index ->
             let
                 checkboxes =
                     Dict.update index
@@ -87,7 +87,7 @@ controlledCheckbox index model additionalAttributes =
     checkbox
         { checkboxConfig
             | state = state
-            , onClick = Just (Click index)
+            , onChange = Just (Changed index)
             , additionalAttributes = additionalAttributes
         }
 

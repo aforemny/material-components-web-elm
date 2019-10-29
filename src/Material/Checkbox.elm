@@ -39,7 +39,7 @@ Note that checkboxes are usually used in conjunction with form fields. Refer to
         checkbox
             { checkboxConfig
                 | state = Checkbox.Unchecked
-                , onClick = Just CheckboxClicked
+                , onChange = Just CheckboxClicked
             }
 
 
@@ -89,7 +89,7 @@ type alias CheckboxConfig msg =
     { state : CheckboxState
     , disabled : Bool
     , additionalAttributes : List (Html.Attribute msg)
-    , onClick : Maybe msg
+    , onChange : Maybe msg
     }
 
 
@@ -100,7 +100,7 @@ checkboxConfig =
     { state = Unchecked
     , disabled = False
     , additionalAttributes = []
-    , onClick = Nothing
+    , onChange = Nothing
     }
 
 
@@ -118,8 +118,9 @@ checkbox config =
     Html.node "mdc-checkbox"
         (List.filterMap identity
             [ rootCs
-            , stateAttr config
-            , disabledAttr config
+            , checkedProp config
+            , indeterminateProp config
+            , disabledProp config
             ]
             ++ config.additionalAttributes
         )
@@ -133,35 +134,43 @@ rootCs =
     Just (class "mdc-checkbox")
 
 
-disabledAttr : CheckboxConfig msg -> Maybe (Html.Attribute msg)
-disabledAttr { disabled } =
-    if disabled then
-        Just (Html.Attributes.attribute "disabled" "")
-
-    else
-        Nothing
+checkedProp : CheckboxConfig msg -> Maybe (Html.Attribute msg)
+checkedProp { state } =
+    Just (Html.Attributes.property "checked" (Encode.bool (state == Checked)))
 
 
-stateAttr : CheckboxConfig msg -> Maybe (Html.Attribute msg)
-stateAttr { state } =
-    Just <|
-        Html.Attributes.attribute "state" <|
-            case state of
-                Checked ->
-                    "checked"
-
-                Unchecked ->
-                    "unchecked"
-
-                Indeterminate ->
-                    "indeterminate"
+indeterminateProp : CheckboxConfig msg -> Maybe (Html.Attribute msg)
+indeterminateProp { state } =
+    Just (Html.Attributes.property "indeterminate" (Encode.bool (state == Indeterminate)))
 
 
-clickHandler : CheckboxConfig msg -> Maybe (Html.Attribute msg)
-clickHandler { onClick } =
+disabledProp : CheckboxConfig msg -> Maybe (Html.Attribute msg)
+disabledProp { disabled } =
+    Just (Html.Attributes.property "disabled" (Encode.bool disabled))
+
+
+changeHandler : CheckboxConfig msg -> Maybe (Html.Attribute msg)
+changeHandler { state, onChange } =
+    -- Note: MDCList choses to send a change event to all checkboxes, thus we
+    -- have to check here if the state actually changed.
     Maybe.map
-        (\msg -> Html.Events.preventDefaultOn "click" (Decode.succeed ( msg, True )))
-        onClick
+        (\msg ->
+            Html.Events.on "change"
+                (Decode.at [ "target", "checked" ] Decode.bool
+                    |> Decode.andThen
+                        (\checked ->
+                            if
+                                (checked && state /= Checked)
+                                    || (not checked && state /= Unchecked)
+                            then
+                                Decode.succeed msg
+
+                            else
+                                Decode.fail ""
+                        )
+                )
+        )
+        onChange
 
 
 nativeControlElt : CheckboxConfig msg -> Html msg
@@ -170,7 +179,8 @@ nativeControlElt config =
         (List.filterMap identity
             [ Just (Html.Attributes.type_ "checkbox")
             , Just (class "mdc-checkbox__native-control")
-            , clickHandler config
+            , checkedProp config
+            , changeHandler config
             ]
         )
         []

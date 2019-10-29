@@ -279,7 +279,7 @@ listWithTrailingCheckbox model =
         checkbox_ index =
             checkbox
                 { checkboxConfig
-                    | onClick = Just (ToggleCheckbox index)
+                    | onChange = Just (ToggleCheckbox index)
                     , state =
                         if Set.member index model.checkboxIndices then
                             Checkbox.Checked

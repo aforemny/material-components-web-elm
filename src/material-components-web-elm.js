@@ -3,7 +3,7 @@ import "@webcomponents/custom-elements";
 
 import "./button";
 import "./card";
-import "./checkbox";
+import "./checkbox/custom-element";
 import "./chip";
 import "./chip-set";
 import "./dialog";

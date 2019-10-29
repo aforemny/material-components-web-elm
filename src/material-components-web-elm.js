@@ -7,7 +7,7 @@ import "./checkbox/custom-element";
 import "./chip/custom-element";
 import "./chip-set/custom-element";
 import "./dialog/custom-element";
-import "./drawer";
+import "./drawer/custom-element";
 import "./fab";
 import "./form-field";
 import "./icon";

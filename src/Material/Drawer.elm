@@ -100,6 +100,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 
 
 {-| Configuration of a permanent drawer
@@ -122,6 +123,7 @@ permanentDrawerConfig =
 type alias DismissibleDrawerConfig msg =
     { open : Bool
     , additionalAttributes : List (Html.Attribute msg)
+    , onClose : Maybe msg
     }
 
 
@@ -131,6 +133,7 @@ dismissibleDrawerConfig : DismissibleDrawerConfig msg
 dismissibleDrawerConfig =
     { open = False
     , additionalAttributes = []
+    , onClose = Nothing
     }
 
 
@@ -167,7 +170,7 @@ modalDrawerConfig =
 -}
 permanentDrawer : PermanentDrawerConfig msg -> List (Html msg) -> Html msg
 permanentDrawer config nodes =
-    Html.node "mdc-drawer"
+    Html.node "div"
         (List.filterMap identity [ rootCs ] ++ config.additionalAttributes)
         nodes
 
@@ -189,7 +192,8 @@ dismissibleDrawer config nodes =
         (List.filterMap identity
             [ rootCs
             , dismissibleCs
-            , openAttr config
+            , openProp config
+            , closeHandler config
             ]
             ++ config.additionalAttributes
         )
@@ -216,7 +220,7 @@ modalDrawer config nodes =
         (List.filterMap identity
             [ rootCs
             , modalCs
-            , openAttr config
+            , openProp config
             , closeHandler config
             ]
             ++ config.additionalAttributes
@@ -276,16 +280,12 @@ dismissibleCs =
     Just (class "mdc-drawer--dismissible")
 
 
-openAttr : { config | open : Bool } -> Maybe (Html.Attribute msg)
-openAttr { open } =
-    if open then
-        Just (Html.Attributes.attribute "open" "")
-
-    else
-        Nothing
+openProp : { config | open : Bool } -> Maybe (Html.Attribute msg)
+openProp { open } =
+    Just (Html.Attributes.property "open" (Encode.bool open))
 
 
-closeHandler : ModalDrawerConfig msg -> Maybe (Html.Attribute msg)
+closeHandler : { config | onClose : Maybe msg } -> Maybe (Html.Attribute msg)
 closeHandler { onClose } =
     Maybe.map (Html.Events.on "MDCDrawer:close" << Decode.succeed) onClose
 

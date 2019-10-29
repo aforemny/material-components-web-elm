@@ -33,6 +33,7 @@ defaultModel =
 
 type Msg
     = ToggleDrawer
+    | CloseDrawer
     | SetSelectedIndex Int
 
 
@@ -42,6 +43,9 @@ update msg model =
         ToggleDrawer ->
             { model | drawerOpen = not model.drawerOpen }
 
+        CloseDrawer ->
+            { model | drawerOpen = False }
+
         SetSelectedIndex index ->
             { model | selectedIndex = index }
 
@@ -50,7 +54,11 @@ view : Model -> DrawerPage Msg
 view model =
     { title = "Dismissible Drawer"
     , drawer =
-        dismissibleDrawer { dismissibleDrawerConfig | open = model.drawerOpen }
+        dismissibleDrawer
+            { dismissibleDrawerConfig
+                | open = model.drawerOpen
+                , onClose = Just CloseDrawer
+            }
             (DrawerPage.drawerBody SetSelectedIndex model.selectedIndex)
     , onMenuClick = Just ToggleDrawer
     , scrim = Nothing

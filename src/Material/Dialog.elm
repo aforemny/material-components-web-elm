@@ -60,6 +60,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 
 
 {-| Configuration of a dialog
@@ -97,7 +98,7 @@ dialog config content =
     Html.node "mdc-dialog"
         (List.filterMap identity
             [ rootCs
-            , openAttr config
+            , openProp config
             , roleAttr
             , ariaModalAttr
             , closeHandler config
@@ -113,13 +114,9 @@ rootCs =
     Just (class "mdc-dialog")
 
 
-openAttr : DialogConfig msg -> Maybe (Html.Attribute msg)
-openAttr { open } =
-    if open then
-        Just (Html.Attributes.attribute "open" "")
-
-    else
-        Nothing
+openProp : DialogConfig msg -> Maybe (Html.Attribute msg)
+openProp { open } =
+    Just (Html.Attributes.property "open" (Encode.bool open))
 
 
 roleAttr : Maybe (Html.Attribute msg)

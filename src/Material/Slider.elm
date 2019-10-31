@@ -89,13 +89,13 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 import Svg
 import Svg.Attributes
 
 
 
 -- TODO: Prevent FOUC
--- TODO: Default values for min, max, step
 
 
 {-| Configuration of a slider
@@ -105,7 +105,7 @@ type alias SliderConfig msg =
     , displayMarkers : Bool
     , min : Float
     , max : Float
-    , step : Maybe Float
+    , step : Float
     , value : Float
     , disabled : Bool
     , additionalAttributes : List (Html.Attribute msg)
@@ -121,7 +121,7 @@ sliderConfig =
     , displayMarkers = False
     , min = 0
     , max = 100
-    , step = Nothing
+    , step = 0
     , value = 0
     , disabled = False
     , additionalAttributes = []
@@ -139,14 +139,13 @@ slider config =
             , displayCss
             , discreteCs config
             , displayMarkersCs config
-            , tabIndexAttr
+            , tabIndexProp
             , sliderRoleAttr
-            , discreteAttr config
-            , valueAttr config
-            , minAttr config
-            , maxAttr config
-            , stepAttr config
-            , disabledAttr config
+            , valueProp config
+            , minProp config
+            , maxProp config
+            , stepProp config
+            , disabledProp config
             , ariaValueMinAttr config
             , ariaValueMaxAttr config
             , ariaValuenowAttr config
@@ -178,15 +177,6 @@ discreteCs { discrete } =
         Nothing
 
 
-discreteAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
-discreteAttr { discrete } =
-    if discrete then
-        Just (Html.Attributes.attribute "discrete" "")
-
-    else
-        Nothing
-
-
 displayMarkersCs : SliderConfig msg -> Maybe (Html.Attribute msg)
 displayMarkersCs { discrete, displayMarkers } =
     if discrete && displayMarkers then
@@ -196,8 +186,8 @@ displayMarkersCs { discrete, displayMarkers } =
         Nothing
 
 
-tabIndexAttr : Maybe (Html.Attribute msg)
-tabIndexAttr =
+tabIndexProp : Maybe (Html.Attribute msg)
+tabIndexProp =
     Just (Html.Attributes.tabindex 0)
 
 
@@ -206,43 +196,29 @@ sliderRoleAttr =
     Just (Html.Attributes.attribute "role" "slider")
 
 
-valueAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
-valueAttr { value } =
-    Just (Html.Attributes.attribute "value" (String.fromFloat value))
+valueProp : SliderConfig msg -> Maybe (Html.Attribute msg)
+valueProp { value } =
+    Just (Html.Attributes.property "value" (Encode.float value))
 
 
-minAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
-minAttr { min } =
-    Just (Html.Attributes.attribute "min" (String.fromFloat min))
+minProp : SliderConfig msg -> Maybe (Html.Attribute msg)
+minProp { min } =
+    Just (Html.Attributes.property "min" (Encode.float min))
 
 
-maxAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
-maxAttr { max } =
-    Just (Html.Attributes.attribute "max" (String.fromFloat max))
+maxProp : SliderConfig msg -> Maybe (Html.Attribute msg)
+maxProp { max } =
+    Just (Html.Attributes.property "max" (Encode.float max))
 
 
-stepAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
-stepAttr { step, discrete } =
-    step
-        |> Maybe.withDefault
-            (if discrete then
-                1
-
-             else
-                0
-            )
-        |> String.fromFloat
-        |> Html.Attributes.attribute "step"
-        |> Just
+stepProp : SliderConfig msg -> Maybe (Html.Attribute msg)
+stepProp { step } =
+    Just (Html.Attributes.property "step" (Encode.float step))
 
 
-disabledAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
-disabledAttr { disabled } =
-    if disabled then
-        Just (Html.Attributes.attribute "disabled" "")
-
-    else
-        Nothing
+disabledProp : SliderConfig msg -> Maybe (Html.Attribute msg)
+disabledProp { disabled } =
+    Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
 ariaValueMinAttr : SliderConfig msg -> Maybe (Html.Attribute msg)

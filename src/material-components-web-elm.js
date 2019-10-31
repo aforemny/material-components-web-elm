@@ -21,7 +21,7 @@ import "./menu";
 import "./radio";
 import "./ripple/custom-element";
 import "./select/custom-element";
-import "./slider";
+import "./slider/custom-element";
 import "./snackbar";
 import "./switch";
 import "./tab-bar";

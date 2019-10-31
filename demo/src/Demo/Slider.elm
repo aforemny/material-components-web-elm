@@ -102,7 +102,7 @@ discreteSlider model =
             , discrete = True
             , min = 0
             , max = 50
-            , step = Just 1
+            , step = 1
         }
 
 
@@ -119,6 +119,6 @@ discreteSliderWithTickMarks model =
             , discrete = True
             , min = 0
             , max = 50
-            , step = Just 1
+            , step = 1
             , displayMarkers = True
         }

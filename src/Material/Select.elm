@@ -13,9 +13,10 @@ accessible, and fully RTL-aware.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
-  - [Outlined select](#outlined-select)
-  - [Disabled select](#disabled-select)
-  - [Disabled options](#disabled-options)
+  - [Outlined Select](#outlined-select)
+  - [Disabled Select](#disabled-select)
+  - [Required Select](#required-select)
+  - [Disabled Option](#disabled-option)
   - [Select with helper text](#select-with-helper-text)
   - [Select with leading icon](#select-with-leading-icon)
 
@@ -60,7 +61,7 @@ accessible, and fully RTL-aware.
 @docs selectOption, selectOptionConfig, SelectOptionConfig, SelectOption
 
 
-# Outlined select
+# Outlined Select
 
 Instead of a filled select, you may choose a select with a outline by using the
 `outlinedSelect` view function.
@@ -71,7 +72,7 @@ Instead of a filled select, you may choose a select with a outline by using the
 @docs outlinedSelect
 
 
-# Disabled select
+# Disabled Select
 
 To disable a select, set its `disabled` configuration field to `True`.
 
@@ -82,7 +83,18 @@ To disable a select, set its `disabled` configuration field to `True`.
         ]
 
 
-# Disabled options
+# Required Select
+
+To mark a select as required, set its `required` configuration field to `True`.
+
+    filledSelect
+        { selectConfig | required = True }
+        [ selectOption { selectOptionConfig | value = "" }
+            [ text "" ]
+        ]
+
+
+# Disabled Option
 
 To disable one select's option, set its `disabled` configuration field to `True`.
 
@@ -108,6 +120,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 
 
 {-| Configuration of a select
@@ -115,6 +128,9 @@ import Json.Decode as Decode
 type alias SelectConfig msg =
     { label : String
     , value : Maybe String
+    , disabled : Bool
+    , required : Bool
+    , valid : Bool
     , additionalAttributes : List (Html.Attribute msg)
     , onChange : Maybe (String -> msg)
     }
@@ -126,6 +142,9 @@ selectConfig : SelectConfig msg
 selectConfig =
     { label = ""
     , value = Nothing
+    , disabled = False
+    , required = False
+    , valid = False
     , additionalAttributes = []
     , onChange = Nothing
     }
@@ -142,6 +161,10 @@ select variant config nodes =
         (List.filterMap identity
             [ rootCs
             , variantCs variant
+            , valueProp config
+            , disabledProp config
+            , validProp config
+            , requiredProp config
             ]
             ++ config.additionalAttributes
         )
@@ -188,9 +211,24 @@ variantCs variant =
         Nothing
 
 
-valueAttr : SelectConfig msg -> Maybe (Html.Attribute msg)
-valueAttr { value } =
-    Maybe.map Html.Attributes.value value
+valueProp : SelectConfig msg -> Maybe (Html.Attribute msg)
+valueProp { value } =
+    Just (Html.Attributes.property "value" (Encode.string (Maybe.withDefault "" value)))
+
+
+disabledProp : SelectConfig msg -> Maybe (Html.Attribute msg)
+disabledProp { disabled } =
+    Just (Html.Attributes.property "disabled" (Encode.bool disabled))
+
+
+validProp : SelectConfig msg -> Maybe (Html.Attribute msg)
+validProp { valid } =
+    Just (Html.Attributes.property "valid" (Encode.bool valid))
+
+
+requiredProp : SelectConfig msg -> Maybe (Html.Attribute msg)
+requiredProp { required } =
+    Just (Html.Attributes.property "required" (Encode.bool required))
 
 
 dropdownIconElt : Html msg
@@ -203,7 +241,6 @@ nativeControlElt config nodes =
     Html.select
         (List.filterMap identity
             [ nativeControlCs
-            , valueAttr config
             , changeHandler config
             ]
         )
@@ -274,11 +311,7 @@ optionValueAttr { value } =
 
 changeHandler : SelectConfig msg -> Maybe (Html.Attribute msg)
 changeHandler { onChange } =
-    Maybe.map
-        (\f ->
-            Html.Events.preventDefaultOn "change"
-                (Decode.map (\s -> ( f s, True )) Html.Events.targetValue)
-        )
+    Maybe.map (\msg -> Html.Events.on "change" (Decode.map msg Html.Events.targetValue))
         onChange
 
 

@@ -94,10 +94,10 @@ To mark a text field as required, set its `required` configuration field to
 
 # Invalid Text Field
 
-To mark a text field as invalid, set its `invalid` configuration field to
-`True`.
+To mark a text field as invalid, set its `valid` configuration field to
+`False`.
 
-    textField { textFieldConfig | invalid = True }
+    textField { textFieldConfig | valid = False }
 
 
 # Outlined Text Field
@@ -153,6 +153,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 import Material.Icon exposing (IconConfig, icon, iconConfig)
 
 
@@ -162,11 +163,11 @@ type alias TextFieldConfig msg =
     { label : Maybe String
     , outlined : Bool
     , fullwidth : Bool
-    , value : Maybe String
+    , value : String
     , placeholder : Maybe String
     , disabled : Bool
     , required : Bool
-    , invalid : Bool
+    , valid : Bool
     , minLength : Maybe Int
     , maxLength : Maybe Int
     , pattern : Maybe String
@@ -194,11 +195,11 @@ textFieldConfig =
     { label = Nothing
     , outlined = False
     , fullwidth = False
-    , value = Nothing
+    , value = ""
     , placeholder = Nothing
     , disabled = False
     , required = False
-    , invalid = False
+    , valid = True
     , minLength = Nothing
     , maxLength = Nothing
     , pattern = Nothing
@@ -227,7 +228,16 @@ textField config =
             , disabledCs config
             , withLeadingIconCs config
             , withTrailingIconCs config
-            , valueAttr config
+            , valueProp config
+            , disabledProp config
+            , requiredProp config
+            , validProp config
+            , patternProp config
+            , minLengthProp config
+            , maxLengthProp config
+            , minProp config
+            , maxProp config
+            , stepProp config
             ]
             ++ config.additionalAttributes
         )
@@ -323,47 +333,69 @@ withTrailingIconCs { trailingIcon } =
         Nothing
 
 
-requiredAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-requiredAttr { required } =
-    if required then
-        Just (Html.Attributes.attribute "required" "")
-
-    else
-        Nothing
+requiredProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+requiredProp { required } =
+    Just (Html.Attributes.property "required" (Encode.bool required))
 
 
-invalidAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-invalidAttr { invalid } =
-    if invalid then
-        Just (Html.Attributes.attribute "invalid" "")
+validProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+validProp { valid } =
+    Just (Html.Attributes.property "valid" (Encode.bool valid))
 
-    else
-        Nothing
+
+minLengthProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+minLengthProp { minLength } =
+    Just
+        (Html.Attributes.property "minLength"
+            (Encode.int (Maybe.withDefault -1 minLength))
+        )
+
+
+maxLengthProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+maxLengthProp { maxLength } =
+    Just
+        (Html.Attributes.property "maxLength"
+            (Encode.int (Maybe.withDefault -1 maxLength))
+        )
 
 
 minLengthAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
 minLengthAttr { minLength } =
-    Maybe.map Html.Attributes.minlength minLength
+    Maybe.map (Html.Attributes.attribute "minLength" << String.fromInt) minLength
 
 
 maxLengthAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
 maxLengthAttr { maxLength } =
-    Maybe.map Html.Attributes.maxlength maxLength
+    Maybe.map (Html.Attributes.attribute "maxLength" << String.fromInt) maxLength
 
 
-minAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-minAttr { min } =
-    Maybe.map (Html.Attributes.min << String.fromInt) min
+minProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+minProp { min } =
+    Just
+        (Html.Attributes.property "min"
+            (Encode.string (Maybe.withDefault "" (Maybe.map String.fromInt min)))
+        )
 
 
-maxAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-maxAttr { max } =
-    Maybe.map (Html.Attributes.max << String.fromInt) max
+maxProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+maxProp { max } =
+    Just
+        (Html.Attributes.property "max"
+            (Encode.string (Maybe.withDefault "" (Maybe.map String.fromInt max)))
+        )
 
 
-valueAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-valueAttr { value } =
-    Maybe.map (Html.Attributes.attribute "value") value
+stepProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+stepProp { step } =
+    Just
+        (Html.Attributes.property "step"
+            (Encode.string (Maybe.withDefault "" (Maybe.map String.fromInt step)))
+        )
+
+
+valueProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+valueProp { value } =
+    Just (Html.Attributes.property "value" (Encode.string value))
 
 
 placeholderAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
@@ -409,18 +441,11 @@ inputElt config =
             [ inputCs
             , typeAttr config
             , ariaLabelAttr config
-            , disabledAttr config
-            , requiredAttr config
-            , invalidAttr config
-            , patternAttr config
-            , minLengthAttr config
-            , maxLengthAttr config
-            , minAttr config
-            , maxAttr config
-            , stepAttr config
             , placeholderAttr config
             , inputHandler config
             , changeHandler config
+            , minLengthAttr config
+            , maxLengthAttr config
             ]
         )
         []
@@ -431,14 +456,12 @@ inputCs =
     Just (class "mdc-text-field__input")
 
 
-stepAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-stepAttr { step } =
-    Maybe.map (Html.Attributes.step << String.fromInt) step
-
-
-patternAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-patternAttr { pattern } =
-    Maybe.map Html.Attributes.pattern pattern
+patternProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+patternProp { pattern } =
+    Just
+        (Html.Attributes.property "pattern"
+            (Encode.string (Maybe.withDefault "" pattern))
+        )
 
 
 typeAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
@@ -455,9 +478,9 @@ ariaLabelAttr { fullwidth, placeholder, label } =
         Nothing
 
 
-disabledAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-disabledAttr { disabled } =
-    Just (Html.Attributes.disabled disabled)
+disabledProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
+disabledProp { disabled } =
+    Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
 labelElt : TextFieldConfig msg -> Html msg
@@ -465,7 +488,7 @@ labelElt { label, value } =
     case label of
         Just str ->
             Html.div
-                (if Maybe.withDefault "" value /= "" then
+                (if value /= "" then
                     [ class "mdc-floating-label mdc-floating-label--float-above" ]
 
                  else

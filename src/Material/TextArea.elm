@@ -81,10 +81,10 @@ To mark a text area as required, set its `required` configuration field to
 
 # Invalid Text Area
 
-To mark a text area as invalid, set its `invalid` configuration field to
-`True`.
+To mark a text area as invalid, set its `valid` configuration field to
+`False`.
 
-    textArea { textAreaConfig | invalid = True }
+    textArea { textAreaConfig | valid = False }
 
 
 # Outlined Text Area
@@ -118,7 +118,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
-import Material.Icon exposing (IconConfig, icon, iconConfig)
+import Json.Encode as Encode
 
 
 {-| Configuration of a text area
@@ -127,13 +127,13 @@ type alias TextAreaConfig msg =
     { label : Maybe String
     , outlined : Bool
     , fullwidth : Bool
-    , value : Maybe String
+    , value : String
     , placeholder : Maybe String
     , rows : Maybe Int
     , cols : Maybe Int
     , disabled : Bool
     , required : Bool
-    , invalid : Bool
+    , valid : Bool
     , minLength : Maybe Int
     , maxLength : Maybe Int
     , additionalAttributes : List (Html.Attribute msg)
@@ -154,13 +154,13 @@ textAreaConfig =
     { label = Nothing
     , outlined = False
     , fullwidth = False
-    , value = Nothing
+    , value = ""
     , placeholder = Nothing
     , rows = Nothing
     , cols = Nothing
     , disabled = False
     , required = False
-    , invalid = False
+    , valid = True
     , minLength = Nothing
     , maxLength = Nothing
     , additionalAttributes = []
@@ -180,7 +180,12 @@ textArea config =
             , outlinedCs config
             , fullwidthCs config
             , disabledCs config
-            , valueAttr config
+            , valueProp config
+            , disabledProp config
+            , requiredProp config
+            , validProp config
+            , minLengthAttr config
+            , maxLengthAttr config
             ]
             ++ config.additionalAttributes
         )
@@ -230,37 +235,45 @@ disabledCs { disabled } =
         Nothing
 
 
-requiredAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-requiredAttr { required } =
-    if required then
-        Just (Html.Attributes.attribute "required" "")
-
-    else
-        Nothing
+requiredProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
+requiredProp { required } =
+    Just (Html.Attributes.property "required" (Encode.bool required))
 
 
-invalidAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-invalidAttr { invalid } =
-    if invalid then
-        Just (Html.Attributes.attribute "invalid" "")
+validProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
+validProp { valid } =
+    Just (Html.Attributes.property "valid" (Encode.bool valid))
 
-    else
-        Nothing
+
+minLengthProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
+minLengthProp { minLength } =
+    Just
+        (Html.Attributes.property "minLength"
+            (Encode.int (Maybe.withDefault -1 minLength))
+        )
+
+
+maxLengthProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
+maxLengthProp { maxLength } =
+    Just
+        (Html.Attributes.property "maxLength"
+            (Encode.int (Maybe.withDefault -1 maxLength))
+        )
 
 
 minLengthAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
 minLengthAttr { minLength } =
-    Maybe.map Html.Attributes.minlength minLength
+    Maybe.map (Html.Attributes.attribute "minLength" << String.fromInt) minLength
 
 
 maxLengthAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
 maxLengthAttr { maxLength } =
-    Maybe.map Html.Attributes.maxlength maxLength
+    Maybe.map (Html.Attributes.attribute "maxLength" << String.fromInt) maxLength
 
 
-valueAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-valueAttr { value } =
-    Maybe.map (Html.Attributes.attribute "value") value
+valueProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
+valueProp { value } =
+    Just (Html.Attributes.property "value" (Encode.string value))
 
 
 placeholderAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
@@ -287,14 +300,11 @@ inputElt config =
             , ariaLabelAttr config
             , rowsAttr config
             , colsAttr config
-            , disabledAttr config
-            , requiredAttr config
-            , invalidAttr config
-            , minLengthAttr config
-            , maxLengthAttr config
             , placeholderAttr config
             , inputHandler config
             , changeHandler config
+            , minLengthAttr config
+            , maxLengthAttr config
             ]
         )
         []
@@ -324,9 +334,9 @@ ariaLabelAttr { fullwidth, placeholder, label } =
         Nothing
 
 
-disabledAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-disabledAttr { disabled } =
-    Just (Html.Attributes.disabled disabled)
+disabledProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
+disabledProp { disabled } =
+    Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
 labelElt : TextAreaConfig msg -> Html msg
@@ -334,7 +344,7 @@ labelElt { label, value } =
     case label of
         Just str ->
             Html.div
-                (if Maybe.withDefault "" value /= "" then
+                (if value /= "" then
                     [ class "mdc-floating-label mdc-floating-label--float-above" ]
 
                  else

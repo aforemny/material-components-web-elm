@@ -5,7 +5,7 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes
 import Material.Elevation as Elevation
-import Material.Ripple as Ripple exposing (ripple, rippleConfig, unboundedRipple)
+import Material.Ripple as Ripple exposing (boundedRipple, rippleConfig, unboundedRipple)
 import Material.Typography as Typography
 
 
@@ -36,27 +36,27 @@ view model =
         , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Ripple"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-ripple"
         }
-    , hero = [ Html.div demoBox [ ripple rippleConfig, text "Click here!" ] ]
+    , hero = [ Html.div demoBox [ text "Click here!", boundedRipple rippleConfig ] ]
     , content =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Bounded Ripple" ]
         , Html.div demoBox
-            [ ripple rippleConfig
-            , text "Interact with me!"
+            [ text "Interact with me!"
+            , boundedRipple rippleConfig
             ]
         , Html.h3 [ Typography.subtitle1 ] [ text "Unbounded Ripple" ]
         , Html.div demoIcon
-            [ unboundedRipple rippleConfig
-            , text "favorite"
+            [ text "favorite"
+            , unboundedRipple rippleConfig
             ]
         , Html.h3 [ Typography.subtitle1 ] [ text "Theme Color: Primary" ]
         , Html.div demoBox
-            [ ripple { rippleConfig | color = Just Ripple.PrimaryColor }
-            , text "Primary"
+            [ text "Primary"
+            , boundedRipple { rippleConfig | color = Just Ripple.PrimaryColor }
             ]
         , Html.h3 [ Typography.subtitle1 ] [ text "Theme Color: Secondary" ]
         , Html.div demoBox
-            [ ripple { rippleConfig | color = Just Ripple.AccentColor }
-            , text "Secondary"
+            [ text "Secondary"
+            , boundedRipple { rippleConfig | color = Just Ripple.AccentColor }
             ]
         ]
     }

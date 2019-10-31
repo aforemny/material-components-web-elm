@@ -1,5 +1,5 @@
 module Material.Ripple exposing
-    ( ripple, rippleConfig, RippleConfig
+    ( boundedRipple, rippleConfig, RippleConfig
     , unboundedRipple
     , RippleColor(..)
     )
@@ -34,14 +34,14 @@ ripple effects which work best with icons.
 
     main =
         Html.div []
-            [ ripple rippleConfig
-            , text "Click me!"
+            [ text "Click me!"
+            , boundedRipple rippleConfig
             ]
 
 
 # Bounded Ripple
 
-@docs ripple, rippleConfig, RippleConfig
+@docs boundedRipple, rippleConfig, RippleConfig
 
 
 # Unbounded Ripple
@@ -67,13 +67,13 @@ its color configuration field to a RippleColor.
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
+import Json.Encode as Encode
 
 
 {-| Ripple configuration
 -}
 type alias RippleConfig msg =
-    { unbounded : Bool
-    , color : Maybe RippleColor
+    { color : Maybe RippleColor
     , additionalAttributes : List (Html.Attribute msg)
     }
 
@@ -82,8 +82,7 @@ type alias RippleConfig msg =
 -}
 rippleConfig : RippleConfig msg
 rippleConfig =
-    { unbounded = False
-    , color = Nothing
+    { color = Nothing
     , additionalAttributes = []
     }
 
@@ -97,11 +96,12 @@ type RippleColor
 
 {-| Bounded ripple variant
 -}
-ripple : RippleConfig msg -> Html msg
-ripple config =
+ripple : Bool -> RippleConfig msg -> Html msg
+ripple unbounded config =
     Html.node "mdc-ripple"
         (List.filterMap identity
-            [ dataUnboundedAttr config
+            [ unboundedProp unbounded
+            , unboundedData unbounded
             , colorCs config
             , rippleSurface
             , Just (Html.Attributes.style "position" "absolute")
@@ -115,11 +115,18 @@ ripple config =
         []
 
 
+{-| Bounded ripple variant
+-}
+boundedRipple : RippleConfig msg -> Html msg
+boundedRipple =
+    ripple False
+
+
 {-| Unbounded ripple variant
 -}
 unboundedRipple : RippleConfig msg -> Html msg
-unboundedRipple config =
-    ripple { config | unbounded = True }
+unboundedRipple =
+    ripple True
 
 
 rippleSurface : Maybe (Html.Attribute msg)
@@ -140,8 +147,13 @@ colorCs { color } =
             Nothing
 
 
-dataUnboundedAttr : RippleConfig msg -> Maybe (Html.Attribute msg)
-dataUnboundedAttr { unbounded } =
+unboundedProp : Bool -> Maybe (Html.Attribute msg)
+unboundedProp unbounded =
+    Just (Html.Attributes.property "unbounded" (Encode.bool unbounded))
+
+
+unboundedData : Bool -> Maybe (Html.Attribute msg)
+unboundedData unbounded =
     if unbounded then
         Just (Html.Attributes.attribute "data-mdc-ripple-is-unbounded" "")
 

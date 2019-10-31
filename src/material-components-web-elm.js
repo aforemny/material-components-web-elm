@@ -19,7 +19,7 @@ import "./list";
 import "./list-item";
 import "./menu";
 import "./radio";
-import "./ripple";
+import "./ripple/custom-element";
 import "./select";
 import "./slider";
 import "./snackbar";

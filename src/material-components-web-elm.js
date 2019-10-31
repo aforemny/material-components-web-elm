@@ -12,7 +12,7 @@ import "./fab/custom-element";
 import "./form-field/custom-element";
 import "./icon-button/custom-element";
 import "./image-list/custom-element";
-import "./image-list-item";
+import "./image-list-item/custom-element";
 import "./layout-grid";
 import "./linear-progress";
 import "./list";

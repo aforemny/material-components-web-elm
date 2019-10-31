@@ -157,6 +157,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 
 
 {-| Configuration of a tab bar
@@ -190,7 +191,7 @@ tabBar config tabs =
         (List.filterMap identity
             [ rootCs
             , tablistRoleAttr
-            , activeTabAttr tabs
+            , activeTabIndexProp tabs
             ]
             ++ config.additionalAttributes
         )
@@ -208,17 +209,16 @@ tablistRoleAttr =
     Just (Html.Attributes.attribute "role" "tablist")
 
 
-activeTabAttr : List (Tab msg) -> Maybe (Html.Attribute msg)
-activeTabAttr tabs =
+activeTabIndexProp : List (Tab msg) -> Maybe (Html.Attribute msg)
+activeTabIndexProp tabs =
     let
         activeTabIndex =
             List.indexedMap Tuple.pair tabs
                 |> List.filter (\( _, Tab { config } ) -> config.active)
                 |> List.head
                 |> Maybe.map Tuple.first
-                |> Maybe.map String.fromInt
     in
-    Maybe.map (Html.Attributes.attribute "activetab") activeTabIndex
+    Maybe.map (Html.Attributes.property "activeTabIndex" << Encode.int) activeTabIndex
 
 
 {-| Configuration of a tab

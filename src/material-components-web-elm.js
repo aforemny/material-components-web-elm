@@ -24,6 +24,6 @@ import "./select/custom-element";
 import "./slider/custom-element";
 import "./snackbar/custom-element";
 import "./switch";
-import "./tab-bar";
+import "./tab-bar/custom-element";
 import "./text-field";
 import "./top-app-bar";

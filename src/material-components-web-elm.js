@@ -14,7 +14,7 @@ import "./icon-button/custom-element";
 import "./image-list/custom-element";
 import "./image-list-item/custom-element";
 import "./layout-grid/custom-element";
-import "./linear-progress";
+import "./linear-progress/custom-element";
 import "./list";
 import "./list-item";
 import "./menu";

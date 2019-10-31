@@ -1,22 +1,17 @@
-import { getClassName, setClassName } from "./utils";
 import { MDCRipple } from '@material/ripple';
+import {
+  installClassNameChangeHook,
+  uninstallClassNameChangeHook,
+} from "../utils/className";
 
 class MdcListItem extends HTMLElement {
 
   constructor() {
     super();
-    this.className_ = "";
-  }
-
-  get className() {
-    return getClassName.call(this);
-  }
-
-  set className(className) {
-    setClassName.call(this, className);
   }
 
   connectedCallback() {
+    installClassNameChangeHook.call(this);
     if (this.classList.contains("mdc-list-item")) {
       this.ripple_ = new MDCRipple(this);
     } else {
@@ -26,6 +21,7 @@ class MdcListItem extends HTMLElement {
 
   disconnectedCallback() {
     this.ripple_.destroy();
+    uninstallClassNameChangeHook.call(this);
   }
 };
 

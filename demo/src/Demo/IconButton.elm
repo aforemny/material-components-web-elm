@@ -56,7 +56,7 @@ view model =
         [ iconToggle
             { iconToggleConfig
                 | on = isOn "icon-button-hero" model
-                , onClick = Just (Toggle "icon-button-hero")
+                , onChange = Just (Toggle "icon-button-hero")
             }
             { offIcon = "favorite_border"
             , onIcon = "favorite"
@@ -64,14 +64,12 @@ view model =
         ]
     , content =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Icon Button" ]
-        , iconButton
-            { iconButtonConfig | onClick = Just (Toggle "icon-button") }
-            "wifi"
+        , iconButton iconButtonConfig "wifi"
         , Html.h3 [ Typography.subtitle1 ] [ text "Icon Toggle" ]
         , iconToggle
             { iconToggleConfig
                 | on = isOn "icon-button-toggle" model
-                , onClick = Just (Toggle "icon-button-toggle")
+                , onChange = Just (Toggle "icon-button-toggle")
             }
             { offIcon = "favorite_border"
             , onIcon = "favorite"

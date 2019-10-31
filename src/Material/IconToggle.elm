@@ -40,7 +40,7 @@ If you are looking for a button that has an icon as well as text, refer to
         iconToggle
             { iconToggleConfig
                 | on = True
-                , onClick = Just IconToggleClicked
+                , onChange = Just IconToggleClicked
             }
             { offIcon = "favorite_outlined"
             , onIcon = "favorite"
@@ -92,6 +92,8 @@ configuration field to a String.
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
+import Json.Decode as Decode
+import Json.Encode as Encode
 
 
 {-| Icon toggle configuration
@@ -101,7 +103,7 @@ type alias IconToggleConfig msg =
     , disabled : Bool
     , label : Maybe String
     , additionalAttributes : List (Html.Attribute msg)
-    , onClick : Maybe msg
+    , onChange : Maybe msg
     }
 
 
@@ -113,7 +115,7 @@ iconToggleConfig =
     , disabled = False
     , label = Nothing
     , additionalAttributes = []
-    , onClick = Nothing
+    , onChange = Nothing
     }
 
 
@@ -124,12 +126,12 @@ iconToggle config { onIcon, offIcon } =
     Html.node "mdc-icon-button"
         (List.filterMap identity
             [ rootCs
-            , onAttr config
+            , onProp config
+            , tabIndexProp
             , ariaHiddenAttr
             , ariaPressedAttr config
             , ariaLabelAttr config
-            , tabIndexAttr
-            , clickHandler config
+            , changeHandler config
             , disabledAttr config
             ]
             ++ config.additionalAttributes
@@ -144,13 +146,9 @@ rootCs =
     Just (class "mdc-icon-button")
 
 
-onAttr : IconToggleConfig msg -> Maybe (Html.Attribute msg)
-onAttr { on } =
-    if on then
-        Just (Html.Attributes.attribute "data-on" "")
-
-    else
-        Nothing
+onProp : IconToggleConfig msg -> Maybe (Html.Attribute msg)
+onProp { on } =
+    Just (Html.Attributes.property "on" (Encode.bool on))
 
 
 materialIconsCs : Maybe (Html.Attribute msg)
@@ -168,8 +166,8 @@ onIconCs =
     Just (class "mdc-icon-button__icon mdc-icon-button__icon--on")
 
 
-tabIndexAttr : Maybe (Html.Attribute msg)
-tabIndexAttr =
+tabIndexProp : Maybe (Html.Attribute msg)
+tabIndexProp =
     Just (Html.Attributes.tabindex 0)
 
 
@@ -196,9 +194,10 @@ ariaLabelAttr { label } =
     Maybe.map (Html.Attributes.attribute "aria-label") label
 
 
-clickHandler : IconToggleConfig msg -> Maybe (Html.Attribute msg)
-clickHandler config =
-    Maybe.map Html.Events.onClick config.onClick
+changeHandler : IconToggleConfig msg -> Maybe (Html.Attribute msg)
+changeHandler config =
+    Maybe.map (Html.Events.on "MDCIconButtonToggle:change" << Decode.succeed)
+        config.onChange
 
 
 disabledAttr : IconToggleConfig msg -> Maybe (Html.Attribute msg)

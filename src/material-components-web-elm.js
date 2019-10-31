@@ -10,7 +10,7 @@ import "./dialog/custom-element";
 import "./drawer/custom-element";
 import "./fab/custom-element";
 import "./form-field/custom-element";
-import "./icon-button";
+import "./icon-button/custom-element";
 import "./image-list";
 import "./image-list-item";
 import "./layout-grid";

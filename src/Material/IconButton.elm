@@ -112,7 +112,7 @@ iconButton config iconName =
         (List.filterMap identity
             [ rootCs
             , materialIconsCs
-            , tabIndexAttr
+            , tabIndexProp
             , clickHandler config
             ]
             ++ config.additionalAttributes
@@ -127,7 +127,7 @@ customIconButton config nodes =
     Html.node "mdc-icon-button"
         (List.filterMap identity
             [ rootCs
-            , tabIndexAttr
+            , tabIndexProp
             , clickHandler config
             ]
             ++ config.additionalAttributes
@@ -150,8 +150,8 @@ iconCs =
     Just (class "mdc-icon-button__icon")
 
 
-tabIndexAttr : Maybe (Html.Attribute msg)
-tabIndexAttr =
+tabIndexProp : Maybe (Html.Attribute msg)
+tabIndexProp =
     Just (Html.Attributes.tabindex 0)
 
 
@@ -168,8 +168,3 @@ ariaLabelAttr { label } =
 clickHandler : IconButtonConfig msg -> Maybe (Html.Attribute msg)
 clickHandler config =
     Maybe.map Html.Events.onClick config.onClick
-
-
-disabledAttr : IconButtonConfig msg -> Maybe (Html.Attribute msg)
-disabledAttr { disabled } =
-    Just (Html.Attributes.disabled disabled)

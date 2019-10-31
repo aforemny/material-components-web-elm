@@ -36,16 +36,14 @@ import Html.Attributes exposing (class)
 {-| Icon configuration
 -}
 type alias IconConfig msg =
-    { additionalAttributes : List (Html.Attribute msg)
-    }
+    { additionalAttributes : List (Html.Attribute msg) }
 
 
 {-| Default icon configuration
 -}
 iconConfig : IconConfig msg
 iconConfig =
-    { additionalAttributes = []
-    }
+    { additionalAttributes = [] }
 
 
 {-| Icon view helper

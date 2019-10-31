@@ -8,7 +8,7 @@ import "./chip/custom-element";
 import "./chip-set/custom-element";
 import "./dialog/custom-element";
 import "./drawer/custom-element";
-import "./fab";
+import "./fab/custom-element";
 import "./form-field";
 import "./icon";
 import "./icon-button";

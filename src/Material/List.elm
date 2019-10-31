@@ -1,6 +1,6 @@
 module Material.List exposing
     ( list, listConfig, ListConfig
-    , listItem, listItemConfig, ListItemConfig
+    , listItem, listItemConfig, ListItemConfig, ListItem
     , listItemText, listItemPrimaryText, listItemSecondaryText
     , listGroup
     , listGroupSubheader
@@ -68,7 +68,7 @@ module Material.List exposing
 
 # List Item
 
-@docs listItem, listItemConfig, ListItemConfig
+@docs listItem, listItemConfig, ListItemConfig, ListItem
 
 
 # List Variants
@@ -268,6 +268,7 @@ type alias ListConfig msg =
     , dense : Bool
     , avatarList : Bool
     , twoLine : Bool
+    , vertical : Bool
     , wrapFocus : Bool
     , additionalAttributes : List (Html.Attribute msg)
     }
@@ -277,10 +278,13 @@ type alias ListConfig msg =
 -}
 listConfig : ListConfig msg
 listConfig =
+    -- TODO: Document wrapFocus
+    -- TODO: Document vertical
     { nonInteractive = False
     , dense = False
     , avatarList = False
     , twoLine = False
+    , vertical = False
     , wrapFocus = False
     , additionalAttributes = []
     }
@@ -288,8 +292,8 @@ listConfig =
 
 {-| List view function
 -}
-list : ListConfig msg -> List (Html msg) -> Html msg
-list config nodes =
+list : ListConfig msg -> List (ListItem msg) -> Html msg
+list config listItems =
     Html.node "mdc-list"
         (List.filterMap identity
             [ rootCs
@@ -298,10 +302,25 @@ list config nodes =
             , avatarListCs config
             , twoLineCs config
             , wrapFocusProp config
+            , clickHandler listItems
+            , selectedIndexProp listItems
             ]
             ++ config.additionalAttributes
         )
-        nodes
+        (List.map
+            (\listItem_ ->
+                case listItem_ of
+                    ListItem { node } ->
+                        node
+
+                    ListItemDivider node ->
+                        node
+
+                    ListGroupSubheader node ->
+                        node
+            )
+            listItems
+        )
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -372,42 +391,55 @@ listItemConfig =
     }
 
 
+{-| Type of a list item
+-}
+type ListItem msg
+    = ListItem
+        { config : ListItemConfig msg
+        , node : Html msg
+        }
+    | ListItemDivider (Html msg)
+    | ListGroupSubheader (Html msg)
+
+
 {-| List item view function
 -}
-listItem : ListItemConfig msg -> List (Html msg) -> Html msg
+listItem : ListItemConfig msg -> List (Html msg) -> ListItem msg
 listItem config nodes =
-    if config.href /= Nothing then
-        Html.node "mdc-list-item"
-            []
-            [ Html.a
-                (List.filterMap identity
-                    [ listItemCs
-                    , hrefAttr config
-                    , targetAttr config
-                    , disabledCs config
-                    , selectedCs config
-                    , activatedCs config
-                    , ariaSelectedAttr config
-                    , clickHandler config
+    ListItem
+        { config = config
+        , node =
+            if config.href /= Nothing then
+                Html.node "mdc-list-item"
+                    []
+                    [ Html.a
+                        (List.filterMap identity
+                            [ listItemCs
+                            , hrefAttr config
+                            , targetAttr config
+                            , disabledCs config
+                            , selectedCs config
+                            , activatedCs config
+                            , ariaSelectedAttr config
+                            ]
+                            ++ config.additionalAttributes
+                        )
+                        nodes
                     ]
-                    ++ config.additionalAttributes
-                )
-                nodes
-            ]
 
-    else
-        Html.node "mdc-list-item"
-            (List.filterMap identity
-                [ listItemCs
-                , disabledCs config
-                , selectedCs config
-                , activatedCs config
-                , ariaSelectedAttr config
-                , clickHandler config
-                ]
-                ++ config.additionalAttributes
-            )
-            nodes
+            else
+                Html.node "mdc-list-item"
+                    (List.filterMap identity
+                        [ listItemCs
+                        , disabledCs config
+                        , selectedCs config
+                        , activatedCs config
+                        , ariaSelectedAttr config
+                        ]
+                        ++ config.additionalAttributes
+                    )
+                    nodes
+        }
 
 
 listItemCs : Maybe (Html.Attribute msg)
@@ -461,9 +493,79 @@ targetAttr { target } =
     Maybe.map Html.Attributes.target target
 
 
-clickHandler : ListItemConfig msg -> Maybe (Html.Attribute msg)
-clickHandler { onClick } =
-    Maybe.map (Html.Events.on "MDCList:action" << Decode.succeed) onClick
+clickHandler : List (ListItem msg) -> Maybe (Html.Attribute msg)
+clickHandler listItems =
+    let
+        getOnClick listItem_ =
+            case listItem_ of
+                ListItem { config } ->
+                    Just config.onClick
+
+                ListItemDivider _ ->
+                    Nothing
+
+                ListGroupSubheader _ ->
+                    Nothing
+
+        nthOnClick index =
+            listItems
+                |> List.map getOnClick
+                |> List.filterMap identity
+                |> List.drop index
+                |> List.head
+                |> Maybe.andThen identity
+
+        mergedClickHandler =
+            Decode.at [ "detail", "index" ] Decode.int
+                |> Decode.andThen
+                    (\index ->
+                        case nthOnClick index of
+                            Just msg_ ->
+                                Decode.succeed msg_
+
+                            Nothing ->
+                                Decode.fail ""
+                    )
+    in
+    Just (Html.Events.on "MDCList:action" mergedClickHandler)
+
+
+selectedIndexProp : List (ListItem msg) -> Maybe (Html.Attribute msg)
+selectedIndexProp listItems =
+    let
+        selectedIndex =
+            listItems
+                |> List.filter
+                    (\listItem_ ->
+                        case listItem_ of
+                            ListItem _ ->
+                                True
+
+                            ListItemDivider _ ->
+                                False
+
+                            ListGroupSubheader _ ->
+                                False
+                    )
+                |> List.indexedMap
+                    (\index listItem_ ->
+                        case listItem_ of
+                            ListItem { config } ->
+                                if config.selected || config.activated then
+                                    Just index
+
+                                else
+                                    Nothing
+
+                            ListItemDivider _ ->
+                                Nothing
+
+                            ListGroupSubheader _ ->
+                                Nothing
+                    )
+                |> List.filterMap identity
+    in
+    Just (Html.Attributes.property "selectedIndex" (Encode.list Encode.int selectedIndex))
 
 
 {-| List item's text for list items in a two-line list
@@ -522,18 +624,19 @@ listItemDividerConfig =
 
 {-| List item divider view function
 -}
-listItemDivider : ListItemDividerConfig msg -> Html msg
+listItemDivider : ListItemDividerConfig msg -> ListItem msg
 listItemDivider config =
-    Html.li
-        (List.filterMap identity
-            [ listDividerCs
-            , separatorRoleAttr
-            , insetCs config
-            , paddedCs config
-            ]
-            ++ config.additionalAttributes
-        )
-        []
+    ListItemDivider <|
+        Html.li
+            (List.filterMap identity
+                [ listDividerCs
+                , separatorRoleAttr
+                , insetCs config
+                , paddedCs config
+                ]
+                ++ config.additionalAttributes
+            )
+            []
 
 
 listDividerCs : Maybe (Html.Attribute msg)
@@ -585,9 +688,10 @@ listGroupDivider additionalAttributes =
 
 {-| List group subheader view function
 -}
-listGroupSubheader : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+listGroupSubheader : List (Html.Attribute msg) -> List (Html msg) -> ListItem msg
 listGroupSubheader additionalAttributes nodes =
-    Html.div (listGroupSubheaderCs :: additionalAttributes) nodes
+    ListGroupSubheader <|
+        Html.div (listGroupSubheaderCs :: additionalAttributes) nodes
 
 
 listGroupSubheaderCs : Html.Attribute msg

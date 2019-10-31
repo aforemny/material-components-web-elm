@@ -192,6 +192,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 import Process
 import Task
 
@@ -275,7 +276,8 @@ addMessage lift message =
 {-| Configuration of a snackbar
 -}
 type alias SnackbarConfig msg =
-    { additionalAttributes : List (Html.Attribute msg)
+    { closeOnEscape : Bool
+    , additionalAttributes : List (Html.Attribute msg)
     }
 
 
@@ -283,7 +285,8 @@ type alias SnackbarConfig msg =
 -}
 snackbarConfig : SnackbarConfig msg
 snackbarConfig =
-    { additionalAttributes = []
+    { closeOnEscape = False
+    , additionalAttributes = []
     }
 
 
@@ -298,10 +301,11 @@ snackbar lift config queue =
     Html.node "mdc-snackbar"
         (List.filterMap identity
             [ rootCs
-            , messageAttr queue
+            , closeOnEscapeProp config
             , leadingCs message
             , stackedCs message
-            , timeoutAttr message
+            , messageIdProp queue
+            , timeoutMsProp message
             , closedHandler lift
             ]
             ++ config.additionalAttributes
@@ -319,7 +323,7 @@ type alias Message msg =
     , onActionIconClick : Maybe msg
     , leading : Bool
     , stacked : Bool
-    , timeoutMs : Float
+    , timeoutMs : Int
     }
 
 
@@ -343,6 +347,11 @@ rootCs =
     Just (class "mdc-snackbar")
 
 
+closeOnEscapeProp : SnackbarConfig msg -> Maybe (Html.Attribute msg)
+closeOnEscapeProp { closeOnEscape } =
+    Just (Html.Attributes.property "closeOnEscape" (Encode.bool closeOnEscape))
+
+
 leadingCs : Message msg -> Maybe (Html.Attribute msg)
 leadingCs { leading } =
     if leading then
@@ -361,18 +370,18 @@ stackedCs { stacked } =
         Nothing
 
 
-messageAttr : Queue msg -> Maybe (Html.Attribute msg)
-messageAttr { messageId } =
-    Just (Html.Attributes.attribute "message" (String.fromInt messageId))
+messageIdProp : Queue msg -> Maybe (Html.Attribute msg)
+messageIdProp { messageId } =
+    Just (Html.Attributes.property "messageId" (Encode.int messageId))
 
 
-timeoutAttr : Message msg -> Maybe (Html.Attribute msg)
-timeoutAttr { timeoutMs } =
+timeoutMsProp : Message msg -> Maybe (Html.Attribute msg)
+timeoutMsProp { timeoutMs } =
     let
         normalizedTimeoutMs =
-            String.fromFloat (clamp 4000 10000 timeoutMs)
+            clamp 4000 10000 timeoutMs
     in
-    Just (Html.Attributes.attribute "timeout" normalizedTimeoutMs)
+    Just (Html.Attributes.property "timeoutMs" (Encode.int normalizedTimeoutMs))
 
 
 closedHandler : (Msg msg -> msg) -> Maybe (Html.Attribute msg)

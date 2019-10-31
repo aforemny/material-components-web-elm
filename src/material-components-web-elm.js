@@ -22,7 +22,7 @@ import "./radio";
 import "./ripple/custom-element";
 import "./select/custom-element";
 import "./slider/custom-element";
-import "./snackbar";
+import "./snackbar/custom-element";
 import "./switch";
 import "./tab-bar";
 import "./text-field";

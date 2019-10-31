@@ -11,7 +11,7 @@ import "./drawer/custom-element";
 import "./fab/custom-element";
 import "./form-field/custom-element";
 import "./icon-button/custom-element";
-import "./image-list";
+import "./image-list/custom-element";
 import "./image-list-item";
 import "./layout-grid";
 import "./linear-progress";

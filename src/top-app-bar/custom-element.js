@@ -1,27 +1,23 @@
-import { getClassName, setClassName } from "./utils";
-import { MDCTopAppBar } from "@material/top-app-bar/index";
+import { MDCTopAppBar } from "./component";
+import {
+  installClassNameChangeHook,
+  uninstallClassNameChangeHook,
+} from "../utils/className";
 
 class MdcTopAppBar extends HTMLElement {
 
   constructor() {
     super();
-    this.className_ = "";
-  }
-
-  get className() {
-    return getClassName.call(this);
-  }
-
-  set className(className) {
-    setClassName.call(this, className);
   }
 
   connectedCallback() {
+    installClassNameChangeHook.call(this);
     this.topAppBar_ = new MDCTopAppBar(this);
   }
 
   disconnectedCallback() {
     this.topAppBar_.destroy();
+    uninstallClassNameChangeHook.call(this);
   }
 };
 

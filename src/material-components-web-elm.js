@@ -26,4 +26,4 @@ import "./snackbar/custom-element";
 import "./switch";
 import "./tab-bar/custom-element";
 import "./text-field/custom-element";
-import "./top-app-bar";
+import "./top-app-bar/custom-element";

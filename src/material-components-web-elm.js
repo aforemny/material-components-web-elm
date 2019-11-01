@@ -23,7 +23,7 @@ import "./ripple/custom-element";
 import "./select/custom-element";
 import "./slider/custom-element";
 import "./snackbar/custom-element";
-import "./switch";
+import "./switch/custom-element";
 import "./tab-bar/custom-element";
 import "./text-field/custom-element";
 import "./top-app-bar/custom-element";

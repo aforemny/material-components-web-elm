@@ -76,7 +76,7 @@ heroSwitch model =
         [ switch
             { switchConfig
                 | checked = isChecked id model
-                , onClick = Just (Toggle id)
+                , onChange = Just (Toggle id)
             }
         ]
     ]
@@ -97,6 +97,6 @@ demoSwitch model =
         [ switch
             { switchConfig
                 | checked = isChecked id model
-                , onClick = Just (Toggle id)
+                , onChange = Just (Toggle id)
             }
         ]

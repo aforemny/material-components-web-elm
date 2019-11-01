@@ -34,8 +34,8 @@ Note that switches are usually used in conjunction with form fields. Refer to
     main =
         switch
             { switchConfig
-                | on = True
-                , onClick = Just SwitchClicked
+                | checked = True
+                , onChange = Just SwitchClicked
             }
 
 
@@ -46,10 +46,10 @@ Note that switches are usually used in conjunction with form fields. Refer to
 
 # On Switch
 
-To set the state of a switch, set its `on` configuration field to a `Bool`
+To set the state of a switch, set its `checked` configuration field to a `Bool`
 value.
 
-    switch { switchConfig | on = True }
+    switch { switchConfig | checked = True }
 
 
 # Disabled Switch
@@ -65,6 +65,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 
 
 {-| Configuration of a switch
@@ -73,7 +74,7 @@ type alias SwitchConfig msg =
     { checked : Bool
     , disabled : Bool
     , additionalAttributes : List (Html.Attribute msg)
-    , onClick : Maybe msg
+    , onChange : Maybe msg
     }
 
 
@@ -84,7 +85,7 @@ switchConfig =
     { checked = False
     , disabled = False
     , additionalAttributes = []
-    , onClick = Nothing
+    , onChange = Nothing
     }
 
 
@@ -95,8 +96,8 @@ switch config =
     Html.node "mdc-switch"
         (List.filterMap identity
             [ rootCs
-            , checkedAttr config
-            , disabledAttr config
+            , checkedProp config
+            , disabledProp config
             ]
             ++ config.additionalAttributes
         )
@@ -110,22 +111,14 @@ rootCs =
     Just (class "mdc-switch")
 
 
-checkedAttr : SwitchConfig msg -> Maybe (Html.Attribute msg)
-checkedAttr { checked } =
-    if checked then
-        Just (Html.Attributes.attribute "checked" "")
-
-    else
-        Nothing
+checkedProp : SwitchConfig msg -> Maybe (Html.Attribute msg)
+checkedProp { checked } =
+    Just (Html.Attributes.property "checked" (Encode.bool checked))
 
 
-disabledAttr : SwitchConfig msg -> Maybe (Html.Attribute msg)
-disabledAttr { disabled } =
-    if disabled then
-        Just (Html.Attributes.attribute "disabled" "")
-
-    else
-        Nothing
+disabledProp : SwitchConfig msg -> Maybe (Html.Attribute msg)
+disabledProp { disabled } =
+    Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
 nativeControlCs : Maybe (Html.Attribute msg)
@@ -143,10 +136,9 @@ checkboxTypeAttr =
     Just (Html.Attributes.type_ "checkbox")
 
 
-clickHandler : SwitchConfig msg -> Maybe (Html.Attribute msg)
-clickHandler config =
-    Maybe.map (\msg -> Html.Events.preventDefaultOn "click" (Decode.succeed ( msg, True )))
-        config.onClick
+changeHandler : SwitchConfig msg -> Maybe (Html.Attribute msg)
+changeHandler config =
+    Maybe.map (Html.Events.on "change" << Decode.succeed) config.onChange
 
 
 trackElt : Html msg
@@ -171,7 +163,8 @@ nativeControlElt config =
             [ nativeControlCs
             , checkboxTypeAttr
             , switchRoleAttr
-            , clickHandler config
+            , checkedProp config
+            , changeHandler config
             ]
         )
         []

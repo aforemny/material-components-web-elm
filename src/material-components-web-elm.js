@@ -18,7 +18,7 @@ import "./linear-progress/custom-element";
 import "./list";
 import "./list-item";
 import "./menu";
-import "./radio";
+import "./radio/custom-element";
 import "./ripple/custom-element";
 import "./select/custom-element";
 import "./slider/custom-element";

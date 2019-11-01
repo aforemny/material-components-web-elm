@@ -324,7 +324,7 @@ listWithTrailingRadioButton model =
             radio
                 { radioConfig
                     | checked = model.radioIndex == Just index
-                    , onClick = Just (SetRadio index)
+                    , onChange = Just (SetRadio index)
                 }
     in
     list { listConfig | additionalAttributes = demoList }

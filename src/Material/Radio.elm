@@ -35,7 +35,7 @@ to [FormField](Material-FormField) for more information.
         radio
             { radioConfig
                 | checked = True
-                , onClick = Just RadioClicked
+                , onChange = Just RadioClicked
             }
 
 
@@ -64,6 +64,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 
 
 {-| Radio button configuration
@@ -72,7 +73,7 @@ type alias RadioConfig msg =
     { checked : Bool
     , disabled : Bool
     , additionalAttributes : List (Html.Attribute msg)
-    , onClick : Maybe msg
+    , onChange : Maybe msg
     }
 
 
@@ -83,7 +84,7 @@ radioConfig =
     { checked = False
     , disabled = False
     , additionalAttributes = []
-    , onClick = Nothing
+    , onChange = Nothing
     }
 
 
@@ -94,8 +95,8 @@ radio config =
     Html.node "mdc-radio"
         (List.filterMap identity
             [ rootCs
-            , checkedAttr config
-            , disabledAttr config
+            , checkedProp config
+            , disabledProp config
             ]
             ++ config.additionalAttributes
         )
@@ -109,34 +110,47 @@ rootCs =
     Just (class "mdc-radio")
 
 
-checkedAttr : RadioConfig msg -> Maybe (Html.Attribute msg)
-checkedAttr { checked } =
-    if checked then
-        Just (Html.Attributes.attribute "checked" "")
-
-    else
-        Nothing
+checkedProp : RadioConfig msg -> Maybe (Html.Attribute msg)
+checkedProp { checked } =
+    Just (Html.Attributes.property "checked" (Encode.bool checked))
 
 
-disabledAttr : RadioConfig msg -> Maybe (Html.Attribute msg)
-disabledAttr { disabled } =
-    if disabled then
-        Just (Html.Attributes.attribute "disabled" "")
-
-    else
-        Nothing
+disabledProp : RadioConfig msg -> Maybe (Html.Attribute msg)
+disabledProp { disabled } =
+    Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
-clickHandler : RadioConfig msg -> Maybe (Html.Attribute msg)
-clickHandler config =
-    Maybe.map (\msg -> Html.Events.preventDefaultOn "click" (Decode.succeed ( msg, True )))
-        config.onClick
+changeHandler : RadioConfig msg -> Maybe (Html.Attribute msg)
+changeHandler { checked, onChange } =
+    -- Note: MDCList choses to send a change event to all checkboxes, thus we
+    -- have to check here if the state actually changed.
+    Maybe.map
+        (\msg ->
+            Html.Events.on "change"
+                (Decode.at [ "target", "checked" ] Decode.bool
+                    |> Decode.andThen
+                        (\checked_ ->
+                            if (checked_ && not checked) || (not checked_ && checked) then
+                                Decode.succeed msg
+
+                            else
+                                Decode.fail ""
+                        )
+                )
+        )
+        onChange
 
 
 nativeControlElt : RadioConfig msg -> Html msg
 nativeControlElt config =
     Html.input
-        (List.filterMap identity [ nativeControlCs, radioTypeAttr, clickHandler config ])
+        (List.filterMap identity
+            [ nativeControlCs
+            , radioTypeAttr
+            , checkedProp config
+            , changeHandler config
+            ]
+        )
         []
 
 

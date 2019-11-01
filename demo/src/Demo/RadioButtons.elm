@@ -66,7 +66,7 @@ heroRadio model group index =
     radio
         { radioConfig
             | checked = isSelected group index model
-            , onClick = Just (Set group index)
+            , onChange = Just (Set group index)
             , additionalAttributes =
                 [ Html.Attributes.style "margin" "0 10px" ]
         }
@@ -93,7 +93,7 @@ radio_ model group index label =
         [ radio
             { radioConfig
                 | checked = isSelected group index model
-                , onClick = Just (Set group index)
+                , onChange = Just (Set group index)
             }
         ]
 

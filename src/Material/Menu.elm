@@ -81,6 +81,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
+import Json.Encode as Encode
 
 
 {-| Configuration of a menu
@@ -111,8 +112,8 @@ menu config nodes =
     Html.node "mdc-menu"
         (List.filterMap identity
             [ rootCs
-            , openAttr config
-            , quickOpenAttr config
+            , openProp config
+            , quickOpenProp config
             , closeHandler config
             ]
             ++ config.additionalAttributes
@@ -132,22 +133,14 @@ rootCs =
     Just (class "mdc-menu mdc-menu-surface")
 
 
-openAttr : MenuConfig msg -> Maybe (Html.Attribute msg)
-openAttr { open } =
-    if open then
-        Just (Html.Attributes.attribute "open" "")
-
-    else
-        Nothing
+openProp : MenuConfig msg -> Maybe (Html.Attribute msg)
+openProp { open } =
+    Just (Html.Attributes.property "open" (Encode.bool open))
 
 
-quickOpenAttr : MenuConfig msg -> Maybe (Html.Attribute msg)
-quickOpenAttr { quickOpen } =
-    if quickOpen then
-        Just (Html.Attributes.attribute "quickopen" "")
-
-    else
-        Nothing
+quickOpenProp : MenuConfig msg -> Maybe (Html.Attribute msg)
+quickOpenProp { quickOpen } =
+    Just (Html.Attributes.property "quickOpen" (Encode.bool quickOpen))
 
 
 closeHandler : MenuConfig msg -> Maybe (Html.Attribute msg)

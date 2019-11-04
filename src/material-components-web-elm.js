@@ -17,7 +17,7 @@ import "./layout-grid/custom-element";
 import "./linear-progress/custom-element";
 import "./list/custom-element";
 import "./list-item/custom-element";
-import "./menu";
+import "./menu/custom-element";
 import "./radio/custom-element";
 import "./ripple/custom-element";
 import "./select/custom-element";

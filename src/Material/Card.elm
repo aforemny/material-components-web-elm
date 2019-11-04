@@ -46,7 +46,7 @@ module Material.Card exposing
             , cardBlock
             , cardConfig
             )
-    import Material.Icon exposing (iconConfig)
+    import Material.IconButton exposing (iconButtonConfig)
 
     main =
         card cardConfig
@@ -68,7 +68,7 @@ module Material.Card exposing
                                 "Visit"
                             ]
                         , icons =
-                            [ cardActionIcon iconConfig
+                            [ cardActionIcon iconButtonConfig
                                 "favorite"
                             ]
                         }
@@ -156,7 +156,7 @@ to the standard buttons and icons, but they do share the same configuration.
         { buttons =
             [ cardActionButton buttonConfig "View" ]
         , actions =
-            [ cardActionIcon iconConfig "favorite" ]
+            [ cardActionIcon iconButtonConfig "favorite" ]
         }
 
 @docs cardActions, CardActions, cardActionButton, cardActionIcon
@@ -175,7 +175,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Material.Button exposing (ButtonConfig, buttonConfig)
-import Material.Icon exposing (IconConfig, iconConfig)
+import Material.IconButton exposing (IconButtonConfig, iconButton)
 
 
 {-| Configuration of a card
@@ -480,17 +480,17 @@ type Icon msg
 
 {-| Card action icon
 
-    cardActionIcon iconConfig "favorite"
+    cardActionIcon iconButtonConfig "favorite"
 
 -}
-cardActionIcon : IconConfig msg -> String -> Icon msg
-cardActionIcon iconConfig iconName =
+cardActionIcon : IconButtonConfig msg -> String -> Icon msg
+cardActionIcon iconButtonConfig iconName =
     Icon <|
-        Material.Icon.icon
-            { iconConfig
+        Material.IconButton.iconButton
+            { iconButtonConfig
                 | additionalAttributes =
                     class "mdc-card__action"
                         :: class "mdc-card__action--icon"
-                        :: iconConfig.additionalAttributes
+                        :: iconButtonConfig.additionalAttributes
             }
             iconName

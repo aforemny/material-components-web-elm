@@ -6,7 +6,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Material.Button exposing (buttonConfig)
 import Material.Card as Card exposing (CardActions, CardBlock, card, cardActionButton, cardActionIcon, cardActions, cardBlock, cardConfig, cardMedia, cardMediaConfig, cardPrimaryAction, cardPrimaryActionConfig)
-import Material.Icon exposing (icon, iconConfig)
+import Material.IconButton exposing (iconButtonConfig)
 import Material.Theme as Theme
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
@@ -173,8 +173,8 @@ demoActions =
             , cardActionButton buttonConfig "Bookmark"
             ]
         , icons =
-            [ cardActionIcon iconConfig "favorite_border"
-            , cardActionIcon iconConfig "share"
-            , cardActionIcon iconConfig "more_vert"
+            [ cardActionIcon iconButtonConfig "favorite_border"
+            , cardActionIcon iconButtonConfig "share"
+            , cardActionIcon iconButtonConfig "more_vert"
             ]
         }

@@ -19,6 +19,7 @@ class MdcDrawer extends HTMLElement {
 
   constructor() {
     super();
+    this.open_ = false;
     this.drawer_;
   }
 

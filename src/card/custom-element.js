@@ -1,4 +1,8 @@
-import { MDCRipple } from "@material/ripple/index";
+import { MDCRipple } from "../ripple/component";
+import {
+  installClassNameChangeHook,
+  uninstallClassNameChangeHook,
+} from "../utils/className";
 
 export default class MdcCard extends HTMLElement {
 
@@ -8,6 +12,7 @@ export default class MdcCard extends HTMLElement {
   }
 
   connectedCallback() {
+    installClassNameChangeHook.call(this);
     const primaryActionElement = this.querySelector(".mdc-card__primary-action");
     if (primaryActionElement) {
       this.ripple_ = new MDCRipple(primaryActionElement);
@@ -18,6 +23,7 @@ export default class MdcCard extends HTMLElement {
     if (this.ripple_) {
       this.ripple_.destroy();
     }
+    uninstallClassNameChangeHook.call(this);
   }
 };
 

@@ -1,4 +1,8 @@
-import { MDCRipple } from "@material/ripple/index";
+import { MDCRipple } from "../ripple/component";
+import {
+  installClassNameChangeHook,
+  uninstallClassNameChangeHook,
+} from "../utils/className";
 
 class MdcFab extends HTMLElement {
 
@@ -7,11 +11,13 @@ class MdcFab extends HTMLElement {
   }
 
   connectedCallback() {
+    installClassNameChangeHook.call(this);
     this.ripple_ = new MDCRipple(this);
   }
 
   disconnectedCallback() {
     this.ripple_.destroy();
+    uninstallClassNameChangeHook.call(this);
   }
 };
 

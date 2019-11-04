@@ -17,17 +17,6 @@ class MdcSnackbar extends HTMLElement {
     }
   }
 
-  get messageId() {
-    return this.messageId_;
-  }
-
-  set messageId(messageId) {
-    this.messageId_ = messageId;
-    if (!!this.snackbar_ && !!messageId) {
-      this.snackbar_.open();
-    }
-  }
-
   get timeoutMs() {
     return this.timeoutMs_;
   }
@@ -36,6 +25,17 @@ class MdcSnackbar extends HTMLElement {
     this.timeoutMs_ = timeoutMs;
     if (!!this.snackbar_) {
       this.snackbar_.timeoutMs = timeoutMs;
+    }
+  }
+
+  get messageId() {
+    return this.messageId_;
+  }
+
+  set messageId(messageId) {
+    this.messageId_ = messageId;
+    if (!!this.snackbar_ && !!messageId) {
+      this.snackbar_.open();
     }
   }
 

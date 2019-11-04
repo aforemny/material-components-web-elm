@@ -1,4 +1,8 @@
-import { MDCRipple } from "@material/ripple";
+import { MDCRipple } from "../ripple/component";
+import {
+  installClassNameChangeHook,
+  uninstallClassNameChangeHook,
+} from "../utils/className";
 
 class MdcImageListItem extends HTMLElement {
   constructor() {
@@ -7,6 +11,7 @@ class MdcImageListItem extends HTMLElement {
   }
 
   connectedCallback() {
+    installClassNameChangeHook.call(this);
     const rippleSurfaceElement = this.querySelector(".mdc-ripple-surface");
     if (!!rippleSurfaceElement) {
       this.ripple_ = new MDCRipple(rippleSurfaceElement);
@@ -17,6 +22,7 @@ class MdcImageListItem extends HTMLElement {
     if (!!this.ripple_) {
       this.ripple_.destroy();
     }
+    uninstallClassNameChangeHook.call(this);
   }
 };
 

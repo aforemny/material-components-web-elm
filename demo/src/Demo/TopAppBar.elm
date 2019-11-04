@@ -6,7 +6,7 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.Icon exposing (icon, iconConfig)
+import Material.IconButton exposing (iconButton, iconButtonConfig)
 import Material.TopAppBar as TopAppBar exposing (prominentTopAppBar, shortCollapsedTopAppBar, shortTopAppBar, topAppBar, topAppBarConfig)
 import Material.Typography as Typography
 
@@ -60,8 +60,8 @@ view model =
                 [ TopAppBar.section
                     [ TopAppBar.alignStart
                     ]
-                    [ icon
-                        { iconConfig
+                    [ iconButton
+                        { iconButtonConfig
                             | additionalAttributes =
                                 [ TopAppBar.navigationIcon ]
                         }
@@ -71,18 +71,18 @@ view model =
                 , TopAppBar.section
                     [ TopAppBar.alignEnd
                     ]
-                    [ icon
-                        { iconConfig
+                    [ iconButton
+                        { iconButtonConfig
                             | additionalAttributes = [ TopAppBar.actionItem ]
                         }
                         "file_download"
-                    , icon
-                        { iconConfig
+                    , iconButton
+                        { iconButtonConfig
                             | additionalAttributes = [ TopAppBar.actionItem ]
                         }
                         "print"
-                    , icon
-                        { iconConfig
+                    , iconButton
+                        { iconButtonConfig
                             | additionalAttributes = [ TopAppBar.actionItem ]
                         }
                         "more_vert"

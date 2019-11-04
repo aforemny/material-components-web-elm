@@ -8,7 +8,6 @@ import "./chip";
 import "./chip-set";
 import "./dialog";
 import "./drawer";
-import "./enhanced-select";
 import "./fab";
 import "./form-field";
 import "./icon";

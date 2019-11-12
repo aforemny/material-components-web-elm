@@ -137,22 +137,25 @@ type Variant
 button : Variant -> ButtonConfig msg -> String -> Html msg
 button variant config label =
     Html.node "mdc-button"
-        (List.filterMap identity
-            [ rootCs
-            , variantCs variant
-            , denseCs config
-            , disabledProp config
-            , tabIndexProp config
-            , clickHandler config
-            ]
-            ++ config.additionalAttributes
-        )
-        (List.filterMap identity
-            [ leadingIconElt config
-            , labelElt label
-            , trailingIconElt config
-            ]
-        )
+        (List.filterMap identity [ disabledProp config ])
+        [ Html.button
+            (List.filterMap identity
+                [ rootCs
+                , variantCs variant
+                , denseCs config
+                , disabledAttr config
+                , tabIndexProp config
+                , clickHandler config
+                ]
+                ++ config.additionalAttributes
+            )
+            (List.filterMap identity
+                [ leadingIconElt config
+                , labelElt label
+                , trailingIconElt config
+                ]
+            )
+        ]
 
 
 {-| Text button variant (flush without outline)
@@ -191,6 +194,11 @@ rootCs =
 disabledProp : ButtonConfig msg -> Maybe (Html.Attribute msg)
 disabledProp { disabled } =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
+
+
+disabledAttr : ButtonConfig msg -> Maybe (Html.Attribute msg)
+disabledAttr { disabled } =
+    Just (Html.Attributes.disabled disabled)
 
 
 tabIndexProp : ButtonConfig msg -> Maybe (Html.Attribute msg)

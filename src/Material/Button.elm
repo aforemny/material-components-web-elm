@@ -17,6 +17,7 @@ module Material.Button exposing
       - [Button with Trailing Icon](#button-with-trailing-icon)
   - [Disabled Button](#disabled-button)
   - [Dense Button](#disabled-button)
+  - [Link Button](#link-button)
 
 
 # Resources
@@ -94,6 +95,15 @@ configuration field to `True`.
 
     textButton { buttonConfig | dense = True } "Dense"
 
+
+# Link Button
+
+Buttons may specify the `href` configuration field in which case the button essentially behaves like a HTML `a` element. You may specify the configuration field `target` as well.
+
+    textButton { buttonConfig | href = Just "https://elm-lang.org" } "Visit"
+
+Note that link buttons cannot be disabled.
+
 -}
 
 import Html exposing (Html, text)
@@ -109,6 +119,8 @@ type alias ButtonConfig msg =
     , trailingIcon : Bool
     , disabled : Bool
     , dense : Bool
+    , href : Maybe String
+    , target : Maybe String
     , additionalAttributes : List (Html.Attribute msg)
     , onClick : Maybe msg
     }
@@ -122,6 +134,8 @@ buttonConfig =
     , trailingIcon = False
     , disabled = False
     , dense = False
+    , href = Nothing
+    , target = Nothing
     , additionalAttributes = []
     , onClick = Nothing
     }
@@ -138,13 +152,20 @@ button : Variant -> ButtonConfig msg -> String -> Html msg
 button variant config label =
     Html.node "mdc-button"
         (List.filterMap identity [ disabledProp config ])
-        [ Html.button
+        [ (if config.href /= Nothing then
+            Html.a
+
+           else
+            Html.button
+          )
             (List.filterMap identity
                 [ rootCs
                 , variantCs variant
                 , denseCs config
                 , disabledAttr config
                 , tabIndexProp config
+                , hrefAttr config
+                , targetAttr config
                 , clickHandler config
                 ]
                 ++ config.additionalAttributes
@@ -208,6 +229,20 @@ tabIndexProp { disabled } =
 
     else
         Just (Html.Attributes.property "tabIndex" (Encode.int 0))
+
+
+hrefAttr : ButtonConfig msg -> Maybe (Html.Attribute msg)
+hrefAttr { href } =
+    Maybe.map Html.Attributes.href href
+
+
+targetAttr : ButtonConfig msg -> Maybe (Html.Attribute msg)
+targetAttr { href, target } =
+    if href /= Nothing then
+        Maybe.map Html.Attributes.target target
+
+    else
+        Nothing
 
 
 clickHandler : ButtonConfig msg -> Maybe (Html.Attribute msg)

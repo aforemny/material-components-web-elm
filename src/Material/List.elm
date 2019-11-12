@@ -237,6 +237,8 @@ essentially behaves like a HTML `a` element. You may specify the configuration
     listItem [ href "https://elm-lang.org" ]
         [ text "Elm programming language" ]
 
+Note that link list items cannot be disabled.
+
 
 ## List Item Divider
 
@@ -409,36 +411,24 @@ listItem config nodes =
     ListItem
         { config = config
         , node =
-            if config.href /= Nothing then
-                Html.node "mdc-list-item"
-                    []
-                    [ Html.a
-                        (List.filterMap identity
-                            [ listItemCs
-                            , hrefAttr config
-                            , targetAttr config
-                            , disabledCs config
-                            , selectedCs config
-                            , activatedCs config
-                            , ariaSelectedAttr config
-                            ]
-                            ++ config.additionalAttributes
-                        )
-                        nodes
-                    ]
+            (\attributes ->
+                if config.href /= Nothing then
+                    Html.node "mdc-list-item" [] [ Html.a attributes nodes ]
 
-            else
-                Html.node "mdc-list-item"
-                    (List.filterMap identity
-                        [ listItemCs
-                        , disabledCs config
-                        , selectedCs config
-                        , activatedCs config
-                        , ariaSelectedAttr config
-                        ]
-                        ++ config.additionalAttributes
-                    )
-                    nodes
+                else
+                    Html.node "mdc-list-item" attributes nodes
+            )
+                (List.filterMap identity
+                    [ listItemCs
+                    , hrefAttr config
+                    , targetAttr config
+                    , disabledCs config
+                    , selectedCs config
+                    , activatedCs config
+                    , ariaSelectedAttr config
+                    ]
+                    ++ config.additionalAttributes
+                )
         }
 
 
@@ -489,8 +479,12 @@ hrefAttr { href } =
 
 
 targetAttr : ListItemConfig msg -> Maybe (Html.Attribute msg)
-targetAttr { target } =
-    Maybe.map Html.Attributes.target target
+targetAttr { href, target } =
+    if href /= Nothing then
+        Maybe.map Html.Attributes.target target
+
+    else
+        Nothing
 
 
 clickHandler : List (ListItem msg) -> Maybe (Html.Attribute msg)

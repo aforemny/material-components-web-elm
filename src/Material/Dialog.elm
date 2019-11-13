@@ -103,6 +103,7 @@ dialog config content =
             , ariaModalAttr
             , closeHandler config
             ]
+            ++ config.additionalAttributes
         )
         [ containerElt content
         , scrimElt

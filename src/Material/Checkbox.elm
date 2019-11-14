@@ -180,6 +180,7 @@ nativeControlElt config =
             [ Just (Html.Attributes.type_ "checkbox")
             , Just (class "mdc-checkbox__native-control")
             , checkedProp config
+            , indeterminateProp config
             , changeHandler config
             ]
         )

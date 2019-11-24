@@ -14,8 +14,12 @@ web](https://github.com/material-components/material-components-web) (MDC Web).
 
 ## Quick start
 
+This package relies upon javascript and css that need to be included in your project separately. As a result, this library will *not* work with e.g. `elm reactor`. Instead you will need to use either an html file or a bundler, such as webpack.
+
+### Using html
+ 
 You should [compile your Elm program to
-JavaScript](https://guide.elm-lang.org/install/elm.html#elm-make) and embed it
+JavaScript](https://guide.elm-lang.org/install/elm.html#elm-make) and include it
 in a custom HTML document. From your HTML document, you have to include the
 following assets to use this library.
 
@@ -35,6 +39,18 @@ for a minimal starting point, specifically to the files
 and
 [`page.html`](https://github.com/aforemny/material-components-web-elm/blob/master/examples/simple-counter/page.html).
 
+
+### Using a bundler
+
+```
+npm i material-components-web-elm
+```
+
+in your `index.js`, add 
+```shell script
+require("material-components-web/dist/material-components-web.js");
+require("material-components-web/dist/material-components-web.css")
+```
 
 ## Contributions
 

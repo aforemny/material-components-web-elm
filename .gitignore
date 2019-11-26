@@ -8,3 +8,5 @@ gh-pages
 *.js.map
 node_modules
 src/*/component.js
+src/*/*.patch
+src/*/*.ts.orig

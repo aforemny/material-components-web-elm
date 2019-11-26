@@ -41,6 +41,9 @@ node_modules:
 
 
 clean:
+	find src -name "*.d.ts" | xargs rm -f
+	find src -name "component.js" | xargs rm -f
+	find src -name "*.js.map" | xargs rm -f
 	rm -rf dist
 	(cd demo && make clean)
 	(cd examples/simple-counter && make clean)

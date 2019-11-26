@@ -67,7 +67,7 @@ class MdcLinearProgress extends HTMLElement {
 
   constructor() {
     super();
-    this.determinate_ = 0;
+    this.determinate_ = false;
     this.progress_ = 0;
     this.buffer_ = 0;
     this.reverse_ = false;

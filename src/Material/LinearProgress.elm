@@ -81,6 +81,7 @@ reverse configuration field to True.
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
+import Json.Encode as Encode
 
 
 {-| Linear progress configuration
@@ -116,11 +117,11 @@ linearProgress variant config =
             , displayCss
             , roleAttr
             , variantCs variant
-            , determinateAttr variant
-            , progressAttr variant
-            , bufferAttr variant
-            , reverseAttr config
-            , closedAttr config
+            , determinateProp variant
+            , progressProp variant
+            , bufferProp variant
+            , reverseProp config
+            , closedProp config
             ]
             ++ config.additionalAttributes
         )
@@ -185,54 +186,54 @@ variantCs variant =
             Nothing
 
 
-determinateAttr : Variant -> Maybe (Html.Attribute msg)
-determinateAttr variant =
-    if variant /= Indeterminate then
-        Just (Html.Attributes.attribute "determinate" "")
-
-    else
-        Nothing
+determinateProp : Variant -> Maybe (Html.Attribute msg)
+determinateProp variant =
+    Just (Html.Attributes.property "determinate" (Encode.bool (variant /= Indeterminate)))
 
 
-progressAttr : Variant -> Maybe (Html.Attribute msg)
-progressAttr variant =
-    case variant of
-        Determinate progress ->
-            Just (Html.Attributes.attribute "progress" (String.fromFloat progress))
+progressProp : Variant -> Maybe (Html.Attribute msg)
+progressProp variant =
+    Just
+        (Html.Attributes.property "progress"
+            (Encode.float
+                (case variant of
+                    Determinate progress ->
+                        progress
 
-        Buffered progress _ ->
-            Just (Html.Attributes.attribute "progress" (String.fromFloat progress))
+                    Buffered progress _ ->
+                        progress
 
-        _ ->
-            Nothing
-
-
-bufferAttr : Variant -> Maybe (Html.Attribute msg)
-bufferAttr variant =
-    case variant of
-        Buffered _ buffer ->
-            Just (Html.Attributes.attribute "buffer" (String.fromFloat buffer))
-
-        _ ->
-            Nothing
+                    _ ->
+                        0
+                )
+            )
+        )
 
 
-reverseAttr : LinearProgressConfig msg -> Maybe (Html.Attribute msg)
-reverseAttr { reverse } =
-    if reverse then
-        Just (Html.Attributes.attribute "reverse" "")
+bufferProp : Variant -> Maybe (Html.Attribute msg)
+bufferProp variant =
+    Just
+        (Html.Attributes.property "buffer"
+            (Encode.float
+                (case variant of
+                    Buffered _ buffer ->
+                        buffer
 
-    else
-        Nothing
+                    _ ->
+                        0
+                )
+            )
+        )
 
 
-closedAttr : LinearProgressConfig msg -> Maybe (Html.Attribute msg)
-closedAttr { closed } =
-    if closed then
-        Just (Html.Attributes.attribute "closed" "")
+reverseProp : LinearProgressConfig msg -> Maybe (Html.Attribute msg)
+reverseProp { reverse } =
+    Just (Html.Attributes.property "reverse" (Encode.bool reverse))
 
-    else
-        Nothing
+
+closedProp : LinearProgressConfig msg -> Maybe (Html.Attribute msg)
+closedProp { closed } =
+    Just (Html.Attributes.property "closed" (Encode.bool closed))
 
 
 bufferingDotsElt : Html msg

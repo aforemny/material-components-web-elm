@@ -23,23 +23,24 @@
 
 import {MDCComponent} from '@material/base/component';
 import {CustomEventListener, SpecificEventListener} from '@material/base/types';
-import {MDCFloatingLabel, MDCFloatingLabelFactory} from '@material/floating-label/index';
-import {MDCLineRipple, MDCLineRippleFactory} from '@material/line-ripple/index';
+import {MDCFloatingLabel, MDCFloatingLabelFactory} from '@material/floating-label/component';
+import {MDCLineRipple, MDCLineRippleFactory} from '@material/line-ripple/component';
 import * as menuSurfaceConstants from '@material/menu-surface/constants';
+import {MDCMenu, MDCMenuFactory} from '@material/menu/component';
 import * as menuConstants from '@material/menu/constants';
-import {MDCMenu, MDCMenuFactory, MDCMenuItemEvent} from '@material/menu/index';
-import {MDCNotchedOutline, MDCNotchedOutlineFactory} from '@material/notched-outline/index';
-import {MDCRipple, MDCRippleAdapter, MDCRippleCapableSurface, MDCRippleFoundation} from '@material/ripple/index';
+import {MDCMenuItemEvent} from '@material/menu/types';
+import {MDCNotchedOutline, MDCNotchedOutlineFactory} from '@material/notched-outline/component';
+import {MDCRippleAdapter} from '@material/ripple/adapter';
+import {MDCRipple} from '@material/ripple/component';
+import {MDCRippleFoundation} from '@material/ripple/foundation';
+import {MDCRippleCapableSurface} from '@material/ripple/types';
 import {MDCSelectAdapter} from '@material/select/adapter';
 import {cssClasses, strings} from '@material/select/constants';
 import {MDCSelectFoundation} from '@material/select/foundation';
-import {MDCSelectHelperText, MDCSelectHelperTextFactory} from '@material/select/helper-text/index';
-import {MDCSelectIcon, MDCSelectIconFactory} from '@material/select/icon/index';
+import {MDCSelectHelperText, MDCSelectHelperTextFactory} from '@material/select/helper-text/component';
+import {MDCSelectIcon, MDCSelectIconFactory} from '@material/select/icon/component';
 import {MDCSelectEventDetail, MDCSelectFoundationMap} from '@material/select/types';
 
-type PointerEventType = 'mousedown' | 'touchstart';
-
-const POINTER_EVENTS: PointerEventType[] = ['mousedown', 'touchstart'];
 const VALIDATION_ATTR_WHITELIST = ['required', 'aria-required'];
 
 export class MDCSelect extends MDCComponent<MDCSelectFoundation> implements MDCRippleCapableSurface {
@@ -71,7 +72,7 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> implements MDCR
   private handleChange_!: SpecificEventListener<'change'>; // assigned in initialize()
   private handleFocus_!: SpecificEventListener<'focus'>; // assigned in initialize()
   private handleBlur_!: SpecificEventListener<'blur'>; // assigned in initialize()
-  private handleClick_!: SpecificEventListener<PointerEventType>; // assigned in initialize()
+  private handleClick_!: SpecificEventListener<'click'>; // assigned in initialize()
   private handleKeydown_!: SpecificEventListener<'keydown'>; // assigned in initialize()
   private handleMenuOpened_!: EventListener; // assigned in initialize()
   private handleMenuClosed_!: EventListener; // assigned in initialize()
@@ -155,13 +156,20 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> implements MDCR
     this.handleKeydown_ = (evt) => this.foundation_.handleKeydown(evt);
     this.handleMenuSelected_ = (evtData) => this.selectedIndex = evtData.detail.index;
     this.handleMenuOpened_ = () => {
-      // Menu should open to the last selected element.
-      if (this.selectedIndex >= 0) {
-        const selectedItemEl = this.menu_!.items[this.selectedIndex] as HTMLElement;
-        selectedItemEl.focus();
+      this.foundation_.handleMenuOpened();
+
+      if (this.menu_!.items.length === 0) {
+        return;
       }
+
+      // Menu should open to the last selected element, should open to first menu item otherwise.
+      const focusItemIndex = this.selectedIndex >= 0 ? this.selectedIndex : 0;
+      const focusItemEl = this.menu_!.items[focusItemIndex] as HTMLElement;
+      focusItemEl.focus();
     };
     this.handleMenuClosed_ = () => {
+      this.foundation_.handleMenuClosed();
+
       // isMenuOpen_ is used to track the state of the menu opening or closing since the menu.open function
       // will return false if the menu is still closing and this method listens to the closed event which
       // occurs after the menu is already closed.
@@ -176,9 +184,7 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> implements MDCR
     this.targetElement_.addEventListener('focus', this.handleFocus_);
     this.targetElement_.addEventListener('blur', this.handleBlur_);
 
-    POINTER_EVENTS.forEach((evtType) => {
-      this.targetElement_.addEventListener(evtType, this.handleClick_ as EventListener);
-    });
+    this.targetElement_.addEventListener('click', this.handleClick_ as EventListener);
 
     if (this.menuElement_) {
       this.selectedText_!.addEventListener('keydown', this.handleKeydown_);
@@ -212,9 +218,7 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> implements MDCR
     this.targetElement_.removeEventListener('focus', this.handleFocus_);
     this.targetElement_.removeEventListener('blur', this.handleBlur_);
     this.targetElement_.removeEventListener('keydown', this.handleKeydown_);
-    POINTER_EVENTS.forEach((evtType) => {
-      this.targetElement_.removeEventListener(evtType, this.handleClick_ as EventListener);
-    });
+    this.targetElement_.removeEventListener('click', this.handleClick_ as EventListener);
 
     if (this.menu_) {
       this.menu_.unlisten(menuSurfaceConstants.strings.CLOSED_EVENT, this.handleMenuClosed_);

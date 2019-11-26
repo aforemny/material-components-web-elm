@@ -23,13 +23,15 @@
 
 import {MDCComponent} from '@material/base/component';
 import {CustomEventListener, SpecificEventListener} from '@material/base/types';
-import {MDCList, MDCListActionEvent, MDCListFoundation} from '@material/list/index';
-import {MDCMenuSurfaceFoundation} from '@material/menu-surface/foundation';
-import {Corner} from '@material/menu-surface/constants';
+import {MDCList} from '@material/list/component';
+import {MDCListFoundation} from '@material/list/foundation';
+import {MDCListActionEvent} from '@material/list/types';
 import {MDCMenuSurface, MDCMenuSurfaceFactory} from '../menu-surface/component';
+import {Corner} from '@material/menu-surface/constants';
+import {MDCMenuSurfaceFoundation} from '@material/menu-surface/foundation';
 import {MDCMenuDistance} from '@material/menu-surface/types';
 import {MDCMenuAdapter} from '@material/menu/adapter';
-import {cssClasses, strings} from '@material/menu/constants';
+import {cssClasses, DefaultFocusState, strings} from '@material/menu/constants';
 import {MDCMenuFoundation} from '@material/menu/foundation';
 import {MDCMenuItemComponentEventDetail} from '@material/menu/types';
 
@@ -47,7 +49,7 @@ export class MDCMenu extends MDCComponent<MDCMenuFoundation> {
 
   private handleKeydown_!: SpecificEventListener<'keydown'>; // assigned in initialSyncWithDOM()
   private handleItemAction_!: CustomEventListener<MDCListActionEvent>; // assigned in initialSyncWithDOM()
-  private afterOpenedCallback_!: EventListener; // assigned in initialSyncWithDOM()
+  private handleMenuSurfaceOpened_!: EventListener; // assigned in initialSyncWithDOM()
 
   initialize(menuSurfaceFactory: MDCMenuSurfaceFactory = (el) => new MDCMenuSurface(el)) {
     this.menuSurfaceFactory_ = menuSurfaceFactory;
@@ -61,9 +63,9 @@ export class MDCMenu extends MDCComponent<MDCMenuFoundation> {
 
     this.handleKeydown_ = (evt) => this.foundation_.handleKeydown(evt);
     this.handleItemAction_ = (evt) => this.foundation_.handleItemAction(this.items[evt.detail.index]);
-    this.afterOpenedCallback_ = () => this.handleAfterOpened_();
+    this.handleMenuSurfaceOpened_ = () => this.foundation_.handleMenuSurfaceOpened();
 
-    this.menuSurface_.listen(MDCMenuSurfaceFoundation.strings.OPENED_EVENT, this.afterOpenedCallback_);
+    this.menuSurface_.listen(MDCMenuSurfaceFoundation.strings.OPENED_EVENT, this.handleMenuSurfaceOpened_);
     this.listen('keydown', this.handleKeydown_);
     this.listen(MDCListFoundation.strings.ACTION_EVENT, this.handleItemAction_);
   }
@@ -74,7 +76,7 @@ export class MDCMenu extends MDCComponent<MDCMenuFoundation> {
     }
 
     this.menuSurface_.destroy();
-    this.menuSurface_.unlisten(MDCMenuSurfaceFoundation.strings.OPENED_EVENT, this.afterOpenedCallback_);
+    this.menuSurface_.unlisten(MDCMenuSurfaceFoundation.strings.OPENED_EVENT, this.handleMenuSurfaceOpened_);
     this.unlisten('keydown', this.handleKeydown_);
     this.unlisten(MDCListFoundation.strings.ACTION_EVENT, this.handleItemAction_);
     super.destroy();
@@ -109,6 +111,16 @@ export class MDCMenu extends MDCComponent<MDCMenuFoundation> {
 
   set quickOpen(quickOpen: boolean) {
     this.menuSurface_.quickOpen = quickOpen;
+  }
+
+  /**
+   * Sets default focus state where the menu should focus every time when menu
+   * is opened. Focuses the list root (`DefaultFocusState.LIST_ROOT`) element by
+   * default.
+   * @param focusState Default focus state.
+   */
+  setDefaultFocusState(focusState: DefaultFocusState) {
+    this.foundation_.setDefaultFocusState(focusState);
   }
 
   /**
@@ -191,15 +203,11 @@ export class MDCMenu extends MDCComponent<MDCMenuFoundation> {
         index: evtData.index,
         item: this.items[evtData.index],
       }),
+      getMenuItemCount: () => this.items.length,
+      focusItemAtIndex: (index) => (this.items[index] as HTMLElement).focus(),
+      focusListRoot: () => (this.root_.querySelector(strings.LIST_SELECTOR) as HTMLElement).focus(),
     };
     // tslint:enable:object-literal-sort-keys
     return new MDCMenuFoundation(adapter);
-  }
-
-  private handleAfterOpened_() {
-    const list = this.items;
-    if (list.length > 0) {
-      (list[0] as HTMLElement).focus();
-    }
   }
 }

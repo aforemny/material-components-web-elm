@@ -23,9 +23,9 @@
 
 import {MDCComponent} from '@material/base/component';
 import * as ponyfill from '@material/dom/ponyfill';
-import {MDCFloatingLabel, MDCFloatingLabelFactory} from '@material/floating-label/index';
-import {MDCLineRipple, MDCLineRippleFactory} from '@material/line-ripple/index';
-import {MDCNotchedOutline, MDCNotchedOutlineFactory} from '@material/notched-outline/index';
+import {MDCFloatingLabel, MDCFloatingLabelFactory} from '@material/floating-label/component';
+import {MDCLineRipple, MDCLineRippleFactory} from '@material/line-ripple/component';
+import {MDCNotchedOutline, MDCNotchedOutlineFactory} from '@material/notched-outline/component';
 import {MDCRippleAdapter} from '@material/ripple/adapter';
 import {MDCRipple, MDCRippleFactory} from '@material/ripple/component';
 import {MDCRippleFoundation} from '@material/ripple/foundation';
@@ -41,16 +41,16 @@ import {
 import {
   MDCTextFieldCharacterCounter,
   MDCTextFieldCharacterCounterFactory,
-  MDCTextFieldCharacterCounterFoundation,
-} from '@material/textfield/character-counter/index';
+} from '@material/textfield/character-counter/component';
+import {MDCTextFieldCharacterCounterFoundation} from '@material/textfield/character-counter/foundation';
 import {cssClasses, strings} from '@material/textfield/constants';
 import {MDCTextFieldFoundation} from '@material/textfield/foundation';
 import {
   MDCTextFieldHelperText,
   MDCTextFieldHelperTextFactory,
-  MDCTextFieldHelperTextFoundation,
-} from '@material/textfield/helper-text/index';
-import {MDCTextFieldIcon, MDCTextFieldIconFactory} from '@material/textfield/icon/index';
+} from '@material/textfield/helper-text/component';
+import {MDCTextFieldHelperTextFoundation} from '@material/textfield/helper-text/foundation';
+import {MDCTextFieldIcon, MDCTextFieldIconFactory} from '@material/textfield/icon/component';
 import {MDCTextFieldFoundationMap} from '@material/textfield/types';
 
 export class MDCTextField extends MDCComponent<MDCTextFieldFoundation> implements MDCRippleCapableSurface {

@@ -16,6 +16,7 @@ docs: node_modules
 
 pages: distclean node_modules
 	mkdir -p gh-pages
+	tsc --project ./tsconfig.json --module esnext --importHelpers
 	webpack --mode=production
 	(cd demo && make)
 	rsync --delete -r demo/images gh-pages
@@ -32,6 +33,7 @@ release: distclean node_modules
 	(cd examples/simple-counter && make)
 	elm make --docs=docs.json
 	rm -rf docs.json
+	tsc --project ./tsconfig.json --module esnext --importHelpers
 	webpack --mode=production
 	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-web-elm.min.css
 

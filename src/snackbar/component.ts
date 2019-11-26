@@ -27,8 +27,7 @@ import {closest} from '@material/dom/ponyfill';
 import {MDCSnackbarAdapter} from '@material/snackbar/adapter';
 import {strings} from '@material/snackbar/constants';
 import {MDCSnackbarFoundation} from '@material/snackbar/foundation';
-import {MDCSnackbarAnnouncer, MDCSnackbarAnnouncerFactory, MDCSnackbarCloseEventDetail} from '@material/snackbar/types';
-import * as util from '@material/snackbar/util';
+import {MDCSnackbarCloseEventDetail} from '@material/snackbar/types';
 
 const {
   SURFACE_SELECTOR, LABEL_SELECTOR, ACTION_SELECTOR, DISMISS_SELECTOR,
@@ -40,8 +39,6 @@ export class MDCSnackbar extends MDCComponent<MDCSnackbarFoundation> {
     return new MDCSnackbar(root);
   }
 
-  private announce_!: MDCSnackbarAnnouncer; // assigned in initialize()
-
   private actionEl_!: Element; // assigned in initialSyncWithDOM()
   private labelEl_!: Element; // assigned in initialSyncWithDOM()
   private surfaceEl_!: Element; // assigned in initialSyncWithDOM()
@@ -49,8 +46,7 @@ export class MDCSnackbar extends MDCComponent<MDCSnackbarFoundation> {
   private handleKeyDown_!: SpecificEventListener<'keydown'>; // assigned in initialSyncWithDOM()
   private handleSurfaceClick_!: SpecificEventListener<'click'>; // assigned in initialSyncWithDOM()
 
-  initialize(announcerFactory: MDCSnackbarAnnouncerFactory = () => util.announce) {
-    this.announce_ = announcerFactory();
+  initialize() {
   }
 
   initialSyncWithDOM() {
@@ -96,7 +92,7 @@ export class MDCSnackbar extends MDCComponent<MDCSnackbarFoundation> {
     // To ensure we don't accidentally omit any methods, we need a separate, strongly typed adapter variable.
     const adapter: MDCSnackbarAdapter = {
       addClass: (className) => this.root_.classList.add(className),
-      announce: () => this.announce_(this.labelEl_),
+      announce: () => {},
       notifyClosed: (reason) => this.emit<MDCSnackbarCloseEventDetail>(CLOSED_EVENT, reason ? {reason} : {}),
       notifyClosing: (reason) => this.emit<MDCSnackbarCloseEventDetail>(CLOSING_EVENT, reason ? {reason} : {}),
       notifyOpened: () => this.emit(OPENED_EVENT, {}),

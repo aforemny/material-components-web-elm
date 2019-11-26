@@ -28,12 +28,12 @@ in a custom HTML document. From your HTML document, you have to include the
 following assets to use this library.
 
 Please make sure that the last two assets match this library's version (ie.
-2.0.0) exactly.
+2.0.1) exactly.
 
 ```html
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/material-components-web-elm@2.0.0/dist/material-components-web-elm.min.css">
-<script src="https://unpkg.com/material-components-web-elm@2.0.0/dist/material-components-web-elm.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/material-components-web-elm@2.0.1/dist/material-components-web-elm.min.css">
+<script src="https://unpkg.com/material-components-web-elm@2.0.1/dist/material-components-web-elm.min.js"></script>
 ```
 
 Refer to the [simple counter
@@ -49,7 +49,7 @@ and
 Install the assets JavaScript and CSS assets via npm:
 
 ```sh
-$ npm install --save material-components-web-elm@2.0.0
+$ npm install --save material-components-web-elm@2.0.1
 ```
 
 Then in your `index.js` add the following imports:

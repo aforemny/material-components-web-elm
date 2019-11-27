@@ -43,8 +43,6 @@ export class MDCMenuSurface extends MDCComponent<MDCMenuSurfaceFoundation> {
   protected root_!: HTMLElement; // assigned in MDCComponent constructor
 
   private previousFocus_?: HTMLElement | SVGElement | null;
-  private firstFocusableElement_?: HTMLElement | SVGElement;
-  private lastFocusableElement_?: HTMLElement | SVGElement;
 
   private handleKeydown_!: SpecificEventListener<'keydown'>; // assigned in initialSyncWithDOM()
   private handleBodyClick_!: SpecificEventListener<'click'>; // assigned in initialSyncWithDOM()
@@ -73,42 +71,25 @@ export class MDCMenuSurface extends MDCComponent<MDCMenuSurfaceFoundation> {
 
   /** Handle keys that close the surface. */
   handleKeydown(evt: KeyboardEvent) {
-    const {keyCode, key, shiftKey} = evt;
+    const {keyCode, key} = evt;
 
     const isEscape = key === 'Escape' || keyCode === 27;
-    const isTab = key === 'Tab' || keyCode === 9;
-
-
-    const isLastElementFocused = this.lastFocusableElement_
-      ? this.lastFocusableElement_ === document.activeElement
-      : false;
-    const isFirstElementFocused = this.firstFocusableElement_
-      ? this.firstFocusableElement_ === document.activeElement
-      : false;
     if (isEscape) {
       this.emit("MDCMenu:close", {}, true);
-    } else if (isTab) {
-      if (isLastElementFocused && !shiftKey) {
-        if (this.firstFocusableElement_ && this.firstFocusableElement_.focus) {
-          this.firstFocusableElement_.focus();
-        }
-        evt.preventDefault();
-      } else if (isFirstElementFocused && shiftKey) {
-        if (this.lastFocusableElement_ && this.lastFocusableElement_.focus) {
-          this.lastFocusableElement_.focus();
-        }
-        evt.preventDefault();
-      }
     }
   }
 
   /** Handle clicks and close if not within menu-surface element. */
   handleBodyClick(evt: MouseEvent) {
     const el = evt.target as Element;
-    if (this.root_.contains(el)) {
+    if (this.isElementInContainer(el)) {
       return;
     }
     this.emit("MDCMenu:close", {}, true);
+  }
+
+  isElementInContainer(el: Element) {
+    return this.root_.contains(el);
   }
 
   destroy() {
@@ -118,19 +99,16 @@ export class MDCMenuSurface extends MDCComponent<MDCMenuSurfaceFoundation> {
     super.destroy();
   }
 
-  get open(): boolean {
+  isOpen(): boolean {
     return this.foundation_.isOpen();
   }
 
-  set open(value: boolean) {
-    if (value) {
-      const focusableElements = this.root_.querySelectorAll<HTMLElement | SVGElement>(strings.FOCUSABLE_ELEMENTS);
-      this.firstFocusableElement_ = focusableElements[0];
-      this.lastFocusableElement_ = focusableElements[focusableElements.length - 1];
-      this.foundation_.open();
-    } else {
-      this.foundation_.close();
-    }
+  open() {
+    this.foundation_.open();
+  }
+
+  close(skipRestoreFocus = false) {
+    this.foundation_.close(skipRestoreFocus);
   }
 
   set quickOpen(quickOpen: boolean) {
@@ -195,7 +173,7 @@ export class MDCMenuSurface extends MDCComponent<MDCMenuSurfaceFoundation> {
       hasAnchor: () => !!this.anchorElement,
       notifyClose: () => this.emit(MDCMenuSurfaceFoundation.strings.CLOSED_EVENT, {}),
       notifyOpen: () => this.emit(MDCMenuSurfaceFoundation.strings.OPENED_EVENT, {}),
-      isElementInContainer: (el) => this.root_.contains(el),
+      isElementInContainer: (el) => this.isElementInContainer(el),
       isRtl: () => getComputedStyle(this.root_).getPropertyValue('direction') === 'rtl',
       setTransformOrigin: (origin) => {
         const propertyName = `${util.getTransformPropertyName(window)}-origin`;
@@ -213,14 +191,6 @@ export class MDCMenuSurface extends MDCComponent<MDCMenuSurfaceFoundation> {
           }
         }
       },
-      isFirstElementFocused: () =>
-          this.firstFocusableElement_ ? this.firstFocusableElement_ === document.activeElement : false,
-      isLastElementFocused: () =>
-          this.lastFocusableElement_ ? this.lastFocusableElement_ === document.activeElement : false,
-      focusFirstElement: () =>
-          this.firstFocusableElement_ && this.firstFocusableElement_.focus && this.firstFocusableElement_.focus(),
-      focusLastElement: () =>
-          this.lastFocusableElement_ && this.lastFocusableElement_.focus && this.lastFocusableElement_.focus(),
 
       getInnerDimensions: () => {
         return {width: this.root_.offsetWidth, height: this.root_.offsetHeight};

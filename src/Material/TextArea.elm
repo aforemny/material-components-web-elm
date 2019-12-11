@@ -43,7 +43,7 @@ module Material.TextArea exposing
                 , value = Just "hello world"
                 , onInput = Just ValueChanged
                 , rows = Just 4
-                , columns = Just 20
+                , cols = Just 20
             }
 
 @docs textArea, textAreaConfig, TextAreaConfig

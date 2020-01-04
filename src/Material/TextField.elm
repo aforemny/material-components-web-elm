@@ -44,8 +44,8 @@ module Material.TextField exposing
     main =
         textField
             { textFieldConfig
-                | label = "My text field"
-                , value = Just "hello world"
+                | label = Just "My text field"
+                , value = "hello world"
                 , onInput = Just ValueChanged
             }
 

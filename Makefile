@@ -8,6 +8,7 @@ build: node_modules
 	cp demo/demo.js gh-pages
 	cp dist/material-components-web-elm.min.js gh-pages
 	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-web-elm.min.css
+	cp dist/material-components-web-elm.min.css gh-pages
 
 
 docs: node_modules

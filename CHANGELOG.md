@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/aforemny/material-components-web-elm/compare/2.0.1...2.1.0) (2020-01-07)
+
+
+### Features
+
+* Add Data Table ([4ffdfa4](https://github.com/aforemny/material-components-web-elm/commit/4ffdfa4a6dc5dbecfd4a7680d6f7c70153bbc101))
+* Update to MDC Web 3.2.0 ([c01ce82](https://github.com/aforemny/material-components-web-elm/commit/c01ce82da33c8207bd9fcb0d5494a7a1ae1aa861))
+
 ### 2.0.1 (2019-11-26)
 
 

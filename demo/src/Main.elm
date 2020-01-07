@@ -8,6 +8,7 @@ import Demo.Cards
 import Demo.CatalogPage as CatalogPage
 import Demo.Checkbox
 import Demo.Chips
+import Demo.DataTable
 import Demo.DenseTopAppBar
 import Demo.Dialog
 import Demo.DismissibleDrawer
@@ -89,6 +90,7 @@ type alias Model =
     , theme : Demo.Theme.Model
     , topAppBar : Demo.TopAppBar.Model
     , typography : Demo.Typography.Model
+    , dataTable : Demo.DataTable.Model
     }
 
 
@@ -131,6 +133,7 @@ defaultModel key =
     , theme = Demo.Theme.defaultModel
     , topAppBar = Demo.TopAppBar.defaultModel
     , typography = Demo.Typography.defaultModel
+    , dataTable = Demo.DataTable.defaultModel
     }
 
 
@@ -174,6 +177,7 @@ type Msg
     | ShortTopAppBarMsg Demo.ShortTopAppBar.Msg
     | ProminentTopAppBarMsg Demo.ProminentTopAppBar.Msg
     | FixedTopAppBarMsg Demo.FixedTopAppBar.Msg
+    | DataTableMsg Demo.DataTable.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -323,6 +327,11 @@ update msg model =
 
         TypographyMsg msg_ ->
             ( { model | typography = Demo.Typography.update msg_ model.typography }
+            , Cmd.none
+            )
+
+        DataTableMsg msg_ ->
+            ( { model | dataTable = Demo.DataTable.update msg_ model.dataTable }
             , Cmd.none
             )
 
@@ -524,6 +533,11 @@ body model =
             CatalogPage.view TypographyMsg
                 catalogPageConfig
                 (Demo.Typography.view model.typography)
+
+        Demo.Url.DataTable ->
+            CatalogPage.view DataTableMsg
+                catalogPageConfig
+                (Demo.DataTable.view model.dataTable)
 
         Demo.Url.Error404 requestedHash ->
             Html.div

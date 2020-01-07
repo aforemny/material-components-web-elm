@@ -44,6 +44,7 @@ type Url
     | ShortTopAppBar
     | ShortCollapsedTopAppBar
     | Typography
+    | DataTable
     | Error404 String
 
 
@@ -154,6 +155,9 @@ toString url =
 
         Typography ->
             "#typography"
+
+        DataTable ->
+            "#data-table"
 
         Error404 requestedHash ->
             requestedHash
@@ -271,6 +275,9 @@ fromString url =
 
         "typography" ->
             Typography
+
+        "data-table" ->
+            DataTable
 
         _ ->
             Error404 url

@@ -163,6 +163,7 @@ catalogDrawerItems =
     , { label = "Card", url = Url.Card }
     , { label = "Checkbox", url = Url.Checkbox }
     , { label = "Chips", url = Url.Chips }
+    , { label = "DataTable", url = Url.DataTable }
     , { label = "Dialog", url = Url.Dialog }
     , { label = "Drawer", url = Url.Drawer }
     , { label = "Elevation", url = Url.Elevation }

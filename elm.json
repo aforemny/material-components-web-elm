@@ -13,6 +13,7 @@
         "Material.Card",
         "Material.Checkbox",
         "Material.Chips",
+        "Material.DataTable",
         "Material.Dialog",
         "Material.Drawer",
         "Material.Elevation",

@@ -81,6 +81,11 @@ imageListItems =
       , title = "Chips"
       , subtitle = "Chips"
       }
+    , { url = DataTable
+      , icon = "images/data_table_180px.svg"
+      , title = "Data Table"
+      , subtitle = "Data Table"
+      }
     , { url = Dialog
       , icon = "images/dialog_180px.svg"
       , title = "Dialog"

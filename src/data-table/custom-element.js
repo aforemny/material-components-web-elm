@@ -8,7 +8,7 @@ class MdcDataTable extends HTMLElement {
   }
 
   connectedCallback() {
-    this.datatable_ = new MDCDataTable(this);
+    this.dataTable_ = new MDCDataTable(this);
   }
 
   disconnectedCallback() {

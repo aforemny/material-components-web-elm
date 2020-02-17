@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [2.1.0](https://github.com/aforemny/material-components-web-elm/compare/2.0.1...2.1.0) (2020-01-07)
+### 2.1.1 (2020-02-17)
+
+
+### Bug Fixes
+
+* Data Table throws error upon destruction ([eaf1649](https://github.com/aforemny/material-components-web-elm/commit/eaf1649680d366d20e260f6cb5019fc98bd71c8a))
+
+## 2.1.0 (2020-01-07)
 
 
 ### Features

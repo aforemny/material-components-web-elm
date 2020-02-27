@@ -52,12 +52,13 @@ Install the assets JavaScript and CSS assets via npm:
 $ npm install --save material-components-web-elm@2.1.1
 ```
 
-Then in your `index.js` add the following imports:
+Then in your `index.js` add the following imports above your elm initialization:
 
 ```js
 require("material-components-web/dist/material-components-web.min.js");
 require("material-components-web/dist/material-components-web.min.css")
 ```
+
 
 
 ## Contributions

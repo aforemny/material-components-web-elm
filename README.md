@@ -57,9 +57,10 @@ $ npm install --save material-components-web-elm@2.1.1
 Then in your `index.js` add the following imports:
 
 ```js
-require("material-components-web/dist/material-components-web.js");
-require("material-components-web/dist/material-components-web.css")
+require("material-components-web/dist/material-components-web.min.js");
+require("material-components-web/dist/material-components-web.min.css")
 ```
+
 
 
 ## Contributions

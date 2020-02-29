@@ -1,3 +1,5 @@
+![build](https://github.com/aforemny/material-components-web-elm/workflows/build/badge.svg)
+
 # Material Components for Elm
 
 A [Material Design](https://material.io/design) framework.

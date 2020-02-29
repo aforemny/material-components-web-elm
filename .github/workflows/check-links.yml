@@ -1,0 +1,16 @@
+name: check-links
+on: [push]
+
+jobs:
+  build:
+    name: Check links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: cachix/install-nix-action@v6
+      - run: nix-shell --run make
+        env:
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz
+      - run: nix-shell --run "sh bin/check-links.sh"
+        env:
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz

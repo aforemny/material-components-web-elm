@@ -47,4 +47,8 @@ find src -name "*.elm" \
   | sed 's@.*#@http://localhost:8080/#@' \
   | xargs node "$fetch" ./gh-pages
 
+code="$?"
+
 rm -f "$fetch"
+
+exit $code

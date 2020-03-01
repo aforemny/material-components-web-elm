@@ -16,7 +16,7 @@ users interact with a button, action, or other control.
 
 # Resources
 
-  - [Demo: Menus](https://aforemny.github.io/material-components-web-elm/#menus)
+  - [Demo: Menus](https://aforemny.github.io/material-components-web-elm/#menu)
   - [Material Design Guidelines: Menus](https://material.io/go/design-menus)
   - [MDC Web: Menu](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu#sass-mixins)

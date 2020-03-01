@@ -23,7 +23,7 @@ Notes](https://github.com/material-components/material-components-web/tree/maste
 
 # Resources
 
-  - [Demo: Selects](https://aforemny.github.io/material-components-web-elm/#selects)
+  - [Demo: Selects](https://aforemny.github.io/material-components-web-elm/#select)
   - [Material Design Guidelines: Fields](https://material.io/go/design-text-fields)
   - [MDC Web: Select](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select#sass-mixins)

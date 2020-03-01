@@ -15,7 +15,7 @@ preferred way to adjust settings on mobile.
 
 # Resources
 
-  - [Demo: Switches](https://aforemny.github.io/material-components-web-elm/#switches)
+  - [Demo: Switches](https://aforemny.github.io/material-components-web-elm/#switch)
   - [Material Design Guidelines: Selection Controls – Switches](https://material.io/go/design-switches)
   - [MDC Web: Switch](https://github.com/material-components/material-components-web/tree/master/packages/mdc-switch)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-switch#sass-mixins)

@@ -24,7 +24,7 @@ module Material.TextField exposing
 
 # Resources
 
-  - [Demo: Text Fields](https://aforemny.github.io/material-components-web-elm/#text-fields)
+  - [Demo: Text Fields](https://aforemny.github.io/material-components-web-elm/#text-field)
   - [Material Design Guidelines: Menus](https://material.io/go/design-menus)
   - [MDC Web: Menu](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu#sass-mixins)

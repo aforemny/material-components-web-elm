@@ -18,10 +18,10 @@ const http = require("http");
     headless: true,
     executablePath: process.env.CHROMIUM_PATH
   });
-  const page = await browser.newPage();
   let errors = [];
 
   for (url of urls) {
+    const page = await browser.newPage();
     await page.goto(url);
     if (await page.\$eval("body", node => !!node.innerText.match(/404/))) {
       errors.push(url);

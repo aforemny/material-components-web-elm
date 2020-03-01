@@ -22,7 +22,7 @@ module Material.Fab exposing
 
 # Resources
 
-  - [Demo: Floating action buttons](https://aforemny.github.io/material-components-web-elm/#fabs)
+  - [Demo: Floating action buttons](https://aforemny.github.io/material-components-web-elm/#fab)
   - [Material Design Guidelines: Floating Action Button](https://material.io/go/design-fab)
   - [MDC Web: Floating Action Button](https://github.com/material-components/material-components-web/tree/master/packages/mdc-fab)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-fab#sass-mixins)

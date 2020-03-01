@@ -19,7 +19,7 @@ optionally supporting a text label.
 
 # Resources
 
-  - [Demo: Image Lists](https://aforemny.github.io/material-components-web-elm/#image-lists)
+  - [Demo: Image Lists](https://aforemny.github.io/material-components-web-elm/#image-list)
   - [Material Design Guidelines: Image list](https://material.io/go/design-image-list)
   - [MDC Web: Image List](https://github.com/material-components/material-components-web/tree/master/packages/mdc-image-list)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-image-list#sass-mixins)

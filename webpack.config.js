@@ -1,4 +1,5 @@
 const path = require("path");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports =
   [
@@ -33,17 +34,26 @@ module.exports =
     */
     "material-components-web-elm",
   ].map(name => ({
-    entry: `./src/${name}.js`,
+    entry: {
+      [`${name}`]: `./src/${name}.js`,
+      [`${name}.min`]: `./src/${name}.js`
+    },
+    devtool: "source-map",
     output: {
       path: path.resolve(__dirname, "dist"),
-      filename: name === "material-components-web-elm"
-        ? `${name}.min.js`
-        : `mdc-${name}.min.js`
+      filename: name === "material-components-web-elm" ? `[name].js` : `mdc-[name].js`
     },
     module: {
       rules: [
         { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
         { test: /\.ts$/, exclude: /node_modules/, loader: "ts-loader" }
       ]
-    }
+    },
+    optimization: {
+      minimize: true,
+      minimizer: [new UglifyJsPlugin({
+        include: /\.min\.js$/,
+        sourceMap: true
+      })]
+    },
   }));

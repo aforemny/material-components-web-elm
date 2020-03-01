@@ -1,4 +1,4 @@
-build:
+build: src/*.elm src/**/*.elm
 	elm make --optimize src/Main.elm --output demo.js
 
 clean:

@@ -1,7 +1,7 @@
 all: build-pages
 
 
-build-npm: node_modules src/**/*.ts src/**/custom-element.js
+build-npm: node_modules src/**/component.ts src/**/custom-element.js
 	tsc --project ./tsconfig.json --module esnext --importHelpers
 	webpack --mode=production
 	cp node_modules/material-components-web/dist/material-components-web.css dist/material-components-web-elm.css

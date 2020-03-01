@@ -12,6 +12,7 @@ import Set exposing (Set)
 type alias Model =
     { selectedChips : Set String
     , choiceChip : Maybe String
+    , inputChips : Set String
     }
 
 
@@ -25,6 +26,7 @@ defaultModel =
             , "chips-filter-chips-alice"
             ]
     , choiceChip = Just "chips-choice-medium"
+    , inputChips = Set.fromList [ "1", "2", "3" ]
     }
 
 
@@ -36,6 +38,7 @@ type ChipType
     = Choice
     | Filter
     | Action
+    | Input
 
 
 update : Msg -> Model -> Model
@@ -52,6 +55,9 @@ update msg model =
                             else
                                 Just index
                     }
+
+                Input ->
+                    { model | inputChips = Set.remove index model.inputChips }
 
                 _ ->
                     { model
@@ -88,6 +94,9 @@ view model =
         , actionChips model
         , Html.h2 [ Typography.subtitle1 ] [ text "Shaped Chips" ]
         , shapedChips model
+
+        -- , Html.h2 [ Typography.subtitle1 ] [ text "Input Chips" ]
+        -- , inputChips model
         ]
     }
 
@@ -193,3 +202,18 @@ shapedChips model =
         , chip "chips-shaped-chips-sofas" "Sofas"
         , chip "chips-shaped-chips-office-chairs" "Office chairs"
         ]
+
+
+inputChips : Model -> Html Msg
+inputChips model =
+    let
+        chip index =
+            inputChip
+                { inputChipConfig
+                    | onTrailingIconClick = Just (ChipClicked Input index)
+                    , additionalAttributes =
+                        [ Html.Attributes.style "border-radius" "4px" ]
+                }
+                index
+    in
+    inputChipSet [] (List.map chip (Set.toList model.inputChips))

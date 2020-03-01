@@ -17,6 +17,12 @@ class MdcChip extends HTMLElement {
     }
   }
 
+  get shouldRemoveOnTrailingIconClick() {
+    return false;
+  }
+
+  set shouldRemoveOnTrailingIconClick(shouldRemove) {}
+
   constructor() {
     super();
     this.selected_ = false;
@@ -26,6 +32,7 @@ class MdcChip extends HTMLElement {
     installClassNameChangeHook.call(this);
     this.chip_ = new MDCChip(this);
     this.chip_.selected = this.selected_;
+    this.chip_.shouldRemoveOnTrailingIconClick = false;
   }
 
   disconnectedCallback() {

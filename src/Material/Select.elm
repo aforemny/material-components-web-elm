@@ -316,15 +316,8 @@ changeHandler { onChange } =
 
 
 floatingLabelElt : SelectConfig msg -> Html msg
-floatingLabelElt { label, value } =
-    Html.label
-        [ if Maybe.withDefault "" value /= "" then
-            class "mdc-floating-label mdc-floating-label--float-above"
-
-          else
-            class "mdc-floating-label"
-        ]
-        [ text label ]
+floatingLabelElt { label } =
+    Html.label [ class "mdc-floating-label" ] [ text label ]
 
 
 lineRippleElt : Html msg

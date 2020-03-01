@@ -340,17 +340,10 @@ disabledProp { disabled } =
 
 
 labelElt : TextAreaConfig msg -> Html msg
-labelElt { label, value } =
+labelElt { label } =
     case label of
         Just str ->
-            Html.div
-                (if value /= "" then
-                    [ class "mdc-floating-label mdc-floating-label--float-above" ]
-
-                 else
-                    [ class "mdc-floating-label" ]
-                )
-                [ text str ]
+            Html.div [ class "mdc-floating-label" ] [ text str ]
 
         Nothing ->
             text ""

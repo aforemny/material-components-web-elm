@@ -484,10 +484,26 @@ disabledProp { disabled } =
 
 
 labelElt : TextFieldConfig msg -> Html msg
-labelElt { label } =
+labelElt { label, value } =
+    let
+        floatingLabelCs =
+            "mdc-floating-label"
+
+        floatingLabelFloatAboveCs =
+            "mdc-floating-label--float-above"
+    in
     case label of
         Just str ->
-            Html.div [ class "mdc-floating-label" ] [ text str ]
+            Html.div
+                [ if value /= "" then
+                    class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
+
+                  else
+                    class floatingLabelCs
+                , Html.Attributes.property "foucClassNames"
+                    (Encode.list Encode.string [ floatingLabelFloatAboveCs ])
+                ]
+                [ text str ]
 
         Nothing ->
             text ""

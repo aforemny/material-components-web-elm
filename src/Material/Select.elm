@@ -316,8 +316,24 @@ changeHandler { onChange } =
 
 
 floatingLabelElt : SelectConfig msg -> Html msg
-floatingLabelElt { label } =
-    Html.label [ class "mdc-floating-label" ] [ text label ]
+floatingLabelElt { label, value } =
+    let
+        floatingLabelCs =
+            "mdc-floating-label"
+
+        floatingLabelFloatAboveCs =
+            "mdc-floating-label--float-above"
+    in
+    Html.div
+        [ if Maybe.withDefault "" value /= "" then
+            class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
+
+          else
+            class floatingLabelCs
+        , Html.Attributes.property "foucClassNames"
+            (Encode.list Encode.string [ floatingLabelFloatAboveCs ])
+        ]
+        [ text label ]
 
 
 lineRippleElt : Html msg

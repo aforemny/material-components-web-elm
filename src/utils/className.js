@@ -24,6 +24,15 @@
  *
  * We will not require this fix anymore once Elm's virtual dom implementation
  * uses `classList.add`, `classList.remove` to manage class names.
+ *
+ * In addition to this, there are some class names that Elm should assume
+ * control over for the first frame, but may not remove them in subsequent
+ * frames. Those class names are class names that fall into the component
+ * state, but may have to be set by Elm in the first frame to prevent a flash
+ * of unstyled content (FOUC).
+ *
+ * The logic for those is implemented similarly, with the exception that the
+ * classNames have to be listed in the node's property `foucClassNames`.
  */
 
 function setClassName(className) {
@@ -32,6 +41,7 @@ function setClassName(className) {
     this.classList.add(cs)
   };
   for (let cs of this.className_) {
+    if ((!!this.foucClassNames) && (this.foucClassNames.includes(cs))) return;
     if (!css.includes(cs)) this.classList.remove(cs);
   }
   this.className_ = css;

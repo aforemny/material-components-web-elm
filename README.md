@@ -109,7 +109,7 @@ npm link webpack-icons-installer
 ```
 And in `src/index.js` import on the top
 
-```js```
+```js
 require('webpack-icons-installer/google');
 require('typeface-roboto');
 ```

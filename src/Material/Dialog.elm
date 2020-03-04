@@ -12,7 +12,7 @@ module Material.Dialog exposing (dialog, dialogConfig, DialogConfig, DialogConte
 
 # Resources
 
-  - [Demo: Dialogs](https://aforemny.github.io/material-components-web-elm/#dialogs)
+  - [Demo: Dialogs](https://aforemny.github.io/material-components-web-elm/#dialog)
   - [Material Design Guidelines: Dialogs](https://material.io/go/design-dialogs)
   - [MDC Web: Dialog](https://github.com/material-components/material-components-web/tree/master/packages/mdc-dialog)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-dialog#sass-mixins)

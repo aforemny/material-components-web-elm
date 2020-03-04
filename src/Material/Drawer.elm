@@ -21,7 +21,7 @@ other functionality on an app.
 
 # Resources
 
-  - [Demo: Drawers](https://aforemny.github.io/material-components-web-elm/#drawers)
+  - [Demo: Drawers](https://aforemny.github.io/material-components-web-elm/#drawer)
   - [Material Design Guidelines: Navigation Drawer](https://material.io/go/design-navigation-drawer)
   - [MDC Web: List](https://github.com/material-components/material-components-web/tree/master/packages/mdc-drawer)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-drawer#sass-mixins)

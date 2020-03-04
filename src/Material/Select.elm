@@ -23,7 +23,7 @@ accessible, and fully RTL-aware.
 
 # Resources
 
-  - [Demo: Selects](https://aforemny.github.io/material-components-web-elm/#selects)
+  - [Demo: Selects](https://aforemny.github.io/material-components-web-elm/#select)
   - [Material Design Guidelines: Text Fields](https://material.io/go/design-text-fields)
   - [MDC Web: Select](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-select#sass-mixins)
@@ -317,12 +317,21 @@ changeHandler { onChange } =
 
 floatingLabelElt : SelectConfig msg -> Html msg
 floatingLabelElt { label, value } =
-    Html.label
+    let
+        floatingLabelCs =
+            "mdc-floating-label"
+
+        floatingLabelFloatAboveCs =
+            "mdc-floating-label--float-above"
+    in
+    Html.div
         [ if Maybe.withDefault "" value /= "" then
-            class "mdc-floating-label mdc-floating-label--float-above"
+            class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
 
           else
-            class "mdc-floating-label"
+            class floatingLabelCs
+        , Html.Attributes.property "foucClassNames"
+            (Encode.list Encode.string [ floatingLabelFloatAboveCs ])
         ]
         [ text label ]
 

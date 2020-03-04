@@ -18,7 +18,7 @@ be used. It should be visible either persistently or only on focus.
 
 # Resources
 
-  - [Demo: Text fields](https://aforemny.github.io/material-components-web-elm/#text-fields)
+  - [Demo: Text fields](https://aforemny.github.io/material-components-web-elm/#text-field)
   - [Material Design Guidelines: Text Fields Layout](https://material.io/go/design-text-fields#text-fields-layout)
   - [MDC Web: Text Field Helper Text](https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield/helper-text)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield/helper-text#sass-mixins)

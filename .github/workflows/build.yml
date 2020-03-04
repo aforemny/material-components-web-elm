@@ -1,0 +1,19 @@
+name: build
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: cachix/install-nix-action@v6
+      - run: nix-shell --run "make node_modules"
+        env:
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz
+      - run: nix-shell --run "ls node_modules/material-components-web/dist/material-components-web{,.min}.css{,.map}"
+      - run: nix-shell --run "find node_modules/material-components-web/dist/"
+      - run: nix-shell --run "find node_modules"
+      - run: nix-shell --run "make release"
+        env:
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz

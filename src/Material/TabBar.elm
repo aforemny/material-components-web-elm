@@ -25,7 +25,7 @@ Scroller and Tab components.
 
 # Resources
 
-  - [Demo: Tab Bar](https://aforemny.github.io/material-components-web-elm/#tab-bars)
+  - [Demo: Tab Bar](https://aforemny.github.io/material-components-web-elm/#tabbar)
   - [Material Design Guidelines: Tabs](https://material.io/go/design-tabs)
   - MDC Web:
     [Tab Bar](https://github.com/material-components/material-components-web/tree/master/packages/mdc-tab-bar),

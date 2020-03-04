@@ -16,7 +16,7 @@ tap.
 
 # Resources
 
-  - [Demo: Icon buttons](https://aforemny.github.io/material-components-web-elm/#icon-buttons)
+  - [Demo: Icon buttons](https://aforemny.github.io/material-components-web-elm/#icon-button)
   - [Material Design Guidelines: Toggle buttons](https://material.io/go/design-buttons#toggle-button)
   - [MDC Web: Icon Button](https://github.com/material-components/material-components-web/tree/master/packages/mdc-icon-button)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-icon-button#sass-mixins)

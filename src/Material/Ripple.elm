@@ -22,7 +22,7 @@ ripple effects which work best with icons.
 
 # Resources
 
-  - [Demo: Ripples](https://aforemny.github.io/material-components-web-elm/#ripples)
+  - [Demo: Ripples](https://aforemny.github.io/material-components-web-elm/#ripple)
   - [Material Design Guidelines: States](https://material.io/go/design-states)
   - [MDC Web: Ripple](https://github.com/material-components/material-components-web/tree/master/packages/mdc-ripple)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-ripple#sass-apis)

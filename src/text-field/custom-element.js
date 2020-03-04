@@ -149,9 +149,19 @@ class MdcTextField extends HTMLElement {
     this.textField_.min = this.min_;
     this.textField_.max = this.max_;
     this.textField_.step = this.step_;
+
+    const floatingLabel = this.querySelector(".mdc-floating-label");
+    if (!!floatingLabel) {
+      installClassNameChangeHook.call(floatingLabel);
+    }
   }
 
   disconnectedCallback() {
+    const floatingLabel = this.querySelector(".mdc-floating-label");
+    if (!!floatingLabel) {
+      uninstallClassNameChangeHook.call(floatingLabel);
+    }
+
     this.textField_.destroy();
     uninstallClassNameChangeHook.call(this);
   }

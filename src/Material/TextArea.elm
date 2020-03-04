@@ -19,7 +19,7 @@ module Material.TextArea exposing
 
 # Resources
 
-  - [Demo: Text Areas](https://aforemny.github.io/material-components-web-elm/#text-fields)
+  - [Demo: Text Areas](https://aforemny.github.io/material-components-web-elm/#text-field)
   - [Material Design Guidelines: Menus](https://material.io/go/design-menus)
   - [MDC Web: Menu](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu)
   - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu#sass-mixins)
@@ -341,15 +341,24 @@ disabledProp { disabled } =
 
 labelElt : TextAreaConfig msg -> Html msg
 labelElt { label, value } =
+    let
+        floatingLabelCs =
+            "mdc-floating-label"
+
+        floatingLabelFloatAboveCs =
+            "mdc-floating-label--float-above"
+    in
     case label of
         Just str ->
             Html.div
-                (if value /= "" then
-                    [ class "mdc-floating-label mdc-floating-label--float-above" ]
+                [ if value /= "" then
+                    class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
 
-                 else
-                    [ class "mdc-floating-label" ]
-                )
+                  else
+                    class floatingLabelCs
+                , Html.Attributes.property "foucClassNames"
+                    (Encode.list Encode.string [ floatingLabelFloatAboveCs ])
+                ]
                 [ text str ]
 
         Nothing ->

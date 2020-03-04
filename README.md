@@ -61,7 +61,70 @@ require("material-components-web/dist/material-components-web.js");
 require("material-components-web/dist/material-components-web.css");
 ```
 
+### Setup using create-elm-app
 
+Set up your project using
+
+```sh
+npm install create-elm-app -g
+create-elm-app my-app
+cd my-app/
+```
+and install materia-components-web-elm:
+
+```sh
+elm install aforemny/material-components-web-elm
+```
+If you want to use CDN to get the material-component-web-elm javascript/css files, then add the following lines to your `public/index.html`
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/material-components-web-elm@2.1.2/dist/material-components-web-elm.min.css">
+<script src="https://unpkg.com/material-components-web-elm@2.1.2/dist/material-components-web-elm.min.js"></script>
+```
+
+If you want to bundle these files with your project, you need to install them 
+```sh
+npm install --save material-components-web-elm@2.1.2
+```
+and import them in the to of your `src/index.js.
+
+```js
+require("material-components-web/dist/material-components-web.js");
+require("material-components-web/dist/material-components-web.css");
+```
+#### Roboto Fonts and Material Icons
+
+In the Html instructions, there was also an Import for the Roboto Font and the Material Icons. 
+If you want to **use a CDN** to get both, then add the following line to your `public/index.html`:
+
+```html
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet">
+```
+(Not Recommended:) If you want to **bundle directly with your app**, you need to install both. Here are some example packages, feel free to swap for your preferred:
+
+```sh
+npm install --save typeface-roboto
+npm install webpack-icons-installer -g
+npm link webpack-icons-installer
+```
+And in `src/index.js` import on the top
+
+```js```
+require('webpack-icons-installer/google');
+require('typeface-roboto');
+```
+
+
+#### Bug
+As the time of writing, Firefox happen to dislike how `create-elm-app` implements the serviceWorker. If you see **Unhandled Rejection (SecurityError): The operation is insecure.**, try replacing in `src/index.js`:
+
+```js
+serviceWorker.unregister();
+```
+to 
+```js
+serviceWorker.register();
+```
 
 ## Contributions
 

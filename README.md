@@ -89,8 +89,8 @@ npm install --save material-components-web-elm@2.1.2
 and import them in the to of your `src/index.js.
 
 ```js
-require("material-components-web/dist/material-components-web.js");
-require("material-components-web/dist/material-components-web.css");
+require("material-components-web-elm/dist/material-components-web-elm.min.js");
+require("material-components-web-elm/dist/material-components-web-elm.min.css");
 ```
 #### Roboto Fonts and Material Icons
 

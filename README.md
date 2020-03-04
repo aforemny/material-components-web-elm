@@ -75,14 +75,14 @@ and install materia-components-web-elm:
 ```sh
 elm install aforemny/material-components-web-elm
 ```
-If you want to use CDN to get the material-component-web-elm javascript/css files, then add the following lines to your `public/index.html`
+If you want to **use CDN** to get the material-component-web-elm javascript/css files, then add the following lines to your `public/index.html`
 
 ```html
 <link rel="stylesheet" href="https://unpkg.com/material-components-web-elm@2.1.2/dist/material-components-web-elm.min.css">
 <script src="https://unpkg.com/material-components-web-elm@2.1.2/dist/material-components-web-elm.min.js"></script>
 ```
 
-If you want to bundle these files with your project, you need to install them 
+If you want to **bundle these files with your project**, you need to install them 
 ```sh
 npm install --save material-components-web-elm@2.1.2
 ```

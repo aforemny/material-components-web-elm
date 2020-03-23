@@ -206,7 +206,7 @@ dismissibleDrawer config nodes =
         [ modalDrawer
             { modalDrawerConfig
                 | open = True
-                , onClick = Just DrawerClosed
+                , onClose = Just DrawerClosed
             }
             [ drawerContent [] [] ]
         , drawerScrim [] []

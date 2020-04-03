@@ -1,4 +1,11 @@
-module Material.Radio exposing (radio, radioConfig, RadioConfig)
+module Material.Radio exposing
+    ( Config, config
+    , setOnChange
+    , setChecked
+    , setDisabled
+    , setAdditionalAttributes
+    , radio
+    )
 
 {-| Radio buttons allow the user to select one option from a set while seeing
 all available options.
@@ -8,6 +15,8 @@ all available options.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Radio](#radio)
   - [Checked Radio](#checked-radio)
   - [Disabled Radio](#disabled-radio)
@@ -26,37 +35,57 @@ all available options.
 Note that radio buttons are usually used in conjunction with form fields. Refer
 to [FormField](Material-FormField) for more information.
 
-    import Material.Radio exposing (radio, radioConfig)
+    import Material.Radio as Radio
 
     type Msg
-        = RadioClicked
+        = Changed
 
     main =
-        radio
-            { radioConfig
-                | checked = True
-                , onChange = Just RadioClicked
-            }
+        Radio.radio
+            (Radio.config
+                |> Radio.setChecked True
+                |> Radio.setOnChange Changed
+            )
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnChange
+@docs setChecked
+@docs setDisabled
+@docs setAdditionalAttributes
 
 
 # Radio
 
-@docs radio, radioConfig, RadioConfig
+@docs radio
 
 
 # Checked Radio
 
-To set the state of a radio button, set its checked configuration field to a Bool value.
+To make a radio button display its checked state, use its `setChecked`
+configuration option.
 
-    radio { radioConfig | checked = False }
+    Radio.radio
+        (Radio.config
+            |> Radio.setChecked
+        )
 
 
 # Disabled Radio
 
-To disable a radio button, set its disabled configuration field to True. Disabled
+To disable a radio button, use its `setDisabled` configuration option. Disabled
 radio buttons cannot be interacted with and have no visual interaction effect.
 
-    radio { radioConfig | disabed = True }
+    Radio.radio
+        (Radio.config
+            |> Radio.setDisabled
+        )
 
 -}
 
@@ -69,38 +98,68 @@ import Json.Encode as Encode
 
 {-| Radio button configuration
 -}
-type alias RadioConfig msg =
-    { checked : Bool
-    , disabled : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    , onChange : Maybe msg
-    }
+type Config msg
+    = Config
+        { checked : Bool
+        , disabled : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        , onChange : Maybe msg
+        }
 
 
 {-| Default radio button configuration
 -}
-radioConfig : RadioConfig msg
-radioConfig =
-    { checked = False
-    , disabled = False
-    , additionalAttributes = []
-    , onChange = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { checked = False
+        , disabled = False
+        , additionalAttributes = []
+        , onChange = Nothing
+        }
+
+
+{-| Make a radio button checked
+-}
+setChecked : Config msg -> Config msg
+setChecked (Config config_) =
+    Config { config_ | checked = True }
+
+
+{-| Make a radio button disabled
+-}
+setDisabled : Config msg -> Config msg
+setDisabled (Config config_) =
+    Config { config_ | disabled = True }
+
+
+{-| Specify additional attributes
+-}
+setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAdditionalAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user changes a radio |
+-}
+setOnChange : msg -> Config msg -> Config msg
+setOnChange onChange (Config config_) =
+    Config { config_ | onChange = Just onChange }
 
 
 {-| Radio button view function
 -}
-radio : RadioConfig msg -> Html msg
-radio config =
+radio : Config msg -> Html msg
+radio ((Config { additionalAttributes }) as config_) =
     Html.node "mdc-radio"
         (List.filterMap identity
             [ rootCs
-            , checkedProp config
-            , disabledProp config
+            , checkedProp config_
+            , disabledProp config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
-        [ nativeControlElt config
+        [ nativeControlElt config_
         , backgroundElt
         ]
 
@@ -110,18 +169,18 @@ rootCs =
     Just (class "mdc-radio")
 
 
-checkedProp : RadioConfig msg -> Maybe (Html.Attribute msg)
-checkedProp { checked } =
+checkedProp : Config msg -> Maybe (Html.Attribute msg)
+checkedProp (Config { checked }) =
     Just (Html.Attributes.property "checked" (Encode.bool checked))
 
 
-disabledProp : RadioConfig msg -> Maybe (Html.Attribute msg)
-disabledProp { disabled } =
+disabledProp : Config msg -> Maybe (Html.Attribute msg)
+disabledProp (Config { disabled }) =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
-changeHandler : RadioConfig msg -> Maybe (Html.Attribute msg)
-changeHandler { checked, onChange } =
+changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler (Config { checked, onChange }) =
     -- Note: MDCList choses to send a change event to all checkboxes, thus we
     -- have to check here if the state actually changed.
     Maybe.map
@@ -141,14 +200,14 @@ changeHandler { checked, onChange } =
         onChange
 
 
-nativeControlElt : RadioConfig msg -> Html msg
-nativeControlElt config =
+nativeControlElt : Config msg -> Html msg
+nativeControlElt config_ =
     Html.input
         (List.filterMap identity
             [ nativeControlCs
             , radioTypeAttr
-            , checkedProp config
-            , changeHandler config
+            , checkedProp config_
+            , changeHandler config_
             ]
         )
         []

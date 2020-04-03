@@ -1,5 +1,5 @@
 module Material.LayoutGrid exposing
-    ( layoutGrid, layoutGridCell, layoutGridInner
+    ( layoutGrid, cell, inner
     , span1, span2, span3, span4, span5, span6, span7, span8, span9, span10, span11, span12
     , alignTop, alignMiddle, alignBottom
     , alignLeft, alignRight
@@ -38,25 +38,20 @@ It has 12 columns on desktop, 8 columns on tablet and 4 columns on phone.
 # Basic Usage
 
     import Material.LayoutGrid as LayoutGrid
-        exposing
-            ( layoutGrid
-            , layoutGridCell
-            , layoutGridInner
-            )
 
     main =
-        layoutGrid []
-            [ layoutGridInner []
-                [ layoutGridCell [] []
-                , layoutGridCell [] []
-                , layoutGridCell [] []
+        LayoutGrid.layoutGrid []
+            [ LayoutGrid.inner []
+                [ LayoutGrid.cell [] []
+                , LayoutGrid.cell [] []
+                , LayoutGrid.cell [] []
                 ]
             ]
 
 
 # Layout Grid
 
-@docs layoutGrid, layoutGridCell, layoutGridInner
+@docs layoutGrid, cell, inner
 
 
 # Cell Spans
@@ -101,15 +96,15 @@ re-introduced since they are living within another cell.
 However, the Material Design guidelines do not recommend having a deeply nested
 grid as it might mean an over complicated UX.
 
-    layoutGrid []
-        [ layoutGridInner []
-            [ layoutGridCell []
-                [ layoutGridInner []
-                    [ layoutGridCell [] []
-                    , layoutGridCell [] []
+    LayoutGrid.layoutGrid []
+        [ LayoutGrid.inner []
+            [ LayoutGrid.cell []
+                [ LayoutGrid.inner []
+                    [ LayoutGrid.cell [] []
+                    , LayoutGrid.cell [] []
                     ]
                 ]
-            , layoutGridCell [] []
+            , LayoutGrid.cell [] []
             ]
         ]
 
@@ -154,15 +149,15 @@ layoutGrid attributes nodes =
 
 {-| Cell view function
 -}
-layoutGridCell : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-layoutGridCell attributes nodes =
+cell : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+cell attributes nodes =
     Html.div (class "mdc-layout-grid__cell" :: attributes) nodes
 
 
 {-| Mandatory wrapper around `layoutGridCell`
 -}
-layoutGridInner : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-layoutGridInner attributes nodes =
+inner : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+inner attributes nodes =
     Html.div (class "mdc-layout-grid__inner" :: attributes) nodes
 
 

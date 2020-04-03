@@ -1,4 +1,11 @@
-module Material.FormField exposing (formField, formFieldConfig, FormFieldConfig)
+module Material.FormField exposing
+    ( Config, config
+    , setOnClick
+    , setLabel, setAlignEnd
+    , setFor
+    , setAdditionalAttributes
+    , formField
+    )
 
 {-| FormField aligns a form field (for example, a checkbox) with
 its label and makes it RTL-aware. It also activates a ripple effect upon
@@ -9,6 +16,8 @@ interacting with the label.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Form Field](#form-field)
   - [Label Position](#label-position)
 
@@ -21,33 +30,46 @@ interacting with the label.
 
 # Basic Usage
 
-    import Material.Checkbox
-        exposing
-            ( checkbox
-            , checkboxConfig
-            )
-    import Material.FormField
-        exposing
-            ( formField
-            , formFieldConfig
-            )
+    import Material.Checkbox as Checkbox
+    import Material.FormField as FormField
 
     main =
-        formField { formFieldConfig | label = "My checkbox" }
-            [ checkbox checkboxConfig ]
+        FormField.formField
+            (FormField.config
+                |> FormField.setLabel "My checkbox"
+            )
+            [ Checkbox.checkbox Checkbox.config ]
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnClick
+@docs setLabel, setAlignEnd
+@docs setFor
+@docs setAdditionalAttributes
 
 
 # Form Field
 
-@docs formField, formFieldConfig, FormFieldConfig
+@docs formField
 
 
 # Label Position
 
-If you want to position the label after the form field (ie. checkbox), set its
-alignEnd configuration field to True:
+If you want to position the label after the form field (ie. checkbox), use its
+`setAlignEnd` configuration option.
 
-    formField { label = "My checkbox", alignEnd = True } [ checkbox checkboxConfig ]
+    FormField.formField
+        (FormField.config
+            |> FormField.setLabel "My checkbox"
+            |> FormField.setAlignEnd
+        )
+        [ Checkbox.checkbox Checkbox.config ]
 
 -}
 
@@ -58,36 +80,76 @@ import Html.Events
 
 {-| Configuration of a form field
 -}
-type alias FormFieldConfig msg =
-    { label : String
-    , for : Maybe String
-    , alignEnd : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    , onClick : Maybe msg
-    }
+type Config msg
+    = Config
+        { label : String
+        , for : Maybe String
+        , alignEnd : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        , onClick : Maybe msg
+        }
+
+
+{-| Set a form field's label
+-}
+setLabel : String -> Config msg -> Config msg
+setLabel label (Config config_) =
+    Config { config_ | label = label }
+
+
+{-| Set a form field label's HTML5 `for` attribute
+-}
+setFor : String -> Config msg -> Config msg
+setFor for (Config config_) =
+    Config { config_ | for = Just for }
+
+
+{-| Position a form field's label after its control. Useful for checkboxes
+-}
+setAlignEnd : Config msg -> Config msg
+setAlignEnd (Config config_) =
+    Config { config_ | alignEnd = True }
+
+
+{-| Specify additional attributes
+-}
+setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAdditionalAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user clicks on the label
+-}
+setOnClick : msg -> Config msg -> Config msg
+setOnClick onClick (Config config_) =
+    Config { config_ | onClick = Just onClick }
 
 
 {-| Default configuration of a form field
 -}
-formFieldConfig : FormFieldConfig msg
-formFieldConfig =
-    { label = ""
-    , for = Nothing
-    , alignEnd = False
-    , additionalAttributes = []
-    , onClick = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { label = ""
+        , for = Nothing
+        , alignEnd = False
+        , additionalAttributes = []
+        , onClick = Nothing
+        }
 
 
 {-| Form field view function
 -}
-formField : FormFieldConfig msg -> List (Html msg) -> Html msg
-formField config nodes =
+formField : Config msg -> List (Html msg) -> Html msg
+formField ((Config { additionalAttributes }) as config_) nodes =
     Html.node "mdc-form-field"
-        (List.filterMap identity [ rootCs, alignEndCs config ]
-            ++ config.additionalAttributes
+        (List.filterMap identity
+            [ rootCs
+            , alignEndCs config_
+            ]
+            ++ additionalAttributes
         )
-        (nodes ++ [ labelElt config ])
+        (nodes ++ [ labelElt config_ ])
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -95,8 +157,8 @@ rootCs =
     Just (class "mdc-form-field")
 
 
-alignEndCs : FormFieldConfig msg -> Maybe (Html.Attribute msg)
-alignEndCs { alignEnd } =
+alignEndCs : Config msg -> Maybe (Html.Attribute msg)
+alignEndCs (Config { alignEnd }) =
     if alignEnd then
         Just (class "mdc-form-field--align-end")
 
@@ -104,17 +166,22 @@ alignEndCs { alignEnd } =
         Nothing
 
 
-forAttr : FormFieldConfig msg -> Maybe (Html.Attribute msg)
-forAttr { for } =
+forAttr : Config msg -> Maybe (Html.Attribute msg)
+forAttr (Config { for }) =
     Maybe.map Html.Attributes.for for
 
 
-clickHandler : FormFieldConfig msg -> Maybe (Html.Attribute msg)
-clickHandler { onClick } =
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler (Config { onClick }) =
     Maybe.map Html.Events.onClick onClick
 
 
-labelElt : FormFieldConfig msg -> Html msg
-labelElt ({ label } as config) =
-    Html.label (List.filterMap identity [ forAttr config, clickHandler config ])
+labelElt : Config msg -> Html msg
+labelElt ((Config { label }) as config_) =
+    Html.label
+        (List.filterMap identity
+            [ forAttr config_
+            , clickHandler config_
+            ]
+        )
         [ text label ]

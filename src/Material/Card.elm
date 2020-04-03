@@ -36,7 +36,7 @@ module Material.Card exposing
 # Basic Usage
 
     import Html exposing (Html, text)
-    import Material.Button exposing (buttonConfig)
+    import Material.Button as Button
     import Material.Card
         exposing
             ( card
@@ -174,7 +174,8 @@ when there is only a single button as card action.
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
-import Material.Button exposing (ButtonConfig, buttonConfig)
+import Material.Button as Button
+import Material.Button.Internal
 import Material.IconButton exposing (IconButtonConfig, iconButton)
 
 
@@ -461,16 +462,18 @@ type Button msg
     cardActionButton buttonConfig "Visit"
 
 -}
-cardActionButton : ButtonConfig msg -> String -> Button msg
-cardActionButton buttonConfig label =
+cardActionButton : Button.Config msg -> String -> Button msg
+cardActionButton (Material.Button.Internal.Config buttonConfig) label =
     Button <|
-        Material.Button.textButton
-            { buttonConfig
-                | additionalAttributes =
-                    class "mdc-card__action"
-                        :: class "mdc-card__action--button"
-                        :: buttonConfig.additionalAttributes
-            }
+        Button.text
+            (Material.Button.Internal.Config
+                { buttonConfig
+                    | additionalAttributes =
+                        class "mdc-card__action"
+                            :: class "mdc-card__action--button"
+                            :: buttonConfig.additionalAttributes
+                }
+            )
             label
 
 

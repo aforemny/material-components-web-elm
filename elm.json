@@ -17,6 +17,7 @@
         "Material.Dialog",
         "Material.Drawer",
         "Material.Elevation",
+        "Material.ExtendedFab",
         "Material.Fab",
         "Material.FormField",
         "Material.HelperText",

@@ -1,6 +1,10 @@
 module Material.Fab exposing
-    ( fab, fabConfig, FabConfig
-    , extendedFab, extendedFabConfig, ExtendedFabConfig
+    ( Config, config
+    , setOnClick
+    , setMini
+    , setExited
+    , setAdditionalAttributes
+    , fab
     )
 
 {-| A floating action button represents the primary action in an application.
@@ -10,14 +14,11 @@ module Material.Fab exposing
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Floating Action Button](#floating-action-button)
-      - [Mini FAB](#mini-fab)
-      - [Exited FAB](#exited-fab)
-  - [Extended Floating Action Button](#extended-floating-action-button)
-      - [Extended FAB with Icon](#extended-fab-with-icon)
-          - [Extended FAB with Leading Icon](#extended-fab-with-leading-icon)
-          - [Extended FAB with Trailing Icon](#extended-fab-with-trailing-icon)
-      - [Exited Extended FAB](#exited-extended-fab)
+  - [Mini FAB](#mini-fab)
+  - [Exited FAB](#exited-fab)
 
 
 # Resources
@@ -37,73 +38,59 @@ A floating action button only contains an icon to indicate its action. For a
 floating action button that may contain text, refer to the [extended floating
 action button](#extended-fab) below.
 
-    import Material.Fab exposing (fab, fabConfig)
+    import Material.Fab as Fab
 
     type Msg
-        = FabClicked
+        = Clicked
 
     main =
-        fab { fabConfig | onClick = Just FabClicked }
+        Fab.fab
+            (Fab.config
+                |> Fab.setOnClick FabClicked
+            )
             "favorite"
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnClick
+@docs setMini
+@docs setExited
+@docs setAdditionalAttributes
 
 
 # Floating Action Button
 
-@docs fab, fabConfig, FabConfig
+@docs fab
 
 
-## Mini FAB
+# Mini FAB
 
-If you want the floating action button to appear in smaller size, set its mini
-configuration field to True.
+If you want the floating action button to appear in smaller size, use its
+`setMini` configuration option.
 
-    fab { fabConfig | mini = True } "favorite"
-
-
-## Exited FAB
-
-If you want the floating action button to transition off the screen, set its
-exited configuration field to True.
-
-    fab { fabConfig | exited = True } "favorite"
+    Fab.fab
+        (Fab.config
+            |> setMini
+        )
+        "favorite"
 
 
-# Extended Floating Action Button
+# Exited FAB
 
-@docs extendedFab, extendedFabConfig, ExtendedFabConfig
+If you want the floating action button to transition off the screen, use its
+`setExited` configuration option.
 
-
-## Extended FAB with Icon
-
-To add an icon to a extended floating action button, set its `icon`
-configuration field to the name of a [Material
-Icon](https://material.io/icons). If you want the icon to be positioned after
-the button's label, also set the `trailingIcon` configuration field to `True`.
-
-
-### Extended FAB with Leading Icon
-
-    extendedFab { extendedFabConfig | icon = "favorite" }
-        "Favorites"
-
-
-### Extended FAB with Trailing Icon
-
-    extendedFab
-        { extendedFabConfig
-            | icon = "favorite"
-            , trailingIcon = True
-        }
-        "Favorites"
-
-
-## Exited Extended FAB
-
-If you want the extended floating action button to transition off the screen,
-set its exited configuration field to True.
-
-    extendedFab { extendedFabConfig | exited = True }
-        "Favorites"
+    Fab.fab
+        (Fab.config
+            |> setExited
+        )
+        "favorite"
 
 -}
 
@@ -114,120 +101,69 @@ import Html.Events
 
 {-| Floating action button configuration
 -}
-type alias FabConfig msg =
-    { mini : Bool
-    , exited : Bool
-    , onClick : Maybe msg
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Config msg
+    = Config
+        { mini : Bool
+        , exited : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        , onClick : Maybe msg
+        }
 
 
 {-| Default floating action button configuration
 -}
-fabConfig : FabConfig msg
-fabConfig =
-    { mini = False
-    , exited = False
-    , onClick = Nothing
-    , additionalAttributes = []
-    }
+config : Config msg
+config =
+    Config
+        { mini = False
+        , exited = False
+        , onClick = Nothing
+        , additionalAttributes = []
+        }
+
+
+{-| Make a floating action button smaller
+-}
+setMini : Config msg -> Config msg
+setMini (Config config_) =
+    Config { config_ | mini = True }
+
+
+{-| Make a floating action button transition off the screen
+-}
+setExited : Config msg -> Config msg
+setExited (Config config_) =
+    Config { config_ | exited = True }
+
+
+{-| Specify additional attributes
+-}
+setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAdditionalAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user clicks the floating action button
+-}
+setOnClick : msg -> Config msg -> Config msg
+setOnClick onClick (Config config_) =
+    Config { config_ | onClick = Just onClick }
 
 
 {-| Floating action button view function
 -}
-fab : FabConfig msg -> String -> Html msg
-fab config iconName =
+fab : Config msg -> String -> Html msg
+fab ((Config { additionalAttributes }) as config_) iconName =
     Html.node "mdc-fab"
         (List.filterMap identity
             [ rootCs
-            , miniCs config
-            , exitedCs config
-            , clickHandler config
+            , miniCs config_
+            , exitedCs config_
+            , clickHandler config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
-        [ iconElt iconName
-        ]
-
-
-{-| Extended floating action button configuration
--}
-type alias ExtendedFabConfig msg =
-    { icon : Maybe String
-    , trailingIcon : Bool
-    , exited : Bool
-    , onClick : Maybe msg
-    , additionalAttributes : List (Html.Attribute msg)
-    }
-
-
-{-| Default extended floating action button configuration
--}
-extendedFabConfig : ExtendedFabConfig msg
-extendedFabConfig =
-    { icon = Nothing
-    , trailingIcon = False
-    , exited = False
-    , onClick = Nothing
-    , additionalAttributes = []
-    }
-
-
-{-| Extended floating action button view function
--}
-extendedFab : ExtendedFabConfig msg -> String -> Html msg
-extendedFab config label =
-    Html.node "mdc-fab"
-        (List.filterMap identity
-            [ rootCs
-            , extendedFabCs
-            , exitedCs config
-            , clickHandler config
-            ]
-            ++ config.additionalAttributes
-        )
-        (List.filterMap identity
-            [ leadingIconElt config
-            , labelElt label
-            , trailingIconElt config
-            ]
-        )
-
-
-extendedFabCs : Maybe (Html.Attribute msg)
-extendedFabCs =
-    Just (class "mdc-fab mdc-fab--extended")
-
-
-leadingIconElt : ExtendedFabConfig msg -> Maybe (Html msg)
-leadingIconElt { icon, trailingIcon } =
-    case ( icon, trailingIcon ) of
-        ( Just iconName, False ) ->
-            Just
-                (Html.span [ class "material-icons", class "mdc-fab__icon" ]
-                    [ text iconName ]
-                )
-
-        _ ->
-            Nothing
-
-
-labelElt : String -> Maybe (Html msg)
-labelElt label =
-    Just (Html.span [ class "mdc-fab__label" ] [ text label ])
-
-
-trailingIconElt : ExtendedFabConfig msg -> Maybe (Html msg)
-trailingIconElt { icon, trailingIcon } =
-    case ( icon, trailingIcon ) of
-        ( Just iconName, True ) ->
-            Just
-                (Html.span [ class "material-icons", class "mdc-fab__icon" ]
-                    [ text iconName ]
-                )
-
-        _ ->
-            Nothing
+        [ iconElt iconName ]
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -235,8 +171,8 @@ rootCs =
     Just (class "mdc-fab")
 
 
-miniCs : FabConfig msg -> Maybe (Html.Attribute msg)
-miniCs { mini } =
+miniCs : Config msg -> Maybe (Html.Attribute msg)
+miniCs (Config { mini }) =
     if mini then
         Just (class "mdc-fab--mini")
 
@@ -244,8 +180,8 @@ miniCs { mini } =
         Nothing
 
 
-exitedCs : { fabConfig | exited : Bool } -> Maybe (Html.Attribute msg)
-exitedCs { exited } =
+exitedCs : Config msg -> Maybe (Html.Attribute msg)
+exitedCs (Config { exited }) =
     if exited then
         Just (class "mdc-fab--exited")
 
@@ -258,6 +194,6 @@ iconElt iconName =
     Html.span [ class "material-icons", class "mdc-fab__icon" ] [ text iconName ]
 
 
-clickHandler : { config | onClick : Maybe msg } -> Maybe (Html.Attribute msg)
-clickHandler { onClick } =
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler (Config { onClick }) =
     Maybe.map Html.Events.onClick onClick

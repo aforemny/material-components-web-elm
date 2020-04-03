@@ -154,7 +154,7 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Icon exposing (IconConfig, icon, iconConfig)
+import Material.Icon as Icon
 
 
 {-| Configuration of a text field
@@ -271,16 +271,9 @@ textField config =
 
 {-| A text field's icon, either leading or trailing
 -}
-textFieldIcon : IconConfig msg -> String -> TextFieldIcon msg
-textFieldIcon iconConfig iconName =
-    Icon
-        (icon
-            { iconConfig
-                | additionalAttributes =
-                    class "mdc-text-field__icon" :: iconConfig.additionalAttributes
-            }
-            iconName
-        )
+textFieldIcon : List (Html.Attribute msg) -> String -> TextFieldIcon msg
+textFieldIcon additionalAttributes iconName =
+    Icon (Icon.icon (class "mdc-text-field__icon" :: additionalAttributes) iconName)
 
 
 rootCs : Maybe (Html.Attribute msg)

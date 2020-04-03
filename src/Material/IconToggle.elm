@@ -1,12 +1,22 @@
-module Material.IconToggle exposing (iconToggle, iconToggleConfig, IconToggleConfig)
+module Material.IconToggle exposing
+    ( Config, config
+    , setOnChange
+    , setOn
+    , setDisabled
+    , setLabel
+    , setAttributes
+    , iconToggle
+    )
 
-{-| Icon toggles allow users to take actions, and make choices, with a single
+{-| Icon toggles allow users to take actions and make choices with a single
 tap.
 
 
 # Table of Contents
 
   - [Resources](#resources)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Basic Usage](#basic-usage)
   - [Icon Toggle](#icon-toggle)
   - [On Icon Toggle](#on-icon-toggle)
@@ -24,68 +34,88 @@ tap.
 
 # Basic Usage
 
-If you are looking for a button that has an icon as well as text, refer to
-[Button](Material-Button).
-
-    import Material.IconToggle
-        exposing
-            ( iconToggle
-            , iconToggleConfig
-            )
+    import Material.IconToggle as IconToggle
 
     type Msg
-        = IconToggleClicked
+        = Clicked
 
     main =
-        iconToggle
-            { iconToggleConfig
-                | on = True
-                , onChange = Just IconToggleClicked
-            }
+        IconToggle.iconToggle
+            (IconToggle.config
+                |> IconToggle.setOn True
+                |> IconToggle.setOnChange Clicked
+            )
             { offIcon = "favorite_outlined"
             , onIcon = "favorite"
             }
 
 
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnChange
+@docs setOn
+@docs setDisabled
+@docs setLabel
+@docs setAttributes
+
+
 # Icon Toggle
 
-Icon toggles are a variant of icon buttons that change their state when
-clicked.
+Icon toggles are a variant of [icon buttons](Material-IconButton) that change
+the icon when their state changes.
 
-    iconToggle { iconToggleConfig | on = True }
-        { offIcon = "favorite_border", onIcon = "favorite" }
+    IconToggle.iconToggle
+        (IconToggle.config |> IconToggle.setOn True)
+        { offIcon = "favorite_border"
+        , onIcon = "favorite"
+        }
 
-@docs iconToggle, iconToggleConfig, IconToggleConfig
+@docs iconToggle
 
 
 # On Icon Toggle
 
-To set the state of a icon toggle, set its on configuration field to a Bool
-value. State only applies to the icon toggle variant, icon buttons ignore this
-configuration field.
+To set an icon toggle to its on state, set its `setOn` configuration option to
+`True`.
 
-    iconToggle { iconToggleConfig | on = True }
-        { offIcon = "favorite_border", onIcon = "favorite" }
+    IconToggle.iconToggle
+        (IconToggle.config |> IconToggle.setOn True)
+        { offIcon = "favorite_border"
+        , onIcon = "favorite"
+        }
 
 
 # Disabled Icon Toggle
 
-To disable a icon toggle, set its disabled configuration field to True.
+To disable an icon toggle, set its `setDisabled` configuration option to
+`True`.
 Disabled icon buttons cannot be interacted with and have no visual interaction
 effect.
 
-    iconToggle { iconButtonConfig | disabled = True }
-        { offIcon = "favorite_border", onIcon = "favorite" }
+    IconToggle.iconToggle
+        (IconToggle.config |> IconToggle.setDisabled True)
+        { offIcon = "favorite_border"
+        , onIcon = "favorite"
+        }
 
 
 # Labeled Icon Toggle
 
-To set the `arial-label` attribute of a icon toggle, set its label
-configuration field to a String.
+To set the HTML5 `arial-label` attribute of an icon toggle, use its `setLabel`
+configuration option.
 
-    iconToggle
-        { iconButtonConfig | label = "Add to favorites" }
-        { offIcon = "favorite_border", onIcon = "favorite" }
+    IconToggle.iconToggle
+        (IconToggle.config
+            |> IconToggle.setLabel (Just "Add to favorites")
+        )
+        { offIcon = "favorite_border"
+        , onIcon = "favorite"
+        }
 
 -}
 
@@ -98,43 +128,84 @@ import Json.Encode as Encode
 
 {-| Icon toggle configuration
 -}
-type alias IconToggleConfig msg =
-    { on : Bool
-    , disabled : Bool
-    , label : Maybe String
-    , additionalAttributes : List (Html.Attribute msg)
-    , onChange : Maybe msg
-    }
+type Config msg
+    = Config
+        { on : Bool
+        , disabled : Bool
+        , label : Maybe String
+        , additionalAttributes : List (Html.Attribute msg)
+        , onChange : Maybe msg
+        }
 
 
 {-| Default icon toggle configuration
 -}
-iconToggleConfig : IconToggleConfig msg
-iconToggleConfig =
-    { on = False
-    , disabled = False
-    , label = Nothing
-    , additionalAttributes = []
-    , onChange = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { on = False
+        , disabled = False
+        , label = Nothing
+        , additionalAttributes = []
+        , onChange = Nothing
+        }
+
+
+{-| Specify whether an icon toggle is on
+-}
+setOn : Bool -> Config msg -> Config msg
+setOn on (Config config_) =
+    Config { config_ | on = on }
+
+
+{-| Specify whether an icon toggle is disabled
+
+Disabled icon buttons cannot be interacted with and have no visual interaction
+effect.
+
+-}
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
+
+
+{-| Specify the HTML5 aria-label attribute of an icon toggle
+-}
+setLabel : Maybe String -> Config msg -> Config msg
+setLabel label (Config config_) =
+    Config { config_ | label = label }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user changes the icon toggle
+-}
+setOnChange : msg -> Config msg -> Config msg
+setOnChange onChange (Config config_) =
+    Config { config_ | onChange = Just onChange }
 
 
 {-| Icon toggle view function
 -}
-iconToggle : IconToggleConfig msg -> { onIcon : String, offIcon : String } -> Html msg
-iconToggle config { onIcon, offIcon } =
+iconToggle : Config msg -> { onIcon : String, offIcon : String } -> Html msg
+iconToggle ((Config { additionalAttributes }) as config_) { onIcon, offIcon } =
     Html.node "mdc-icon-button"
         (List.filterMap identity
             [ rootCs
-            , onProp config
+            , onProp config_
             , tabIndexProp
             , ariaHiddenAttr
-            , ariaPressedAttr config
-            , ariaLabelAttr config
-            , changeHandler config
-            , disabledAttr config
+            , ariaPressedAttr config_
+            , ariaLabelAttr config_
+            , changeHandler config_
+            , disabledAttr config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         [ Html.i (List.filterMap identity [ materialIconsCs, onIconCs ]) [ text onIcon ]
         , Html.i (List.filterMap identity [ materialIconsCs, iconCs ]) [ text offIcon ]
@@ -146,8 +217,8 @@ rootCs =
     Just (class "mdc-icon-button")
 
 
-onProp : IconToggleConfig msg -> Maybe (Html.Attribute msg)
-onProp { on } =
+onProp : Config msg -> Maybe (Html.Attribute msg)
+onProp (Config { on }) =
     Just (Html.Attributes.property "on" (Encode.bool on))
 
 
@@ -176,8 +247,8 @@ ariaHiddenAttr =
     Just (Html.Attributes.attribute "aria-hidden" "true")
 
 
-ariaPressedAttr : IconToggleConfig msg -> Maybe (Html.Attribute msg)
-ariaPressedAttr { on } =
+ariaPressedAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaPressedAttr (Config { on }) =
     Just
         (Html.Attributes.attribute "aria-pressed"
             (if on then
@@ -189,17 +260,17 @@ ariaPressedAttr { on } =
         )
 
 
-ariaLabelAttr : IconToggleConfig msg -> Maybe (Html.Attribute msg)
-ariaLabelAttr { label } =
+ariaLabelAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaLabelAttr (Config { label }) =
     Maybe.map (Html.Attributes.attribute "aria-label") label
 
 
-changeHandler : IconToggleConfig msg -> Maybe (Html.Attribute msg)
-changeHandler config =
+changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler (Config { onChange }) =
     Maybe.map (Html.Events.on "MDCIconButtonToggle:change" << Decode.succeed)
-        config.onChange
+        onChange
 
 
-disabledAttr : IconToggleConfig msg -> Maybe (Html.Attribute msg)
-disabledAttr { disabled } =
+disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr (Config { disabled }) =
     Just (Html.Attributes.disabled disabled)

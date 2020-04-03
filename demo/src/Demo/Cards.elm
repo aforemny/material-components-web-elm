@@ -3,10 +3,10 @@ module Demo.Cards exposing (Model, Msg(..), defaultModel, update, view)
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.Button exposing (buttonConfig)
-import Material.Card as Card exposing (CardActions, CardBlock, card, cardActionButton, cardActionIcon, cardActions, cardBlock, cardConfig, cardMedia, cardMediaConfig, cardPrimaryAction, cardPrimaryActionConfig)
-import Material.IconButton exposing (iconButtonConfig)
+import Html.Attributes exposing (style)
+import Material.Button as Button
+import Material.Card as Card
+import Material.IconButton as IconButton
 import Material.Theme as Theme
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
@@ -50,13 +50,12 @@ view model =
 
 heroCard : List (Html msg)
 heroCard =
-    [ card
-        { cardConfig
-            | additionalAttributes =
-                [ Html.Attributes.style "width" "350px" ]
-        }
+    [ Card.card
+        (Card.config
+            |> Card.setAttributes [ style "width" "350px" ]
+        )
         { blocks =
-            cardPrimaryAction cardPrimaryActionConfig
+            Card.primaryAction []
                 [ demoMedia
                 , demoTitle
                 , demoBody
@@ -68,15 +67,15 @@ heroCard =
 
 exampleCard1 : Html msg
 exampleCard1 =
-    card
-        { cardConfig
-            | additionalAttributes =
-                [ Html.Attributes.style "margin" "48px 0"
-                , Html.Attributes.style "width" "350px"
+    Card.card
+        (Card.config
+            |> Card.setAttributes
+                [ style "margin" "48px 0"
+                , style "width" "350px"
                 ]
-        }
+        )
         { blocks =
-            cardPrimaryAction cardPrimaryActionConfig
+            Card.primaryAction []
                 [ demoMedia
                 , demoTitle
                 , demoBody
@@ -87,15 +86,15 @@ exampleCard1 =
 
 exampleCard2 : Html msg
 exampleCard2 =
-    card
-        { cardConfig
-            | additionalAttributes =
-                [ Html.Attributes.style "margin" "48px 0"
-                , Html.Attributes.style "width" "350px"
+    Card.card
+        (Card.config
+            |> Card.setAttributes
+                [ style "margin" "48px 0"
+                , style "width" "350px"
                 ]
-        }
+        )
         { blocks =
-            cardPrimaryAction cardPrimaryActionConfig
+            Card.primaryAction []
                 [ demoTitle
                 , demoBody
                 ]
@@ -105,16 +104,16 @@ exampleCard2 =
 
 exampleCard3 : Html msg
 exampleCard3 =
-    card
-        { cardConfig
-            | additionalAttributes =
-                [ Html.Attributes.style "margin" "48px 0"
-                , Html.Attributes.style "width" "350px"
-                , Html.Attributes.style "border-radius" "24px 8px"
+    Card.card
+        (Card.config
+            |> Card.setAttributes
+                [ style "margin" "48px 0"
+                , style "width" "350px"
+                , style "border-radius" "24px 8px"
                 ]
-        }
+        )
         { blocks =
-            cardPrimaryAction cardPrimaryActionConfig
+            Card.primaryAction []
                 [ demoTitle
                 , demoBody
                 ]
@@ -122,59 +121,56 @@ exampleCard3 =
         }
 
 
-demoMedia : CardBlock msg
+demoMedia : Card.Block msg
 demoMedia =
-    cardMedia { cardMediaConfig | aspect = Just Card.SixteenToNine }
-        "images/photos/3x2/2.jpg"
+    Card.sixteenToNineMedia [] "images/photos/3x2/2.jpg"
 
 
-demoTitle : CardBlock msg
+demoTitle : Card.Block msg
 demoTitle =
-    cardBlock <|
+    Card.block <|
         Html.div
-            [ Html.Attributes.style "padding" "1rem"
-            ]
+            [ style "padding" "1rem" ]
             [ Html.h2
                 [ Typography.headline6
-                , Html.Attributes.style "margin" "0"
+                , style "margin" "0"
                 ]
-                [ text "Our Changing Planet"
-                ]
+                [ text "Our Changing Planet" ]
             , Html.h3
                 [ Typography.subtitle2
                 , Theme.textSecondaryOnBackground
-                , Html.Attributes.style "margin" "0"
+                , style "margin" "0"
                 ]
-                [ text "by Kurt Wagner"
-                ]
+                [ text "by Kurt Wagner" ]
             ]
 
 
-demoBody : CardBlock msg
+demoBody : Card.Block msg
 demoBody =
-    cardBlock <|
+    Card.block <|
         Html.div
-            [ Html.Attributes.style "padding" "0 1rem 0.5rem 1rem"
-            , Typography.body2
+            [ Typography.body2
             , Theme.textSecondaryOnBackground
+            , style "padding" "0 1rem 0.5rem 1rem"
             ]
-            [ text """
-            Visit ten places on our planet that are undergoing the biggest
-            changes today.
-          """
+            [ text
+                """
+                Visit ten places on our planet that are undergoing the biggest
+                changes today.
+                """
             ]
 
 
-demoActions : CardActions msg
+demoActions : Card.Actions msg
 demoActions =
-    cardActions
+    Card.actions
         { buttons =
-            [ cardActionButton buttonConfig "Read"
-            , cardActionButton buttonConfig "Bookmark"
+            [ Card.button Button.config "Read"
+            , Card.button Button.config "Bookmark"
             ]
         , icons =
-            [ cardActionIcon iconButtonConfig "favorite_border"
-            , cardActionIcon iconButtonConfig "share"
-            , cardActionIcon iconButtonConfig "more_vert"
+            [ Card.icon IconButton.config "favorite_border"
+            , Card.icon IconButton.config "share"
+            , Card.icon IconButton.config "more_vert"
             ]
         }

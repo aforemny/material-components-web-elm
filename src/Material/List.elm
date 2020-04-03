@@ -1,39 +1,34 @@
 module Material.List exposing
-    ( list, listConfig, ListConfig
-    , listItem, listItemConfig, ListItemConfig, ListItem
-    , listItemText, listItemPrimaryText, listItemSecondaryText
-    , listGroup
-    , listGroupSubheader
-    , listGroupDivider
-    , listItemGraphic
-    , listItemMeta
-    , listItemDivider, listItemDividerConfig, ListItemDividerConfig
+    ( Config, config
+    , setNonInteractive
+    , setDense
+    , setAvatarList
+    , setTwoLine
+    , setAttributes
+    , setWrapFocus
+    , list
+    , group, subheader
     )
 
 {-| Lists are continuous, vertical indexes of text or images.
+
+This module concerns the container list. If you are looking for information
+about the list items, refer to [Material.List.Item](Material-List-Item).
 
 
 # Table of Contents
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [List](#list)
-  - [List Item](#list-item)
-  - [List Variants](#list-variants)
-      - [Two-Line List](#two-line-list)
-      - [Non-interactive List](#non-interactive-list)
-      - [Dense List](#dense-list)
-      - [Avatar List](#avatar-list)
-      - [List Group](#list-group)
-          - [List Group Divider](#list-group-divider)
-  - [List Item Variants](#list-item-variants)
-      - [List Item with Graphic](#list-item-with-graphic)
-      - [List Item with Meta](#list-item-with-meta)
-      - [Disabled List Item](#disabled-list-item)
-      - [Selected List Item](#selected-list-item)
-      - [Activated List Item](#activated-list-item)
-      - [Link List Item](#link-list-item)
-      - [List Item Divider](#list-item-divider)
+  - [Two-Line List](#two-line-list)
+  - [Non-interactive List](#non-interactive-list)
+  - [Dense List](#dense-list)
+  - [Avatar List](#avatar-list)
+  - [List Group](#list-group)
+      - [List Group Divider](#list-group-divider)
 
 
 # Resources
@@ -46,84 +41,90 @@ module Material.List exposing
 
 # Basic Usage
 
-    import Material.List
-        exposing
-            ( list
-            , listConfig
-            , listItem
-            , listItemConfig
-            )
+    import Material.List as List
+    import Material.List.Item as ListItem
 
     main =
-        list listConfig
-            [ listItem listItemConfig [ text "Line item" ]
-            , listItem listItemConfig [ text "Line item" ]
+        List.list List.config
+            [ ListItem.listItem ListItem.config
+                [ text "Line item" ]
+            , ListItem.listItem ListItem.config
+                [ text "Line item" ]
             ]
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setNonInteractive
+@docs setDense
+@docs setAvatarList
+@docs setTwoLine
+@docs setAttributes
+@docs setWrapFocus
 
 
 # List
 
-@docs list, listConfig, ListConfig
+@docs list
 
 
-# List Item
+# Two-Line List
 
-@docs listItem, listItemConfig, ListItemConfig, ListItem
+Lists may be _two-line_ lists by setting its `setTwoLine` configuration option
+to `True`. In that case, list items should wrap their contents inside
+`ListItem.text`.
 
-
-# List Variants
-
-
-## Two-Line List
-
-Lists may be two-line lists by settings the `twoLine` configuration field to
-`True`. In that case, list items should wrap their contents inside
-`listItemText` and their first line in `listItemPrimaryText` and their second
-line in `listItemSecondaryText`.
-
-    list { listConfig | twoLine = True }
-        [ listItem listItemConfig
-            [ listItemText []
-                [ listItemPrimaryText []
-                    [ text "First line" ]
-                , listItemSecondaryText []
-                    [ text "Second line" ]
-                ]
+    List.list (List.config |> List.setTwoLine True)
+        [ ListItem.listItem ListItem.config
+            [ ListItem.text []
+                { primary = [ text "First line" ]
+                , secondary = [ text "Second line" ]
+                }
             ]
         ]
 
-@docs listItemText, listItemPrimaryText, listItemSecondaryText
 
+# Non-interactive List
 
-## Non-interactive List
+Lists may be non-interactive by its setting `setNonInteractive` configuration
+option to `True`.
 
-Lists may be non-interactive by setting the `nonInteractive` configuration
-field to `True`.
+Non-interactive lists do not feature keyboard interaction and list items have
+no visual interaction effect.
 
-    list { listConfig | nonInteractive = True }
-        [ listItem listItemConfig [ text "List item" ] ]
+    List.list
+        (List.config |> List.setNonInteractive True)
+        [ ListItem.listItem ListItem.config [ text "List item" ]
+        ]
 
 
 ## Dense List
 
-Lists may be styled more compact by setting the `dense` configuration field to
-`True`.
+Lists may be styled more compact by setting its `setDense` configuration option
+to `True`.
 
-    list { listConfig | dense = True }
-        [ listItem listItemConfig [ text "List item" ] ]
+Dense lists feature smaller than normal margins.
+
+    List.list
+        (List.config |> List.setDense True)
+        [ ListItem.listItem ListItem.config [ text "List item" ]
+        ]
 
 
 ## Avatar List
 
-List item's graphics may be configured to appear larger by setting the
-`avatarList` configuration field to `True`.
+A list item's graphics may be configured to appear larger by setting its
+`setAvatarList` configuration option to `True`.
 
-This is particularly useful when a list item's graphic includes an image rather
-than an icon.
-
-    list { listConfig | dense = True }
-        [ listItem listItemConfig
-            [ listItemGraphic [] [ Html.img [] [] ]
+    List.list
+        (List.config |> List.setAvatarList True)
+        [ ListItem.listItem ListItem.config
+            [ ListItem.graphic [] [ Html.img [] [] ]
             , text "List item"
             ]
         ]
@@ -132,127 +133,22 @@ than an icon.
 ## List Group
 
 Multiple related lists, such as folders and files in a file hierarchy, may be
-grouped using `listGroup` and labeled by `listGroupSubheader`.
+grouped using `group` and labeled by `subheader`.
 
-    listGroup []
-        [ listGroupSubheader [] [ text "Folders" ]
-        , list listConfig
-            [ listItem [] [ text "Folder" ]
-            , listItem [] [ text "Folder" ]
+    List.group []
+        [ List.subheader [] [ text "Folders" ]
+        , List.list List.config
+            [ ListItem.listItem ListItem.config [ text "Folder" ]
+            , ListItem.listItem ListItem.config [ text "Folder" ]
             ]
-        , listGroupSubheader [] [ text "Files" ]
-        , list listConfig
-            [ listItem [] [ text "File" ]
-            , listItem [] [ text "File" ]
-            ]
-        ]
-
-@docs listGroup
-@docs listGroupSubheader
-
-
-### List Group Divider
-
-Multiple lists within a group may be visually seperated by a list group divider.
-
-    listGroup []
-        [ list listConfig
-            [ listItem [] [ text "Folder" ]
-            , listItem [] [ text "Folder" ]
-            ]
-        , listGroupDivider []
-        , list listConfig
-            [ listItem [] [ text "File" ]
-            , listItem [] [ text "File" ]
+        , List.subheader [] [ text "Files" ]
+        , List.list List.config
+            [ ListItem.listItem ListItem.config [ text "File" ]
+            , ListItem.listItem ListItem.config [ text "File" ]
             ]
         ]
 
-@docs listGroupDivider
-
-
-## List Item Variants
-
-In addition to their text child, lists may optionally contain a starting tile
-referred to as _graphic_ and/ or a last tile referred to as _meta_.
-
-
-### List Item with Graphic
-
-Common examples for graphics are icons and images, avatar images and selection
-controls such as checkboxes.
-
-    listItem listItemConf
-        [ listItemGraphic [] [ icon iconConf "star" ]
-        , text "List item"
-        ]
-
-@docs listItemGraphic
-
-
-### List Item with Meta
-
-Common examples for metas are text, icons and images and selection controls.
-
-    listItem listItemConf
-        [ text "List item"
-        , listItemMeta [] [ icon iconConf "star" ]
-        ]
-
-@docs listItemMeta
-
-
-### Disabled List Item
-
-List items may be disabled by setting their `disabled` configuration field to
-`True`.
-
-    listItem { listItemConf | disabled = True }
-        [ text "List item" ]
-
-
-### Selected List Item
-
-List items may be disabled by setting their `selected` configuration field to
-`True`.
-
-    listItem { listItemConf | selected = True }
-        [ text "List item" ]
-
-
-### Activated List Item
-
-List items may be disabled by setting their `activated` configuration field to
-`True`.
-
-    listItem { listItemConf | activated = True }
-        [ text "List item" ]
-
-
-## Link List Item
-
-List items may specify the `href` attribute in which case the list item
-essentially behaves like a HTML `a` element. You may specify the configuration
-`target` target as well.
-
-    listItem [ href "https://elm-lang.org" ]
-        [ text "Elm programming language" ]
-
-Note that link list items cannot be disabled.
-
-
-## List Item Divider
-
-List items may be seperated by a divider. The divider may optionally be `inset`
-so that it does not intersect the list item's graphic, or `padded` so that it
-does not intersect the list item's meta.
-
-    list listConfig
-        [ listItem [] [ text "List item" ]
-        , listItemDivider listItemDividerConfig
-        , listItem [] [ text "List item" ]
-        ]
-
-@docs listItemDivider, listItemDividerConfig, ListItemDividerConfig
+@docs group, subheader
 
 -}
 
@@ -261,64 +157,133 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Material.List.Item exposing (Config, ListItem)
+import Material.List.Item.Internal as ListItem
 
 
 {-| Configuration of a list
 -}
-type alias ListConfig msg =
-    { nonInteractive : Bool
-    , dense : Bool
-    , avatarList : Bool
-    , twoLine : Bool
-    , vertical : Bool
-    , wrapFocus : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Config msg
+    = Config
+        { nonInteractive : Bool
+        , dense : Bool
+        , avatarList : Bool
+        , twoLine : Bool
+        , vertical : Bool
+        , wrapFocus : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        }
 
 
 {-| Default configuration of a list
 -}
-listConfig : ListConfig msg
-listConfig =
-    -- TODO: Document wrapFocus
-    -- TODO: Document vertical
-    { nonInteractive = False
-    , dense = False
-    , avatarList = False
-    , twoLine = False
-    , vertical = False
-    , wrapFocus = False
-    , additionalAttributes = []
-    }
+config : Config msg
+config =
+    Config
+        { nonInteractive = False
+        , dense = False
+        , avatarList = False
+        , twoLine = False
+        , vertical = False
+        , wrapFocus = False
+        , additionalAttributes = []
+        }
+
+
+{-| Specify whether a list should be non-interactive
+
+Non-interactive lists do not feature keyboard interaction and list items have
+no visual interaction effect.
+
+-}
+setNonInteractive : Bool -> Config msg -> Config msg
+setNonInteractive nonInteractive (Config config_) =
+    Config { config_ | nonInteractive = nonInteractive }
+
+
+{-| Specify whether a list should be _dense_
+
+Dense lists are more compact and feature smaller than normal margins
+
+-}
+setDense : Bool -> Config msg -> Config msg
+setDense dense (Config config_) =
+    Config { config_ | dense = dense }
+
+
+{-| Specify whether a list should be an _avatar_ list
+
+An avatar list features a larger than usual list item _graphic_.
+
+-}
+setAvatarList : Bool -> Config msg -> Config msg
+setAvatarList avatarList (Config config_) =
+    Config { config_ | avatarList = avatarList }
+
+
+{-| Specify whether a list should be a _two line_ list
+
+Two line lists feature list items with a primary and a secondary text line.
+
+-}
+setTwoLine : Bool -> Config msg -> Config msg
+setTwoLine twoLine (Config config_) =
+    Config { config_ | twoLine = twoLine }
+
+
+{-| Specify whether a list should be vertical
+-}
+setVertical : Bool -> Config msg -> Config msg
+setVertical vertical (Config config_) =
+    Config { config_ | vertical = vertical }
+
+
+{-| Specify whether a list should wrap focus
+
+A list that wraps focus focuses the first list item after pressing tab on the
+last list item. By default, a list in that case passes focus to the next
+focusable control.
+
+-}
+setWrapFocus : Bool -> Config msg -> Config msg
+setWrapFocus wrapFocus (Config config_) =
+    Config { config_ | wrapFocus = wrapFocus }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| List view function
 -}
-list : ListConfig msg -> List (ListItem msg) -> Html msg
-list config listItems =
+list : Config msg -> List (ListItem msg) -> Html msg
+list ((Config { additionalAttributes }) as config_) listItems =
     Html.node "mdc-list"
         (List.filterMap identity
             [ rootCs
-            , nonInteractiveCs config
-            , denseCs config
-            , avatarListCs config
-            , twoLineCs config
-            , wrapFocusProp config
+            , nonInteractiveCs config_
+            , denseCs config_
+            , avatarListCs config_
+            , twoLineCs config_
+            , wrapFocusProp config_
             , clickHandler listItems
             , selectedIndexProp listItems
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         (List.map
             (\listItem_ ->
                 case listItem_ of
-                    ListItem { node } ->
+                    ListItem.ListItem (ListItem.Config { node }) ->
                         node
 
-                    ListItemDivider node ->
+                    ListItem.ListItemDivider node ->
                         node
 
-                    ListGroupSubheader node ->
+                    ListItem.ListGroupSubheader node ->
                         node
             )
             listItems
@@ -330,8 +295,8 @@ rootCs =
     Just (class "mdc-list")
 
 
-nonInteractiveCs : ListConfig msg -> Maybe (Html.Attribute msg)
-nonInteractiveCs { nonInteractive } =
+nonInteractiveCs : Config msg -> Maybe (Html.Attribute msg)
+nonInteractiveCs (Config { nonInteractive }) =
     if nonInteractive then
         Just (class "mdc-list--non-interactive")
 
@@ -339,8 +304,8 @@ nonInteractiveCs { nonInteractive } =
         Nothing
 
 
-denseCs : ListConfig msg -> Maybe (Html.Attribute msg)
-denseCs { dense } =
+denseCs : Config msg -> Maybe (Html.Attribute msg)
+denseCs (Config { dense }) =
     if dense then
         Just (class "mdc-list--dense")
 
@@ -348,8 +313,8 @@ denseCs { dense } =
         Nothing
 
 
-avatarListCs : ListConfig msg -> Maybe (Html.Attribute msg)
-avatarListCs { avatarList } =
+avatarListCs : Config msg -> Maybe (Html.Attribute msg)
+avatarListCs (Config { avatarList }) =
     if avatarList then
         Just (class "mdc-list--avatar-list")
 
@@ -357,131 +322,10 @@ avatarListCs { avatarList } =
         Nothing
 
 
-twoLineCs : ListConfig msg -> Maybe (Html.Attribute msg)
-twoLineCs { twoLine } =
+twoLineCs : Config msg -> Maybe (Html.Attribute msg)
+twoLineCs (Config { twoLine }) =
     if twoLine then
         Just (class "mdc-list--two-line")
-
-    else
-        Nothing
-
-
-{-| Configuration of a list item
--}
-type alias ListItemConfig msg =
-    { disabled : Bool
-    , selected : Bool
-    , activated : Bool
-    , href : Maybe String
-    , target : Maybe String
-    , additionalAttributes : List (Html.Attribute msg)
-    , onClick : Maybe msg
-    }
-
-
-{-| Default configuration of a list item
--}
-listItemConfig : ListItemConfig msg
-listItemConfig =
-    { disabled = False
-    , selected = False
-    , activated = False
-    , href = Nothing
-    , target = Nothing
-    , additionalAttributes = []
-    , onClick = Nothing
-    }
-
-
-{-| Type of a list item
--}
-type ListItem msg
-    = ListItem
-        { config : ListItemConfig msg
-        , node : Html msg
-        }
-    | ListItemDivider (Html msg)
-    | ListGroupSubheader (Html msg)
-
-
-{-| List item view function
--}
-listItem : ListItemConfig msg -> List (Html msg) -> ListItem msg
-listItem config nodes =
-    ListItem
-        { config = config
-        , node =
-            (\attributes ->
-                if config.href /= Nothing then
-                    Html.node "mdc-list-item" [] [ Html.a attributes nodes ]
-
-                else
-                    Html.node "mdc-list-item" attributes nodes
-            )
-                (List.filterMap identity
-                    [ listItemCs
-                    , hrefAttr config
-                    , targetAttr config
-                    , disabledCs config
-                    , selectedCs config
-                    , activatedCs config
-                    , ariaSelectedAttr config
-                    ]
-                    ++ config.additionalAttributes
-                )
-        }
-
-
-listItemCs : Maybe (Html.Attribute msg)
-listItemCs =
-    Just (class "mdc-list-item")
-
-
-disabledCs : ListItemConfig msg -> Maybe (Html.Attribute msg)
-disabledCs { disabled } =
-    if disabled then
-        Just (class "mdc-list-item--disabled")
-
-    else
-        Nothing
-
-
-selectedCs : ListItemConfig msg -> Maybe (Html.Attribute msg)
-selectedCs { selected } =
-    if selected then
-        Just (class "mdc-list-item--selected")
-
-    else
-        Nothing
-
-
-activatedCs : ListItemConfig msg -> Maybe (Html.Attribute msg)
-activatedCs { activated } =
-    if activated then
-        Just (class "mdc-list-item--activated")
-
-    else
-        Nothing
-
-
-ariaSelectedAttr : ListItemConfig msg -> Maybe (Html.Attribute msg)
-ariaSelectedAttr { selected, activated } =
-    if selected || activated then
-        Just (Html.Attributes.attribute "aria-selected" "true")
-
-    else
-        Nothing
-
-
-hrefAttr : ListItemConfig msg -> Maybe (Html.Attribute msg)
-hrefAttr { href } =
-    Maybe.map Html.Attributes.href href
-
-
-targetAttr : ListItemConfig msg -> Maybe (Html.Attribute msg)
-targetAttr { href, target } =
-    if href /= Nothing then
-        Maybe.map Html.Attributes.target target
 
     else
         Nothing
@@ -492,13 +336,13 @@ clickHandler listItems =
     let
         getOnClick listItem_ =
             case listItem_ of
-                ListItem { config } ->
-                    Just config.onClick
+                ListItem.ListItem (ListItem.Config { onClick }) ->
+                    Just onClick
 
-                ListItemDivider _ ->
+                ListItem.ListItemDivider _ ->
                     Nothing
 
-                ListGroupSubheader _ ->
+                ListItem.ListGroupSubheader _ ->
                     Nothing
 
         nthOnClick index =
@@ -532,29 +376,29 @@ selectedIndexProp listItems =
                 |> List.filter
                     (\listItem_ ->
                         case listItem_ of
-                            ListItem _ ->
+                            ListItem.ListItem _ ->
                                 True
 
-                            ListItemDivider _ ->
+                            ListItem.ListItemDivider _ ->
                                 False
 
-                            ListGroupSubheader _ ->
+                            ListItem.ListGroupSubheader _ ->
                                 False
                     )
                 |> List.indexedMap
                     (\index listItem_ ->
                         case listItem_ of
-                            ListItem { config } ->
-                                if config.selected || config.activated then
+                            ListItem.ListItem (ListItem.Config { selection }) ->
+                                if selection /= Nothing then
                                     Just index
 
                                 else
                                     Nothing
 
-                            ListItemDivider _ ->
+                            ListItem.ListItemDivider _ ->
                                 Nothing
 
-                            ListGroupSubheader _ ->
+                            ListItem.ListGroupSubheader _ ->
                                 Nothing
                     )
                 |> List.filterMap identity
@@ -562,109 +406,10 @@ selectedIndexProp listItems =
     Just (Html.Attributes.property "selectedIndex" (Encode.list Encode.int selectedIndex))
 
 
-{-| List item's text for list items in a two-line list
--}
-listItemText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-listItemText additionalAttributes nodes =
-    Html.div (class "mdc-list-item__text" :: additionalAttributes) nodes
-
-
-{-| First line of a two-line list item's text
--}
-listItemPrimaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-listItemPrimaryText additionalAttributes nodes =
-    Html.div (class "mdc-list-item__primary-text" :: additionalAttributes) nodes
-
-
-{-| Second line of a two-line list item's text
--}
-listItemSecondaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-listItemSecondaryText additionalAttributes nodes =
-    Html.div (class "mdc-list-item__secondary-text" :: additionalAttributes) nodes
-
-
-{-| A list item's graphic tile
--}
-listItemGraphic : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-listItemGraphic additionalAttributes nodes =
-    Html.div (class "mdc-list-item__graphic" :: additionalAttributes) nodes
-
-
-{-| A list item's meta tile
--}
-listItemMeta : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-listItemMeta additionalAttributes nodes =
-    Html.div (class "mdc-list-item__meta" :: additionalAttributes) nodes
-
-
-{-| Configuration of a list item divider
--}
-type alias ListItemDividerConfig msg =
-    { inset : Bool
-    , padded : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
-
-
-{-| Default configuration of a list item divider
--}
-listItemDividerConfig : ListItemDividerConfig msg
-listItemDividerConfig =
-    { inset = False
-    , padded = False
-    , additionalAttributes = []
-    }
-
-
-{-| List item divider view function
--}
-listItemDivider : ListItemDividerConfig msg -> ListItem msg
-listItemDivider config =
-    ListItemDivider <|
-        Html.li
-            (List.filterMap identity
-                [ listDividerCs
-                , separatorRoleAttr
-                , insetCs config
-                , paddedCs config
-                ]
-                ++ config.additionalAttributes
-            )
-            []
-
-
-listDividerCs : Maybe (Html.Attribute msg)
-listDividerCs =
-    Just (class "mdc-list-divider")
-
-
-separatorRoleAttr : Maybe (Html.Attribute msg)
-separatorRoleAttr =
-    Just (Html.Attributes.attribute "role" "separator")
-
-
-insetCs : ListItemDividerConfig msg -> Maybe (Html.Attribute msg)
-insetCs { inset } =
-    if inset then
-        Just (class "mdc-list-divider--inset")
-
-    else
-        Nothing
-
-
-paddedCs : ListItemDividerConfig msg -> Maybe (Html.Attribute msg)
-paddedCs { padded } =
-    if padded then
-        Just (class "mdc-list-divider--padded")
-
-    else
-        Nothing
-
-
 {-| List group view function
 -}
-listGroup : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-listGroup additionalAttributes nodes =
+group : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+group additionalAttributes nodes =
     Html.div (listGroupCs :: additionalAttributes) nodes
 
 
@@ -673,18 +418,11 @@ listGroupCs =
     class "mdc-list-group"
 
 
-{-| List group divider view function
--}
-listGroupDivider : List (Html.Attribute msg) -> Html msg
-listGroupDivider additionalAttributes =
-    Html.hr (List.filterMap identity [ listDividerCs ] ++ additionalAttributes) []
-
-
 {-| List group subheader view function
 -}
-listGroupSubheader : List (Html.Attribute msg) -> List (Html msg) -> ListItem msg
-listGroupSubheader additionalAttributes nodes =
-    ListGroupSubheader <|
+subheader : List (Html.Attribute msg) -> List (Html msg) -> ListItem msg
+subheader additionalAttributes nodes =
+    ListItem.ListGroupSubheader <|
         Html.div (listGroupSubheaderCs :: additionalAttributes) nodes
 
 
@@ -693,6 +431,6 @@ listGroupSubheaderCs =
     class "mdc-list-group__subheader"
 
 
-wrapFocusProp : ListConfig msg -> Maybe (Html.Attribute msg)
-wrapFocusProp { wrapFocus } =
+wrapFocusProp : Config msg -> Maybe (Html.Attribute msg)
+wrapFocusProp (Config { wrapFocus }) =
     Just (Html.Attributes.property "wrapFocus" (Encode.bool wrapFocus))

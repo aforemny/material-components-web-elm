@@ -6,21 +6,12 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.IconButton exposing (iconButton, iconButtonConfig)
-import Material.TopAppBar as TopAppBar exposing (prominentTopAppBar, shortCollapsedTopAppBar, shortTopAppBar, topAppBar, topAppBarConfig)
+import Material.IconButton as IconButton
+import Material.TopAppBar as TopAppBar
 import Material.Typography as Typography
 
 
 type alias Model =
-    {}
-
-
-type alias Example =
-    {}
-
-
-defaultExample : Example
-defaultExample =
     {}
 
 
@@ -42,35 +33,33 @@ view : Model -> TopAppBarPage Msg
 view model =
     { fixedAdjust = TopAppBar.fixedAdjust
     , topAppBar =
-        topAppBar topAppBarConfig
+        TopAppBar.regular TopAppBar.config
             [ TopAppBar.row []
                 [ TopAppBar.section
-                    [ TopAppBar.alignStart
-                    ]
-                    [ iconButton
-                        { iconButtonConfig
-                            | additionalAttributes = [ TopAppBar.navigationIcon ]
-                        }
+                    [ TopAppBar.alignStart ]
+                    [ IconButton.iconButton
+                        (IconButton.config
+                            |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
+                        )
                         "menu"
                     , Html.span [ TopAppBar.title ] [ text "Standard" ]
                     ]
                 , TopAppBar.section
-                    [ TopAppBar.alignEnd
-                    ]
-                    [ iconButton
-                        { iconButtonConfig
-                            | additionalAttributes = [ TopAppBar.actionItem ]
-                        }
+                    [ TopAppBar.alignEnd ]
+                    [ IconButton.iconButton
+                        (IconButton.config
+                            |> IconButton.setAttributes [ TopAppBar.actionItem ]
+                        )
                         "file_download"
-                    , iconButton
-                        { iconButtonConfig
-                            | additionalAttributes = [ TopAppBar.actionItem ]
-                        }
+                    , IconButton.iconButton
+                        (IconButton.config
+                            |> IconButton.setAttributes [ TopAppBar.actionItem ]
+                        )
                         "print"
-                    , iconButton
-                        { iconButtonConfig
-                            | additionalAttributes = [ TopAppBar.actionItem ]
-                        }
+                    , IconButton.iconButton
+                        (IconButton.config
+                            |> IconButton.setAttributes [ TopAppBar.actionItem ]
+                        )
                         "bookmark"
                     ]
                 ]

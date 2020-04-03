@@ -2,24 +2,22 @@ module Demo.IconButton exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
-import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.IconButton exposing (iconButton, iconButtonConfig)
-import Material.IconToggle exposing (iconToggle, iconToggleConfig)
+import Material.IconButton as IconButton
+import Material.IconToggle as IconToggle
 import Material.Typography as Typography
+import Set exposing (Set)
 
 
 type alias Model =
-    { iconButtons : Dict String Bool
-    }
+    { ons : Set String }
 
 
 defaultModel : Model
 defaultModel =
-    { iconButtons = Dict.empty
-    }
+    { ons = Set.empty }
 
 
 type Msg
@@ -29,18 +27,15 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Toggle index ->
+        Toggle id ->
             { model
-                | iconButtons =
-                    Dict.update index
-                        (\state -> Just (not (Maybe.withDefault False state)))
-                        model.iconButtons
+                | ons =
+                    if Set.member id model.ons then
+                        Set.remove id model.ons
+
+                    else
+                        Set.insert id model.ons
             }
-
-
-isOn : String -> Model -> Bool
-isOn index model =
-    Maybe.withDefault False (Dict.get index model.iconButtons)
 
 
 view : Model -> CatalogPage Msg
@@ -53,24 +48,24 @@ view model =
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-icon-button"
         }
     , hero =
-        [ iconToggle
-            { iconToggleConfig
-                | on = isOn "icon-button-hero" model
-                , onChange = Just (Toggle "icon-button-hero")
-            }
+        [ IconToggle.iconToggle
+            (IconToggle.config
+                |> IconToggle.setOn (Set.member "icon-button-hero" model.ons)
+                |> IconToggle.setOnChange (Toggle "icon-button-hero")
+            )
             { offIcon = "favorite_border"
             , onIcon = "favorite"
             }
         ]
     , content =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Icon Button" ]
-        , iconButton iconButtonConfig "wifi"
+        , IconButton.iconButton IconButton.config "wifi"
         , Html.h3 [ Typography.subtitle1 ] [ text "Icon Toggle" ]
-        , iconToggle
-            { iconToggleConfig
-                | on = isOn "icon-button-toggle" model
-                , onChange = Just (Toggle "icon-button-toggle")
-            }
+        , IconToggle.iconToggle
+            (IconToggle.config
+                |> IconToggle.setOn (Set.member "icon-button-toggle" model.ons)
+                |> IconToggle.setOnChange (Toggle "icon-button-toggle")
+            )
             { offIcon = "favorite_border"
             , onIcon = "favorite"
             }

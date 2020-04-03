@@ -2,8 +2,8 @@ module Demo.Theme exposing (Model, Msg, defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.Button exposing (buttonConfig, outlinedButton, raisedButton, textButton)
+import Html.Attributes exposing (class, style)
+import Material.Button as Button
 import Material.Elevation as Elevation
 import Material.Theme as Theme
 import Material.Typography as Typography
@@ -37,21 +37,9 @@ view model =
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-theme"
         }
     , hero =
-        [ textButton
-            { buttonConfig
-                | additionalAttributes = heroMargin
-            }
-            "Text"
-        , raisedButton
-            { buttonConfig
-                | additionalAttributes = heroMargin
-            }
-            "Raised"
-        , outlinedButton
-            { buttonConfig
-                | additionalAttributes = heroMargin
-            }
-            "Outlined"
+        [ Button.text (Button.config |> Button.setAttributes heroMargin) "Text"
+        , Button.raised (Button.config |> Button.setAttributes heroMargin) "Raised"
+        , Button.outlined (Button.config |> Button.setAttributes heroMargin) "Outlined"
         ]
     , content =
         [ Html.legend [ Typography.subtitle1 ] [ text "Theme colors as text" ]
@@ -179,69 +167,69 @@ textOnDarkBackground =
 
 heroMargin : List (Html.Attribute msg)
 heroMargin =
-    [ Html.Attributes.style "margin" "16px 32px" ]
+    [ style "margin" "16px 32px" ]
 
 
 demoThemeColorGroup : List (Html.Attribute msg)
 demoThemeColorGroup =
-    [ Html.Attributes.style "padding" "16px 0" ]
+    [ style "padding" "16px 0" ]
 
 
 demoThemeColorSwatches : List (Html.Attribute msg)
 demoThemeColorSwatches =
-    [ Html.Attributes.style "display" "-ms-inline-flexbox"
-    , Html.Attributes.style "display" "inline-flex"
-    , Html.Attributes.style "-ms-flex-direction" "column"
-    , Html.Attributes.style "flex-direction" "column"
-    , Html.Attributes.style "margin-right" "16px"
+    [ style "display" "-ms-inline-flexbox"
+    , style "display" "inline-flex"
+    , style "-ms-flex-direction" "column"
+    , style "flex-direction" "column"
+    , style "margin-right" "16px"
     , Elevation.z2
     ]
 
 
 demoThemeColorSwatch : List (Html.Attribute msg)
 demoThemeColorSwatch =
-    [ Html.Attributes.style "display" "inline-block"
-    , Html.Attributes.style "-webkit-box-sizing" "border-box"
-    , Html.Attributes.style "box-sizing" "border-box"
-    , Html.Attributes.style "width" "150px"
-    , Html.Attributes.style "height" "50px"
-    , Html.Attributes.style "line-height" "50px"
-    , Html.Attributes.style "text-align" "center"
-    , Html.Attributes.style "margin-bottom" "8px"
-    , Html.Attributes.style "border-radius" "4px"
+    [ style "display" "inline-block"
+    , style "-webkit-box-sizing" "border-box"
+    , style "box-sizing" "border-box"
+    , style "width" "150px"
+    , style "height" "50px"
+    , style "line-height" "50px"
+    , style "text-align" "center"
+    , style "margin-bottom" "8px"
+    , style "border-radius" "4px"
     ]
 
 
 demoThemeTextRow : List (Html.Attribute msg)
 demoThemeTextRow =
-    [ Html.Attributes.style "display" "-ms-inline-flexbox"
-    , Html.Attributes.style "display" "inline-flex"
-    , Html.Attributes.style "-webkit-box-sizing" "border-box"
-    , Html.Attributes.style "box-sizing" "border-box"
-    , Html.Attributes.style "padding" "16px"
-    , Html.Attributes.style "border" "1px solid #f0f0f0"
-    , Html.Attributes.style "-ms-flex-align" "center"
-    , Html.Attributes.style "align-items" "center"
-    , Html.Attributes.style "-ms-flex-direction" "row"
-    , Html.Attributes.style "flex-direction" "row"
+    [ style "display" "-ms-inline-flexbox"
+    , style "display" "inline-flex"
+    , style "-webkit-box-sizing" "border-box"
+    , style "box-sizing" "border-box"
+    , style "padding" "16px"
+    , style "border" "1px solid #f0f0f0"
+    , style "-ms-flex-align" "center"
+    , style "align-items" "center"
+    , style "-ms-flex-direction" "row"
+    , style "flex-direction" "row"
     ]
 
 
 demoThemeTextStyle : List (Html.Attribute msg)
 demoThemeTextStyle =
-    [ Html.Attributes.style "padding" "0 16px" ]
+    [ style "padding" "0 16px" ]
 
 
 demoThemeIconStyle : List (Html.Attribute msg)
 demoThemeIconStyle =
-    Html.Attributes.class "material-icons" :: demoThemeTextStyle
+    class "material-icons" :: demoThemeTextStyle
 
 
 demoThemeBgCustomLight : List (Html.Attribute msg)
 demoThemeBgCustomLight =
-    [ Html.Attributes.style "background-color" "#ddd" ]
+    [ style "background-color" "#ddd" ]
 
 
 demoThemeBgCustomDark : List (Html.Attribute msg)
 demoThemeBgCustomDark =
-    [ Html.Attributes.style "background-color" "#d1d1d1" ]
+    [ style "background-color" "#d1d1d1" ]

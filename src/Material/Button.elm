@@ -1,16 +1,23 @@
 module Material.Button exposing
-    ( textButton, buttonConfig, ButtonConfig
-    , outlinedButton, raisedButton, unelevatedButton
+    ( Config, config
+    , setOnClick
+    , setIcon, setTrailingIcon
+    , setDisabled
+    , setDense
+    , setHref, setTarget
+    , setAttributes
+    , text, outlined, raised, unelevated
     )
 
-{-| Buttons allow users to take actions, and make choices, with a single tap.
+{-| Buttons allow users to take actions and make choices with a single tap.
 
 
 # Table of Contents
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
-  - [Text Button](#text-button)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Button Variants](#button-variants)
   - [Button with Icons](#button-with-icons)
       - [Button with Leading Icon](#button-with-leading-icon)
@@ -30,115 +37,203 @@ module Material.Button exposing
 
 # Basic Usage
 
-    import Material.Button exposing (buttonConfig, textButton)
+    import Material.Button as Button
 
     type Msg
-        = ButtonClicked
+        = Clicked
 
     main =
-        textButton
-            { buttonConfig | onClick = Just ButtonClicked }
+        Button.text
+            (Button.config |> Button.setOnClick Clicked)
             "Text"
 
 
-# Text Button
+# Configuration
 
-@docs textButton, buttonConfig, ButtonConfig
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnClick
+@docs setIcon, setTrailingIcon
+@docs setDisabled
+@docs setDense
+@docs setHref, setTarget
+@docs setAttributes
 
 
 # Button Variants
 
-Buttons may appear in different variants. Use `textButton` or `outlinedButton`
-if you want a button that is flush with the surface, and `raisedButton` or
-`unelevatedButton` for a button that is contained.
+Buttons may appear in different variants. Use `text` or `outlined` if you want
+a button that is flush with the surface, and use `raised` or `unelevated` for a
+button that is contained.
 
-@docs outlinedButton, raisedButton, unelevatedButton
+@docs text, outlined, raised, unelevated
 
 
 # Button with Icons
 
-To add an icon to a button, set its `icon` configuration field to the name of a
-[Material Icon](https://material.io/icons). If you want the icon to be
-positioned after the button's label, also set the `trailingIcon` configuration
-field to `True`.
+To add an icon to a button, use its `setIcon` configuration option to specify
+the name of a [Material Icon](https://material.io/icons). If you want the icon
+to be positioned after the button's label, also set the `setTrailingIcon`
+configuration option to `True`.
 
 
 ## Button with Leading Icon
 
-    textButton
-        { buttonConfig | icon = Just "favorite" }
+    Button.text
+        (Button.config |> Button.setIcon (Just "favorite"))
         "Like"
 
 
 ## Button with Trailing Icon
 
-    textButton
-        { buttonConfig
-            | icon = Just "favorite"
-            , trailingIcon = True
-        }
+    Button.text
+        (Button.config
+            |> Button.setIcon (Just "favorite")
+            |> Button.setTrailingIcon True
+        )
         "Like"
 
 
 # Disabled Button
 
-To disable a button, set its `disabled` configuration field to `True`. Disabled
+To disable a button, use its `setDisabled` configuration option. Disabled
 buttons cannot be interacted with and have no visual interaction effect.
 
-    textButton { buttonConfig | disabled = True } "Disabled"
+    Button.text
+        (Button.config |> Button.setDisabled True)
+        "Disabled"
 
 
 # Dense Button
 
-To make a button's text and container margins slightly smaller, set the `dense`
-configuration field to `True`.
+To make a button's text and container margins slightly smaller, use its `setDense`
+configuration option.
 
-    textButton { buttonConfig | dense = True } "Dense"
+    Button.text
+        (Button.config |> Button.setDense True)
+        "Dense"
 
 
 # Link Button
 
-Buttons may specify the `href` configuration field in which case the button essentially behaves like a HTML `a` element. You may specify the configuration field `target` as well.
+To make a button essentially behave like a HTML anchor element, use its
+`setHref` configution option. You may use its `setTarget` configuration option
+to specify a target.
 
-    textButton { buttonConfig | href = Just "https://elm-lang.org" } "Visit"
+    Button.text
+        (Button.config
+            |> Button.setHref (Just "https://elm-lang.org")
+        )
+        "Visit"
 
 Note that link buttons cannot be disabled.
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Encode as Encode
+import Material.Button.Internal exposing (Config(..))
 
 
 {-| Configuration of a button
 -}
-type alias ButtonConfig msg =
-    { icon : Maybe String
-    , trailingIcon : Bool
-    , disabled : Bool
-    , dense : Bool
-    , href : Maybe String
-    , target : Maybe String
-    , additionalAttributes : List (Html.Attribute msg)
-    , onClick : Maybe msg
-    }
+type alias Config msg =
+    Material.Button.Internal.Config msg
 
 
 {-| Default configuration of a button
 -}
-buttonConfig : ButtonConfig msg
-buttonConfig =
-    { icon = Nothing
-    , trailingIcon = False
-    , disabled = False
-    , dense = False
-    , href = Nothing
-    , target = Nothing
-    , additionalAttributes = []
-    , onClick = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { icon = Nothing
+        , trailingIcon = False
+        , disabled = False
+        , dense = False
+        , href = Nothing
+        , target = Nothing
+        , additionalAttributes = []
+        , onClick = Nothing
+        }
+
+
+{-| Specify whether the button features an icon
+-}
+setIcon : Maybe String -> Config msg -> Config msg
+setIcon icon (Config config_) =
+    Config { config_ | icon = icon }
+
+
+{-| Specify whether a button's icon is a _trailing icon_.
+
+Trailing icons are displayed after the button's label rather than before.
+
+-}
+setTrailingIcon : Bool -> Config msg -> Config msg
+setTrailingIcon trailingIcon (Config config_) =
+    Config { config_ | trailingIcon = trailingIcon }
+
+
+{-| Specify whether the button is disabled
+
+Disabled buttons cannot be interacted with and do not have no visual
+interaction effect.
+
+-}
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
+
+
+{-| Specify whether a button is _dense_
+
+Dense buttons feature smaller than normal padding.
+
+-}
+setDense : Bool -> Config msg -> Config msg
+setDense dense (Config config_) =
+    Config { config_ | dense = dense }
+
+
+{-| Specify whether a button is a _link button_.
+
+Link buttons behave like normal HTML5 anchor tags. Note that link buttons
+cannot be disabled and ignore that configuration option.
+
+-}
+setHref : Maybe String -> Config msg -> Config msg
+setHref href (Config config_) =
+    Config { config_ | href = href }
+
+
+{-| Specify the target for a link button.
+
+Note that this configuration option will be ignored by buttons that do not also
+set `setHref`.
+
+-}
+setTarget : Maybe String -> Config msg -> Config msg
+setTarget target (Config config_) =
+    Config { config_ | target = target }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user clicks a button
+-}
+setOnClick : msg -> Config msg -> Config msg
+setOnClick onClick (Config config_) =
+    Config { config_ | onClick = Just onClick }
 
 
 type Variant
@@ -148,11 +243,11 @@ type Variant
     | Outlined
 
 
-button : Variant -> ButtonConfig msg -> String -> Html msg
-button variant config label =
+button : Variant -> Config msg -> String -> Html msg
+button variant ((Config { additionalAttributes, href }) as config_) label =
     Html.node "mdc-button"
-        (List.filterMap identity [ disabledProp config ])
-        [ (if config.href /= Nothing then
+        (List.filterMap identity [ disabledProp config_ ])
+        [ (if href /= Nothing then
             Html.a
 
            else
@@ -161,19 +256,19 @@ button variant config label =
             (List.filterMap identity
                 [ rootCs
                 , variantCs variant
-                , denseCs config
-                , disabledAttr config
-                , tabIndexProp config
-                , hrefAttr config
-                , targetAttr config
-                , clickHandler config
+                , denseCs config_
+                , disabledAttr config_
+                , tabIndexProp config_
+                , hrefAttr config_
+                , targetAttr config_
+                , clickHandler config_
                 ]
-                ++ config.additionalAttributes
+                ++ additionalAttributes
             )
             (List.filterMap identity
-                [ leadingIconElt config
+                [ leadingIconElt config_
                 , labelElt label
-                , trailingIconElt config
+                , trailingIconElt config_
                 ]
             )
         ]
@@ -181,30 +276,30 @@ button variant config label =
 
 {-| Text button variant (flush without outline)
 -}
-textButton : ButtonConfig msg -> String -> Html msg
-textButton config label =
-    button Text config label
+text : Config msg -> String -> Html msg
+text config_ label =
+    button Text config_ label
 
 
 {-| Outlined button variant (flush with outline)
 -}
-outlinedButton : ButtonConfig msg -> String -> Html msg
-outlinedButton config label =
-    button Outlined config label
+outlined : Config msg -> String -> Html msg
+outlined config_ label =
+    button Outlined config_ label
 
 
 {-| Raised button variant (contained with elevation)
 -}
-raisedButton : ButtonConfig msg -> String -> Html msg
-raisedButton config label =
-    button Raised config label
+raised : Config msg -> String -> Html msg
+raised config_ label =
+    button Raised config_ label
 
 
 {-| Unelevated button variant (contained without elevation)
 -}
-unelevatedButton : ButtonConfig msg -> String -> Html msg
-unelevatedButton config label =
-    button Unelevated config label
+unelevated : Config msg -> String -> Html msg
+unelevated config_ label =
+    button Unelevated config_ label
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -212,18 +307,18 @@ rootCs =
     Just (class "mdc-button")
 
 
-disabledProp : ButtonConfig msg -> Maybe (Html.Attribute msg)
-disabledProp { disabled } =
+disabledProp : Config msg -> Maybe (Html.Attribute msg)
+disabledProp (Config { disabled }) =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
-disabledAttr : ButtonConfig msg -> Maybe (Html.Attribute msg)
-disabledAttr { disabled } =
+disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr (Config { disabled }) =
     Just (Html.Attributes.disabled disabled)
 
 
-tabIndexProp : ButtonConfig msg -> Maybe (Html.Attribute msg)
-tabIndexProp { disabled } =
+tabIndexProp : Config msg -> Maybe (Html.Attribute msg)
+tabIndexProp (Config { disabled }) =
     if disabled then
         Just (Html.Attributes.property "tabIndex" (Encode.int -1))
 
@@ -231,13 +326,13 @@ tabIndexProp { disabled } =
         Just (Html.Attributes.property "tabIndex" (Encode.int 0))
 
 
-hrefAttr : ButtonConfig msg -> Maybe (Html.Attribute msg)
-hrefAttr { href } =
+hrefAttr : Config msg -> Maybe (Html.Attribute msg)
+hrefAttr (Config { href }) =
     Maybe.map Html.Attributes.href href
 
 
-targetAttr : ButtonConfig msg -> Maybe (Html.Attribute msg)
-targetAttr { href, target } =
+targetAttr : Config msg -> Maybe (Html.Attribute msg)
+targetAttr (Config { href, target }) =
     if href /= Nothing then
         Maybe.map Html.Attributes.target target
 
@@ -245,8 +340,8 @@ targetAttr { href, target } =
         Nothing
 
 
-clickHandler : ButtonConfig msg -> Maybe (Html.Attribute msg)
-clickHandler { onClick } =
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler (Config { onClick }) =
     Maybe.map Html.Events.onClick onClick
 
 
@@ -266,8 +361,8 @@ variantCs variant =
             Just (class "mdc-button--outlined")
 
 
-denseCs : ButtonConfig msg -> Maybe (Html.Attribute msg)
-denseCs { dense } =
+denseCs : Config msg -> Maybe (Html.Attribute msg)
+denseCs (Config { dense }) =
     if dense then
         Just (class "mdc-button--dense")
 
@@ -275,32 +370,32 @@ denseCs { dense } =
         Nothing
 
 
-iconElt : ButtonConfig msg -> Maybe (Html msg)
-iconElt { icon } =
+iconElt : Config msg -> Maybe (Html msg)
+iconElt (Config { icon }) =
     Maybe.map
         (\iconName ->
             Html.i
                 [ class "mdc-button__icon material-icons"
                 , Html.Attributes.attribute "aria-hidden" "true"
                 ]
-                [ text iconName ]
+                [ Html.text iconName ]
         )
         icon
 
 
-leadingIconElt : ButtonConfig msg -> Maybe (Html msg)
-leadingIconElt config =
-    if not config.trailingIcon then
-        iconElt config
+leadingIconElt : Config msg -> Maybe (Html msg)
+leadingIconElt ((Config { trailingIcon }) as config_) =
+    if not trailingIcon then
+        iconElt config_
 
     else
         Nothing
 
 
-trailingIconElt : ButtonConfig msg -> Maybe (Html msg)
-trailingIconElt config =
-    if config.trailingIcon then
-        iconElt config
+trailingIconElt : Config msg -> Maybe (Html msg)
+trailingIconElt ((Config { trailingIcon }) as config_) =
+    if trailingIcon then
+        iconElt config_
 
     else
         Nothing
@@ -308,4 +403,4 @@ trailingIconElt config =
 
 labelElt : String -> Maybe (Html msg)
 labelElt label =
-    Just (Html.span [ class "mdc-button__label" ] [ text label ])
+    Just (Html.span [ class "mdc-button__label" ] [ Html.text label ])

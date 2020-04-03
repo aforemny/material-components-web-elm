@@ -3,62 +3,63 @@ module Demo.Lists exposing (Model, Msg, defaultModel, update, view)
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
-import Html.Attributes
+import Html.Attributes exposing (style)
 import Html.Events
 import Json.Decode as Decode
-import Material.Checkbox as Checkbox exposing (checkbox, checkboxConfig)
-import Material.Icon exposing (icon, iconConfig)
-import Material.List exposing (list, listConfig, listGroup, listGroupSubheader, listItem, listItemConfig, listItemDivider, listItemDividerConfig, listItemGraphic, listItemMeta, listItemPrimaryText, listItemSecondaryText, listItemText)
-import Material.Radio exposing (radio, radioConfig)
+import Material.Checkbox as Checkbox
+import Material.Icon as Icon
+import Material.List as List
+import Material.List.Item as ListItem
+import Material.Radio as Radio
 import Material.Typography as Typography
 import Set exposing (Set)
 
 
 type alias Model =
-    { checkboxIndices : Set Int
-    , radioIndex : Maybe Int
-    , activatedIndex : Int
-    , shapedActivatedIndex : Int
+    { checkboxes : Set String
+    , radio : Maybe String
+    , activated : String
+    , shapedActivated : String
     }
 
 
 defaultModel : Model
 defaultModel =
-    { checkboxIndices = Set.empty
-    , radioIndex = Nothing
-    , activatedIndex = 1
-    , shapedActivatedIndex = 1
+    { checkboxes = Set.empty
+    , radio = Nothing
+    , activated = "Star"
+    , shapedActivated = "Star"
     }
 
 
 type Msg
-    = ToggleCheckbox Int
-    | SetRadio Int
-    | SetActivated Int
-    | SetShapedActivated Int
+    = ToggleCheckbox String
+    | SetRadio String
+    | SetActivated String
+    | SetShapedActivated String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        ToggleCheckbox index ->
+        ToggleCheckbox id ->
             { model
-                | checkboxIndices =
-                    if Set.member index model.checkboxIndices then
-                        Set.remove index model.checkboxIndices
+                | checkboxes =
+                    if Set.member id model.checkboxes then
+                        Set.remove id model.checkboxes
 
                     else
-                        Set.insert index model.checkboxIndices
+                        Set.insert id model.checkboxes
             }
 
-        SetRadio index ->
-            { model | radioIndex = Just index }
+        SetRadio id ->
+            { model | radio = Just id }
 
-        SetActivated index ->
-            { model | activatedIndex = index }
+        SetActivated id ->
+            { model | activated = id }
 
-        SetShapedActivated index ->
-            { model | shapedActivatedIndex = index }
+        SetShapedActivated id ->
+            { model | shapedActivated = id }
 
 
 view : Model -> CatalogPage Msg
@@ -97,69 +98,68 @@ view model =
 
 demoList : List (Html.Attribute msg)
 demoList =
-    [ Html.Attributes.style "max-width" "600px"
-    , Html.Attributes.style "border" "1px solid rgba(0,0,0,.1)"
+    [ style "max-width" "600px"
+    , style "border" "1px solid rgba(0,0,0,.1)"
     ]
 
 
 heroList : List (Html msg)
 heroList =
-    [ list
-        { listConfig
-            | additionalAttributes = Html.Attributes.style "background" "#fff" :: demoList
-        }
-        (List.repeat 3 <| listItem listItemConfig [ text "Line item" ])
+    [ List.list
+        (List.config
+            |> List.setAttributes (style "background" "#fff" :: demoList)
+        )
+        (List.repeat 3 <| ListItem.listItem ListItem.config [ text "Line item" ])
     ]
 
 
 singleLineList : Html msg
 singleLineList =
-    list { listConfig | additionalAttributes = demoList }
-        (List.repeat 3 <| listItem listItemConfig [ text "Line item" ])
+    List.list (List.config |> List.setAttributes demoList)
+        (List.repeat 3 <| ListItem.listItem ListItem.config [ text "Line item" ])
 
 
 twoLineList : Html msg
 twoLineList =
-    list
-        { listConfig
-            | twoLine = True
-            , additionalAttributes = demoList
-        }
+    List.list
+        (List.config
+            |> List.setTwoLine True
+            |> List.setAttributes demoList
+        )
         (List.repeat 3 <|
-            listItem listItemConfig
-                [ listItemText []
-                    [ listItemPrimaryText [] [ text "Line item" ]
-                    , listItemSecondaryText [] [ text "Secondary text" ]
-                    ]
+            ListItem.listItem ListItem.config
+                [ ListItem.text []
+                    { primary = [ text "Line item" ]
+                    , secondary = [ text "Secondary text" ]
+                    }
                 ]
         )
 
 
 leadingIconList : Html msg
 leadingIconList =
-    list { listConfig | additionalAttributes = demoList }
-        [ listItem listItemConfig
-            [ listItemGraphic [] [ icon iconConfig "wifi" ]
-            , text "Line item"
+    List.list (List.config |> List.setAttributes demoList)
+        (List.map
+            (\icon ->
+                ListItem.listItem ListItem.config
+                    [ ListItem.graphic [] [ Icon.icon [] icon ]
+                    , text "Line item"
+                    ]
+            )
+            [ "wifi"
+            , "bluetooth"
+            , "data_usage"
             ]
-        , listItem listItemConfig
-            [ listItemGraphic [] [ icon iconConfig "bluetooth" ]
-            , text "Line item"
-            ]
-        , listItem listItemConfig
-            [ listItemGraphic [] [ icon iconConfig "data_usage" ]
-            , text "Line item"
-            ]
-        ]
+        )
 
 
 trailingIconList : Html msg
 trailingIconList =
-    list { listConfig | additionalAttributes = demoList }
+    List.list (List.config |> List.setAttributes demoList)
         (List.repeat 3 <|
-            listItem listItemConfig
+            ListItem.listItem ListItem.config
                 [ text "Line item"
-                , listItemMeta [] [ icon iconConfig "info" ]
+                , ListItem.meta [] [ Icon.icon [] "info" ]
                 ]
         )
 
@@ -167,171 +167,179 @@ trailingIconList =
 activatedItemList : Model -> Html Msg
 activatedItemList model =
     let
-        listItemConfig_ index =
-            { listItemConfig
-                | activated = model.activatedIndex == index
-                , onClick = Just (SetActivated index)
-            }
+        listItem ( icon, label ) =
+            ListItem.listItem
+                (ListItem.config
+                    |> ListItem.setSelected
+                        (if model.activated == label then
+                            Just ListItem.activated
+
+                         else
+                            Nothing
+                        )
+                    |> ListItem.setOnClick (SetActivated label)
+                )
+                [ ListItem.graphic [] [ Icon.icon [] icon ], text label ]
     in
-    list { listConfig | additionalAttributes = demoList }
-        [ listItem (listItemConfig_ 0)
-            [ listItemGraphic [] [ icon iconConfig "inbox" ], text "Inbox" ]
-        , listItem (listItemConfig_ 1)
-            [ listItemGraphic [] [ icon iconConfig "star" ], text "Star" ]
-        , listItem (listItemConfig_ 2)
-            [ listItemGraphic [] [ icon iconConfig "send" ], text "Sent" ]
-        , listItem (listItemConfig_ 3)
-            [ listItemGraphic [] [ icon iconConfig "drafts" ], text "Drafts" ]
-        ]
+    List.list (List.config |> List.setAttributes demoList)
+        (List.map listItem
+            [ ( "inbox", "Inbox" )
+            , ( "star", "Star" )
+            , ( "send", "Sent" )
+            , ( "drafts", "Drafts" )
+            ]
+        )
 
 
 shapedActivatedItemList : Model -> Html Msg
 shapedActivatedItemList model =
     let
-        listItemConfig_ index =
-            { listItemConfig
-                | activated = model.shapedActivatedIndex == index
-                , onClick = Just (SetShapedActivated index)
-                , additionalAttributes =
-                    [ Html.Attributes.style "border-radius" "0 32px 32px 0" ]
-            }
+        listItem ( icon, label ) =
+            ListItem.listItem
+                (ListItem.config
+                    |> ListItem.setSelected
+                        (if model.shapedActivated == label then
+                            Just ListItem.activated
+
+                         else
+                            Nothing
+                        )
+                    |> ListItem.setOnClick (SetShapedActivated label)
+                    |> ListItem.setAttributes [ style "border-radius" "0 32px 32px 0" ]
+                )
+                [ ListItem.graphic [] [ Icon.icon [] icon ], text label ]
     in
-    list { listConfig | additionalAttributes = demoList }
-        [ listItem (listItemConfig_ 0)
-            [ listItemGraphic [] [ icon iconConfig "inbox" ], text "Inbox" ]
-        , listItem (listItemConfig_ 1)
-            [ listItemGraphic [] [ icon iconConfig "star" ], text "Star" ]
-        , listItem (listItemConfig_ 2)
-            [ listItemGraphic [] [ icon iconConfig "send" ], text "Sent" ]
-        , listItem (listItemConfig_ 3)
-            [ listItemGraphic [] [ icon iconConfig "drafts" ], text "Drafts" ]
-        ]
+    List.list (List.config |> List.setAttributes demoList)
+        (List.map listItem
+            [ ( "inbox", "Inbox" )
+            , ( "star", "Star" )
+            , ( "send", "Sent" )
+            , ( "drafts", "Drafts" )
+            ]
+        )
 
 
 demoIcon : List (Html.Attribute msg)
 demoIcon =
-    [ Html.Attributes.style "background" "rgba(0,0,0,.3)"
-    , Html.Attributes.style "border-radius" "50%"
-    , Html.Attributes.style "color" "#fff"
+    [ style "background" "rgba(0,0,0,.3)"
+    , style "border-radius" "50%"
+    , style "color" "#fff"
     ]
 
 
 folderList : Html msg
 folderList =
-    list
-        { listConfig
-            | avatarList = True
-            , twoLine = True
-            , additionalAttributes = demoList
-        }
-        [ listItem listItemConfig
-            [ listItemGraphic demoIcon [ icon iconConfig "folder" ]
-            , listItemText []
-                [ listItemPrimaryText [] [ text "Dog Photos" ]
-                , listItemSecondaryText [] [ text "9 Jan 2018" ]
+    let
+        listItem { primary, secondary } =
+            ListItem.listItem ListItem.config
+                [ ListItem.graphic demoIcon [ Icon.icon [] "folder" ]
+                , ListItem.text []
+                    { primary = [ text primary ]
+                    , secondary = [ text secondary ]
+                    }
+                , ListItem.meta [] [ Icon.icon [] "info" ]
                 ]
-            , listItemMeta [] [ icon iconConfig "info" ]
+    in
+    List.list
+        (List.config
+            |> List.setAvatarList True
+            |> List.setTwoLine True
+            |> List.setAttributes demoList
+        )
+        (List.map listItem
+            [ { primary = "Dog Photos"
+              , secondary = "9 Jan 2018"
+              }
+            , { primary = "Cat Photos"
+              , secondary = "22 Dec 2017"
+              }
+            , { primary = "Potatoes"
+              , secondary = "30 Noc 2017"
+              }
+            , { primary = "Carrots"
+              , secondary = "17 Oct 2017"
+              }
             ]
-        , listItem listItemConfig
-            [ listItemGraphic demoIcon [ icon iconConfig "folder" ]
-            , listItemText []
-                [ listItemPrimaryText [] [ text "Cat Photos" ]
-                , listItemSecondaryText [] [ text "22 Dec 2017" ]
-                ]
-            , listItemMeta [] [ icon iconConfig "info" ]
-            ]
-        , listItemDivider listItemDividerConfig
-        , listItem listItemConfig
-            [ listItemGraphic demoIcon [ icon iconConfig "folder" ]
-            , listItemText []
-                [ listItemPrimaryText [] [ text "Potatoes" ]
-                , listItemSecondaryText [] [ text "30 Noc 2017" ]
-                ]
-            , listItemMeta [] [ icon iconConfig "info" ]
-            ]
-        , listItem listItemConfig
-            [ listItemGraphic demoIcon [ icon iconConfig "folder" ]
-            , listItemText []
-                [ listItemPrimaryText [] [ text "Carrots" ]
-                , listItemSecondaryText [] [ text "17 Oct 2017" ]
-                ]
-            , listItemMeta [] [ icon iconConfig "info" ]
-            ]
-        ]
+        )
 
 
 listWithTrailingCheckbox : Model -> Html Msg
 listWithTrailingCheckbox model =
     let
-        listItemConfig_ index =
-            { listItemConfig | selected = Set.member index model.checkboxIndices }
+        listItem label =
+            ListItem.listItem
+                (ListItem.config
+                    |> ListItem.setSelected
+                        (if Set.member label model.checkboxes then
+                            Just ListItem.selected
 
-        checkbox_ index =
-            checkbox
-                { checkboxConfig
-                    | onChange = Just (ToggleCheckbox index)
-                    , state =
-                        if Set.member index model.checkboxIndices then
-                            Checkbox.Checked
+                         else
+                            Nothing
+                        )
+                )
+                [ text "Dog Photos"
+                , ListItem.meta []
+                    [ Checkbox.checkbox
+                        (Checkbox.config
+                            |> Checkbox.setOnChange (ToggleCheckbox label)
+                            |> Checkbox.setState
+                                (Just
+                                    (if Set.member label model.checkboxes then
+                                        Checkbox.checked
 
-                        else
-                            Checkbox.Unchecked
-                }
-    in
-    list
-        { listConfig
-            | additionalAttributes =
-                [ Html.Attributes.attribute "role" "group"
+                                     else
+                                        Checkbox.unchecked
+                                    )
+                                )
+                        )
+                    ]
                 ]
-                    ++ demoList
-        }
-        [ listItem (listItemConfig_ 0)
-            [ text "Dog Photos"
-            , listItemMeta [] [ checkbox_ 0 ]
+    in
+    List.list
+        (List.config
+            |> List.setAttributes
+                (Html.Attributes.attribute "role" "group"
+                    :: demoList
+                )
+        )
+        (List.map listItem
+            [ "Dog Photos"
+            , "Cat Photos"
+            , "Potatoes"
+            , "Carrots"
             ]
-        , listItem (listItemConfig_ 1)
-            [ text "Cat Photos"
-            , listItemMeta [] [ checkbox_ 1 ]
-            ]
-        , listItem (listItemConfig_ 2)
-            [ text "Potatoes"
-            , listItemMeta [] [ checkbox_ 2 ]
-            ]
-        , listItem (listItemConfig_ 3)
-            [ text "Carrots"
-            , listItemMeta [] [ checkbox_ 3 ]
-            ]
-        ]
+        )
 
 
 listWithTrailingRadioButton : Model -> Html Msg
 listWithTrailingRadioButton model =
     let
-        listItemConfig_ index =
-            { listItemConfig | selected = model.radioIndex == Just index }
+        listItem label =
+            ListItem.listItem
+                (ListItem.config
+                    |> ListItem.setSelected
+                        (if model.radio == Just label then
+                            Just ListItem.selected
 
-        radio_ index =
-            radio
-                { radioConfig
-                    | checked = model.radioIndex == Just index
-                    , onChange = Just (SetRadio index)
-                }
+                         else
+                            Nothing
+                        )
+                )
+                [ text label
+                , ListItem.meta []
+                    [ Radio.radio
+                        (Radio.config
+                            |> Radio.setChecked (model.radio == Just label)
+                            |> Radio.setOnChange (SetRadio label)
+                        )
+                    ]
+                ]
     in
-    list { listConfig | additionalAttributes = demoList }
-        [ listItem (listItemConfig_ 0)
-            [ text "Dog Photos"
-            , listItemMeta [] [ radio_ 0 ]
+    List.list (List.config |> List.setAttributes demoList)
+        (List.map listItem
+            [ "Dog Photos"
+            , "Cat Photos"
+            , "Potatoes"
+            , "Carrots"
             ]
-        , listItem (listItemConfig_ 1)
-            [ text "Cat Photos"
-            , listItemMeta [] [ radio_ 1 ]
-            ]
-        , listItem (listItemConfig_ 2)
-            [ text "Potatoes"
-            , listItemMeta [] [ radio_ 2 ]
-            ]
-        , listItem (listItemConfig_ 3)
-            [ text "Carrots"
-            , listItemMeta [] [ radio_ 3 ]
-            ]
-        ]
+        )

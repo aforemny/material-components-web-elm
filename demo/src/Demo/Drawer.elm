@@ -9,10 +9,11 @@ module Demo.Drawer exposing
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.Drawer as Drawer exposing (drawerContent, drawerHeader, drawerSubtitle, drawerTitle, permanentDrawer, permanentDrawerConfig)
-import Material.Icon exposing (icon, iconConfig)
-import Material.List exposing (list, listConfig, listItem, listItemConfig, listItemGraphic)
+import Html.Attributes exposing (style)
+import Material.Drawer.Permanent as PermanentDrawer
+import Material.Icon as Icon
+import Material.List as List
+import Material.List.Item as ListItem
 import Material.Typography as Typography
 
 
@@ -54,43 +55,37 @@ view model =
 
 heroDrawer : List (Html msg)
 heroDrawer =
-    [ permanentDrawer permanentDrawerConfig
-        [ drawerHeader []
-            [ Html.h3 [ drawerTitle ] [ text "Title" ]
-            , Html.h6 [ drawerSubtitle ] [ text "Subtitle" ]
-            ]
-        , drawerContent []
-            [ list listConfig
-                [ listItem
-                    { listItemConfig
-                        | activated = True
-                        , additionalAttributes = [ Html.Attributes.href "#drawer" ]
-                    }
-                    [ listItemGraphic [] [ icon iconConfig "inbox" ]
-                    , text "Inbox"
-                    ]
-                , listItem
-                    { listItemConfig
-                        | additionalAttributes = [ Html.Attributes.href "#drawer" ]
-                    }
-                    [ listItemGraphic [] [ icon iconConfig "star" ]
-                    , text "Star"
-                    ]
-                , listItem
-                    { listItemConfig
-                        | additionalAttributes = [ Html.Attributes.href "#drawer" ]
-                    }
-                    [ listItemGraphic [] [ icon iconConfig "send" ]
-                    , text "Sent Mail"
-                    ]
-                , listItem
-                    { listItemConfig
-                        | additionalAttributes = [ Html.Attributes.href "#drawer" ]
-                    }
-                    [ listItemGraphic [] [ icon iconConfig "drafts" ]
-                    , text "Drafts"
-                    ]
+    let
+        listItem ( activated, icon, label ) =
+            ListItem.listItem
+                (ListItem.config
+                    |> ListItem.setSelected
+                        (if activated then
+                            Just ListItem.activated
+
+                         else
+                            Nothing
+                        )
+                    |> ListItem.setAttributes [ Html.Attributes.href "#drawer" ]
+                )
+                [ ListItem.graphic [] [ Icon.icon [] icon ]
+                , text label
                 ]
+    in
+    [ PermanentDrawer.drawer PermanentDrawer.config
+        [ PermanentDrawer.header []
+            [ Html.h3 [ PermanentDrawer.title ] [ text "Title" ]
+            , Html.h6 [ PermanentDrawer.subtitle ] [ text "Subtitle" ]
+            ]
+        , PermanentDrawer.content []
+            [ List.list List.config
+                (List.map listItem
+                    [ ( True, "inbox", "Inbox" )
+                    , ( False, "star", "Star" )
+                    , ( False, "send", "Sent Mail" )
+                    , ( False, "drafts", "Drafts" )
+                    ]
+                )
             ]
         ]
     ]
@@ -99,33 +94,27 @@ heroDrawer =
 iframe : String -> String -> Html msg
 iframe label url =
     Html.div
-        [ Html.Attributes.style "display" "inline-block"
-        , Html.Attributes.style "-ms-flex" "1 1 80%"
-        , Html.Attributes.style "flex" "1 1 80%"
-        , Html.Attributes.style "-ms-flex-pack" "distribute"
-        , Html.Attributes.style "justify-content" "space-around"
-        , Html.Attributes.style "min-height" "400px"
-        , Html.Attributes.style "min-width" "400px"
-        , Html.Attributes.style "padding" "15px"
+        [ style "display" "inline-block"
+        , style "-ms-flex" "1 1 80%"
+        , style "flex" "1 1 80%"
+        , style "-ms-flex-pack" "distribute"
+        , style "justify-content" "space-around"
+        , style "min-height" "400px"
+        , style "min-width" "400px"
+        , style "padding" "15px"
         ]
-        [ Html.div
-            []
+        [ Html.div []
             [ Html.a
                 [ Html.Attributes.href url
                 , Html.Attributes.target "_blank"
                 ]
-                [ Html.h3
-                    [ Typography.subtitle1
-                    ]
-                    [ text label
-                    ]
-                ]
+                [ Html.h3 [ Typography.subtitle1 ] [ text label ] ]
             ]
         , Html.iframe
             [ Html.Attributes.src url
-            , Html.Attributes.style "height" "400px"
-            , Html.Attributes.style "width" "100vw"
-            , Html.Attributes.style "max-width" "780px"
+            , style "height" "400px"
+            , style "width" "100vw"
+            , style "max-width" "780px"
             ]
             []
         ]

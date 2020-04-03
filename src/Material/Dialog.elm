@@ -1,12 +1,21 @@
-module Material.Dialog exposing (dialog, dialogConfig, DialogConfig, DialogContent)
+module Material.Dialog exposing
+    ( Config, config
+    , setOnClose
+    , setOpen
+    , setAttributes
+    , dialog, Content
+    )
 
-{-| Dialogs inform users about a task and can contain critical information, require decisions, or involve multiple tasks.
+{-| Dialogs inform users about a task and can contain critical information,
+require decisions, or involve multiple tasks.
 
 
 # Table of Contents
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Dialog](#dialog)
 
 
@@ -20,39 +29,46 @@ module Material.Dialog exposing (dialog, dialogConfig, DialogConfig, DialogConte
 
 # Basic Usage
 
-    import Material.Button exposing (buttonConfig, textButton)
-    import Material.Dialog exposing (dialog, dialogConfig)
+    import Material.Button as Button
+    import Material.Dialog as Dialog
 
     type Msg
-        = DialogClosed
+        = Closed
 
     main =
-        dialog
-            { dialogConfig
-                | open = True
-                , onClose = Just DialogClosed
-            }
+        Dialog.dialog
+            (Dialog.config
+                |> Dialog.setOpen True
+                |> Dialog.setOnClose Closed
+            )
             { title = Nothing
-            , content =
-                [ text "Discard draft?" ]
+            , content = [ text "Discard draft?" ]
             , actions =
-                [ textButton
-                    { buttonConfig
-                        | onClick = Just DialogClosed
-                    }
+                [ Button.text
+                    (Button.config |> Button.setOnClick Closed)
                     "Cancel"
-                , textButton
-                    { buttonConfig
-                        | onClick = Just DialogClosed
-                    }
+                , Button.text
+                    (Button.config |> Button.setOnClick Closed)
                     "Discard"
                 ]
             }
 
 
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnClose
+@docs setOpen
+@docs setAttributes
+
+
 # Dialog
 
-@docs dialog, dialogConfig, DialogConfig, DialogContent
+@docs dialog, Content
 
 -}
 
@@ -65,26 +81,49 @@ import Json.Encode as Encode
 
 {-| Configuration of a dialog
 -}
-type alias DialogConfig msg =
-    { open : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    , onClose : Maybe msg
-    }
+type Config msg
+    = Config
+        { open : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        , onClose : Maybe msg
+        }
 
 
 {-| Default configuration of a dialog
 -}
-dialogConfig : DialogConfig msg
-dialogConfig =
-    { open = False
-    , additionalAttributes = []
-    , onClose = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { open = False
+        , additionalAttributes = []
+        , onClose = Nothing
+        }
+
+
+{-| Specify whether a dialog is open
+-}
+setOpen : Bool -> Config msg -> Config msg
+setOpen open (Config config_) =
+    Config { config_ | open = open }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user closes the dialog
+-}
+setOnClose : msg -> Config msg -> Config msg
+setOnClose onClose (Config config_) =
+    Config { config_ | onClose = Just onClose }
 
 
 {-| Dialog content
 -}
-type alias DialogContent msg =
+type alias Content msg =
     { title : Maybe String
     , content : List (Html msg)
     , actions : List (Html msg)
@@ -93,17 +132,17 @@ type alias DialogContent msg =
 
 {-| Dialog view function
 -}
-dialog : DialogConfig msg -> DialogContent msg -> Html msg
-dialog config content =
+dialog : Config msg -> Content msg -> Html msg
+dialog ((Config { additionalAttributes }) as config_) content =
     Html.node "mdc-dialog"
         (List.filterMap identity
             [ rootCs
-            , openProp config
+            , openProp config_
             , roleAttr
             , ariaModalAttr
-            , closeHandler config
+            , closeHandler config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         [ containerElt content
         , scrimElt
@@ -115,8 +154,8 @@ rootCs =
     Just (class "mdc-dialog")
 
 
-openProp : DialogConfig msg -> Maybe (Html.Attribute msg)
-openProp { open } =
+openProp : Config msg -> Maybe (Html.Attribute msg)
+openProp (Config { open }) =
     Just (Html.Attributes.property "open" (Encode.bool open))
 
 
@@ -130,17 +169,17 @@ ariaModalAttr =
     Just (Html.Attributes.attribute "aria-modal" "true")
 
 
-closeHandler : DialogConfig msg -> Maybe (Html.Attribute msg)
-closeHandler { onClose } =
+closeHandler : Config msg -> Maybe (Html.Attribute msg)
+closeHandler (Config { onClose }) =
     Maybe.map (Html.Events.on "MDCDialog:close" << Decode.succeed) onClose
 
 
-containerElt : DialogContent msg -> Html msg
+containerElt : Content msg -> Html msg
 containerElt content =
     Html.div [ class "mdc-dialog__container" ] [ surfaceElt content ]
 
 
-surfaceElt : DialogContent msg -> Html msg
+surfaceElt : Content msg -> Html msg
 surfaceElt content =
     Html.div
         [ class "mdc-dialog__surface" ]
@@ -152,7 +191,7 @@ surfaceElt content =
         )
 
 
-titleElt : DialogContent msg -> Maybe (Html msg)
+titleElt : Content msg -> Maybe (Html msg)
 titleElt { title } =
     case title of
         Just title_ ->
@@ -162,12 +201,12 @@ titleElt { title } =
             Nothing
 
 
-contentElt : DialogContent msg -> Maybe (Html msg)
+contentElt : Content msg -> Maybe (Html msg)
 contentElt { content } =
     Just (Html.div [ class "mdc-dialog__content" ] content)
 
 
-actionsElt : DialogContent msg -> Maybe (Html msg)
+actionsElt : Content msg -> Maybe (Html msg)
 actionsElt { actions } =
     if List.isEmpty actions then
         Nothing

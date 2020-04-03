@@ -1,4 +1,11 @@
-module Material.Switch exposing (switch, SwitchConfig, switchConfig)
+module Material.Switch exposing
+    ( switch
+    , Config, config
+    , setOnChange
+    , setChecked
+    , setDisabled
+    , setAttributes
+    )
 
 {-| Switches toggle the state of a single setting on or off. They are the
 preferred way to adjust settings on mobile.
@@ -8,6 +15,8 @@ preferred way to adjust settings on mobile.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Switch](#switch)
   - [On Switch](#on-switch)
   - [Disabled Switch](#disabled-switch)
@@ -23,41 +32,56 @@ preferred way to adjust settings on mobile.
 
 # Basic Usage
 
-Note that switches are usually used in conjunction with form fields. Refer to
-[FormField](Material-FormField) for more information.
+Note that switches are usually used in conjunction with [form
+fields](Material-FormField).
 
-    import Material.Switch exposing (switch, switchConfig)
+    import Material.Switch as Switch
 
     type Msg
-        = SwitchClicked
+        = Changed
 
     main =
-        switch
-            { switchConfig
-                | checked = True
-                , onChange = Just SwitchClicked
-            }
+        Switch.switch
+            (Switch.config
+                |> Switch.setChecked True
+                |> Switch.setOnChange Changed
+            )
 
 
 # Switch
 
-@docs switch, SwitchConfig, switchConfig
+@docs switch
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnChange
+@docs setChecked
+@docs setDisabled
+@docs setAttributes
 
 
 # On Switch
 
-To set the state of a switch, set its `checked` configuration field to a `Bool`
-value.
+To set the state of a switch to on, set its `setChecked` configuration option
+to `True`.
 
-    switch { switchConfig | checked = True }
+    Switch.switch (Switch.config |> Switch.setChecked True)
 
 
 # Disabled Switch
 
-To disable a switch, set its `disabled` configuration field to `True`. Disabled
-switches cannot be interacted with and have no visual interaction effect.
+To disable a switch, set its `setDisabled` configuration option to `True`.
 
-    switch { switchConfig | disabled = True }
+Disabled switches cannot be interacted with and have no visual interaction
+effect.
+
+    Switch.switch (Switch.config |> Switch.setDisabled True)
 
 -}
 
@@ -70,39 +94,73 @@ import Json.Encode as Encode
 
 {-| Configuration of a switch
 -}
-type alias SwitchConfig msg =
-    { checked : Bool
-    , disabled : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    , onChange : Maybe msg
-    }
+type Config msg
+    = Config
+        { checked : Bool
+        , disabled : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        , onChange : Maybe msg
+        }
 
 
 {-| Default configuration of a switch
 -}
-switchConfig : SwitchConfig msg
-switchConfig =
-    { checked = False
-    , disabled = False
-    , additionalAttributes = []
-    , onChange = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { checked = False
+        , disabled = False
+        , additionalAttributes = []
+        , onChange = Nothing
+        }
+
+
+{-| Specify whether a switch is checked
+-}
+setChecked : Bool -> Config msg -> Config msg
+setChecked checked (Config config_) =
+    Config { config_ | checked = checked }
+
+
+{-| Specify whether a switch is disabled
+
+Disabled switches cannot be interacted with and have no visual interaction
+effect.
+
+-}
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user changes a switch
+-}
+setOnChange : msg -> Config msg -> Config msg
+setOnChange onChange (Config config_) =
+    Config { config_ | onChange = Just onChange }
 
 
 {-| Switch view function
 -}
-switch : SwitchConfig msg -> Html msg
-switch config =
+switch : Config msg -> Html msg
+switch ((Config { additionalAttributes }) as config_) =
     Html.node "mdc-switch"
         (List.filterMap identity
             [ rootCs
-            , checkedProp config
-            , disabledProp config
+            , checkedProp config_
+            , disabledProp config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         [ trackElt
-        , thumbUnderlayElt config
+        , thumbUnderlayElt config_
         ]
 
 
@@ -111,13 +169,13 @@ rootCs =
     Just (class "mdc-switch")
 
 
-checkedProp : SwitchConfig msg -> Maybe (Html.Attribute msg)
-checkedProp { checked } =
+checkedProp : Config msg -> Maybe (Html.Attribute msg)
+checkedProp (Config { checked }) =
     Just (Html.Attributes.property "checked" (Encode.bool checked))
 
 
-disabledProp : SwitchConfig msg -> Maybe (Html.Attribute msg)
-disabledProp { disabled } =
+disabledProp : Config msg -> Maybe (Html.Attribute msg)
+disabledProp (Config { disabled }) =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
@@ -136,9 +194,9 @@ checkboxTypeAttr =
     Just (Html.Attributes.type_ "checkbox")
 
 
-changeHandler : SwitchConfig msg -> Maybe (Html.Attribute msg)
-changeHandler config =
-    Maybe.map (Html.Events.on "change" << Decode.succeed) config.onChange
+changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler (Config { onChange }) =
+    Maybe.map (Html.Events.on "change" << Decode.succeed) onChange
 
 
 trackElt : Html msg
@@ -146,25 +204,25 @@ trackElt =
     Html.div [ class "mdc-switch__track" ] []
 
 
-thumbUnderlayElt : SwitchConfig msg -> Html msg
-thumbUnderlayElt config =
-    Html.div [ class "mdc-switch__thumb-underlay" ] [ thumbElt config ]
+thumbUnderlayElt : Config msg -> Html msg
+thumbUnderlayElt config_ =
+    Html.div [ class "mdc-switch__thumb-underlay" ] [ thumbElt config_ ]
 
 
-thumbElt : SwitchConfig msg -> Html msg
-thumbElt config =
-    Html.div [ class "mdc-switch__thumb" ] [ nativeControlElt config ]
+thumbElt : Config msg -> Html msg
+thumbElt config_ =
+    Html.div [ class "mdc-switch__thumb" ] [ nativeControlElt config_ ]
 
 
-nativeControlElt : SwitchConfig msg -> Html msg
-nativeControlElt config =
+nativeControlElt : Config msg -> Html msg
+nativeControlElt config_ =
     Html.input
         (List.filterMap identity
             [ nativeControlCs
             , checkboxTypeAttr
             , switchRoleAttr
-            , checkedProp config
-            , changeHandler config
+            , checkedProp config_
+            , changeHandler config_
             ]
         )
         []

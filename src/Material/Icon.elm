@@ -1,6 +1,6 @@
-module Material.Icon exposing (icon, iconConfig, IconConfig)
+module Material.Icon exposing (icon)
 
-{-| Icons render a Material Icon.
+{-| Icon renders a Material Icon.
 
 
 # Table of Contents
@@ -17,15 +17,15 @@ module Material.Icon exposing (icon, iconConfig, IconConfig)
 
 # Basic Usage
 
-    import Material.Icon exposing (icon, iconConfig)
+    import Material.Icon as Icon
 
     main =
-        icon iconConfig "favorite"
+        Icon.icon [] "favorite"
 
 
 # Icon
 
-@docs icon, iconConfig, IconConfig
+@docs icon
 
 -}
 
@@ -33,21 +33,8 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 
 
-{-| Icon configuration
+{-| Icon view function
 -}
-type alias IconConfig msg =
-    { additionalAttributes : List (Html.Attribute msg) }
-
-
-{-| Default icon configuration
--}
-iconConfig : IconConfig msg
-iconConfig =
-    { additionalAttributes = [] }
-
-
-{-| Icon view helper
--}
-icon : IconConfig msg -> String -> Html msg
-icon config iconName =
-    Html.i (class "material-icons" :: config.additionalAttributes) [ text iconName ]
+icon : List (Html.Attribute msg) -> String -> Html msg
+icon additionalAttributes iconName =
+    Html.i (class "material-icons" :: additionalAttributes) [ text iconName ]

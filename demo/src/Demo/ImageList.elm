@@ -3,8 +3,9 @@ module Demo.ImageList exposing (Model, Msg(..), defaultModel, update, view)
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.ImageList exposing (ImageListItem, imageList, imageListConfig, imageListItem, imageListItemConfig)
+import Html.Attributes exposing (style)
+import Material.ImageList as ImageList
+import Material.ImageList.Item as ImageListItem exposing (ImageListItem)
 import Material.Typography as Typography
 
 
@@ -36,10 +37,10 @@ view model =
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-image-list"
         }
     , hero =
-        [ imageList
-            { imageListConfig
-                | additionalAttributes = [ Html.Attributes.style "width" "300px" ]
-            }
+        [ ImageList.imageList
+            (ImageList.config
+                |> ImageList.setAttributes [ style "width" "300px" ]
+            )
             (List.repeat 15 imageListHeroItem)
         ]
     , content =
@@ -57,39 +58,37 @@ view model =
 
 standardImageList : Html msg
 standardImageList =
-    imageList
-        { imageListConfig
-            | withTextProtection = True
-            , additionalAttributes =
-                [ Html.Attributes.style "max-width" "900px" ]
-        }
+    ImageList.imageList
+        (ImageList.config
+            |> ImageList.setWithTextProtection True
+            |> ImageList.setAttributes [ style "max-width" "900px" ]
+        )
         (List.map standardItem standardImages)
 
 
 masonryImageList : Html msg
 masonryImageList =
-    imageList
-        { imageListConfig
-            | masonry = True
-            , additionalAttributes =
-                [ Html.Attributes.style "max-width" "900px"
-                , Html.Attributes.style "column-count" "5"
-                , Html.Attributes.style "column-gap" "16px"
+    ImageList.imageList
+        (ImageList.config
+            |> ImageList.setMasonry True
+            |> ImageList.setAttributes
+                [ style "max-width" "900px"
+                , style "column-count" "5"
+                , style "column-gap" "16px"
                 ]
-        }
+        )
         (List.map masonryItem masonryImages)
 
 
 imageListHeroItem : ImageListItem msg
 imageListHeroItem =
-    imageListItem
-        { imageListItemConfig
-            | label = Nothing
-            , additionalAttributes =
-                [ Html.Attributes.style "width" "calc(100% / 5 - 4.2px)"
-                , Html.Attributes.style "margin" "2px"
+    ImageListItem.imageListItem
+        (ImageListItem.config
+            |> ImageListItem.setAttributes
+                [ style "width" "calc(100% / 5 - 4.2px)"
+                , style "margin" "2px"
                 ]
-        }
+        )
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAABNJREFUCB1jZGBg+A/EDEwgAgQADigBA//q6GsAAAAASUVORK5CYII%3D"
 
 
@@ -97,26 +96,25 @@ standardItem : String -> ImageListItem msg
 standardItem url =
     -- TODO:
     -- ImageList.imageAspectContainer
-    --   [ Html.Attributes.style "padding-bottom" "66.66667%"
-    --   ]
-    imageListItem
-        { imageListItemConfig
-            | label = Just "Text label"
-            , additionalAttributes =
-                [ Html.Attributes.style "width" "calc(100% / 5 - 4.2px)"
-                , Html.Attributes.style "margin" "2px"
+    --   [ style "padding-bottom" "66.66667%" ]
+    ImageListItem.imageListItem
+        (ImageListItem.config
+            |> ImageListItem.setLabel (Just "Text label")
+            |> ImageListItem.setAttributes
+                [ style "width" "calc(100% / 5 - 4.2px)"
+                , style "margin" "2px"
                 ]
-        }
+        )
         url
 
 
 masonryItem : String -> ImageListItem msg
 masonryItem url =
-    imageListItem
-        { imageListItemConfig
-            | label = Just "Text label"
-            , additionalAttributes = [ Html.Attributes.style "margin-bottom" "16px" ]
-        }
+    ImageListItem.imageListItem
+        (ImageListItem.config
+            |> ImageListItem.setLabel (Just "Text label")
+            |> ImageListItem.setAttributes [ style "margin-bottom" "16px" ]
+        )
         url
 
 

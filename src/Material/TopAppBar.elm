@@ -1,5 +1,9 @@
 module Material.TopAppBar exposing
-    ( topAppBar, topAppBarConfig, TopAppBarConfig
+    ( Config, config
+    , setFixed
+    , setDense
+    , setAttributes
+    , regular
     , row, section, alignEnd, alignStart
     , navigationIcon, title
     , actionItem
@@ -8,9 +12,9 @@ module Material.TopAppBar exposing
     , denseProminentFixedAdjust
     , prominentFixedAdjust
     , shortFixedAdjust
-    , shortTopAppBar
-    , shortCollapsedTopAppBar
-    , prominentTopAppBar
+    , short
+    , shortCollapsed
+    , prominent
     )
 
 {-| Top App Bar acts as a container for items such as application title,
@@ -21,6 +25,8 @@ navigation icon, and action items.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Top App Bar](#top-app-bar)
       - [Top App Bar with Action Items](#top-app-bar-with-action-items)
   - [Fixed Variant](#fixed-variant)
@@ -41,20 +47,16 @@ navigation icon, and action items.
 # Basic Usage
 
     import Material.TopAppBar as TopAppBar
-        exposing
-            ( topAppBar
-            , topAppBarConfig
-            )
 
     main =
-        topAppBar topAppBarConfig
+        TopAppBar.regular TopAppBar.config
             [ TopAppBar.row []
                 [ TopAppBar.section [ TopAppBar.alignStart ]
-                    [ iconButton
-                        { iconButtonConfig
-                            | additionalAttributes =
+                    [ IconButton.iconButton
+                        (IconButton.config
+                            |> IconButton.setAttributes
                                 [ TopAppBar.navigationIcon ]
-                        }
+                        )
                         "menu"
                     , Html.span [ TopAppBar.title ]
                         [ text "Title" ]
@@ -63,12 +65,24 @@ navigation icon, and action items.
             ]
 
 
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setFixed
+@docs setDense
+@docs setAttributes
+
+
 # Top App Bar
 
 Usually a top app bar contains one row with at least one start-aligned section.
 This is where you would normally place your navigation icon and title.
 
-@docs topAppBar, topAppBarConfig, TopAppBarConfig
+@docs regular
 @docs row, section, alignEnd, alignStart
 @docs navigationIcon, title
 
@@ -79,30 +93,30 @@ A top app bar can contain action items that are placed on the opposite side of
 the navigation icon. To do so, add another end-aligned section to the top app
 bar's row. Do not forget to set the `actionItem` attribute on the icons.
 
-    topAppBar topAppBarConfig
+    TopAppBar.regular TopAppBar.config
         [ TopAppBar.row []
             [ TopAppBar.section [ TopAppBar.alignStart ]
-                [ iconButton
-                    { iconButtonConfig
-                        | additionalAttributes =
+                [ IconButton.iconButton
+                    (IconButton.config
+                        |> IconButton.setAttributes
                             [ TopAppBar.navigationIcon ]
-                    }
+                    )
                     "menu"
                 , Html.span [ TopAppBar.title ]
                     [ text "Title" ]
                 ]
             , TopAppBar.section [ TopAppBar.alignEnd ]
-                [ iconButton
-                    { iconButtonConfig
-                        | additionalAttributes =
+                [ IconButton.iconButton
+                    (IconButton.config
+                        |> IconButton.setAttributes
                             [ TopAppBar.actionItem ]
-                    }
+                    )
                     "print"
-                , iconButton
-                    { iconButtonConfig
-                        | additionalAttributes =
+                , IconButton.iconButton
+                    (IconButton.config
+                        |> IconButton.setAttributes
                             [ TopAppBar.actionItem ]
-                    }
+                    )
                     "bookmark"
                 ]
             ]
@@ -113,11 +127,14 @@ bar's row. Do not forget to set the `actionItem` attribute on the icons.
 
 # Fixed Variant
 
-To make a top app bar fixed to the top, set its `fixed` configuration field to
-`True`. Since a fixed top app bar would overlay the pages content, an
-appropriate margin has to be applied to the page's content.
+To make a top app bar fixed to the top, set its `setFixed` configuration option
+to `True`. Since a fixed top app bar would overlay the pages content, an
+appropriate margin has to be applied to the page's content, called the _fixed
+adjust_.
 
-    topAppBar { topAppBarConfig | fixed = True } []
+    TopAppBar.regular
+        (TopAppBar.config |> TopAppBar.setFixed True)
+        []
 
 @docs fixedAdjust
 @docs denseFixedAdjust
@@ -130,35 +147,37 @@ appropriate margin has to be applied to the page's content.
 
 Short top app bars collapse to the navigation icon side when scrolled.
 
-    shortTopAppBar topAppBarConfig []
+    TopAppBar.short TopAppBar.config []
 
-@docs shortTopAppBar
+@docs short
 
 
 ## Short Always Closed Variant
 
 A short top app bar can be configured to always appear closed.
 
-    shortCollapsedtopAppBar topAppBarConfig []
+    TopAppBar.shortCollapsed TopAppBar.config []
 
-@docs shortCollapsedTopAppBar
+@docs shortCollapsed
 
 
 # Prominent Variant
 
 To make a top app bar taller than the default, you may use a prominent top app bar.
 
-    prominentTopAppBar topAppBarConfig []
+    TopAppBar.prominentTopAppBar TopAppBar.config []
 
-@docs prominentTopAppBar
+@docs prominent
 
 
 # Dense Variant
 
-To make a top app bar shorter than the default, set its `dense` configuration
-field to `True`.
+To make a top app bar shorter than the default, use its `setDense`
+configuration option.
 
-    topAppBar { topAppBarConfig | dense = True }
+    TopAppBar.regular
+        (TopAppBar.config |> TopAppBar.setDense True)
+        []
 
 -}
 
@@ -168,15 +187,16 @@ import Html.Attributes exposing (class)
 
 {-| Configuration of a top app bar
 -}
-type alias TopAppBarConfig msg =
-    { dense : Bool
-    , fixed : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Config msg
+    = Config
+        { dense : Bool
+        , fixed : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        }
 
 
 type Variant
-    = Default
+    = Regular
     | Short
     | ShortCollapsed
     | Prominent
@@ -184,54 +204,82 @@ type Variant
 
 {-| Default configuration of a top app bar
 -}
-topAppBarConfig : TopAppBarConfig msg
-topAppBarConfig =
-    { dense = False
-    , fixed = False
-    , additionalAttributes = []
-    }
+config : Config msg
+config =
+    Config
+        { dense = False
+        , fixed = False
+        , additionalAttributes = []
+        }
 
 
-genericTopAppBar : Variant -> TopAppBarConfig msg -> List (Html msg) -> Html msg
-genericTopAppBar variant config nodes =
+{-| Specify whether a top app bar is dense
+
+A dense top app bar is more compact, featuring smaller than usual margins.
+
+-}
+setDense : Bool -> Config msg -> Config msg
+setDense dense (Config config_) =
+    Config { config_ | dense = dense }
+
+
+{-| Specify whether a top app bar is fixed
+
+A fixed top app bar does not scroll away when the user is scrolling the page.
+
+-}
+setFixed : Bool -> Config msg -> Config msg
+setFixed fixed (Config config_) =
+    Config { config_ | fixed = fixed }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+genericTopAppBar : Variant -> Config msg -> List (Html msg) -> Html msg
+genericTopAppBar variant ((Config { additionalAttributes }) as config_) nodes =
     Html.node "mdc-top-app-bar"
         (List.filterMap identity
             [ rootCs
             , variantCs variant
-            , denseCs config
-            , fixedCs config
+            , denseCs config_
+            , fixedCs config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         nodes
 
 
-{-| Top app bar view function
+{-| Regular top app bar view function
 -}
-topAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
-topAppBar config nodes =
-    genericTopAppBar Default config nodes
+regular : Config msg -> List (Html msg) -> Html msg
+regular config_ nodes =
+    genericTopAppBar Regular config_ nodes
 
 
 {-| Short top app bar view function
 -}
-shortTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
-shortTopAppBar config nodes =
-    genericTopAppBar Short config nodes
+short : Config msg -> List (Html msg) -> Html msg
+short config_ nodes =
+    genericTopAppBar Short config_ nodes
 
 
 {-| Short always closed top app bar view function
 -}
-shortCollapsedTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
-shortCollapsedTopAppBar config nodes =
-    genericTopAppBar ShortCollapsed config nodes
+shortCollapsed : Config msg -> List (Html msg) -> Html msg
+shortCollapsed config_ nodes =
+    genericTopAppBar ShortCollapsed config_ nodes
 
 
 {-| Prominent top app bar view function
 -}
-prominentTopAppBar : TopAppBarConfig msg -> List (Html msg) -> Html msg
-prominentTopAppBar config nodes =
-    genericTopAppBar Prominent config nodes
+prominent : Config msg -> List (Html msg) -> Html msg
+prominent config_ nodes =
+    genericTopAppBar Prominent config_ nodes
 
 
 {-| A row is the first child of a top app bar. It contains the top app bar's
@@ -296,7 +344,7 @@ rootCs =
 variantCs : Variant -> Maybe (Html.Attribute msg)
 variantCs variant =
     case variant of
-        Default ->
+        Regular ->
             Nothing
 
         Short ->
@@ -309,8 +357,8 @@ variantCs variant =
             Just (class "mdc-top-app-bar--prominent")
 
 
-denseCs : TopAppBarConfig msg -> Maybe (Html.Attribute msg)
-denseCs { dense } =
+denseCs : Config msg -> Maybe (Html.Attribute msg)
+denseCs (Config { dense }) =
     if dense then
         Just (class "mdc-top-app-bar--dense")
 
@@ -318,8 +366,8 @@ denseCs { dense } =
         Nothing
 
 
-fixedCs : TopAppBarConfig msg -> Maybe (Html.Attribute msg)
-fixedCs { fixed } =
+fixedCs : Config msg -> Maybe (Html.Attribute msg)
+fixedCs (Config { fixed }) =
     if fixed then
         Just (class "mdc-top-app-bar--fixed")
 

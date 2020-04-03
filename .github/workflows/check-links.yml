@@ -10,7 +10,7 @@ jobs:
       - uses: cachix/install-nix-action@v6
       - run: nix-shell --run "make build-pages"
         env:
-          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz
       - run: nix-shell --run "sh bin/check-links.sh"
         env:
-          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz

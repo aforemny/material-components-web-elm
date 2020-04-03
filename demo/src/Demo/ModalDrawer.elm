@@ -12,23 +12,23 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Decode
-import Material.Drawer as Drawer exposing (drawerScrim, modalDrawer, modalDrawerConfig)
-import Material.Icon exposing (icon, iconConfig)
+import Material.Drawer.Modal as ModalDrawer
+import Material.Icon as Icon
 import Material.Theme as Theme
-import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
+import Material.TopAppBar as TopAppBar
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =
-    { drawerOpen : Bool
+    { open : Bool
     , selectedIndex : Int
     }
 
 
 defaultModel : Model
 defaultModel =
-    { drawerOpen = False
+    { open = False
     , selectedIndex = 0
     }
 
@@ -43,10 +43,10 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         OpenDrawer ->
-            { model | drawerOpen = True }
+            { model | open = True }
 
         CloseDrawer ->
-            { model | drawerOpen = False }
+            { model | open = False }
 
         SetSelectedIndex index ->
             { model | selectedIndex = index }
@@ -56,12 +56,12 @@ view : Model -> DrawerPage Msg
 view model =
     { title = "Modal Drawer"
     , drawer =
-        modalDrawer
-            { modalDrawerConfig
-                | open = model.drawerOpen
-                , onClose = Just CloseDrawer
-            }
+        ModalDrawer.drawer
+            (ModalDrawer.config
+                |> ModalDrawer.setOpen model.open
+                |> ModalDrawer.setOnClose CloseDrawer
+            )
             (DrawerPage.drawerBody SetSelectedIndex model.selectedIndex)
-    , scrim = Just (drawerScrim [] [])
+    , scrim = Just (ModalDrawer.scrim [] [])
     , onMenuClick = Just OpenDrawer
     }

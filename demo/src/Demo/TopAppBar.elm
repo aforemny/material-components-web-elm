@@ -4,23 +4,14 @@ import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Url as Url exposing (Url)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
-import Html.Attributes
+import Html.Attributes exposing (style)
 import Html.Events
-import Material.IconButton exposing (iconButton, iconButtonConfig)
-import Material.TopAppBar as TopAppBar exposing (prominentTopAppBar, shortCollapsedTopAppBar, shortTopAppBar, topAppBar, topAppBarConfig)
+import Material.IconButton as IconButton
+import Material.TopAppBar as TopAppBar
 import Material.Typography as Typography
 
 
 type alias Model =
-    {}
-
-
-type alias Example =
-    {}
-
-
-defaultExample : Example
-defaultExample =
     {}
 
 
@@ -49,42 +40,36 @@ view model =
         }
     , hero =
         [ Html.div
-            [ Html.Attributes.style "width" "480px"
-            , Html.Attributes.style "height" "72px"
+            [ style "width" "480px"
+            , style "height" "72px"
             ]
-            [ topAppBar
-                { topAppBarConfig
-                    | additionalAttributes =
-                        [ Html.Attributes.style "position" "static" ]
-                }
+            [ TopAppBar.regular
+                (TopAppBar.config |> TopAppBar.setAttributes [ style "position" "static" ])
                 [ TopAppBar.section
-                    [ TopAppBar.alignStart
-                    ]
-                    [ iconButton
-                        { iconButtonConfig
-                            | additionalAttributes =
-                                [ TopAppBar.navigationIcon ]
-                        }
+                    [ TopAppBar.alignStart ]
+                    [ IconButton.iconButton
+                        (IconButton.config
+                            |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
+                        )
                         "menu"
                     , Html.span [ TopAppBar.title ] [ text "Title" ]
                     ]
                 , TopAppBar.section
-                    [ TopAppBar.alignEnd
-                    ]
-                    [ iconButton
-                        { iconButtonConfig
-                            | additionalAttributes = [ TopAppBar.actionItem ]
-                        }
+                    [ TopAppBar.alignEnd ]
+                    [ IconButton.iconButton
+                        (IconButton.config
+                            |> IconButton.setAttributes [ TopAppBar.actionItem ]
+                        )
                         "file_download"
-                    , iconButton
-                        { iconButtonConfig
-                            | additionalAttributes = [ TopAppBar.actionItem ]
-                        }
+                    , IconButton.iconButton
+                        (IconButton.config
+                            |> IconButton.setAttributes [ TopAppBar.actionItem ]
+                        )
                         "print"
-                    , iconButton
-                        { iconButtonConfig
-                            | additionalAttributes = [ TopAppBar.actionItem ]
-                        }
+                    , IconButton.iconButton
+                        (IconButton.config
+                            |> IconButton.setAttributes [ TopAppBar.actionItem ]
+                        )
                         "more_vert"
                     ]
                 ]
@@ -92,11 +77,11 @@ view model =
         ]
     , content =
         [ Html.div
-            [ Html.Attributes.style "display" "-ms-flexbox"
-            , Html.Attributes.style "display" "flex"
-            , Html.Attributes.style "-ms-flex-wrap" "wrap"
-            , Html.Attributes.style "flex-wrap" "wrap"
-            , Html.Attributes.style "min-height" "200px"
+            [ style "display" "-ms-flexbox"
+            , style "display" "flex"
+            , style "-ms-flex-wrap" "wrap"
+            , style "flex-wrap" "wrap"
+            , style "min-height" "200px"
             ]
             [ iframe "Standard" Url.StandardTopAppBar
             , iframe "Fixed" Url.FixedTopAppBar
@@ -116,14 +101,14 @@ iframe title url =
             Url.toString url
     in
     Html.div
-        [ Html.Attributes.style "display" "inline-block"
-        , Html.Attributes.style "-ms-flex" "1 1 45%"
-        , Html.Attributes.style "flex" "1 1 45%"
-        , Html.Attributes.style "-ms-flex-pack" "distribute"
-        , Html.Attributes.style "justify-content" "space-around"
-        , Html.Attributes.style "min-height" "200px"
-        , Html.Attributes.style "min-width" "400px"
-        , Html.Attributes.style "padding" "15px"
+        [ style "display" "inline-block"
+        , style "-ms-flex" "1 1 45%"
+        , style "flex" "1 1 45%"
+        , style "-ms-flex-pack" "distribute"
+        , style "justify-content" "space-around"
+        , style "min-height" "200px"
+        , style "min-width" "400px"
+        , style "padding" "15px"
         ]
         [ Html.div []
             [ Html.a
@@ -134,8 +119,8 @@ iframe title url =
                 ]
             ]
         , Html.iframe
-            [ Html.Attributes.style "width" "100%"
-            , Html.Attributes.style "height" "200px"
+            [ style "width" "100%"
+            , style "height" "200px"
             , Html.Attributes.src stringUrl
             ]
             []

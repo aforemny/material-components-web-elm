@@ -1,20 +1,39 @@
 module Material.TextArea exposing
-    ( textArea, textAreaConfig, TextAreaConfig
-    , characterCounter
+    ( Config, config
+    , setOnInput
+    , setOnChange
+    , setLabel
+    , setFullwidth
+    , setValue
+    , setPlaceholder
+    , setRows
+    , setCols
+    , setDisabled
+    , setRequired
+    , setValid
+    , setMinLength
+    , setMaxLength
+    , setAttributes
+    , filled
+    , outlined
     )
 
-{-| Text areas allow users to input, edit, and select text.
+{-| Text areas allow users to input, edit, and select multiline text.
 
 
 # Table of Contents
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
-  - [Full Width Text Area](#full-width-text-field)
-  - [Disabled Text Area](#disabled-text-field)
-  - [Required Text Area](#disabled-text-field)
-  - [Invalid Text Area](#disabled-text-field)
-  - [Text Area with Character Counter](#text-field-with-character-counter)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
+  - [Filled Text Area](#filled-text-area)
+  - [Outlined Text Area](#outlined-text-area)
+  - [Full Width Text Area](#full-width-text-area)
+  - [Disabled Text Area](#disabled-text-area)
+  - [Required Text Area](#required-text-area)
+  - [Valid Text Area](#valid-text-area)
+  - [Text Area with Character Counter](#text-area-with-character-counter)
 
 
 # Resources
@@ -27,90 +46,115 @@ module Material.TextArea exposing
 
 # Basic Usage
 
-    import Material.TextArea
-        exposing
-            ( textArea
-            , textAreaConfig
-            )
+    import Material.TextArea as TextArea
 
     type Msg
         = ValueChanged String
 
     main =
-        textArea
-            { textAreaConfig
-                | label = "My text area"
-                , value = Just "hello world"
-                , onInput = Just ValueChanged
-                , rows = Just 4
-                , cols = Just 20
-            }
-
-@docs textArea, textAreaConfig, TextAreaConfig
+        TextArea.filled
+            (TextArea.config
+                |> TextArea.setLabel (Just "My text area")
+                |> TextArea.setValue (Just "hello world")
+                |> TextArea.setOnInput ValueChanged
+                |> TextArea.setRows (Just 4)
+                |> TextArea.setCols (Just 20)
+            )
 
 
-# Full Width Text Area
+# Configuration
 
-To make a text area span all of its available width, set its `fullwidth`
-configuration field to `True`.
-
-    textArea { textAreaConfig | fullWidth = True }
-
-Full width text areas do not support `label` and will ignore this
-configuration field. You may set `placeholder` or provide an extraneous label
-for a full width text area.
-
-Full width text areas do not support `outlined` and will ignore this
-configuration field.
+@docs Config, config
 
 
-# Disabled Text Area
+## Configuration Options
 
-To disable a text area set its `disabled` configuration field to `True`.
+@docs setOnInput
+@docs setOnChange
+@docs setLabel
+@docs setFullwidth
+@docs setValue
+@docs setPlaceholder
+@docs setRows
+@docs setCols
+@docs setDisabled
+@docs setRequired
+@docs setValid
+@docs setMinLength
+@docs setMaxLength
+@docs setAttributes
 
-    textArea { textAreaConfig | disabled = True }
 
+# Filled Text Area
 
-# Required Text Area
+    TextArea.filled TextArea.config
 
-To mark a text area as required, set its `required` configuration field to
-`True`.
-
-    textArea { textAreaConfig | required = True }
-
-
-# Invalid Text Area
-
-To mark a text area as invalid, set its `valid` configuration field to
-`False`.
-
-    textArea { textAreaConfig | valid = False }
+@docs filled
 
 
 # Outlined Text Area
 
-Text areas may have a visible outlined around them by setting their `outlined`
-configuration field to `True`.
+Text areas may have a visible outlined around them by using their `outlined`
+variant.
 
-    textArea { textAreaConfig | outlined = True }
+    TextArea.outlined TextArea.config
 
-Note that this does not have any effect for fullwidth text areas.
+Note that `setFullwidth` does not have any effect on an outlined text area.
+
+@docs outlined
+
+
+# Full Width Text Area
+
+To make a text area span all of its available width, set its `setFullwidth`
+configuration option to `True`.
+
+    TextArea.filled
+        (TextArea.config |> TextArea.setFullwidth True)
+
+Full width text areas do not support labels and will ignore the `setLabel`
+configuration option. You may use `setPlaceholder` or provide an extraneous
+label for a full width text area.
+
+Outlined text areas do not support `setFullwidth` and will ignore this
+configuration option.
+
+
+# Disabled Text Area
+
+To disable a text area, set its `setDisabled` configuration option to `True`.
+
+    TextArea.filled
+        (TextArea.config |> TextArea.setDisabled True)
+
+
+# Required Text Area
+
+To mark a text area as required, set its `setRequired` configuration option to
+`True`.
+
+    TextArea.filled
+        (TextArea.config |> TextArea.setRequired True)
+
+
+# Valid Text Area
+
+To mark a text area as valid, set its `setValid` configuration option to
+`True`.
+
+    TextArea.filled (TextArea.config |> TextArea.setValid True)
 
 
 # Text Area with Character Counter
 
-To have a text area display a character counter, set its `maxLength`
-configuration field, and also add a `characterCounter` as a child of
-`helperLine`.
+To have a text area display a character counter, specify its `setMaxLength`
+configuration option, and also add a `HelperText.characterCounter` as a child
+of `HelperText.helperLine`.
 
-    [ textArea
-        { textAreaConfig
-            | maxLength = Just 18
-        }
-    , helperLine [] [ characterCounter [] ]
+    [ TextArea.filled
+        (TextArea.config |> TextArea.setMaxLength (Just 18))
+    , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]
-
-@docs characterCounter
 
 -}
 
@@ -123,81 +167,191 @@ import Json.Encode as Encode
 
 {-| Configuration of a text area
 -}
-type alias TextAreaConfig msg =
-    { label : Maybe String
-    , outlined : Bool
-    , fullwidth : Bool
-    , value : String
-    , placeholder : Maybe String
-    , rows : Maybe Int
-    , cols : Maybe Int
-    , disabled : Bool
-    , required : Bool
-    , valid : Bool
-    , minLength : Maybe Int
-    , maxLength : Maybe Int
-    , additionalAttributes : List (Html.Attribute msg)
-    , onInput : Maybe (String -> msg)
-    , onChange : Maybe (String -> msg)
-    }
-
-
-type TextAreaIcon msg
-    = NoIcon
-    | Icon (Html msg)
+type Config msg
+    = Config
+        { label : Maybe String
+        , fullwidth : Bool
+        , value : Maybe String
+        , placeholder : Maybe String
+        , rows : Maybe Int
+        , cols : Maybe Int
+        , disabled : Bool
+        , required : Bool
+        , valid : Bool
+        , minLength : Maybe Int
+        , maxLength : Maybe Int
+        , additionalAttributes : List (Html.Attribute msg)
+        , onInput : Maybe (String -> msg)
+        , onChange : Maybe (String -> msg)
+        }
 
 
 {-| Default configuration of a text area
 -}
-textAreaConfig : TextAreaConfig msg
-textAreaConfig =
-    { label = Nothing
-    , outlined = False
-    , fullwidth = False
-    , value = ""
-    , placeholder = Nothing
-    , rows = Nothing
-    , cols = Nothing
-    , disabled = False
-    , required = False
-    , valid = True
-    , minLength = Nothing
-    , maxLength = Nothing
-    , additionalAttributes = []
-    , onInput = Nothing
-    , onChange = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { label = Nothing
+        , fullwidth = False
+        , value = Nothing
+        , placeholder = Nothing
+        , rows = Nothing
+        , cols = Nothing
+        , disabled = False
+        , required = False
+        , valid = True
+        , minLength = Nothing
+        , maxLength = Nothing
+        , additionalAttributes = []
+        , onInput = Nothing
+        , onChange = Nothing
+        }
 
 
-{-| Text area view function
+{-| Specify a text area's label
 -}
-textArea : TextAreaConfig msg -> Html msg
-textArea config =
+setLabel : Maybe String -> Config msg -> Config msg
+setLabel label (Config config_) =
+    Config { config_ | label = label }
+
+
+{-| Specify a text area to be fullwidth
+-}
+setFullwidth : Bool -> Config msg -> Config msg
+setFullwidth fullwidth (Config config_) =
+    Config { config_ | fullwidth = fullwidth }
+
+
+{-| Specify a text area's value
+-}
+setValue : Maybe String -> Config msg -> Config msg
+setValue value (Config config_) =
+    Config { config_ | value = value }
+
+
+{-| Specify a text area's placeholder
+-}
+setPlaceholder : Maybe String -> Config msg -> Config msg
+setPlaceholder placeholder (Config config_) =
+    Config { config_ | placeholder = placeholder }
+
+
+{-| Specify a text area's number of rows
+-}
+setRows : Maybe Int -> Config msg -> Config msg
+setRows rows (Config config_) =
+    Config { config_ | rows = rows }
+
+
+{-| Specify a text area's number of columns
+-}
+setCols : Maybe Int -> Config msg -> Config msg
+setCols cols (Config config_) =
+    Config { config_ | cols = cols }
+
+
+{-| Specify a text area to be disabled
+
+Disabled text areas cannot be interacted with and have no visual interaction
+effect.
+
+-}
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
+
+
+{-| Specify a text area to be required
+-}
+setRequired : Bool -> Config msg -> Config msg
+setRequired required (Config config_) =
+    Config { config_ | required = required }
+
+
+{-| Specify a text area to be valid
+-}
+setValid : Bool -> Config msg -> Config msg
+setValid valid (Config config_) =
+    Config { config_ | valid = valid }
+
+
+{-| Specify a text area's minimum length
+-}
+setMinLength : Maybe Int -> Config msg -> Config msg
+setMinLength minLength (Config config_) =
+    Config { config_ | minLength = minLength }
+
+
+{-| Specify a text area's maximum length
+-}
+setMaxLength : Maybe Int -> Config msg -> Config msg
+setMaxLength maxLength (Config config_) =
+    Config { config_ | maxLength = maxLength }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user changes the value inside the text area
+-}
+setOnInput : (String -> msg) -> Config msg -> Config msg
+setOnInput onInput (Config config_) =
+    Config { config_ | onInput = Just onInput }
+
+
+{-| Specify a message when the user confirms a changed value inside the text
+area
+-}
+setOnChange : (String -> msg) -> Config msg -> Config msg
+setOnChange onChange (Config config_) =
+    Config { config_ | onChange = Just onChange }
+
+
+{-| Filled text area view function
+-}
+filled : Config msg -> Html msg
+filled config_ =
+    textArea False config_
+
+
+{-| Outlined text area view function
+-}
+outlined : Config msg -> Html msg
+outlined config_ =
+    textArea True config_
+
+
+textArea : Bool -> Config msg -> Html msg
+textArea outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
     Html.node "mdc-text-field"
         (List.filterMap identity
             [ rootCs
-            , noLabelCs config
-            , outlinedCs config
-            , fullwidthCs config
-            , disabledCs config
-            , valueProp config
-            , disabledProp config
-            , requiredProp config
-            , validProp config
-            , minLengthAttr config
-            , maxLengthAttr config
+            , noLabelCs config_
+            , outlinedCs outlined_
+            , fullwidthCs config_
+            , disabledCs config_
+            , valueProp config_
+            , disabledProp config_
+            , requiredProp config_
+            , validProp config_
+            , minLengthAttr config_
+            , maxLengthAttr config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         (List.concat
-            [ if config.fullwidth then
-                [ inputElt config
-                , notchedOutlineElt config
+            [ if fullwidth then
+                [ inputElt config_
+                , notchedOutlineElt config_
                 ]
 
               else
-                [ inputElt config
-                , notchedOutlineElt config
+                [ inputElt config_
+                , notchedOutlineElt config_
                 ]
             ]
         )
@@ -208,17 +362,17 @@ rootCs =
     Just (class "mdc-text-field mdc-text-field--textarea")
 
 
-outlinedCs : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-outlinedCs { outlined } =
-    if outlined then
+outlinedCs : Bool -> Maybe (Html.Attribute msg)
+outlinedCs outlined_ =
+    if outlined_ then
         Just (class "mdc-text-field--outlined")
 
     else
         Nothing
 
 
-fullwidthCs : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-fullwidthCs { fullwidth } =
+fullwidthCs : Config msg -> Maybe (Html.Attribute msg)
+fullwidthCs (Config { fullwidth }) =
     if fullwidth then
         Just (class "mdc-text-field--fullwidth")
 
@@ -226,8 +380,8 @@ fullwidthCs { fullwidth } =
         Nothing
 
 
-disabledCs : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-disabledCs { disabled } =
+disabledCs : Config msg -> Maybe (Html.Attribute msg)
+disabledCs (Config { disabled }) =
     if disabled then
         Just (class "mdc-text-field--disabled")
 
@@ -235,76 +389,76 @@ disabledCs { disabled } =
         Nothing
 
 
-requiredProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-requiredProp { required } =
+requiredProp : Config msg -> Maybe (Html.Attribute msg)
+requiredProp (Config { required }) =
     Just (Html.Attributes.property "required" (Encode.bool required))
 
 
-validProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-validProp { valid } =
+validProp : Config msg -> Maybe (Html.Attribute msg)
+validProp (Config { valid }) =
     Just (Html.Attributes.property "valid" (Encode.bool valid))
 
 
-minLengthProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-minLengthProp { minLength } =
+minLengthProp : Config msg -> Maybe (Html.Attribute msg)
+minLengthProp (Config { minLength }) =
     Just
         (Html.Attributes.property "minLength"
             (Encode.int (Maybe.withDefault -1 minLength))
         )
 
 
-maxLengthProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-maxLengthProp { maxLength } =
+maxLengthProp : Config msg -> Maybe (Html.Attribute msg)
+maxLengthProp (Config { maxLength }) =
     Just
         (Html.Attributes.property "maxLength"
             (Encode.int (Maybe.withDefault -1 maxLength))
         )
 
 
-minLengthAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-minLengthAttr { minLength } =
+minLengthAttr : Config msg -> Maybe (Html.Attribute msg)
+minLengthAttr (Config { minLength }) =
     Maybe.map (Html.Attributes.attribute "minLength" << String.fromInt) minLength
 
 
-maxLengthAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-maxLengthAttr { maxLength } =
+maxLengthAttr : Config msg -> Maybe (Html.Attribute msg)
+maxLengthAttr (Config { maxLength }) =
     Maybe.map (Html.Attributes.attribute "maxLength" << String.fromInt) maxLength
 
 
-valueProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-valueProp { value } =
-    Just (Html.Attributes.property "value" (Encode.string value))
+valueProp : Config msg -> Maybe (Html.Attribute msg)
+valueProp (Config { value }) =
+    Maybe.map (Html.Attributes.property "value" << Encode.string) value
 
 
-placeholderAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-placeholderAttr { placeholder } =
+placeholderAttr : Config msg -> Maybe (Html.Attribute msg)
+placeholderAttr (Config { placeholder }) =
     Maybe.map Html.Attributes.placeholder placeholder
 
 
-inputHandler : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-inputHandler { onInput } =
+inputHandler : Config msg -> Maybe (Html.Attribute msg)
+inputHandler (Config { onInput }) =
     Maybe.map Html.Events.onInput onInput
 
 
-changeHandler : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-changeHandler { onChange } =
+changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler (Config { onChange }) =
     Maybe.map (\f -> Html.Events.on "change" (Decode.map f Html.Events.targetValue))
         onChange
 
 
-inputElt : TextAreaConfig msg -> Html msg
-inputElt config =
+inputElt : Config msg -> Html msg
+inputElt config_ =
     Html.textarea
         (List.filterMap identity
             [ inputCs
-            , ariaLabelAttr config
-            , rowsAttr config
-            , colsAttr config
-            , placeholderAttr config
-            , inputHandler config
-            , changeHandler config
-            , minLengthAttr config
-            , maxLengthAttr config
+            , ariaLabelAttr config_
+            , rowsAttr config_
+            , colsAttr config_
+            , placeholderAttr config_
+            , inputHandler config_
+            , changeHandler config_
+            , minLengthAttr config_
+            , maxLengthAttr config_
             ]
         )
         []
@@ -315,18 +469,18 @@ inputCs =
     Just (class "mdc-text-field__input")
 
 
-rowsAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-rowsAttr { rows } =
+rowsAttr : Config msg -> Maybe (Html.Attribute msg)
+rowsAttr (Config { rows }) =
     Maybe.map Html.Attributes.rows rows
 
 
-colsAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-colsAttr { cols } =
+colsAttr : Config msg -> Maybe (Html.Attribute msg)
+colsAttr (Config { cols }) =
     Maybe.map Html.Attributes.cols cols
 
 
-ariaLabelAttr : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-ariaLabelAttr { fullwidth, placeholder, label } =
+ariaLabelAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaLabelAttr (Config { fullwidth, placeholder, label }) =
     if fullwidth then
         Maybe.map (Html.Attributes.attribute "aria-label") label
 
@@ -334,13 +488,13 @@ ariaLabelAttr { fullwidth, placeholder, label } =
         Nothing
 
 
-disabledProp : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-disabledProp { disabled } =
+disabledProp : Config msg -> Maybe (Html.Attribute msg)
+disabledProp (Config { disabled }) =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
-labelElt : TextAreaConfig msg -> Html msg
-labelElt { label, value } =
+labelElt : Config msg -> Html msg
+labelElt (Config { label, value }) =
     let
         floatingLabelCs =
             "mdc-floating-label"
@@ -351,7 +505,7 @@ labelElt { label, value } =
     case label of
         Just str ->
             Html.div
-                [ if value /= "" then
+                [ if Maybe.withDefault "" value /= "" then
                     class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
 
                   else
@@ -365,8 +519,8 @@ labelElt { label, value } =
             text ""
 
 
-noLabelCs : TextAreaConfig msg -> Maybe (Html.Attribute msg)
-noLabelCs { label } =
+noLabelCs : Config msg -> Maybe (Html.Attribute msg)
+noLabelCs (Config { label }) =
     if label == Nothing then
         Just (class "mdc-text-field--no-label")
 
@@ -379,11 +533,11 @@ lineRippleElt =
     Html.div [ class "mdc-line-ripple" ] []
 
 
-notchedOutlineElt : TextAreaConfig msg -> Html msg
-notchedOutlineElt config =
+notchedOutlineElt : Config msg -> Html msg
+notchedOutlineElt config_ =
     Html.div [ class "mdc-notched-outline" ]
         [ notchedOutlineLeadingElt
-        , notchedOutlineNotchElt config
+        , notchedOutlineNotchElt config_
         , notchedOutlineTrailingElt
         ]
 
@@ -398,18 +552,6 @@ notchedOutlineTrailingElt =
     Html.div [ class "mdc-notched-outline__trailing" ] []
 
 
-notchedOutlineNotchElt : TextAreaConfig msg -> Html msg
-notchedOutlineNotchElt config =
-    Html.div [ class "mdc-notched-outline__notch" ] [ labelElt config ]
-
-
-{-| Character counter view function
--}
-characterCounter : List (Html.Attribute msg) -> Html msg
-characterCounter additionalAttributes =
-    Html.div (characterCounterCs :: additionalAttributes) []
-
-
-characterCounterCs : Html.Attribute msg
-characterCounterCs =
-    class "mdc-text-field-character-counter"
+notchedOutlineNotchElt : Config msg -> Html msg
+notchedOutlineNotchElt config_ =
+    Html.div [ class "mdc-notched-outline__notch" ] [ labelElt config_ ]

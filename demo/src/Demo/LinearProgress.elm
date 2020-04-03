@@ -4,7 +4,7 @@ import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes
-import Material.LinearProgress exposing (bufferedLinearProgress, determinateLinearProgress, indeterminateLinearProgress, linearProgressConfig)
+import Material.LinearProgress as LinearProgress
 import Material.Typography as Typography
 
 
@@ -35,18 +35,18 @@ view model =
         , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-LinearProgress"
         , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-linear-progress"
         }
-    , hero = [ determinateLinearProgress linearProgressConfig { progress = 0.5 } ]
+    , hero = [ LinearProgress.determinate LinearProgress.config { progress = 0.5 } ]
     , content =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Buffered" ]
-        , bufferedLinearProgress linearProgressConfig
-            { progress = 0.5, buffered = 0.75 }
+        , LinearProgress.buffered LinearProgress.config { progress = 0.5, buffered = 0.75 }
         , Html.h3 [ Typography.subtitle1 ] [ text "Indeterminate" ]
-        , indeterminateLinearProgress linearProgressConfig
+        , LinearProgress.indeterminate LinearProgress.config
         , Html.h3 [ Typography.subtitle1 ] [ text "Reversed" ]
-        , determinateLinearProgress { linearProgressConfig | reverse = True }
+        , LinearProgress.determinate
+            (LinearProgress.config |> LinearProgress.setReverse True)
             { progress = 0.5 }
         , Html.h3 [ Typography.subtitle1 ] [ text "Reversed Buffered" ]
-        , bufferedLinearProgress { linearProgressConfig | reverse = True }
+        , LinearProgress.buffered (LinearProgress.config |> LinearProgress.setReverse True)
             { progress = 0.5, buffered = 0.75 }
         ]
     }

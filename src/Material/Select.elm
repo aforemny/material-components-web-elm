@@ -1,18 +1,29 @@
 module Material.Select exposing
-    ( filledSelect, selectConfig, SelectConfig
-    , selectOption, selectOptionConfig, SelectOptionConfig, SelectOption
-    , outlinedSelect
+    ( Config, config
+    , setOnChange
+    , setLabel
+    , setValue
+    , setDisabled
+    , setRequired
+    , setValid
+    , setAttributes
+    , filled
+    , outlined
     )
 
-{-| MDC Select provides Material Design single-option select menus. It supports
-using the browser's native `<select>` element, or a MDC Menu. It is fully
-accessible, and fully RTL-aware.
+{-| Select provides a single-option select menus.
+
+This module concerns the container select. If you are looking for information
+about select options, refer to
+[Material.Select.Option](Material-Select-Option).
 
 
 # Table of Contents
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Outlined Select](#outlined-select)
   - [Disabled Select](#disabled-select)
   - [Required Select](#required-select)
@@ -31,88 +42,88 @@ accessible, and fully RTL-aware.
 
 # Basic Usage
 
-    import Material.Select
-        exposing
-            ( select
-            , selectConfig
-            , selectOption
-            , selectOptionConfig
-            )
+    import Material.Select as Select
+    import Material.Select.Option as SelectOption
 
     type Msg
         = ValueChanged String
 
     main =
-        filledSelect
-            { selectConfig
-                | label = "Fruit"
-                , value = Just ""
-                , onChange = Just ValueChanged
-            }
-            [ selectOption
-                { selectOptionConfig | value = "" }
+        Select.filled
+            (Select.config
+                |> Select.setLabel "Fruit"
+                |> Select.setValue (Just "")
+                |> Select.setOnChange ValueChanged
+            )
+            [ SelectOption.selectOption
+                (SelectOption.config |> SelectOption.setValue (Just ""))
                 [ text "" ]
-            , selectOption
-                { selectOptionConfig | value = "Apple" }
+            , SelectOption.selectOption
+                (SelectOption.config
+                    |> SelectOption.setValue (Just "Apple")
+                )
                 [ text "Apple" ]
             ]
 
-@docs filledSelect, selectConfig, SelectConfig
-@docs selectOption, selectOptionConfig, SelectOptionConfig, SelectOption
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnChange
+@docs setLabel
+@docs setValue
+@docs setDisabled
+@docs setRequired
+@docs setValid
+@docs setAttributes
+
+
+# Filled Select
+
+@docs filled
 
 
 # Outlined Select
 
 Instead of a filled select, you may choose a select with a outline by using the
-`outlinedSelect` view function.
+`outlined` view function.
 
-    outlinedSelect selectConf
-        [ selectOption selectOptionConf "" ]
+    Select.outlined Select.config
+        [ SelectOption.selectOption
+            (SelectOption.config |> SelectOption.setValue (Just ""))
+            [ text "" ]
+        ]
 
-@docs outlinedSelect
+@docs outlined
 
 
 # Disabled Select
 
-To disable a select, set its `disabled` configuration field to `True`.
+To disable a select, set its `setDisabled` configuration option to `True`.
 
-    filledSelect
-        { selectConfig | disabled = True }
-        [ selectOption { selectOptionConfig | value = "" }
-            [ text "" ]
-        ]
+    Select.filled (Select.config |> Select.setDisabled True) []
 
 
 # Required Select
 
-To mark a select as required, set its `required` configuration field to `True`.
+To mark a select as required, set its `setRequired` configuration option to
+`True`.
 
-    filledSelect
-        { selectConfig | required = True }
-        [ selectOption { selectOptionConfig | value = "" }
-            [ text "" ]
-        ]
-
-
-# Disabled Option
-
-To disable one select's option, set its `disabled` configuration field to `True`.
-
-    selectOption { selectOptionConfig | disabled = True }
-        [ text "" ]
-
-This is particularly useful on the first emply option if you have a select that
-must be filled but is not initially filled.
+    Select.filled (Select.config |> Select.setRequired True) []
 
 
 # Select with helper text
 
-TODO
+TODO(select-with-helper-text)
 
 
 # Select with leading icon
 
-TODO
+TODO(select-with-leading-icon)
 
 -}
 
@@ -121,33 +132,90 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Material.Select.Option exposing (SelectOption)
+import Material.Select.Option.Internal as SelectOption
 
 
 {-| Configuration of a select
 -}
-type alias SelectConfig msg =
-    { label : String
-    , value : Maybe String
-    , disabled : Bool
-    , required : Bool
-    , valid : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    , onChange : Maybe (String -> msg)
-    }
+type Config msg
+    = Config
+        { label : Maybe String
+        , value : Maybe String
+        , disabled : Bool
+        , required : Bool
+        , valid : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        , onChange : Maybe (String -> msg)
+        }
 
 
 {-| Default configuration of a select
 -}
-selectConfig : SelectConfig msg
-selectConfig =
-    { label = ""
-    , value = Nothing
-    , disabled = False
-    , required = False
-    , valid = False
-    , additionalAttributes = []
-    , onChange = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { label = Nothing
+        , value = Nothing
+        , disabled = False
+        , required = False
+        , valid = False
+        , additionalAttributes = []
+        , onChange = Nothing
+        }
+
+
+{-| Specify a select's label
+-}
+setLabel : Maybe String -> Config msg -> Config msg
+setLabel label (Config config_) =
+    Config { config_ | label = label }
+
+
+{-| Specify a select's value
+-}
+setValue : Maybe String -> Config msg -> Config msg
+setValue value (Config config_) =
+    Config { config_ | value = value }
+
+
+{-| Specify a select to be disabled
+
+Disabled selects cannot be interacted with an have no visual interaction
+effect.
+
+-}
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
+
+
+{-| Specify whether a select is required
+-}
+setRequired : Bool -> Config msg -> Config msg
+setRequired required (Config config_) =
+    Config { config_ | required = required }
+
+
+{-| Specify whether a select is valid
+-}
+setValid : Bool -> Config msg -> Config msg
+setValid valid (Config config_) =
+    Config { config_ | valid = valid }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user changes the select
+-}
+setOnChange : (String -> msg) -> Config msg -> Config msg
+setOnChange onChange (Config config_) =
+    Config { config_ | onChange = Just onChange }
 
 
 type Variant
@@ -155,28 +223,28 @@ type Variant
     | Outlined
 
 
-select : Variant -> SelectConfig msg -> List (SelectOption msg) -> Html msg
-select variant config nodes =
+select : Variant -> Config msg -> List (SelectOption msg) -> Html msg
+select variant ((Config { additionalAttributes }) as config_) nodes =
     Html.node "mdc-select"
         (List.filterMap identity
             [ rootCs
             , variantCs variant
-            , valueProp config
-            , disabledProp config
-            , validProp config
-            , requiredProp config
+            , valueProp config_
+            , disabledProp config_
+            , validProp config_
+            , requiredProp config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         (List.concat
             [ [ dropdownIconElt
-              , nativeControlElt config nodes
+              , nativeControlElt config_ nodes
               ]
             , if variant == Outlined then
-                [ notchedOutlineElt config ]
+                [ notchedOutlineElt config_ ]
 
               else
-                [ floatingLabelElt config
+                [ floatingLabelElt config_
                 , lineRippleElt
                 ]
             ]
@@ -185,16 +253,16 @@ select variant config nodes =
 
 {-| Filled select view function
 -}
-filledSelect : SelectConfig msg -> List (SelectOption msg) -> Html msg
-filledSelect config nodes =
-    select Filled config nodes
+filled : Config msg -> List (SelectOption msg) -> Html msg
+filled config_ nodes =
+    select Filled config_ nodes
 
 
 {-| Outlined select view function
 -}
-outlinedSelect : SelectConfig msg -> List (SelectOption msg) -> Html msg
-outlinedSelect config nodes =
-    select Outlined config nodes
+outlined : Config msg -> List (SelectOption msg) -> Html msg
+outlined config_ nodes =
+    select Outlined config_ nodes
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -211,23 +279,23 @@ variantCs variant =
         Nothing
 
 
-valueProp : SelectConfig msg -> Maybe (Html.Attribute msg)
-valueProp { value } =
+valueProp : Config msg -> Maybe (Html.Attribute msg)
+valueProp (Config { value }) =
     Just (Html.Attributes.property "value" (Encode.string (Maybe.withDefault "" value)))
 
 
-disabledProp : SelectConfig msg -> Maybe (Html.Attribute msg)
-disabledProp { disabled } =
+disabledProp : Config msg -> Maybe (Html.Attribute msg)
+disabledProp (Config { disabled }) =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
-validProp : SelectConfig msg -> Maybe (Html.Attribute msg)
-validProp { valid } =
+validProp : Config msg -> Maybe (Html.Attribute msg)
+validProp (Config { valid }) =
     Just (Html.Attributes.property "valid" (Encode.bool valid))
 
 
-requiredProp : SelectConfig msg -> Maybe (Html.Attribute msg)
-requiredProp { required } =
+requiredProp : Config msg -> Maybe (Html.Attribute msg)
+requiredProp (Config { required }) =
     Just (Html.Attributes.property "required" (Encode.bool required))
 
 
@@ -236,15 +304,15 @@ dropdownIconElt =
     Html.i [ class "mdc-select__dropdown-icon" ] []
 
 
-nativeControlElt : SelectConfig msg -> List (SelectOption msg) -> Html msg
-nativeControlElt config nodes =
+nativeControlElt : Config msg -> List (SelectOption msg) -> Html msg
+nativeControlElt config_ nodes =
     Html.select
         (List.filterMap identity
             [ nativeControlCs
-            , changeHandler config
+            , changeHandler config_
             ]
         )
-        (List.map (\(SelectOption f) -> f config) nodes)
+        (List.map (selectOptionView config_) nodes)
 
 
 nativeControlCs : Maybe (Html.Attribute msg)
@@ -252,71 +320,47 @@ nativeControlCs =
     Just (class "mdc-select__native-control")
 
 
-{-| Configuration of a select option
--}
-type alias SelectOptionConfig msg =
-    { disabled : Bool
-    , value : String
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+selectOptionView : Config msg -> SelectOption msg -> Html msg
+selectOptionView topConfig (SelectOption.SelectOption ((SelectOption.Config { additionalAttributes, nodes }) as config_)) =
+    Html.option
+        (List.filterMap identity
+            [ selectedAttr topConfig config_
+            , disabledAttr config_
+            , optionValueAttr config_
+            ]
+            ++ additionalAttributes
+        )
+        nodes
 
 
-{-| Default configuration of a select option
--}
-selectOptionConfig : SelectOptionConfig msg
-selectOptionConfig =
-    { disabled = False
-    , value = ""
-    , additionalAttributes = []
-    }
-
-
-{-| Select option type
--}
-type SelectOption msg
-    = SelectOption (SelectConfig msg -> Html msg)
-
-
-{-| Select option view function
--}
-selectOption : SelectOptionConfig msg -> List (Html msg) -> SelectOption msg
-selectOption config nodes =
-    SelectOption
-        (\topConfig ->
-            Html.option
-                ([ selectedAttr topConfig config
-                 , disabledAttr config
-                 , optionValueAttr config
-                 ]
-                    ++ config.additionalAttributes
-                )
-                nodes
+selectedAttr : Config msg -> SelectOption.Config msg -> Maybe (Html.Attribute msg)
+selectedAttr (Config topConfig) (SelectOption.Config config_) =
+    Just
+        (Html.Attributes.selected
+            ((topConfig.value /= Nothing)
+                && (topConfig.value == config_.value)
+            )
         )
 
 
-selectedAttr : SelectConfig msg -> SelectOptionConfig msg -> Html.Attribute msg
-selectedAttr topConfig config =
-    Html.Attributes.selected (Maybe.withDefault "" topConfig.value == config.value)
+disabledAttr : SelectOption.Config msg -> Maybe (Html.Attribute msg)
+disabledAttr (SelectOption.Config { disabled }) =
+    Just (Html.Attributes.disabled disabled)
 
 
-disabledAttr : SelectOptionConfig msg -> Html.Attribute msg
-disabledAttr { disabled } =
-    Html.Attributes.disabled disabled
+optionValueAttr : SelectOption.Config msg -> Maybe (Html.Attribute msg)
+optionValueAttr (SelectOption.Config { value }) =
+    Maybe.map Html.Attributes.value value
 
 
-optionValueAttr : SelectOptionConfig msg -> Html.Attribute msg
-optionValueAttr { value } =
-    Html.Attributes.value value
-
-
-changeHandler : SelectConfig msg -> Maybe (Html.Attribute msg)
-changeHandler { onChange } =
+changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler (Config { onChange }) =
     Maybe.map (\msg -> Html.Events.on "change" (Decode.map msg Html.Events.targetValue))
         onChange
 
 
-floatingLabelElt : SelectConfig msg -> Html msg
-floatingLabelElt { label, value } =
+floatingLabelElt : Config msg -> Html msg
+floatingLabelElt (Config { label, value }) =
     let
         floatingLabelCs =
             "mdc-floating-label"
@@ -333,7 +377,7 @@ floatingLabelElt { label, value } =
         , Html.Attributes.property "foucClassNames"
             (Encode.list Encode.string [ floatingLabelFloatAboveCs ])
         ]
-        [ text label ]
+        [ text (Maybe.withDefault "" label) ]
 
 
 lineRippleElt : Html msg
@@ -341,12 +385,13 @@ lineRippleElt =
     Html.label [ class "mdc-line-ripple" ] []
 
 
-notchedOutlineElt : SelectConfig msg -> Html msg
-notchedOutlineElt { label } =
+notchedOutlineElt : Config msg -> Html msg
+notchedOutlineElt (Config { label }) =
     Html.div [ class "mdc-notched-outline" ]
         [ Html.div [ class "mdc-notched-outline__leading" ] []
         , Html.div [ class "mdc-notched-outline__notch" ]
-            [ Html.label [ class "mdc-floating-label" ] [ text label ]
+            [ Html.label [ class "mdc-floating-label" ]
+                [ text (Maybe.withDefault "" label) ]
             ]
         , Html.div [ class "mdc-notched-outline__trailing" ] []
         ]

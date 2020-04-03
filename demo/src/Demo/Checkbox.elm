@@ -4,25 +4,24 @@ import Demo.CatalogPage as Page exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Dict exposing (Dict)
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.Checkbox as Checkbox exposing (CheckboxState, checkbox, checkboxConfig)
+import Html.Attributes exposing (style)
+import Material.Checkbox as Checkbox
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =
-    { checkboxes : Dict String CheckboxState
-    }
+    { checkboxes : Dict String Checkbox.State }
 
 
 defaultModel : Model
 defaultModel =
     { checkboxes =
         Dict.fromList
-            [ ( "checked-hero-checkbox", Checkbox.Checked )
-            , ( "unchecked-hero-checkbox", Checkbox.Unchecked )
-            , ( "unchecked-checkbox", Checkbox.Unchecked )
-            , ( "checked-checkbox", Checkbox.Checked )
+            [ ( "checked-hero-checkbox", Checkbox.checked )
+            , ( "unchecked-hero-checkbox", Checkbox.unchecked )
+            , ( "unchecked-checkbox", Checkbox.unchecked )
+            , ( "checked-checkbox", Checkbox.checked )
             ]
     }
 
@@ -39,11 +38,11 @@ update msg model =
                 checkboxes =
                     Dict.update index
                         (\state ->
-                            if state == Just Checkbox.Checked then
-                                Just Checkbox.Unchecked
+                            if state == Just Checkbox.checked then
+                                Just Checkbox.unchecked
 
                             else
-                                Just Checkbox.Checked
+                                Just Checkbox.checked
                         )
                         model.checkboxes
             in
@@ -62,36 +61,37 @@ view model =
     , hero = heroCheckboxes model
     , content =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Unchecked" ]
-        , controlledCheckbox "unchecked-checkbox" model []
+        , checkbox "unchecked-checkbox" model []
         , Html.h3 [ Typography.subtitle1 ] [ text "Indeterminate" ]
-        , controlledCheckbox "indeterminate-checkbox" model []
+        , checkbox "indeterminate-checkbox" model []
         , Html.h3 [ Typography.subtitle1 ] [ text "Checked" ]
-        , controlledCheckbox "checked-checkbox" model []
+        , checkbox "checked-checkbox" model []
         ]
     }
 
 
 heroCheckboxes : Model -> List (Html Msg)
 heroCheckboxes model =
-    [ controlledCheckbox "checked-hero-checkbox" model heroMargin
-    , controlledCheckbox "unchecked-hero-checkbox" model heroMargin
+    [ checkbox "checked-hero-checkbox" model heroMargin
+    , checkbox "unchecked-hero-checkbox" model heroMargin
     ]
 
 
-controlledCheckbox : String -> Model -> List (Html.Attribute Msg) -> Html Msg
-controlledCheckbox index model additionalAttributes =
+checkbox : String -> Model -> List (Html.Attribute Msg) -> Html Msg
+checkbox index model attributes =
     let
         state =
-            Maybe.withDefault Checkbox.Indeterminate (Dict.get index model.checkboxes)
+            Dict.get index model.checkboxes
+                |> Maybe.withDefault Checkbox.indeterminate
     in
-    checkbox
-        { checkboxConfig
-            | state = state
-            , onChange = Just (Changed index)
-            , additionalAttributes = additionalAttributes
-        }
+    Checkbox.checkbox
+        (Checkbox.config
+            |> Checkbox.setState (Just state)
+            |> Checkbox.setOnChange (Changed index)
+            |> Checkbox.setAttributes attributes
+        )
 
 
 heroMargin : List (Html.Attribute msg)
 heroMargin =
-    [ Html.Attributes.style "margin" "8px 16px" ]
+    [ style "margin" "8px 16px" ]

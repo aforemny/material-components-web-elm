@@ -1,4 +1,13 @@
-module Material.Checkbox exposing (checkbox, checkboxConfig, CheckboxConfig, CheckboxState(..))
+module Material.Checkbox exposing
+    ( Config, config
+    , setOnChange
+    , State, setState
+    , setDisabled
+    , setAttributes
+    , checkbox
+    , checked, unchecked
+    , indeterminate
+    )
 
 {-| Checkboxes allow the user to select one or more items from a set.
 
@@ -7,6 +16,8 @@ module Material.Checkbox exposing (checkbox, checkboxConfig, CheckboxConfig, Che
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Checkbox](#checkbox)
   - [Checked Checkbox](#checked-Checkbox)
   - [Indeterminate Checkbox](#indeterminate-checkbox)
@@ -27,50 +38,65 @@ Note that checkboxes are usually used in conjunction with form fields. Refer to
 [FormField](Material-FormField) for more information.
 
     import Material.Checkbox as Checkbox
-        exposing
-            ( checkbox
-            , checkboxConfig
-            )
 
     type Msg
-        = CheckboxClicked
+        = Changed
 
     main =
         checkbox
-            { checkboxConfig
-                | state = Checkbox.Unchecked
-                , onChange = Just CheckboxClicked
-            }
+            (Checkbox.config
+                |> Checkbox.setState Checkbox.Unchecked
+                |> Checkbox.setOnChange Changed
+            )
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnChange
+@docs State, setState
+@docs setDisabled
+@docs setAttributes
 
 
 # Checkbox
 
-@docs checkbox, checkboxConfig, CheckboxConfig, CheckboxState
+@docs checkbox
 
 
 # Checked Checkbox
 
-To set the state of a checkbox to checked, set its `state` configuration field
-to `Checked`. To set its state to unchecked, use `Unchecked`.
+To set the state of a checkbox, use its `setState` configuration option.
 
-    checkbox { checkboxConfig | state = Checkbox.Checked }
+    Checkbox.checkbox
+        (Checkbox.config |> Checkbox.setState (Just Checkbox.checked))
+
+@docs checked, unchecked
 
 
 # Indeterminate Checkbox
 
-To set the state of a checkbox to indeterminate, set its `state` configuration
-field to `Indeterminate`.
+To set the state of a checkbox, use its `setState` configuration option.
 
-    checkbox
-        { checkboxConfig | state = Checkbox.Indeterminate }
+    Checkbox.checkbox
+        (Checkbox.config
+            |> Checkbox.setState (Just Checkbox.indeterminate)
+        )
+
+@docs indeterminate
 
 
 # Disabled Checkbox
 
-To disable a checkbox, set its disabled configuration field to True. Disabled
+To disable a checkbox, use its `setDisabled` configuration option. Disabled
 checkboxes cannot be interacted with and have no visual interaction effect.
 
-    checkbox { checkboxConfig | disabled = True }
+    Checkbox.checkbox
+        (Checkbox.config |> Checkbox.setDisabled True)
 
 -}
 
@@ -79,52 +105,105 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Material.Checkbox.Internal exposing (Config(..), State(..))
 import Svg
 import Svg.Attributes
 
 
 {-| Configuration of a checkbox
 -}
-type alias CheckboxConfig msg =
-    { state : CheckboxState
-    , disabled : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    , onChange : Maybe msg
-    }
+type alias Config msg =
+    Material.Checkbox.Internal.Config msg
 
 
 {-| Default configuration of a checkbox
 -}
-checkboxConfig : CheckboxConfig msg
-checkboxConfig =
-    { state = Unchecked
-    , disabled = False
-    , additionalAttributes = []
-    , onChange = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { state = Nothing
+        , disabled = False
+        , additionalAttributes = []
+        , onChange = Nothing
+        }
 
 
-{-| -}
-type CheckboxState
-    = Unchecked
-    | Checked
-    | Indeterminate
+{-| Specify a checkbox' state
+
+A checkbox may be in `checked`, `unchecked` or `indeterminate` state.
+
+-}
+setState : Maybe State -> Config msg -> Config msg
+setState state (Config config_) =
+    Config { config_ | state = state }
+
+
+{-| Specify whether a checkbox is disabled
+
+Disabled checkboxes cannot be interacted with and have no visual interaction
+effect.
+
+-}
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user changes a checkbox
+-}
+setOnChange : msg -> Config msg -> Config msg
+setOnChange onChange (Config config_) =
+    Config { config_ | onChange = Just onChange }
+
+
+{-| State of a checkbox
+-}
+type alias State =
+    Material.Checkbox.Internal.State
+
+
+{-| Unchecked state
+-}
+unchecked : State
+unchecked =
+    Unchecked
+
+
+{-| Checked state
+-}
+checked : State
+checked =
+    Checked
+
+
+{-| Indeterminate state
+-}
+indeterminate : State
+indeterminate =
+    Indeterminate
 
 
 {-| Checkbox view function
 -}
-checkbox : CheckboxConfig msg -> Html msg
-checkbox config =
+checkbox : Config msg -> Html msg
+checkbox ((Config { additionalAttributes }) as config_) =
     Html.node "mdc-checkbox"
         (List.filterMap identity
             [ rootCs
-            , checkedProp config
-            , indeterminateProp config
-            , disabledProp config
+            , checkedProp config_
+            , indeterminateProp config_
+            , disabledProp config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
-        [ nativeControlElt config
+        [ nativeControlElt config_
         , backgroundElt
         ]
 
@@ -134,23 +213,23 @@ rootCs =
     Just (class "mdc-checkbox")
 
 
-checkedProp : CheckboxConfig msg -> Maybe (Html.Attribute msg)
-checkedProp { state } =
-    Just (Html.Attributes.property "checked" (Encode.bool (state == Checked)))
+checkedProp : Config msg -> Maybe (Html.Attribute msg)
+checkedProp (Config { state }) =
+    Just (Html.Attributes.property "checked" (Encode.bool (state == Just Checked)))
 
 
-indeterminateProp : CheckboxConfig msg -> Maybe (Html.Attribute msg)
-indeterminateProp { state } =
-    Just (Html.Attributes.property "indeterminate" (Encode.bool (state == Indeterminate)))
+indeterminateProp : Config msg -> Maybe (Html.Attribute msg)
+indeterminateProp (Config { state }) =
+    Just (Html.Attributes.property "indeterminate" (Encode.bool (state == Just Indeterminate)))
 
 
-disabledProp : CheckboxConfig msg -> Maybe (Html.Attribute msg)
-disabledProp { disabled } =
+disabledProp : Config msg -> Maybe (Html.Attribute msg)
+disabledProp (Config { disabled }) =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
-changeHandler : CheckboxConfig msg -> Maybe (Html.Attribute msg)
-changeHandler { state, onChange } =
+changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler (Config { state, onChange }) =
     -- Note: MDCList choses to send a change event to all checkboxes, thus we
     -- have to check here if the state actually changed.
     Maybe.map
@@ -158,10 +237,10 @@ changeHandler { state, onChange } =
             Html.Events.on "change"
                 (Decode.at [ "target", "checked" ] Decode.bool
                     |> Decode.andThen
-                        (\checked ->
+                        (\isChecked ->
                             if
-                                (checked && state /= Checked)
-                                    || (not checked && state /= Unchecked)
+                                (isChecked && state /= Just Checked)
+                                    || (not isChecked && state /= Just Unchecked)
                             then
                                 Decode.succeed msg
 
@@ -173,15 +252,15 @@ changeHandler { state, onChange } =
         onChange
 
 
-nativeControlElt : CheckboxConfig msg -> Html msg
-nativeControlElt config =
+nativeControlElt : Config msg -> Html msg
+nativeControlElt config_ =
     Html.input
         (List.filterMap identity
             [ Just (Html.Attributes.type_ "checkbox")
             , Just (class "mdc-checkbox__native-control")
-            , checkedProp config
-            , indeterminateProp config
-            , changeHandler config
+            , checkedProp config_
+            , indeterminateProp config_
+            , changeHandler config_
             ]
         )
         []

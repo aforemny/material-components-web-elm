@@ -1,5 +1,8 @@
 module Material.HelperText exposing
-    ( helperText, helperTextConfig, HelperTextConfig
+    ( Config, config
+    , setPersistent
+    , setAttributes
+    , helperText
     , helperLine, characterCounter
     )
 
@@ -10,6 +13,8 @@ be used. It should be visible either persistently or only on focus.
 # Table of Contents
 
   - [Resources](#resources)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Basic Usage](#basic-usage)
   - [Helper Text](#helper-text)
   - [Persistent Helper Text](#persisten-helper-text)
@@ -26,14 +31,29 @@ be used. It should be visible either persistently or only on focus.
 
 # Basic Usage
 
-    import Material.HelperText exposing (helperText, helperTextConf)
-    import Material.TextField exposing (textField, textFieldConf)
+    import Material.HelperText as HelperText
+    import Material.TextField as TextField
 
     main =
         Html.div
-            [ textField { textFieldConf | label = "Your name" }
-            , helperText helperTextConf "Please fill this"
+            [ TextField.textField
+                (TextField.config
+                    |> TextField.setLabel "Your name"
+                )
+            , HelperText.helperText HelperText.config
+                "Please fill this"
             ]
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setPersistent
+@docs setAttributes
 
 
 # Helper Text
@@ -42,27 +62,25 @@ The helper line is expected to be a direct sibling of the text field it belongs
 to and the helper text is expected to be a direct child of the helper text
 line.
 
-@docs helperText, helperTextConfig, HelperTextConfig
+@docs helperText
 
 
 # Persistent Helper Text
 
-A text field's helper text may show unconditionally by setting its `persistent`
-configuration field to `True`. By default a text field's helper text only shows
-when the text field has focus.
+A text field's helper text may show unconditionally by setting its
+`setPersistent` configuration option to `True`. By default a text field's
+helper text only shows when the text field has focus.
 
 
 # Helper Text with Character Counter
 
 To have a text field or text area display a character counter, set its
-`maxLength` configuration field, and also add a `characterCounter` as a child
-of `helperLine`.
+`setMaxLength` configuration option, and also add a `characterCounter` as a
+child of `helperLine`.
 
-    [ textField
-        { textFieldConfig
-            | maxLength = Just 18
-        }
-    , helperLine [] [ characterCounter [] ]
+    [ TextField.textField
+        (TextField.config |> TextField.setMaxLength (Just 18))
+    , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]
 
 @docs helperLine, characterCounter
@@ -75,43 +93,63 @@ import Html.Attributes exposing (class)
 
 {-| Configuration of a helper text
 -}
-type alias HelperTextConfig msg =
-    { persistent : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Config msg
+    = Config
+        { persistent : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        }
 
 
 {-| Default configuration of a helper text
 -}
-helperTextConfig : HelperTextConfig msg
-helperTextConfig =
-    { persistent = False
-    , additionalAttributes = []
-    }
+config : Config msg
+config =
+    Config
+        { persistent = False
+        , additionalAttributes = []
+        }
+
+
+{-| Specify whether a helper text should be persistent
+
+Persistent helper texts always display regardless of whether the input has
+focus or not.
+
+-}
+setPersistent : Bool -> Config msg -> Config msg
+setPersistent persistent (Config config_) =
+    Config { config_ | persistent = persistent }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Helper text view function
 
-The helper text is expected to be a direct child of the text line.
+The helper text is expected to be a direct child of the helper line.
 
 -}
-helperText : HelperTextConfig msg -> String -> Html msg
-helperText config string =
+helperText : Config msg -> String -> Html msg
+helperText ((Config { additionalAttributes }) as config_) string =
     Html.div
         (List.filterMap identity
             [ helperTextCs
-            , persistentCs config
+            , persistentCs config_
             , ariaHiddenAttr
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         [ text string ]
 
 
 {-| Helper text line view function
 
-The text line is expected to be the wrapping element of the helper text. It is
-expected to be a direct sibling of the text field that it belongs to.
+The helper line is expected to be the wrapping element of the helper text. It
+is expected to be a direct sibling of the text field that it belongs to.
 
 -}
 helperLine : List (Html.Attribute msg) -> List (Html msg) -> Html msg
@@ -129,9 +167,9 @@ helperLineCs =
     class "mdc-text-field-helper-line"
 
 
-persistentCs : HelperTextConfig msg -> Maybe (Html.Attribute msg)
-persistentCs config =
-    if config.persistent then
+persistentCs : Config msg -> Maybe (Html.Attribute msg)
+persistentCs (Config config_) =
+    if config_.persistent then
         Just (class "mdc-text-field-helper-text--persistent")
 
     else

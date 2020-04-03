@@ -3,11 +3,11 @@ module Demo.Snackbar exposing (Model, Msg(..), defaultModel, update, view)
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
-import Html.Attributes
+import Html.Attributes exposing (class, style)
 import Html.Events
 import Json.Decode as Json
-import Material.Button exposing (buttonConfig, raisedButton)
-import Material.Snackbar as Snackbar exposing (snackbar, snackbarConfig, snackbarMessage)
+import Material.Button as Button
+import Material.Snackbar as Snackbar
 import Platform.Cmd exposing (Cmd, none)
 
 
@@ -32,34 +32,31 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
         baselineMessage =
-            { snackbarMessage
-                | label = "Can't send photo. Retry in 5 seconds."
-                , actionButton = Just "Retry"
-                , onActionButtonClick = Just Click
-                , actionIcon = Just "close"
-                , onActionIconClick = Just Click
-            }
+            Snackbar.message
+                |> Snackbar.setLabel (Just "Can't send photo. Retry in 5 seconds.")
+                |> Snackbar.setActionButton (Just "Retry")
+                |> Snackbar.setOnActionButtonClick Click
+                |> Snackbar.setActionIcon (Just "close")
+                |> Snackbar.setOnActionIconClick Click
 
         leadingMessage =
-            { snackbarMessage
-                | label = "Your photo has been archived."
-                , leading = True
-                , actionButton = Just "Undo"
-                , onActionButtonClick = Just Click
-                , actionIcon = Just "close"
-                , onActionIconClick = Just Click
-            }
+            Snackbar.message
+                |> Snackbar.setLabel (Just "Your photo has been archived.")
+                |> Snackbar.setLeading True
+                |> Snackbar.setActionButton (Just "Undo")
+                |> Snackbar.setOnActionButtonClick Click
+                |> Snackbar.setActionIcon (Just "close")
+                |> Snackbar.setOnActionIconClick Click
 
         stackedMessage =
-            { snackbarMessage
-                | label =
-                    "This item already has the label \"travel\". You can add a new label."
-                , stacked = True
-                , actionButton = Just "Add a new label"
-                , onActionButtonClick = Just Click
-                , actionIcon = Just "close"
-                , onActionIconClick = Just Click
-            }
+            Snackbar.message
+                |> Snackbar.setLabel
+                    (Just "This item already has the label \"travel\". You can add a new label.")
+                |> Snackbar.setStacked True
+                |> Snackbar.setActionButton (Just "Add a new label")
+                |> Snackbar.setOnActionButtonClick Click
+                |> Snackbar.setActionIcon (Just "close")
+                |> Snackbar.setOnActionIconClick Click
     in
     case msg of
         ShowBaseline ->
@@ -90,68 +87,67 @@ view model =
         }
     , hero = [ heroMessage ]
     , content =
-        [ raisedButton
-            { buttonConfig
-                | onClick = Just ShowBaseline
-                , additionalAttributes = buttonMargin
-            }
+        [ Button.raised
+            (Button.config
+                |> Button.setOnClick ShowBaseline
+                |> Button.setAttributes buttonMargin
+            )
             "Baseline"
         , text " "
-        , raisedButton
-            { buttonConfig
-                | onClick = Just ShowLeading
-                , additionalAttributes = buttonMargin
-            }
+        , Button.raised
+            (Button.config
+                |> Button.setOnClick ShowLeading
+                |> Button.setAttributes buttonMargin
+            )
             "Leading"
         , text " "
-        , raisedButton
-            { buttonConfig
-                | onClick = Just ShowStacked
-                , additionalAttributes = buttonMargin
-            }
+        , Button.raised
+            (Button.config
+                |> Button.setOnClick ShowStacked
+                |> Button.setAttributes buttonMargin
+            )
             "Stacked"
-        , snackbar SnackbarMsg snackbarConfig model.queue
+        , Snackbar.snackbar SnackbarMsg Snackbar.config model.queue
         ]
     }
+
+
+buttonMargin : List (Html.Attribute msg)
+buttonMargin =
+    [ style "margin" "14px" ]
 
 
 heroMessage : Html msg
 heroMessage =
     Html.div
-        [ Html.Attributes.style "position" "relative"
-        , Html.Attributes.style "left" "0"
-        , Html.Attributes.style "transform" "none"
-        , Html.Attributes.class "mdc-snackbar mdc-snackbar--open"
+        [ class "mdc-snackbar mdc-snackbar--open"
+        , style "position" "relative"
+        , style "left" "0"
+        , style "transform" "none"
         ]
         [ Html.div
-            [ Html.Attributes.class "mdc-snackbar__surface" ]
+            [ class "mdc-snackbar__surface" ]
             [ Html.div
-                [ Html.Attributes.class "mdc-snackbar__label"
+                [ class "mdc-snackbar__label"
+                , style "color" "hsla(0,0%,100%,.87)"
                 , Html.Attributes.attribute "role" "status"
                 , Html.Attributes.attribute "aria-live" "polite"
-                , Html.Attributes.style "color" "hsla(0,0%,100%,.87)"
                 ]
                 [ text "Can't send photo. Retry in 5 seconds." ]
             , Html.div
-                [ Html.Attributes.class "mdc-snackbar__actions" ]
+                [ class "mdc-snackbar__actions" ]
                 [ Html.button
-                    [ Html.Attributes.type_ "button"
-                    , Html.Attributes.class "mdc-button"
-                    , Html.Attributes.class "mdc-snackbar__action"
+                    [ class "mdc-button"
+                    , class "mdc-snackbar__action"
+                    , Html.Attributes.type_ "button"
                     ]
-                    [ text "Retry"
-                    ]
+                    [ text "Retry" ]
                 , Html.button
-                    [ Html.Attributes.class "mdc-icon-button"
-                    , Html.Attributes.class "mdc-snackbar__dismiss"
-                    , Html.Attributes.class "material-icons"
+                    [ class "mdc-icon-button"
+                    , class "mdc-snackbar__dismiss"
+                    , class "material-icons"
                     ]
                     [ text "close" ]
                 ]
             ]
         ]
-
-
-buttonMargin : List (Html.Attribute msg)
-buttonMargin =
-    [ Html.Attributes.style "margin" "14px" ]

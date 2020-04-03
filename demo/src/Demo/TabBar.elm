@@ -6,7 +6,8 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.TabBar exposing (tab, tabBar, tabBarConfig, tabConfig)
+import Material.Tab as Tab
+import Material.TabBar as TabBar
 import Material.Theme as Theme
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
@@ -77,24 +78,24 @@ view model =
 
 heroTabs : Model -> String -> Html Msg
 heroTabs model index =
-    tabBar tabBarConfig
-        [ tab
-            { tabConfig
-                | active = model.activeHeroTab == 0
-                , onClick = Just (SetActiveHeroTab 0)
-            }
+    TabBar.tabBar TabBar.config
+        [ Tab.tab
+            (Tab.config
+                |> Tab.setActive (model.activeHeroTab == 0)
+                |> Tab.setOnClick (SetActiveHeroTab 0)
+            )
             { label = "Home", icon = Nothing }
-        , tab
-            { tabConfig
-                | active = model.activeHeroTab == 1
-                , onClick = Just (SetActiveHeroTab 1)
-            }
+        , Tab.tab
+            (Tab.config
+                |> Tab.setActive (model.activeHeroTab == 1)
+                |> Tab.setOnClick (SetActiveHeroTab 1)
+            )
             { label = "Merchandise", icon = Nothing }
-        , tab
-            { tabConfig
-                | active = model.activeHeroTab == 2
-                , onClick = Just (SetActiveHeroTab 2)
-            }
+        , Tab.tab
+            (Tab.config
+                |> Tab.setActive (model.activeHeroTab == 2)
+                |> Tab.setOnClick (SetActiveHeroTab 2)
+            )
             { label = "About Us", icon = Nothing }
         ]
 
@@ -102,52 +103,49 @@ heroTabs model index =
 tabsWithIcons : Model -> Html Msg
 tabsWithIcons model =
     let
-        tabConfig_ index =
-            { tabConfig
-                | active = model.activeIconTab == index
-                , onClick = Just (SetActiveIconTab index)
-            }
+        config index =
+            Tab.config
+                |> Tab.setActive (model.activeIconTab == index)
+                |> Tab.setOnClick (SetActiveIconTab index)
     in
-    tabBar tabBarConfig
-        [ tab (tabConfig_ 0) { label = "Recents", icon = Just "access_time" }
-        , tab (tabConfig_ 1) { label = "Nearby", icon = Just "near_me" }
-        , tab (tabConfig_ 2) { label = "Favorites", icon = Just "favorite" }
+    TabBar.tabBar TabBar.config
+        [ Tab.tab (config 0) { label = "Recents", icon = Just "access_time" }
+        , Tab.tab (config 1) { label = "Nearby", icon = Just "near_me" }
+        , Tab.tab (config 2) { label = "Favorites", icon = Just "favorite" }
         ]
 
 
 tabsWithStackedIcons : Model -> Html Msg
 tabsWithStackedIcons model =
     let
-        tabConfig_ index =
-            { tabConfig
-                | active = model.activeStackedTab == index
-                , onClick = Just (SetActiveStackedTab index)
-            }
+        config index =
+            Tab.config
+                |> Tab.setActive (model.activeStackedTab == index)
+                |> Tab.setOnClick (SetActiveStackedTab index)
     in
-    tabBar
-        { tabBarConfig
-            | stacked = True
-            , indicatorSpansContent = True
-        }
-        [ tab (tabConfig_ 0) { label = "Recents", icon = Just "access_time" }
-        , tab (tabConfig_ 1) { label = "Nearby", icon = Just "near_me" }
-        , tab (tabConfig_ 2) { label = "Favorites", icon = Just "favorite" }
+    TabBar.tabBar
+        (TabBar.config
+            |> TabBar.setStacked True
+            |> TabBar.setIndicatorSpansContent True
+        )
+        [ Tab.tab (config 0) { label = "Recents", icon = Just "access_time" }
+        , Tab.tab (config 1) { label = "Nearby", icon = Just "near_me" }
+        , Tab.tab (config 2) { label = "Favorites", icon = Just "favorite" }
         ]
 
 
 scrollingTabs : Model -> Html Msg
 scrollingTabs model =
     let
-        tabConfig_ index =
-            { tabConfig
-                | active = model.activeScrollingTab == index
-                , onClick = Just (SetActiveScrollingTab index)
-            }
+        config index =
+            Tab.config
+                |> Tab.setActive (model.activeScrollingTab == index)
+                |> Tab.setOnClick (SetActiveScrollingTab index)
     in
-    tabBar tabBarConfig
+    TabBar.tabBar TabBar.config
         (List.indexedMap
             (\index label ->
-                tab (tabConfig_ index) { label = "Tab " ++ label, icon = Nothing }
+                Tab.tab (config index) { label = "Tab " ++ label, icon = Nothing }
             )
             [ "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight" ]
         )

@@ -1,6 +1,27 @@
 module Material.TextField exposing
-    ( textField, textFieldConfig, TextFieldConfig
-    , textFieldIcon
+    ( Config, config
+    , setOnInput
+    , setOnChange
+    , setLabel
+    , setFullwidth
+    , setValue
+    , setPlaceholder
+    , setDisabled
+    , setRequired
+    , setValid
+    , setMinLength
+    , setMaxLength
+    , setPattern
+    , setType
+    , setMin
+    , setMax
+    , setStep
+    , setLeadingIcon
+    , setTrailingIcon
+    , setAttributes
+    , filled
+    , outlined
+    , Icon, icon
     )
 
 {-| Text fields allow users to input, edit, and select text.
@@ -10,13 +31,16 @@ module Material.TextField exposing
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
+  - [Filled Text Field](#filled-text-field)
+  - [Outlined Text Field](#outlined-text-field)
   - [Full Width Text Field](#full-width-text-field)
   - [Multiline Text Field](#multiline-text-field)
   - [Disabled Text Field](#disabled-text-field)
   - [Password Text Field](#password-text-field)
   - [Required Text Field](#disabled-text-field)
-  - [Invalid Text Field](#disabled-text-field)
-  - [Outlined Text Field](#outlined-text-field)
+  - [Valid Text Field](#valid-text-field)
   - [Text Field with Leading Icon](#text-field-with-leading-icon)
   - [Text Field with Trailing Icon](#text-field-with-trailing-icon)
   - [Text Field with Character Counter](#text-field-with-character-counter)
@@ -32,119 +56,158 @@ module Material.TextField exposing
 
 # Basic Usage
 
-    import Material.TextField
-        exposing
-            ( textField
-            , textFieldConfig
-            )
+    import Material.TextField as TextField
 
     type Msg
         = ValueChanged String
 
     main =
-        textField
-            { textFieldConfig
-                | label = Just "My text field"
-                , value = "hello world"
-                , onInput = Just ValueChanged
-            }
-
-@docs textField, textFieldConfig, TextFieldConfig
+        TextField.filled
+            (TextField.config
+                |> TextField.setLabel (Just "My text field")
+                |> TextField.setValue (Just "hello world")
+                |> TextField.setOnInput ValueChanged
+            )
 
 
-# Full Width Text Field
+# Configuration
 
-To make a text field span all of its available width, set its `fullwidth`
-configuration field to `True`.
-
-    textField { textFieldConfig | fullWidth = True }
-
-Full width text fields do not support `label` and will ignore this
-configuration field. You may set `placeholder` or provide an extraneous label
-for a full width text field.
-
-Full width text fields do not support `outlined` and will ignore this
-configuration field.
+@docs Config, config
 
 
-# Disabled Text Field
+## Configuration Options
 
-To disable a text field set its `disabled` configuration field to `True`.
-
-    textField { textFieldConfig | disabled = True }
-
-
-# Password Text Field
-
-To mark a text field as an input for entering a passwort, set its `type_`
-configuration field to the String `"password"`.
-
-    textField { textFieldConfig | type_ = "password" }
-
-Note: Other input types besides password may or may not be supported.
-
-
-# Required Text Field
-
-To mark a text field as required, set its `required` configuration field to
-`True`.
-
-    textField { textFieldConfig | required = True }
+@docs setOnInput
+@docs setOnChange
+@docs setLabel
+@docs setFullwidth
+@docs setValue
+@docs setPlaceholder
+@docs setDisabled
+@docs setRequired
+@docs setValid
+@docs setMinLength
+@docs setMaxLength
+@docs setPattern
+@docs setType
+@docs setMin
+@docs setMax
+@docs setStep
+@docs setLeadingIcon
+@docs setTrailingIcon
+@docs setAttributes
 
 
-# Invalid Text Field
+# Filled Text Field
 
-To mark a text field as invalid, set its `valid` configuration field to
-`False`.
 
-    textField { textFieldConfig | valid = False }
+# Filled Text Field
+
+    TextField.filled TextField.config
+
+@docs filled
 
 
 # Outlined Text Field
 
-Text fields may have a visible outlined around them by setting their `outlined`
-configuration field to `True`.
+Text fields may have a visible outlined around them by using their
+`outlined` variant.
 
-    textField { textFieldConfig | outlined = True }
+    TextField.outlined TextField.config
 
-Note that this does not have any effect for fullwidth text fields.
+Note that `setFullwidth` does not have any effect on an outlined text field.
+
+@docs outlined
+
+
+# Full Width Text Field
+
+To make a text field span all of its available width, set its `setFullwidth`
+configuration option to `True`.
+
+    TextField.filled
+        (TextField.config |> TextField.setFullwidth True)
+
+Full width text fields do not support a label and will ignore the `setLabel`
+configuration option. You may use `setPlaceholder` or provide an extraneous
+label for a full width text field.
+
+Outlined text fields do not support `setFullwidth` and wll ignore this
+configuration option.
+
+
+# Disabled Text Field
+
+To disable a text field, set its `setDisabled` configuration option to `True`.
+
+    TextField.filled
+        (TextField.config |> TextField.setDisabled True)
+
+
+# Password Text Field
+
+To mark a text field as an input for entering a passwort, use its `setType`
+configuration option to specify `"password"`.
+
+    TextField.filled
+        (TextField.config |> TextField.setType "password")
+
+Other input types besides `"password"` may or may not be supported.
+
+
+# Required Text Field
+
+To mark a text field as required, set its `setRequired` configuration option to
+`True`.
+
+    TextField.filled
+        (TextField.config |> TextField.setRequired True)
+
+
+# Valid Text Field
+
+To mark a text field as valid, set its `setValid` configuration option to
+`True`.
+
+    TextField.filled
+        (TextField.config |> TextField.setValid True)
 
 
 # Text Field with Leading Icon
 
-To have a text field display a leading icon, set its `leadingIcon`
-configuration field to a `TextFieldIcon`.
+To have a text field display a leading icon, use its `setLeadingIcon`
+configuration option to specify a value of `Icon`.
 
-    textField
-        { textFieldConfig
-            | leadingIcon = textFieldIcon iconConfig "wifi"
-        }
+    TextField.filled
+        (TextField.config
+            |> TextField.setLeadingIcon
+                (Just (TextField.icon Icon.config "wifi"))
+        )
 
-@docs textFieldIcon
+@docs Icon, icon
 
 
 # Text Field with Trailing Icon
 
-To have a text field display a trailing icon, set its `trailingIcon`
-configuration field to a `TextFieldIcon`.
+To have a text field display a trailing icon, use its `setTrailingIcon`
+configuration option to specify a value of `Icon`.
 
-    textField
-        { textFieldConfig
-            | trailingIcon = textFieldIcon iconConfig "clear"
-        }
+    TextField.filled
+        (TextField.config
+            |> TextField.setTrailingIcon
+                (Just (TextField.icon Icon.config "clear"))
+        )
 
 
 # Text Field with Character Counter
 
-To have a text field display a character counter, set its `maxLength`
-configuration field, and also add a `characterCounter` as a child of
-`helperLine`.
+To have a text field display a character counter, specify its `setMaxLength`
+configuration option, and also add a `HelperText.characterCounter` as a child
+of `HelperText.helperLine`.
 
-    [ textField
-        { textFieldConfig
-            | maxLength = Just 18
-        }
-    , helperLine [] [ characterCounter [] ]
+    [ TextField.filled
+        (TextField.config |> TextField.setMaxLength (Just 18))
+    , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]
 
 -}
@@ -154,133 +217,277 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Icon exposing (IconConfig, icon, iconConfig)
+import Material.Icon as Icon
 
 
 {-| Configuration of a text field
 -}
-type alias TextFieldConfig msg =
-    { label : Maybe String
-    , outlined : Bool
-    , fullwidth : Bool
-    , value : String
-    , placeholder : Maybe String
-    , disabled : Bool
-    , required : Bool
-    , valid : Bool
-    , minLength : Maybe Int
-    , maxLength : Maybe Int
-    , pattern : Maybe String
-    , type_ : String
-    , min : Maybe Int
-    , max : Maybe Int
-    , step : Maybe Int
-    , leadingIcon : TextFieldIcon msg
-    , trailingIcon : TextFieldIcon msg
-    , additionalAttributes : List (Html.Attribute msg)
-    , onInput : Maybe (String -> msg)
-    , onChange : Maybe (String -> msg)
-    }
+type Config msg
+    = Config
+        { label : Maybe String
+        , fullwidth : Bool
+        , value : Maybe String
+        , placeholder : Maybe String
+        , disabled : Bool
+        , required : Bool
+        , valid : Bool
+        , minLength : Maybe Int
+        , maxLength : Maybe Int
+        , pattern : Maybe String
+        , type_ : Maybe String
+        , min : Maybe Int
+        , max : Maybe Int
+        , step : Maybe Int
+        , leadingIcon : Maybe (Icon msg)
+        , trailingIcon : Maybe (Icon msg)
+        , additionalAttributes : List (Html.Attribute msg)
+        , onInput : Maybe (String -> msg)
+        , onChange : Maybe (String -> msg)
+        }
 
 
-type TextFieldIcon msg
-    = NoIcon
-    | Icon (Html msg)
+{-| Text field trailing or leading icon -
+-}
+type Icon msg
+    = Icon (Html msg)
 
 
 {-| Default configuration of a text field
 -}
-textFieldConfig : TextFieldConfig msg
-textFieldConfig =
-    { label = Nothing
-    , outlined = False
-    , fullwidth = False
-    , value = ""
-    , placeholder = Nothing
-    , disabled = False
-    , required = False
-    , valid = True
-    , minLength = Nothing
-    , maxLength = Nothing
-    , pattern = Nothing
-    , type_ = "text"
-    , min = Nothing
-    , max = Nothing
-    , step = Nothing
-    , leadingIcon = NoIcon
-    , trailingIcon = NoIcon
-    , additionalAttributes = []
-    , onInput = Nothing
-    , onChange = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { label = Nothing
+        , fullwidth = False
+        , value = Nothing
+        , placeholder = Nothing
+        , disabled = False
+        , required = False
+        , valid = True
+        , minLength = Nothing
+        , maxLength = Nothing
+        , pattern = Nothing
+        , type_ = Nothing
+        , min = Nothing
+        , max = Nothing
+        , step = Nothing
+        , leadingIcon = Nothing
+        , trailingIcon = Nothing
+        , additionalAttributes = []
+        , onInput = Nothing
+        , onChange = Nothing
+        }
 
 
-{-| Text field view function
+{-| Specify a text field's label
 -}
-textField : TextFieldConfig msg -> Html msg
-textField config =
+setLabel : Maybe String -> Config msg -> Config msg
+setLabel label (Config config_) =
+    Config { config_ | label = label }
+
+
+{-| Specify a text field to be fullwidth
+-}
+setFullwidth : Bool -> Config msg -> Config msg
+setFullwidth fullwidth (Config config_) =
+    Config { config_ | fullwidth = fullwidth }
+
+
+{-| Specify a text field's value
+-}
+setValue : Maybe String -> Config msg -> Config msg
+setValue value (Config config_) =
+    Config { config_ | value = value }
+
+
+{-| Specify a text field's placeholder
+-}
+setPlaceholder : Maybe String -> Config msg -> Config msg
+setPlaceholder placeholder (Config config_) =
+    Config { config_ | placeholder = placeholder }
+
+
+{-| Specify a text field to be disabled
+
+Disabled text fields cannot be interacted with and have no visual interaction
+effect.
+
+-}
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
+
+
+{-| Specify a text field to be required
+-}
+setRequired : Bool -> Config msg -> Config msg
+setRequired required (Config config_) =
+    Config { config_ | required = required }
+
+
+{-| Specify a text field to be valid
+-}
+setValid : Bool -> Config msg -> Config msg
+setValid valid (Config config_) =
+    Config { config_ | valid = valid }
+
+
+{-| Specify a text field's minimum length
+-}
+setMinLength : Maybe Int -> Config msg -> Config msg
+setMinLength minLength (Config config_) =
+    Config { config_ | minLength = minLength }
+
+
+{-| Specify a text field's maximum length
+-}
+setMaxLength : Maybe Int -> Config msg -> Config msg
+setMaxLength maxLength (Config config_) =
+    Config { config_ | maxLength = maxLength }
+
+
+{-| Specify a text field's pattern
+-}
+setPattern : Maybe String -> Config msg -> Config msg
+setPattern pattern (Config config_) =
+    Config { config_ | pattern = pattern }
+
+
+{-| Specify a text field's type
+-}
+setType : Maybe String -> Config msg -> Config msg
+setType type_ (Config config_) =
+    Config { config_ | type_ = type_ }
+
+
+{-| Specify a text field's minimum value
+-}
+setMin : Maybe Int -> Config msg -> Config msg
+setMin min (Config config_) =
+    Config { config_ | min = min }
+
+
+{-| Specify a text field's maximum value
+-}
+setMax : Maybe Int -> Config msg -> Config msg
+setMax max (Config config_) =
+    Config { config_ | max = max }
+
+
+{-| Specify a text field's step value
+-}
+setStep : Maybe Int -> Config msg -> Config msg
+setStep step (Config config_) =
+    Config { config_ | step = step }
+
+
+{-| Specify a text field's leading icon
+-}
+setLeadingIcon : Maybe (Icon msg) -> Config msg -> Config msg
+setLeadingIcon leadingIcon (Config config_) =
+    Config { config_ | leadingIcon = leadingIcon }
+
+
+{-| Specify a text field's trailing icon
+-}
+setTrailingIcon : Maybe (Icon msg) -> Config msg -> Config msg
+setTrailingIcon trailingIcon (Config config_) =
+    Config { config_ | trailingIcon = trailingIcon }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user changes the value inside the text field
+-}
+setOnInput : (String -> msg) -> Config msg -> Config msg
+setOnInput onInput (Config config_) =
+    Config { config_ | onInput = Just onInput }
+
+
+{-| Specify a message when the user confirms a changed value inside the text
+field
+-}
+setOnChange : (String -> msg) -> Config msg -> Config msg
+setOnChange onChange (Config config_) =
+    Config { config_ | onChange = Just onChange }
+
+
+{-| Filled text field view function
+-}
+filled : Config msg -> Html msg
+filled config_ =
+    textField False config_
+
+
+{-| Outlined text field view function
+-}
+outlined : Config msg -> Html msg
+outlined config_ =
+    textField True config_
+
+
+textField : Bool -> Config msg -> Html msg
+textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
     Html.node "mdc-text-field"
         (List.filterMap identity
             [ rootCs
-            , noLabelCs config
-            , outlinedCs config
-            , fullwidthCs config
-            , disabledCs config
-            , withLeadingIconCs config
-            , withTrailingIconCs config
-            , valueProp config
-            , disabledProp config
-            , requiredProp config
-            , validProp config
-            , patternProp config
-            , minLengthProp config
-            , maxLengthProp config
-            , minProp config
-            , maxProp config
-            , stepProp config
+            , noLabelCs config_
+            , outlinedCs outlined_
+            , fullwidthCs config_
+            , disabledCs config_
+            , withLeadingIconCs config_
+            , withTrailingIconCs config_
+            , valueProp config_
+            , disabledProp config_
+            , requiredProp config_
+            , validProp config_
+            , patternProp config_
+            , minLengthProp config_
+            , maxLengthProp config_
+            , minProp config_
+            , maxProp config_
+            , stepProp config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         (List.concat
-            [ leadingIconElt config
-            , if config.fullwidth then
-                if config.outlined then
-                    [ inputElt config
-                    , notchedOutlineElt config
+            [ leadingIconElt config_
+            , if fullwidth then
+                if outlined_ then
+                    [ inputElt config_
+                    , notchedOutlineElt config_
                     ]
 
                 else
-                    [ inputElt config
+                    [ inputElt config_
                     , lineRippleElt
                     ]
 
-              else if config.outlined then
-                [ inputElt config
-                , notchedOutlineElt config
+              else if outlined_ then
+                [ inputElt config_
+                , notchedOutlineElt config_
                 ]
 
               else
-                [ inputElt config
-                , labelElt config
+                [ inputElt config_
+                , labelElt config_
                 , lineRippleElt
                 ]
-            , trailingIconElt config
+            , trailingIconElt config_
             ]
         )
 
 
 {-| A text field's icon, either leading or trailing
 -}
-textFieldIcon : IconConfig msg -> String -> TextFieldIcon msg
-textFieldIcon iconConfig iconName =
-    Icon
-        (icon
-            { iconConfig
-                | additionalAttributes =
-                    class "mdc-text-field__icon" :: iconConfig.additionalAttributes
-            }
-            iconName
-        )
+icon : List (Html.Attribute msg) -> String -> Icon msg
+icon additionalAttributes iconName =
+    Icon (Icon.icon (class "mdc-text-field__icon" :: additionalAttributes) iconName)
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -288,17 +495,17 @@ rootCs =
     Just (class "mdc-text-field")
 
 
-outlinedCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-outlinedCs { outlined } =
-    if outlined then
+outlinedCs : Bool -> Maybe (Html.Attribute msg)
+outlinedCs outlined_ =
+    if outlined_ then
         Just (class "mdc-text-field--outlined")
 
     else
         Nothing
 
 
-fullwidthCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-fullwidthCs { fullwidth } =
+fullwidthCs : Config msg -> Maybe (Html.Attribute msg)
+fullwidthCs (Config { fullwidth }) =
     if fullwidth then
         Just (class "mdc-text-field--fullwidth")
 
@@ -306,8 +513,8 @@ fullwidthCs { fullwidth } =
         Nothing
 
 
-disabledCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-disabledCs { disabled } =
+disabledCs : Config msg -> Maybe (Html.Attribute msg)
+disabledCs (Config { disabled }) =
     if disabled then
         Just (class "mdc-text-field--disabled")
 
@@ -315,137 +522,137 @@ disabledCs { disabled } =
         Nothing
 
 
-withLeadingIconCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-withLeadingIconCs { leadingIcon } =
-    if leadingIcon /= NoIcon then
+withLeadingIconCs : Config msg -> Maybe (Html.Attribute msg)
+withLeadingIconCs (Config { leadingIcon }) =
+    if leadingIcon /= Nothing then
         Just (class "mdc-text-field--with-leading-icon")
 
     else
         Nothing
 
 
-withTrailingIconCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-withTrailingIconCs { trailingIcon } =
-    if trailingIcon /= NoIcon then
+withTrailingIconCs : Config msg -> Maybe (Html.Attribute msg)
+withTrailingIconCs (Config { trailingIcon }) =
+    if trailingIcon /= Nothing then
         Just (class "mdc-text-field--with-trailing-icon")
 
     else
         Nothing
 
 
-requiredProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-requiredProp { required } =
+requiredProp : Config msg -> Maybe (Html.Attribute msg)
+requiredProp (Config { required }) =
     Just (Html.Attributes.property "required" (Encode.bool required))
 
 
-validProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-validProp { valid } =
+validProp : Config msg -> Maybe (Html.Attribute msg)
+validProp (Config { valid }) =
     Just (Html.Attributes.property "valid" (Encode.bool valid))
 
 
-minLengthProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-minLengthProp { minLength } =
+minLengthProp : Config msg -> Maybe (Html.Attribute msg)
+minLengthProp (Config { minLength }) =
     Just
         (Html.Attributes.property "minLength"
             (Encode.int (Maybe.withDefault -1 minLength))
         )
 
 
-maxLengthProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-maxLengthProp { maxLength } =
+maxLengthProp : Config msg -> Maybe (Html.Attribute msg)
+maxLengthProp (Config { maxLength }) =
     Just
         (Html.Attributes.property "maxLength"
             (Encode.int (Maybe.withDefault -1 maxLength))
         )
 
 
-minLengthAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-minLengthAttr { minLength } =
+minLengthAttr : Config msg -> Maybe (Html.Attribute msg)
+minLengthAttr (Config { minLength }) =
     Maybe.map (Html.Attributes.attribute "minLength" << String.fromInt) minLength
 
 
-maxLengthAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-maxLengthAttr { maxLength } =
+maxLengthAttr : Config msg -> Maybe (Html.Attribute msg)
+maxLengthAttr (Config { maxLength }) =
     Maybe.map (Html.Attributes.attribute "maxLength" << String.fromInt) maxLength
 
 
-minProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-minProp { min } =
+minProp : Config msg -> Maybe (Html.Attribute msg)
+minProp (Config { min }) =
     Just
         (Html.Attributes.property "min"
             (Encode.string (Maybe.withDefault "" (Maybe.map String.fromInt min)))
         )
 
 
-maxProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-maxProp { max } =
+maxProp : Config msg -> Maybe (Html.Attribute msg)
+maxProp (Config { max }) =
     Just
         (Html.Attributes.property "max"
             (Encode.string (Maybe.withDefault "" (Maybe.map String.fromInt max)))
         )
 
 
-stepProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-stepProp { step } =
+stepProp : Config msg -> Maybe (Html.Attribute msg)
+stepProp (Config { step }) =
     Just
         (Html.Attributes.property "step"
             (Encode.string (Maybe.withDefault "" (Maybe.map String.fromInt step)))
         )
 
 
-valueProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-valueProp { value } =
-    Just (Html.Attributes.property "value" (Encode.string value))
+valueProp : Config msg -> Maybe (Html.Attribute msg)
+valueProp (Config { value }) =
+    Maybe.map (Html.Attributes.property "value" << Encode.string) value
 
 
-placeholderAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-placeholderAttr { placeholder } =
+placeholderAttr : Config msg -> Maybe (Html.Attribute msg)
+placeholderAttr (Config { placeholder }) =
     Maybe.map Html.Attributes.placeholder placeholder
 
 
-leadingIconElt : TextFieldConfig msg -> List (Html msg)
-leadingIconElt { leadingIcon } =
+leadingIconElt : Config msg -> List (Html msg)
+leadingIconElt (Config { leadingIcon }) =
     case leadingIcon of
-        NoIcon ->
+        Nothing ->
             []
 
-        Icon html ->
+        Just (Icon html) ->
             [ html ]
 
 
-trailingIconElt : TextFieldConfig msg -> List (Html msg)
-trailingIconElt { trailingIcon } =
+trailingIconElt : Config msg -> List (Html msg)
+trailingIconElt (Config { trailingIcon }) =
     case trailingIcon of
-        NoIcon ->
+        Nothing ->
             []
 
-        Icon html ->
+        Just (Icon html) ->
             [ html ]
 
 
-inputHandler : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-inputHandler { onInput } =
+inputHandler : Config msg -> Maybe (Html.Attribute msg)
+inputHandler (Config { onInput }) =
     Maybe.map Html.Events.onInput onInput
 
 
-changeHandler : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-changeHandler { onChange } =
+changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler (Config { onChange }) =
     Maybe.map (\f -> Html.Events.on "change" (Decode.map f Html.Events.targetValue))
         onChange
 
 
-inputElt : TextFieldConfig msg -> Html msg
-inputElt config =
+inputElt : Config msg -> Html msg
+inputElt config_ =
     Html.input
         (List.filterMap identity
             [ inputCs
-            , typeAttr config
-            , ariaLabelAttr config
-            , placeholderAttr config
-            , inputHandler config
-            , changeHandler config
-            , minLengthAttr config
-            , maxLengthAttr config
+            , typeAttr config_
+            , ariaLabelAttr config_
+            , placeholderAttr config_
+            , inputHandler config_
+            , changeHandler config_
+            , minLengthAttr config_
+            , maxLengthAttr config_
             ]
         )
         []
@@ -456,21 +663,21 @@ inputCs =
     Just (class "mdc-text-field__input")
 
 
-patternProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-patternProp { pattern } =
+patternProp : Config msg -> Maybe (Html.Attribute msg)
+patternProp (Config { pattern }) =
     Just
         (Html.Attributes.property "pattern"
             (Encode.string (Maybe.withDefault "" pattern))
         )
 
 
-typeAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-typeAttr { type_ } =
-    Just (Html.Attributes.type_ type_)
+typeAttr : Config msg -> Maybe (Html.Attribute msg)
+typeAttr (Config { type_ }) =
+    Maybe.map Html.Attributes.type_ type_
 
 
-ariaLabelAttr : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-ariaLabelAttr { fullwidth, placeholder, label } =
+ariaLabelAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaLabelAttr (Config { fullwidth, placeholder, label }) =
     if fullwidth then
         Maybe.map (Html.Attributes.attribute "aria-label") label
 
@@ -478,13 +685,13 @@ ariaLabelAttr { fullwidth, placeholder, label } =
         Nothing
 
 
-disabledProp : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-disabledProp { disabled } =
+disabledProp : Config msg -> Maybe (Html.Attribute msg)
+disabledProp (Config { disabled }) =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
-labelElt : TextFieldConfig msg -> Html msg
-labelElt { label, value } =
+labelElt : Config msg -> Html msg
+labelElt (Config { label, value }) =
     let
         floatingLabelCs =
             "mdc-floating-label"
@@ -495,7 +702,7 @@ labelElt { label, value } =
     case label of
         Just str ->
             Html.div
-                [ if value /= "" then
+                [ if Maybe.withDefault "" value /= "" then
                     class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
 
                   else
@@ -509,8 +716,8 @@ labelElt { label, value } =
             text ""
 
 
-noLabelCs : TextFieldConfig msg -> Maybe (Html.Attribute msg)
-noLabelCs { label } =
+noLabelCs : Config msg -> Maybe (Html.Attribute msg)
+noLabelCs (Config { label }) =
     if label == Nothing then
         Just (class "mdc-text-field--no-label")
 
@@ -523,11 +730,11 @@ lineRippleElt =
     Html.div [ class "mdc-line-ripple" ] []
 
 
-notchedOutlineElt : TextFieldConfig msg -> Html msg
-notchedOutlineElt config =
+notchedOutlineElt : Config msg -> Html msg
+notchedOutlineElt config_ =
     Html.div [ class "mdc-notched-outline" ]
         [ notchedOutlineLeadingElt
-        , notchedOutlineNotchElt config
+        , notchedOutlineNotchElt config_
         , notchedOutlineTrailingElt
         ]
 
@@ -542,6 +749,6 @@ notchedOutlineTrailingElt =
     Html.div [ class "mdc-notched-outline__trailing" ] []
 
 
-notchedOutlineNotchElt : TextFieldConfig msg -> Html msg
-notchedOutlineNotchElt config =
-    Html.div [ class "mdc-notched-outline__notch" ] [ labelElt config ]
+notchedOutlineNotchElt : Config msg -> Html msg
+notchedOutlineNotchElt config_ =
+    Html.div [ class "mdc-notched-outline__notch" ] [ labelElt config_ ]

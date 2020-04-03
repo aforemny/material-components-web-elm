@@ -5,10 +5,8 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Decode
-import Material.Drawer as Drawer exposing (drawerContent, drawerHeader, permanentDrawer, permanentDrawerConfig)
-import Material.Icon exposing (icon, iconConfig)
-import Material.List exposing (list, listConfig, listGroupSubheader, listItem, listItemConfig, listItemDivider, listItemDividerConfig, listItemGraphic)
-import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
+import Material.Drawer.Permanent as PermanentDrawer
+import Material.TopAppBar as TopAppBar
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -37,7 +35,7 @@ view : Model -> DrawerPage Msg
 view model =
     { title = "Permanent Drawer"
     , drawer =
-        permanentDrawer permanentDrawerConfig
+        PermanentDrawer.drawer PermanentDrawer.config
             (DrawerPage.drawerBody SetSelectedIndex model.selectedIndex)
     , scrim = Nothing
     , onMenuClick = Nothing

@@ -4,9 +4,9 @@ import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Dict exposing (Dict)
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.FormField exposing (formField, formFieldConfig)
-import Material.Radio exposing (radio, radioConfig)
+import Html.Attributes exposing (style)
+import Material.FormField as FormField
+import Material.Radio as Radio
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
@@ -63,13 +63,12 @@ view model =
 
 heroRadio : Model -> String -> String -> Html Msg
 heroRadio model group index =
-    radio
-        { radioConfig
-            | checked = isSelected group index model
-            , onChange = Just (Set group index)
-            , additionalAttributes =
-                [ Html.Attributes.style "margin" "0 10px" ]
-        }
+    Radio.radio
+        (Radio.config
+            |> Radio.setChecked (isSelected group index model)
+            |> Radio.setOnChange (Set group index)
+            |> Radio.setAttributes [ style "margin" "0 10px" ]
+        )
 
 
 heroRadioGroup : Model -> Html Msg
@@ -80,27 +79,26 @@ heroRadioGroup model =
         ]
 
 
-radio_ : Model -> String -> String -> String -> Html Msg
-radio_ model group index label =
-    formField
-        { formFieldConfig
-            | label = label
-            , for = Just index
-            , onClick = Just (Set group index)
-            , additionalAttributes =
-                [ Html.Attributes.style "margin" "0 10px" ]
-        }
-        [ radio
-            { radioConfig
-                | checked = isSelected group index model
-                , onChange = Just (Set group index)
-            }
+radio : Model -> String -> String -> String -> Html Msg
+radio model group index label =
+    FormField.formField
+        (FormField.config
+            |> FormField.setLabel (Just label)
+            |> FormField.setFor (Just index)
+            |> FormField.setOnClick (Set group index)
+            |> FormField.setAttributes [ style "margin" "0 10px" ]
+        )
+        [ Radio.radio
+            (Radio.config
+                |> Radio.setChecked (isSelected group index model)
+                |> Radio.setOnChange (Set group index)
+            )
         ]
 
 
 exampleRadioGroup : Model -> Html Msg
 exampleRadioGroup model =
     Html.div []
-        [ radio_ model "example" "radio-buttons-example-radio-1" "Radio 1"
-        , radio_ model "example" "radio-buttons-example-radio-2" "Radio 2"
+        [ radio model "example" "radio-buttons-example-radio-1" "Radio 1"
+        , radio model "example" "radio-buttons-example-radio-2" "Radio 2"
         ]

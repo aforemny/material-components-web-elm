@@ -3,7 +3,7 @@ module Demo.Elevation exposing (Model, Msg(..), defaultModel, update, view)
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
-import Html.Attributes
+import Html.Attributes exposing (class, style)
 import Material.Elevation as Elevation
 import Material.Typography as Typography
 
@@ -78,40 +78,40 @@ heroElevation =
 
 heroSurface : List (Html.Attribute msg)
 heroSurface =
-    [ Html.Attributes.style "display" "-ms-inline-flexbox"
-    , Html.Attributes.style "display" "inline-flex"
-    , Html.Attributes.style "-ms-flex-pack" "distribute"
-    , Html.Attributes.style "justify-content" "space-around"
-    , Html.Attributes.style "min-height" "100px"
-    , Html.Attributes.style "min-width" "200px"
-    , Html.Attributes.style "-ms-flex-align" "center"
-    , Html.Attributes.style "align-items" "center"
-    , Html.Attributes.style "width" "120px"
-    , Html.Attributes.style "height" "48px"
-    , Html.Attributes.style "margin" "24px"
-    , Html.Attributes.style "background-color" "#212121"
-    , Html.Attributes.style "color" "#f0f0f0"
+    [ style "display" "-ms-inline-flexbox"
+    , style "display" "inline-flex"
+    , style "-ms-flex-pack" "distribute"
+    , style "justify-content" "space-around"
+    , style "min-height" "100px"
+    , style "min-width" "200px"
+    , style "-ms-flex-align" "center"
+    , style "align-items" "center"
+    , style "width" "120px"
+    , style "height" "48px"
+    , style "margin" "24px"
+    , style "background-color" "#212121"
+    , style "color" "#f0f0f0"
     ]
 
 
 demoContainer : List (Html.Attribute msg)
 demoContainer =
-    [ Html.Attributes.class "elevation-demo-container"
-    , Html.Attributes.style "display" "flex"
-    , Html.Attributes.style "flex-flow" "row wrap"
-    , Html.Attributes.style "justify-content" "space-between"
+    [ class "elevation-demo-container"
+    , style "display" "flex"
+    , style "flex-flow" "row wrap"
+    , style "justify-content" "space-between"
     ]
 
 
 demoSurface : List (Html.Attribute msg)
 demoSurface =
-    [ Html.Attributes.style "display" "-ms-inline-flexbox"
-    , Html.Attributes.style "display" "inline-flex"
-    , Html.Attributes.style "-ms-flex-pack" "distribute"
-    , Html.Attributes.style "justify-content" "space-around"
-    , Html.Attributes.style "min-height" "100px"
-    , Html.Attributes.style "min-width" "200px"
-    , Html.Attributes.style "margin" "15px"
-    , Html.Attributes.style "-ms-flex-align" "center"
-    , Html.Attributes.style "align-items" "center"
+    [ style "display" "-ms-inline-flexbox"
+    , style "display" "inline-flex"
+    , style "-ms-flex-pack" "distribute"
+    , style "justify-content" "space-around"
+    , style "min-height" "100px"
+    , style "min-width" "200px"
+    , style "margin" "15px"
+    , style "-ms-flex-align" "center"
+    , style "align-items" "center"
     ]

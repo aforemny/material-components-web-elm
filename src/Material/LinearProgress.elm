@@ -1,7 +1,11 @@
 module Material.LinearProgress exposing
-    ( indeterminateLinearProgress, linearProgressConfig, LinearProgressConfig
-    , determinateLinearProgress
-    , bufferedLinearProgress
+    ( Config, config
+    , setReverse
+    , setClosed
+    , setAttributes
+    , indeterminate
+    , determinate
+    , buffered
     )
 
 {-| Linear progress indicators visualize the linear progression of either
@@ -12,6 +16,8 @@ determinate or indeterminate activities.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Indeterminate Linear Progress](#indeterminate-linear-progress)
   - [Determinate Linear Progress](#determinate-linear-progress)
   - [Buffered Linear Progress](#buffered-linear-progress)
@@ -29,53 +35,61 @@ determinate or indeterminate activities.
 
 # Basic Usage
 
-    import Material.LinearProgress
-        exposing
-            ( indeterminateLinearProgress
-            , linearProgressConfig
-            )
+    import Material.LinearProgress as LinearProgress
 
     main =
-        indeterminateLinearProgress linearProgressConfig
+        LinearProgress.indeterminate LinearProgress.config
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setReverse
+@docs setClosed
+@docs setAttributes
 
 
 # Indeterminate Linear Progress
 
-@docs indeterminateLinearProgress, linearProgressConfig, LinearProgressConfig
+@docs indeterminate
 
 
 # Determinate Linear Progress
 
-    determinateLinearProgress linearProgressConfig
+    LinearProgress.determinate LinearProgress.config
         { progress = 0.5 }
 
-@docs determinateLinearProgress
+@docs determinate
 
 
 ## Buffered Linear Progress
 
-    bufferedLinearProgress linearProgressConfig
+    LinearProgress.buffered LinearProgress.config
         { progress = 0.5, buffered = 0.75 }
 
-@docs bufferedLinearProgress
+@docs buffered
 
 
 # Closed Linear Progress
 
-If you want to hide the linear progress indicator, set its closed configuration
-field to True.
+If you want to hide the linear progress indicator, set its `setClosed`
+configuration option to `True`.
 
-    indeterminateLinearProgress
-        { linearProgressConfig | closed = True }
+    LinearProgress.indeterminate
+        (LinearProgress.config |> LinearProgress.setClosed True)
 
 
 # Reverse Linear Progress
 
 If you want to reverse the direction of the linear progress indicator, set its
-reverse configuration field to True.
+`setReverse` configuration option to `True`.
 
-    indeterminateLinearProgress
-        { linearProgressConfig | reverse = True }
+    LinearProgress.indeterminate
+        (LinearProgress.config |> LinearProgress.reverse True)
 
 -}
 
@@ -86,11 +100,12 @@ import Json.Encode as Encode
 
 {-| Linear progress configuration
 -}
-type alias LinearProgressConfig msg =
-    { reverse : Bool
-    , closed : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Config msg
+    = Config
+        { reverse : Bool
+        , closed : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        }
 
 
 type Variant
@@ -101,16 +116,38 @@ type Variant
 
 {-| Default linear progress configuration
 -}
-linearProgressConfig : LinearProgressConfig msg
-linearProgressConfig =
-    { reverse = False
-    , closed = False
-    , additionalAttributes = []
-    }
+config : Config msg
+config =
+    Config
+        { reverse = False
+        , closed = False
+        , additionalAttributes = []
+        }
 
 
-linearProgress : Variant -> LinearProgressConfig msg -> Html msg
-linearProgress variant config =
+{-| Specify whether a linear progress indicator should be hidden
+-}
+setClosed : Bool -> Config msg -> Config msg
+setClosed closed (Config config_) =
+    Config { config_ | closed = closed }
+
+
+{-| Specify whether the direction of a linear progress indicator should be reversed
+-}
+setReverse : Bool -> Config msg -> Config msg
+setReverse reverse (Config config_) =
+    Config { config_ | reverse = reverse }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+linearProgress : Variant -> Config msg -> Html msg
+linearProgress variant ((Config { additionalAttributes }) as config_) =
     Html.node "mdc-linear-progress"
         (List.filterMap identity
             [ rootCs
@@ -120,10 +157,10 @@ linearProgress variant config =
             , determinateProp variant
             , progressProp variant
             , bufferProp variant
-            , reverseProp config
-            , closedProp config
+            , reverseProp config_
+            , closedProp config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         [ bufferingDotsElt
         , bufferElt
@@ -134,31 +171,23 @@ linearProgress variant config =
 
 {-| Indeterminate linear progress variant
 -}
-indeterminateLinearProgress :
-    LinearProgressConfig msg
-    -> Html msg
-indeterminateLinearProgress config =
-    linearProgress Indeterminate config
+indeterminate : Config msg -> Html msg
+indeterminate config_ =
+    linearProgress Indeterminate config_
 
 
 {-| Determinate linear progress variant
 -}
-determinateLinearProgress :
-    LinearProgressConfig msg
-    -> { progress : Float }
-    -> Html msg
-determinateLinearProgress config { progress } =
-    linearProgress (Determinate progress) config
+determinate : Config msg -> { progress : Float } -> Html msg
+determinate config_ { progress } =
+    linearProgress (Determinate progress) config_
 
 
 {-| Buffered linear progress variant
 -}
-bufferedLinearProgress :
-    LinearProgressConfig msg
-    -> { progress : Float, buffered : Float }
-    -> Html msg
-bufferedLinearProgress config { progress, buffered } =
-    linearProgress (Buffered progress buffered) config
+buffered : Config msg -> { progress : Float, buffered : Float } -> Html msg
+buffered config_ data =
+    linearProgress (Buffered data.progress data.buffered) config_
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -226,13 +255,13 @@ bufferProp variant =
         )
 
 
-reverseProp : LinearProgressConfig msg -> Maybe (Html.Attribute msg)
-reverseProp { reverse } =
+reverseProp : Config msg -> Maybe (Html.Attribute msg)
+reverseProp (Config { reverse }) =
     Just (Html.Attributes.property "reverse" (Encode.bool reverse))
 
 
-closedProp : LinearProgressConfig msg -> Maybe (Html.Attribute msg)
-closedProp { closed } =
+closedProp : Config msg -> Maybe (Html.Attribute msg)
+closedProp (Config { closed }) =
     Just (Html.Attributes.property "closed" (Encode.bool closed))
 
 

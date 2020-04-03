@@ -1,13 +1,16 @@
 module Material.Ripple exposing
-    ( boundedRipple, rippleConfig, RippleConfig
-    , unboundedRipple
-    , RippleColor(..)
+    ( Config, config
+    , setColor
+    , setAdditionalAttributes
+    , bounded
+    , unbounded
+    , Color, primary, accent
     )
 
 {-| Material “ink ripple” interaction effect.
 
-Ripples come in two variants. Use `ripple` for bounded ripple effects which
-work best when used for contained surfaces, and `unboundedRipple` for unbounded
+Ripples come in two variants. Use `bounded` for bounded ripple effects which
+work best when used for contained surfaces, and `unbounded` for unbounded
 ripple effects which work best with icons.
 
 
@@ -15,6 +18,8 @@ ripple effects which work best with icons.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Bounded Ripple](#bounded-ripple)
   - [Unbounded Ripple](#unbounded-ripple)
   - [Colored Ripple](#colored-ripple)
@@ -30,38 +35,52 @@ ripple effects which work best with icons.
 
 # Basic Usage
 
-    import Material.Ripple exposing (ripple, rippleConfig)
+    import Material.Ripple as Ripple
 
     main =
         Html.div []
             [ text "Click me!"
-            , boundedRipple rippleConfig
+            , Ripple.bounded Ripple.config
             ]
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setColor
+@docs setAdditionalAttributes
 
 
 # Bounded Ripple
 
-@docs boundedRipple, rippleConfig, RippleConfig
+@docs bounded
 
 
 # Unbounded Ripple
 
     Html.span []
-        [ unboundedRipple rippleConfig
-        , text "🙌"
+        [ text "🙌"
+        , Ripple.unbounded Ripple.config
         ]
 
-@docs unboundedRipple
+@docs unbounded
 
 
 # Colored Ripple
 
-If you want to set the ripple effect to either primary or secondary color, set
-its color configuration field to a RippleColor.
+If you want to set the ripple effect to either primary or accent color, use its
+`setColor` configuration option and specify a `Color`.
 
-    ripple { rippleConfig | color = Ripple.PrimaryColor }
+    Ripple.bounded
+        (Ripple.config
+            |> setColor Ripple.primary
+        )
 
-@docs RippleColor
+@docs Color, primary, accent
 
 -}
 
@@ -72,37 +91,65 @@ import Json.Encode as Encode
 
 {-| Ripple configuration
 -}
-type alias RippleConfig msg =
-    { color : Maybe RippleColor
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Config msg
+    = Config
+        { color : Maybe Color
+        , additionalAttributes : List (Html.Attribute msg)
+        }
 
 
 {-| Default ripple configuration
 -}
-rippleConfig : RippleConfig msg
-rippleConfig =
-    { color = Nothing
-    , additionalAttributes = []
-    }
+config : Config msg
+config =
+    Config
+        { color = Nothing
+        , additionalAttributes = []
+        }
+
+
+{-| Set a ripple's color
+-}
+setColor : Color -> Config msg -> Config msg
+setColor color (Config config_) =
+    Config { config_ | color = Just color }
+
+
+{-| Specify additional attributes
+-}
+setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAdditionalAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Ripple color
 -}
-type RippleColor
-    = PrimaryColor
-    | AccentColor
+type Color
+    = Primary
+    | Accent
 
 
-{-| Bounded ripple variant
+{-| A ripple's primary color
 -}
-ripple : Bool -> RippleConfig msg -> Html msg
-ripple unbounded config =
+primary : Color
+primary =
+    Primary
+
+
+{-| A ripple's accent color
+-}
+accent : Color
+accent =
+    Accent
+
+
+ripple : Bool -> Config msg -> Html msg
+ripple isUnbounded ((Config { additionalAttributes }) as config_) =
     Html.node "mdc-ripple"
         (List.filterMap identity
-            [ unboundedProp unbounded
-            , unboundedData unbounded
-            , colorCs config
+            [ unboundedProp isUnbounded
+            , unboundedData isUnbounded
+            , colorCs config_
             , rippleSurface
             , Just (Html.Attributes.style "position" "absolute")
             , Just (Html.Attributes.style "top" "0")
@@ -110,22 +157,22 @@ ripple unbounded config =
             , Just (Html.Attributes.style "right" "0")
             , Just (Html.Attributes.style "bottom" "0")
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         []
 
 
 {-| Bounded ripple variant
 -}
-boundedRipple : RippleConfig msg -> Html msg
-boundedRipple =
+bounded : Config msg -> Html msg
+bounded =
     ripple False
 
 
 {-| Unbounded ripple variant
 -}
-unboundedRipple : RippleConfig msg -> Html msg
-unboundedRipple =
+unbounded : Config msg -> Html msg
+unbounded =
     ripple True
 
 
@@ -134,13 +181,13 @@ rippleSurface =
     Just (class "mdc-ripple-surface")
 
 
-colorCs : RippleConfig msg -> Maybe (Html.Attribute msg)
-colorCs { color } =
+colorCs : Config msg -> Maybe (Html.Attribute msg)
+colorCs (Config { color }) =
     case color of
-        Just PrimaryColor ->
+        Just Primary ->
             Just (class "mdc-ripple-surface--primary")
 
-        Just AccentColor ->
+        Just Accent ->
             Just (class "mdc-ripple-surface--accent")
 
         Nothing ->
@@ -148,13 +195,13 @@ colorCs { color } =
 
 
 unboundedProp : Bool -> Maybe (Html.Attribute msg)
-unboundedProp unbounded =
-    Just (Html.Attributes.property "unbounded" (Encode.bool unbounded))
+unboundedProp isUnbounded =
+    Just (Html.Attributes.property "unbounded" (Encode.bool isUnbounded))
 
 
 unboundedData : Bool -> Maybe (Html.Attribute msg)
-unboundedData unbounded =
-    if unbounded then
+unboundedData isUnbounded =
+    if isUnbounded then
         Just (Html.Attributes.attribute "data-mdc-ripple-is-unbounded" "")
 
     else

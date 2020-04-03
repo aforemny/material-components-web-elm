@@ -1,6 +1,11 @@
 module Material.IconButton exposing
-    ( iconButton, iconButtonConfig, IconButtonConfig
-    , customIconButton
+    ( Config, config
+    , setOnClick
+    , setDisabled
+    , setLabel
+    , setAdditionalAttributes
+    , iconButton
+    , custom
     )
 
 {-| Icon buttons allow users to take actions, and make choices, with a single
@@ -11,6 +16,8 @@ tap.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Icon Button](#icon-button)
   - [Disabled Icon Button](#disabled-icon-button)
   - [Labeled Icon Button](#labeled-icon-button)
@@ -29,108 +36,147 @@ tap.
 If you are looking for a button that has an icon as well as text, refer to
 [Button](Material-Button).
 
-    import Material.IconButton
-        exposing
-            ( iconButton
-            , iconButtonConfig
-            )
+    import Material.IconButton as IconButton
 
     type Msg
-        = IconButtonClicked
+        = Clicked
 
     main =
-        iconButton
-            { iconButtonConfig
-                | onClick = Just IconButtonClicked
-            }
+        IconButton.iconButton
+            (IconButton.config
+                |> IconButton.setOnClick Clicked
+            )
             "favorite"
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnClick
+@docs setDisabled
+@docs setLabel
+@docs setAdditionalAttributes
 
 
 # Icon Button
 
-@docs iconButton, iconButtonConfig, IconButtonConfig
+@docs iconButton
 
 
 # Disabled Icon Button
 
-To disable a icon button, set its disabled configuration field to True.
+To disable an icon button, use its `setDisabled` configuration option.
 Disabled icon buttons cannot be interacted with and have no visual interaction
 effect.
 
-    iconButton
-        { iconButtonConfig | disabled = True }
+    IconButton.iconButton
+        (IconButton.config
+            |> IconButton.setDisabled
+        )
         "favorite"
 
 
 # Labeled Icon Button
 
-To set the `arial-label` attribute of a icon button, set its label
-configuration field to a String.
+To set the HTML attribute `arial-label` of a icon button, use its `setLabel`
+configuration option.
 
-    iconButton
-        { iconButtonConfig | label = "Add to favorites" }
+    IconButton.iconButton
+        (IconButton.config
+            |> setLabel "Add to favorites"
+        )
         "favorite"
 
 
 # Variant: Custom Icon Button
 
-@docs customIconButton
+@docs custom
 
 -}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
+import Material.IconButton.Internal exposing (Config(..))
 
 
 {-| Icon button configuration
 -}
-type alias IconButtonConfig msg =
-    { disabled : Bool
-    , label : Maybe String
-    , additionalAttributes : List (Html.Attribute msg)
-    , onClick : Maybe msg
-    }
+type alias Config msg =
+    Material.IconButton.Internal.Config msg
 
 
 {-| Default icon button configuration
 -}
-iconButtonConfig : IconButtonConfig msg
-iconButtonConfig =
-    { disabled = False
-    , label = Nothing
-    , additionalAttributes = []
-    , onClick = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { disabled = False
+        , label = Nothing
+        , additionalAttributes = []
+        , onClick = Nothing
+        }
+
+
+{-| Mark an icon button as disabled
+-}
+setDisabled : Config msg -> Config msg
+setDisabled (Config config_) =
+    Config { config_ | disabled = True }
+
+
+{-| Set an icon button's `arial-label` HTML5 attribute
+-}
+setLabel : String -> Config msg -> Config msg
+setLabel label (Config config_) =
+    Config { config_ | label = Just label }
+
+
+{-| Specify additional attributes
+-}
+setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAdditionalAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user clicks on an icon button
+-}
+setOnClick : msg -> Config msg -> Config msg
+setOnClick onClick (Config config_) =
+    Config { config_ | onClick = Just onClick }
 
 
 {-| Icon button view function
 -}
-iconButton : IconButtonConfig msg -> String -> Html msg
-iconButton config iconName =
+iconButton : Config msg -> String -> Html msg
+iconButton ((Config { additionalAttributes }) as config_) iconName =
     Html.node "mdc-icon-button"
         (List.filterMap identity
             [ rootCs
             , materialIconsCs
             , tabIndexProp
-            , clickHandler config
+            , clickHandler config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         [ text iconName ]
 
 
 {-| TODO
 -}
-customIconButton : IconButtonConfig msg -> List (Html msg) -> Html msg
-customIconButton config nodes =
+custom : Config msg -> List (Html msg) -> Html msg
+custom ((Config { additionalAttributes }) as config_) nodes =
     Html.node "mdc-icon-button"
         (List.filterMap identity
             [ rootCs
             , tabIndexProp
-            , clickHandler config
+            , clickHandler config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         nodes
 
@@ -160,11 +206,11 @@ ariaHiddenAttr =
     Just (Html.Attributes.attribute "aria-hidden" "true")
 
 
-ariaLabelAttr : IconButtonConfig msg -> Maybe (Html.Attribute msg)
-ariaLabelAttr { label } =
+ariaLabelAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaLabelAttr (Config { label }) =
     Maybe.map (Html.Attributes.attribute "aria-label") label
 
 
-clickHandler : IconButtonConfig msg -> Maybe (Html.Attribute msg)
-clickHandler config =
-    Maybe.map Html.Events.onClick config.onClick
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler (Config { onClick }) =
+    Maybe.map Html.Events.onClick onClick

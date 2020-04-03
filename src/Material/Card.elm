@@ -176,7 +176,8 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Material.Button as Button
 import Material.Button.Internal
-import Material.IconButton exposing (IconButtonConfig, iconButton)
+import Material.IconButton as IconButton
+import Material.IconButton.Internal
 
 
 {-| Configuration of a card
@@ -486,14 +487,16 @@ type Icon msg
     cardActionIcon iconButtonConfig "favorite"
 
 -}
-cardActionIcon : IconButtonConfig msg -> String -> Icon msg
-cardActionIcon iconButtonConfig iconName =
+cardActionIcon : IconButton.Config msg -> String -> Icon msg
+cardActionIcon (Material.IconButton.Internal.Config iconButtonConfig) iconName =
     Icon <|
-        Material.IconButton.iconButton
-            { iconButtonConfig
-                | additionalAttributes =
-                    class "mdc-card__action"
-                        :: class "mdc-card__action--icon"
-                        :: iconButtonConfig.additionalAttributes
-            }
+        IconButton.iconButton
+            (Material.IconButton.Internal.Config
+                { iconButtonConfig
+                    | additionalAttributes =
+                        class "mdc-card__action"
+                            :: class "mdc-card__action--icon"
+                            :: iconButtonConfig.additionalAttributes
+                }
+            )
             iconName

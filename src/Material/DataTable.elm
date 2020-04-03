@@ -93,11 +93,11 @@ can look for patterns and insights.
 
 ## Checkbox Header Cell
 
-    import Material.Checkbox exposing (checkboxConfig)
+    import Material.Checkbox as Checkbox
 
     dataTableHeaderCell
         { dataTableHeaderCellConfig | checkbox = True }
-        [ dataTableHeaderRowCheckbox checkboxConfig ]
+        [ dataTableHeaderRowCheckbox Checkbox.config ]
 
 @docs dataTableHeaderRowCheckbox
 
@@ -126,10 +126,10 @@ can look for patterns and insights.
 
 ## Checkbox Cell
 
-    import Material.Checkbox exposing (checkboxConfig)
+    import Material.Checkbox as Checkbox
 
     dataTableCell { dataTableCellConfig | checkbox = True }
-        [ dataTableRowCheckbox checkboxConfig ]
+        [ dataTableRowCheckbox Checkbox.config ]
 
 @docs dataTableRowCheckbox
 
@@ -139,7 +139,8 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Encode as Encode
-import Material.Checkbox exposing (CheckboxConfig, checkbox)
+import Material.Checkbox as Checkbox
+import Material.Checkbox.Internal
 
 
 {-| Configuration of a data table
@@ -427,23 +428,27 @@ dataTableCellCheckboxCs { checkbox } =
 
 {-| Checkbox view function (header row variant)
 -}
-dataTableHeaderRowCheckbox : CheckboxConfig msg -> Html msg
-dataTableHeaderRowCheckbox checkboxConfig =
-    checkbox
-        { checkboxConfig
-            | additionalAttributes =
-                class "mdc-data-table__header-row-checkbox"
-                    :: checkboxConfig.additionalAttributes
-        }
+dataTableHeaderRowCheckbox : Checkbox.Config msg -> Html msg
+dataTableHeaderRowCheckbox (Material.Checkbox.Internal.Config checkboxConfig) =
+    Checkbox.checkbox
+        (Material.Checkbox.Internal.Config
+            { checkboxConfig
+                | additionalAttributes =
+                    class "mdc-data-table__header-row-checkbox"
+                        :: checkboxConfig.additionalAttributes
+            }
+        )
 
 
 {-| Checkbox view function (row variant)
 -}
-dataTableRowCheckbox : CheckboxConfig msg -> Html msg
-dataTableRowCheckbox checkboxConfig =
-    checkbox
-        { checkboxConfig
-            | additionalAttributes =
-                class "mdc-data-table__row-checkbox"
-                    :: checkboxConfig.additionalAttributes
-        }
+dataTableRowCheckbox : Checkbox.Config msg -> Html msg
+dataTableRowCheckbox (Material.Checkbox.Internal.Config checkboxConfig) =
+    Checkbox.checkbox
+        (Material.Checkbox.Internal.Config
+            { checkboxConfig
+                | additionalAttributes =
+                    class "mdc-data-table__row-checkbox"
+                        :: checkboxConfig.additionalAttributes
+            }
+        )

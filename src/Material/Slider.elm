@@ -1,4 +1,16 @@
-module Material.Slider exposing (slider, sliderConfig, SliderConfig)
+module Material.Slider exposing
+    ( Config, config
+    , setOnChange
+    , setDiscrete
+    , setDisplayMarkers
+    , setMin
+    , setMax
+    , setStep
+    , setValue
+    , setDisabled
+    , setAdditionalAttributes
+    , slider
+    )
 
 {-| MDC Slider provides an implementation of the Material Design slider
 component.
@@ -8,6 +20,8 @@ component.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Continuous Slider](#continuous-slider)
   - [Custom range values](#using-a-step-value)
   - [Using a step value](#using-a-step-value)
@@ -26,62 +40,96 @@ component.
 
 # Basic Usage
 
-    import Material.Slider exposing (slider, sliderConfig)
+    import Material.Slider as Slider
 
     type Msg
         = ValueChanged Float
 
     main =
-        slider
-            { sliderConfig
-                | value = 50
-                , onChange = Just ValueChanged
-            }
+        Slider.slider
+            (Slider.config
+                |> Slider.setValue 50
+                |> Slider.setOnChange ValueChanged
+            )
+
+
+# Configurations
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOnChange
+@docs setDiscrete
+@docs setDisplayMarkers
+@docs setMin
+@docs setMax
+@docs setStep
+@docs setValue
+@docs setDisabled
+@docs setAdditionalAttributes
 
 
 # Continuous Slider
 
-@docs slider, sliderConfig, SliderConfig
+@docs slider
 
 
 # Custom range values
 
-To set a custom range, set the slider's `min` and `max` configuration fields to
-a `Float`.
+To set a custom range, use the slider's `setMin` and `setMax` configuration
+options.
 
-    slider { sliderConfig | min = 0, max = 100 }
+    Slider.slider
+        (Slider.config
+            |> Slider.setMin 0
+            |> Slider.setMax 100
+        )
 
 
 # Using a step value
 
-To allow for quantization of the user input, set the slider's `step`
-configuration field to a `Float`.
+To allow for quantization of the user input, use the slider's `setStep`
+configuration option.
 
-    slider { sliderConfig | step = 4.5 }
+    Slider.slider
+        (Slider.config
+            |> Slider.setStep 4.5
+        )
 
 
 # Disabled Slider
 
-To disable a slider, set its `disabled` configuration field to `True`. Disabled
+To disable a slider, use its `setDisabled` configuration option. Disabled
 sliders cannot be interacted with and have no visual interaction effect.
 
-    slider { sliderConfig | disabled = True }
+    Slider.slider
+        (Slider.config
+            |> Slider.setDisabled
+        )
 
 
 # Discrete Slider
 
-To treat a slider as a discrete slider, set its `discrete` configuration field
-to `True`.
+To treat a slider as a discrete slider, use its `setDiscrete` configuration
+option.
 
-    slider { sliderConfig | disabled = True }
+    Slider.slider
+        (Slider.config
+            |> Slider.setDiscrete
+        )
 
 
 ## Track Markers
 
-To have a discrete slider show track markers, set its `displayMarkers`
-configuration field to `True`.
+To have a discrete slider show track markers, use its `setDisplayMarkers`
+configuration option.
 
-    slider { sliderConfig | displayMarkers = True }
+    Slider.slider
+        (Slider.config
+            |> Slider.setDisplayMarkers
+        )
 
 -}
 
@@ -100,61 +148,126 @@ import Svg.Attributes
 
 {-| Configuration of a slider
 -}
-type alias SliderConfig msg =
-    { discrete : Bool
-    , displayMarkers : Bool
-    , min : Float
-    , max : Float
-    , step : Float
-    , value : Float
-    , disabled : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    , onChange : Maybe (Float -> msg)
-    }
+type Config msg
+    = Config
+        { discrete : Bool
+        , displayMarkers : Bool
+        , min : Float
+        , max : Float
+        , step : Float
+        , value : Float
+        , disabled : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        , onChange : Maybe (Float -> msg)
+        }
 
 
 {-| Default configuration of a slider
 -}
-sliderConfig : SliderConfig msg
-sliderConfig =
-    { discrete = False
-    , displayMarkers = False
-    , min = 0
-    , max = 100
-    , step = 0
-    , value = 0
-    , disabled = False
-    , additionalAttributes = []
-    , onChange = Nothing
-    }
+config : Config msg
+config =
+    Config
+        { discrete = False
+        , displayMarkers = False
+        , min = 0
+        , max = 100
+        , step = 0
+        , value = 0
+        , disabled = False
+        , additionalAttributes = []
+        , onChange = Nothing
+        }
+
+
+{-| Set a slider to be a discrete slider
+-}
+setDiscrete : Config msg -> Config msg
+setDiscrete (Config config_) =
+    Config { config_ | discrete = True }
+
+
+{-| Set a discrete slider to display track markers
+-}
+setDisplayMarkers : Config msg -> Config msg
+setDisplayMarkers (Config config_) =
+    Config { config_ | displayMarkers = True }
+
+
+{-| Set a slider's minimum value (default: 0)
+-}
+setMin : Float -> Config msg -> Config msg
+setMin min (Config config_) =
+    Config { config_ | min = min }
+
+
+{-| Set a slider's maximum value (default: 100)
+-}
+setMax : Float -> Config msg -> Config msg
+setMax max (Config config_) =
+    Config { config_ | max = max }
+
+
+{-| Set a slider's step value (default: 0)
+-}
+setStep : Float -> Config msg -> Config msg
+setStep step (Config config_) =
+    Config { config_ | step = step }
+
+
+{-| Set a slider's value (default: 0)
+-}
+setValue : Float -> Config msg -> Config msg
+setValue value (Config config_) =
+    Config { config_ | value = value }
+
+
+{-| Make a slider disabled
+-}
+setDisabled : Config msg -> Config msg
+setDisabled (Config config_) =
+    Config { config_ | disabled = True }
+
+
+{-| Specify additional attributes
+-}
+setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAdditionalAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
+
+
+{-| Specify a message when the user interacts with the slider
+-}
+setOnChange : (Float -> msg) -> Config msg -> Config msg
+setOnChange onChange (Config config_) =
+    Config { config_ | onChange = Just onChange }
 
 
 {-| Slider view function
 -}
-slider : SliderConfig msg -> Html msg
-slider config =
+slider : Config msg -> Html msg
+slider ((Config { additionalAttributes }) as config_) =
     Html.node "mdc-slider"
         (List.filterMap identity
             [ rootCs
             , displayCss
-            , discreteCs config
-            , displayMarkersCs config
+            , discreteCs config_
+            , displayMarkersCs config_
             , tabIndexProp
             , sliderRoleAttr
-            , valueProp config
-            , minProp config
-            , maxProp config
-            , stepProp config
-            , disabledProp config
-            , ariaValueMinAttr config
-            , ariaValueMaxAttr config
-            , ariaValuenowAttr config
-            , changeHandler config
+            , valueProp config_
+            , minProp config_
+            , maxProp config_
+            , stepProp config_
+            , disabledProp config_
+            , ariaValueMinAttr config_
+            , ariaValueMaxAttr config_
+            , ariaValuenowAttr config_
+            , changeHandler config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         [ trackContainerElt
-        , thumbContainerElt config
+        , thumbContainerElt config_
         ]
 
 
@@ -168,8 +281,8 @@ displayCss =
     Just (style "display" "block")
 
 
-discreteCs : SliderConfig msg -> Maybe (Html.Attribute msg)
-discreteCs { discrete } =
+discreteCs : Config msg -> Maybe (Html.Attribute msg)
+discreteCs (Config { discrete }) =
     if discrete then
         Just (class "mdc-slider--discrete")
 
@@ -177,8 +290,8 @@ discreteCs { discrete } =
         Nothing
 
 
-displayMarkersCs : SliderConfig msg -> Maybe (Html.Attribute msg)
-displayMarkersCs { discrete, displayMarkers } =
+displayMarkersCs : Config msg -> Maybe (Html.Attribute msg)
+displayMarkersCs (Config { discrete, displayMarkers }) =
     if discrete && displayMarkers then
         Just (class "mdc-slider--display-markers")
 
@@ -196,54 +309,54 @@ sliderRoleAttr =
     Just (Html.Attributes.attribute "role" "slider")
 
 
-valueProp : SliderConfig msg -> Maybe (Html.Attribute msg)
-valueProp { value } =
+valueProp : Config msg -> Maybe (Html.Attribute msg)
+valueProp (Config { value }) =
     Just (Html.Attributes.property "value" (Encode.float value))
 
 
-minProp : SliderConfig msg -> Maybe (Html.Attribute msg)
-minProp { min } =
+minProp : Config msg -> Maybe (Html.Attribute msg)
+minProp (Config { min }) =
     Just (Html.Attributes.property "min" (Encode.float min))
 
 
-maxProp : SliderConfig msg -> Maybe (Html.Attribute msg)
-maxProp { max } =
+maxProp : Config msg -> Maybe (Html.Attribute msg)
+maxProp (Config { max }) =
     Just (Html.Attributes.property "max" (Encode.float max))
 
 
-stepProp : SliderConfig msg -> Maybe (Html.Attribute msg)
-stepProp { step } =
+stepProp : Config msg -> Maybe (Html.Attribute msg)
+stepProp (Config { step }) =
     Just (Html.Attributes.property "step" (Encode.float step))
 
 
-disabledProp : SliderConfig msg -> Maybe (Html.Attribute msg)
-disabledProp { disabled } =
+disabledProp : Config msg -> Maybe (Html.Attribute msg)
+disabledProp (Config { disabled }) =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
-ariaValueMinAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
-ariaValueMinAttr { min } =
+ariaValueMinAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaValueMinAttr (Config { min }) =
     Just (Html.Attributes.attribute "aria-valuemin" (String.fromFloat min))
 
 
-ariaValueMaxAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
-ariaValueMaxAttr { max } =
+ariaValueMaxAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaValueMaxAttr (Config { max }) =
     Just (Html.Attributes.attribute "aria-valuemax" (String.fromFloat max))
 
 
-ariaValuenowAttr : SliderConfig msg -> Maybe (Html.Attribute msg)
-ariaValuenowAttr { value } =
+ariaValuenowAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaValuenowAttr (Config { value }) =
     Just (Html.Attributes.attribute "aria-valuenow" (String.fromFloat value))
 
 
-changeHandler : SliderConfig msg -> Maybe (Html.Attribute msg)
-changeHandler config =
+changeHandler : Config msg -> Maybe (Html.Attribute msg)
+changeHandler (Config { onChange }) =
     Maybe.map
         (\handler ->
             Html.Events.on "MDCSlider:change"
                 (Decode.map handler (Decode.at [ "target", "value" ] Decode.float))
         )
-        config.onChange
+        onChange
 
 
 trackContainerElt : Html msg
@@ -261,8 +374,8 @@ trackMarkerContainerElt =
     Html.div [ class "mdc-slider__track-marker-container" ] []
 
 
-thumbContainerElt : SliderConfig msg -> Html msg
-thumbContainerElt { discrete } =
+thumbContainerElt : Config msg -> Html msg
+thumbContainerElt (Config { discrete }) =
     Html.div [ class "mdc-slider__thumb-container" ]
         (if discrete then
             [ pinElt, thumbElt, focusRingElt ]

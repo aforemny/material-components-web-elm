@@ -1,6 +1,9 @@
 module Material.ImageList exposing
-    ( imageList, imageListConfig, ImageListConfig
-    , imageListItem, imageListItemConfig, ImageListItemConfig, ImageListItem
+    ( Config, config
+    , setMasonry
+    , setTextProtection
+    , setAdditionalAttributes
+    , imageList
     )
 
 {-| An Image List consists of several items, each containing an image and
@@ -10,9 +13,10 @@ optionally supporting a text label.
 # Table of Contents
 
   - [Resources](#resources)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Basic Usage](#basic-usage)
   - [Image List](#image-list)
-  - [Image List Item](#image-list-item)
   - [Masonry Image List](#masonry-image-list)
   - [Image List with Text Label](#image-list-with-text-label)
 
@@ -31,36 +35,37 @@ Note that you will have to set the width and margin of image list items
 yourself, preferably through SASS.
 
     import Html.Attributes exposing (style)
-    import Material.ImageList
-        exposing
-            ( imageList
-            , imageListConfig
-            , imageListItem
-            , imageListItemConfig
-            )
+    import Material.ImageList as ImageList
+    import Material.ImageListItem as ImageListItem
 
     main =
-        imageList imageListConfig
-            [ imageListItem
-                { imageListItemConfig
-                    | additionalAttributes =
-                        [ style "width"
-                            "calc(100% / 5 - 4.2px)"
+        ImageList.imageList ImageList.config
+            [ ImageListItem.imageListItem
+                (ImageListItem.config
+                    |> ImageListItem.setAdditionalAttributes
+                        [ style "width" "calc(100% / 5 - 4.2px)"
                         , style "margin" "2px"
                         ]
-                }
+                )
                 "images/photos/3x2/1.jpg"
             ]
 
 
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setMasonry
+@docs setTextProtection
+@docs setAdditionalAttributes
+
+
 # Image List
 
-@docs imageList, imageListConfig, ImageListConfig
-
-
-# Image list Item
-
-@docs imageListItem, imageListItemConfig, ImageListItemConfig, ImageListItem
+@docs imageList
 
 
 # Masonry Image List
@@ -69,94 +74,93 @@ The Masonry Image List variant presents images vertically arranged into several
 columns, using CSS Columns. In this layout, images may be any combination of
 aspect ratios.
 
-        imageList { imageListConfig | masonry = True } []
+    ImageList.imageList
+        (ImageList.config
+            |> ImageList.setMasonry
+        )
+        []
 
 
 # Image List with Label
 
 Image's labels are by default positioned below the image. If you want image
-labels to be positioned in a scrim overlaying each image, set the image list's
-textProtection configuration field to True.
+labels to be positioned in a scrim overlaying each image, use the image list's
+`setTextProtection` configuration option.
 
-        imageList { imageListConfig | textProtection = True }
-            [ imageListItem
-                { imageListItemConfig | label = "Photo" }
-                "images/photos/3x2/1.jpg"
-            ]
+    ImageList.imageList
+        (ImageList.config
+            |> ImageList.setTextProtection
+        )
+        [ ImageListItem.imageListItem
+            (ImageListItem.config
+                |> ImageListItem.setLabel "Photo"
+            )
+            "images/photos/3x2/1.jpg"
+        ]
 
 -}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
+import Material.ImageListItem exposing (ImageListItem)
+import Material.ImageListItem.Internal
 
 
 {-| Configuration of an image list
 -}
-type alias ImageListConfig msg =
-    { masonry : Bool
-    , withTextProtection : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Config msg
+    = Config
+        { masonry : Bool
+        , withTextProtection : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        }
 
 
 {-| Default configuration of an image list
 -}
-imageListConfig : ImageListConfig msg
-imageListConfig =
-    { masonry = False
-    , withTextProtection = False
-    , additionalAttributes = []
-    }
+config : Config msg
+config =
+    Config
+        { masonry = False
+        , withTextProtection = False
+        , additionalAttributes = []
+        }
+
+
+{-| Make an image list a masonry image list
+-}
+setMasonry : Config msg -> Config msg
+setMasonry (Config config_) =
+    Config { config_ | masonry = True }
+
+
+{-| Make an image list item's label display below the item
+-}
+setTextProtection : Config msg -> Config msg
+setTextProtection (Config config_) =
+    Config { config_ | withTextProtection = True }
+
+
+{-| Specify additional attributes
+-}
+setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAdditionalAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Image list view function
 -}
-imageList : ImageListConfig msg -> List (ImageListItem msg) -> Html msg
-imageList config listItems =
+imageList : Config msg -> List (ImageListItem msg) -> Html msg
+imageList ((Config { additionalAttributes }) as config_) listItems =
     Html.node "mdc-image-list"
         (List.filterMap identity
             [ rootCs
-            , masonryCs config
-            , withTextProtectionCs config
+            , masonryCs config_
+            , withTextProtectionCs config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
-        (List.map (listItemElt config) listItems)
-
-
-{-| Configuration of an image list item
--}
-type alias ImageListItemConfig msg =
-    { label : Maybe String
-    , href : Maybe String
-    , additionalAttributes : List (Html.Attribute msg)
-    }
-
-
-{-| Default configuration of an image list item
--}
-imageListItemConfig : ImageListItemConfig msg
-imageListItemConfig =
-    { label = Nothing
-    , href = Nothing
-    , additionalAttributes = []
-    }
-
-
-{-| Image list item
--}
-type ImageListItem msg
-    = ImageListItem
-        { config : ImageListItemConfig msg
-        , image : String
-        }
-
-
-{-| Image list item constructor
--}
-imageListItem : ImageListItemConfig msg -> String -> ImageListItem msg
-imageListItem config image =
-    ImageListItem { config = config, image = image }
+        (List.map (listItemElt config_) listItems)
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -164,8 +168,8 @@ rootCs =
     Just (class "mdc-image-list")
 
 
-masonryCs : ImageListConfig msg -> Maybe (Html.Attribute msg)
-masonryCs { masonry } =
+masonryCs : Config msg -> Maybe (Html.Attribute msg)
+masonryCs (Config { masonry }) =
     if masonry then
         Just (class "mdc-image-list--masonry")
 
@@ -173,8 +177,8 @@ masonryCs { masonry } =
         Nothing
 
 
-withTextProtectionCs : ImageListConfig msg -> Maybe (Html.Attribute msg)
-withTextProtectionCs { withTextProtection } =
+withTextProtectionCs : Config msg -> Maybe (Html.Attribute msg)
+withTextProtectionCs (Config { withTextProtection }) =
     if withTextProtection then
         Just (class "mdc-image-list--with-text-protection")
 
@@ -182,39 +186,39 @@ withTextProtectionCs { withTextProtection } =
         Nothing
 
 
-listItemElt : ImageListConfig msg -> ImageListItem msg -> Html msg
-listItemElt ({ masonry } as config_) ((ImageListItem { config }) as listItem) =
+listItemElt : Config msg -> ImageListItem msg -> Html msg
+listItemElt ((Config { masonry }) as config_) ((Material.ImageListItem.Internal.ImageListItem (Material.ImageListItem.Internal.Config { href, additionalAttributes })) as listItem) =
     let
         inner =
             [ if masonry then
-                imageElt config_ listItem
+                imageElt masonry listItem
 
               else
-                imageAspectContainerElt config_ listItem
+                imageAspectContainerElt masonry listItem
             , supportingElt listItem
             ]
     in
     Html.node "mdc-image-list-item"
-        (class "mdc-image-list__item" :: config.additionalAttributes)
-        (config.href
-            |> Maybe.map (\href -> [ Html.a [ Html.Attributes.href href ] inner ])
+        (class "mdc-image-list__item" :: additionalAttributes)
+        (href
+            |> Maybe.map (\href_ -> [ Html.a [ Html.Attributes.href href_ ] inner ])
             |> Maybe.withDefault inner
         )
 
 
-imageAspectContainerElt : ImageListConfig msg -> ImageListItem msg -> Html msg
-imageAspectContainerElt config_ ((ImageListItem { config }) as listItem) =
+imageAspectContainerElt : Bool -> ImageListItem msg -> Html msg
+imageAspectContainerElt masonry ((Material.ImageListItem.Internal.ImageListItem (Material.ImageListItem.Internal.Config { href })) as listItem) =
     Html.div
         (List.filterMap identity
             [ Just (class "mdc-image-list__image-aspect-container")
-            , Maybe.map (\_ -> class "mdc-ripple-surface") config.href
+            , Maybe.map (\_ -> class "mdc-ripple-surface") href
             ]
         )
-        [ imageElt config_ listItem ]
+        [ imageElt masonry listItem ]
 
 
-imageElt : ImageListConfig msg -> ImageListItem msg -> Html msg
-imageElt { masonry } (ImageListItem { config, image }) =
+imageElt : Bool -> ImageListItem msg -> Html msg
+imageElt masonry (Material.ImageListItem.Internal.ImageListItem (Material.ImageListItem.Internal.Config { href, image })) =
     let
         img =
             Html.img
@@ -224,7 +228,7 @@ imageElt { masonry } (ImageListItem { config, image }) =
                 []
     in
     if masonry then
-        if config.href /= Nothing then
+        if href /= Nothing then
             Html.div [ class "mdc-ripple-surface" ] [ img ]
 
         else
@@ -239,8 +243,8 @@ imageElt { masonry } (ImageListItem { config, image }) =
 
 
 supportingElt : ImageListItem msg -> Html msg
-supportingElt (ImageListItem { config }) =
-    case config.label of
+supportingElt (Material.ImageListItem.Internal.ImageListItem (Material.ImageListItem.Internal.Config { label })) =
+    case label of
         Just string ->
             Html.div
                 [ class "mdc-image-list__supporting" ]

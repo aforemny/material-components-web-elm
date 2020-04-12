@@ -25,6 +25,7 @@
         "Material.IconButton",
         "Material.IconToggle",
         "Material.ImageList",
+        "Material.ImageListItem",
         "Material.LayoutGrid",
         "Material.LinearProgress",
         "Material.List",

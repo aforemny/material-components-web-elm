@@ -1,8 +1,19 @@
 module Material.Snackbar exposing
-    ( snackbar, snackbarConfig, SnackbarConfig
+    ( Config, config
+    , setCloseOnEscape
+    , setAdditionalAttributes
+    , snackbar
     , Queue, initialQueue, Msg, update
     , addMessage
-    , snackbarMessage, Message
+    , message, Message
+    , setLabel
+    , setActionButton
+    , setOnActionButtonClick
+    , setActionIcon
+    , setOnActionIconClick
+    , setLeading
+    , setStacked
+    , setTimeoutMs
     )
 
 {-| Snackbars provide brief messages about app processes at the bottom of the
@@ -13,6 +24,8 @@ screen.
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Snackbar](#snackbar)
   - [Queue](#queue)
       - [Adding Messages](#adding-messages)
@@ -30,10 +43,6 @@ screen.
 # Basic Usage
 
     import Material.Snackbar as Snackbar
-        exposing
-            ( snackbar
-            , snackbarConfig
-            )
 
     type alias Model =
         { queue : Snackbar.Queue }
@@ -54,12 +63,23 @@ screen.
                 ( { model | queue = newQueue }, cmd )
 
     main =
-        snackbar SnackbarMsg snackbarConfig model.queue
+        Snackbar.snackbar SnackbarMsg Snackbar.config model.queue
+
+
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setCloseOnEscape
+@docs setAdditionalAttributes
 
 
 # Snackbar
 
-@docs snackbar, snackbarConfig, SnackbarConfig
+@docs snackbar
 
 
 # Queue
@@ -88,9 +108,7 @@ Then from your application's update function, call `update` to handle
             SnackbarMsg snackbarMsg ->
                 Snackbar.update SnackbarMsg snackbarMsg model
                     |> Tuple.mapFirst
-                        (\newQueue ->
-                            { model | queue = newQueue }
-                        )
+                        (\newQueue -> { model | queue = newQueue })
 
 Now you are ready to call `addMessage` from your application update function.
 
@@ -106,9 +124,8 @@ Note that `addMessage` takes `SnackbarMsg` as first parameter.
         SomethingHappened ->
             let
                 message =
-                    { snackbarMessage
-                        | label = "Something happened"
-                    }
+                  Snackbar.message
+                      |> Snackbar.setLabel "Something happened"
             in
             ( model, addMessage SnackbarMsg message )
 
@@ -120,9 +137,19 @@ Note that `addMessage` takes `SnackbarMsg` as first parameter.
 At the minimum, a message contains only a label. To specify the label, set the
 `label` configuration field to a `String`.
 
-    { snackbarMessage | label = "Something happened" }
+    Snackbar.message
+        |> Snackbar.addLabel "Something happened"
 
-@docs snackbarMessage, Message
+@docs message, Message
+
+@docs setLabel
+@docs setActionButton
+@docs setOnActionButtonClick
+@docs setActionIcon
+@docs setOnActionIconClick
+@docs setLeading
+@docs setStacked
+@docs setTimeoutMs
 
 
 ## Message with action button
@@ -131,11 +158,10 @@ Messages may contain an action button that the user can click. To display an
 action button, set the message's `actionButton` configuration field to a
 `String`, and handle the event in `onActionButtonClick`.
 
-    { snackbarMessage
-        | label = "Something happened"
-        , actionButton = Just "Take action"
-        , onActionButtonClick = Just ActionButtonClicked
-    }
+    Snackbar.message
+        |> Snackbar.setLabel "Something happened"
+        |> Snackbar.setActionButton "Take action"
+        |> Snackbar.setOnActionButtonClick ActionButtonClicked
 
 
 ## Message with action icon
@@ -144,11 +170,10 @@ Messages may contain an action icon that the user can click. To display an
 action icon, set the message's `actionIcon` configuration field to a
 `String`, and handle the event in `onActionIconClick`.
 
-    { snackbarMessage
-        | label = "Something happened"
-        , actionIcon = Just "close"
-        , onActionIconClick = Just Dismissed
-    }
+    Snackbar.message
+        |> Snackbar.setLabel "Something happened"
+        |> Snackbar.setActionIcon "close"
+        |> Snackbar.setOnActionIconClick Dismissed
 
 
 ## Stacked messages
@@ -157,11 +182,10 @@ Messages with a long label and action button should display the action button
 below the label. To archieve this, set the message's `stacked` configuration
 field to `True`.
 
-    { snackbarMessage
-        | label = "Something happened"
-        , actionButton = Just "Take action"
-        , stacked = True
-    }
+    Snackbar.message
+        |> Snackbar.setLabel "Something happened"
+        |> Snackbar.setActionButton "Take action"
+        |> Snackbar.setStacked
 
 
 ## Leading messages
@@ -170,10 +194,9 @@ Messages are by default centered within the viewport. On larger screens, they
 can optionally be displyed on the _leading_ edge of the screen. To display a
 message as leading, set its `leading` configuration field to `True`.
 
-    { snackbarMessage
-        | label = "Something happened"
-        , leading = True
-    }
+    Snackbar.message
+        |> Snackbar.setLabel "Something happened"
+        |> Snackbar.setLeading
 
 
 ## Custom timeout
@@ -181,10 +204,9 @@ message as leading, set its `leading` configuration field to `True`.
 To set a custom timeout for a message, set its `timeoutMs` configuration field
 to a `Float`, representing the on-screen time in milliseconds.
 
-    { snackbarMessage
-        | label = "Something happened"
-        , timeoutMs = 5000
-    }
+    Snackbar.message
+        |> Snackbar.setLabel "Something happened"
+        |> Snackbar.setTimeoutMs 5000
 
 -}
 
@@ -223,7 +245,7 @@ initialQueue =
 update : (Msg msg -> msg) -> Msg msg -> Queue msg -> ( Queue msg, Cmd msg )
 update lift msg queue =
     case msg of
-        AddMessage message ->
+        AddMessage message_ ->
             let
                 nextMessageId =
                     if List.isEmpty queue.messages then
@@ -233,7 +255,7 @@ update lift msg queue =
                         queue.messageId
             in
             ( { queue
-                | messages = queue.messages ++ [ message ]
+                | messages = queue.messages ++ [ message_ ]
                 , messageId = nextMessageId
               }
             , Cmd.none
@@ -269,77 +291,151 @@ type Msg msg
 {-| Adds a message to the queue
 -}
 addMessage : (Msg msg -> msg) -> Message msg -> Cmd msg
-addMessage lift message =
-    Task.perform lift (Task.succeed (AddMessage message))
+addMessage lift message_ =
+    Task.perform lift (Task.succeed (AddMessage message_))
 
 
 {-| Configuration of a snackbar
 -}
-type alias SnackbarConfig msg =
-    { closeOnEscape : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Config msg
+    = Config
+        { closeOnEscape : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        }
 
 
 {-| Default configuration of a snackbar
 -}
-snackbarConfig : SnackbarConfig msg
-snackbarConfig =
-    { closeOnEscape = False
-    , additionalAttributes = []
-    }
+config : Config msg
+config =
+    Config
+        { closeOnEscape = False
+        , additionalAttributes = []
+        }
+
+
+{-| Set the snackbar to close the current message when the user presses escape
+-}
+setCloseOnEscape : Config msg -> Config msg
+setCloseOnEscape (Config config_) =
+    Config { config_ | closeOnEscape = True }
+
+
+{-| Specify additional attributes
+-}
+setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAdditionalAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Snackbar view function
 -}
-snackbar : (Msg msg -> msg) -> SnackbarConfig msg -> Queue msg -> Html msg
-snackbar lift config queue =
+snackbar : (Msg msg -> msg) -> Config msg -> Queue msg -> Html msg
+snackbar lift ((Config { additionalAttributes }) as config_) queue =
     let
-        message =
-            Maybe.withDefault snackbarMessage (List.head queue.messages)
+        message_ =
+            Maybe.withDefault message (List.head queue.messages)
     in
     Html.node "mdc-snackbar"
         (List.filterMap identity
             [ rootCs
-            , closeOnEscapeProp config
+            , closeOnEscapeProp config_
             , leadingCs message
             , stackedCs message
             , messageIdProp queue
             , timeoutMsProp message
             , closedHandler lift
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         [ surfaceElt message ]
 
 
 {-| Snackbar message
 -}
-type alias Message msg =
-    { label : String
-    , actionButton : Maybe String
-    , onActionButtonClick : Maybe msg
-    , actionIcon : Maybe String
-    , onActionIconClick : Maybe msg
-    , leading : Bool
-    , stacked : Bool
-    , timeoutMs : Int
-    }
+type Message msg
+    = Message
+        { label : String
+        , actionButton : Maybe String
+        , onActionButtonClick : Maybe msg
+        , actionIcon : Maybe String
+        , onActionIconClick : Maybe msg
+        , leading : Bool
+        , stacked : Bool
+        , timeoutMs : Int
+        }
+
+
+{-| Set a message's label
+-}
+setLabel : String -> Message msg -> Message msg
+setLabel label (Message message_) =
+    Message { message_ | label = label }
+
+
+{-| Set a message's action button
+-}
+setActionButton : String -> Message msg -> Message msg
+setActionButton actionButton (Message message_) =
+    Message { message_ | actionButton = Just actionButton }
+
+
+{-| Specify a message when the user clicks on a message's action button
+-}
+setOnActionButtonClick : msg -> Message msg -> Message msg
+setOnActionButtonClick onActionButtonClick (Message message_) =
+    Message { message_ | onActionButtonClick = Just onActionButtonClick }
+
+
+{-| Set a message's action icon
+-}
+setActionIcon : String -> Message msg -> Message msg
+setActionIcon actionIcon (Message message_) =
+    Message { message_ | actionIcon = Just actionIcon }
+
+
+{-| Specify a message when the user clicks on a message's action icon
+-}
+setOnActionIconClick : msg -> Message msg -> Message msg
+setOnActionIconClick onActionIconClick (Message message_) =
+    Message { message_ | onActionIconClick = Just onActionIconClick }
+
+
+{-| Set a message to be leading
+-}
+setLeading : Message msg -> Message msg
+setLeading (Message message_) =
+    Message { message_ | leading = True }
+
+
+{-| Set a message to be stacked
+-}
+setStacked : Message msg -> Message msg
+setStacked (Message message_) =
+    Message { message_ | stacked = True }
+
+
+{-| Set a message's timeout in milliseconds
+-}
+setTimeoutMs : Int -> Message msg -> Message msg
+setTimeoutMs timeoutMs (Message message_) =
+    Message { message_ | timeoutMs = timeoutMs }
 
 
 {-| Default snackbar message (empty label)
 -}
-snackbarMessage : Message msg
-snackbarMessage =
-    { label = ""
-    , actionButton = Nothing
-    , onActionButtonClick = Nothing
-    , actionIcon = Nothing
-    , onActionIconClick = Nothing
-    , leading = False
-    , stacked = False
-    , timeoutMs = 5000
-    }
+message : Message msg
+message =
+    Message
+        { label = ""
+        , actionButton = Nothing
+        , onActionButtonClick = Nothing
+        , actionIcon = Nothing
+        , onActionIconClick = Nothing
+        , leading = False
+        , stacked = False
+        , timeoutMs = 5000
+        }
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -347,13 +443,13 @@ rootCs =
     Just (class "mdc-snackbar")
 
 
-closeOnEscapeProp : SnackbarConfig msg -> Maybe (Html.Attribute msg)
-closeOnEscapeProp { closeOnEscape } =
+closeOnEscapeProp : Config msg -> Maybe (Html.Attribute msg)
+closeOnEscapeProp (Config { closeOnEscape }) =
     Just (Html.Attributes.property "closeOnEscape" (Encode.bool closeOnEscape))
 
 
 leadingCs : Message msg -> Maybe (Html.Attribute msg)
-leadingCs { leading } =
+leadingCs (Message { leading }) =
     if leading then
         Just (class "mdc-snackbar--leading")
 
@@ -362,7 +458,7 @@ leadingCs { leading } =
 
 
 stackedCs : Message msg -> Maybe (Html.Attribute msg)
-stackedCs { stacked } =
+stackedCs (Message { stacked }) =
     if stacked then
         Just (class "mdc-snackbar--stacked")
 
@@ -376,7 +472,7 @@ messageIdProp { messageId } =
 
 
 timeoutMsProp : Message msg -> Maybe (Html.Attribute msg)
-timeoutMsProp { timeoutMs } =
+timeoutMsProp (Message { timeoutMs }) =
     let
         normalizedTimeoutMs =
             clamp 4000 10000 timeoutMs
@@ -400,37 +496,37 @@ ariaPoliteLiveAttr =
 
 
 surfaceElt : Message msg -> Html msg
-surfaceElt message =
+surfaceElt message_ =
     Html.div [ class "mdc-snackbar__surface" ]
-        [ labelElt message
-        , actionsElt message
+        [ labelElt message_
+        , actionsElt message_
         ]
 
 
 labelElt : Message msg -> Html msg
-labelElt { label } =
+labelElt (Message { label }) =
     Html.div [ class "mdc-snackbar__label", ariaStatusRoleAttr, ariaPoliteLiveAttr ]
         [ text label ]
 
 
 actionsElt : Message msg -> Html msg
-actionsElt message =
+actionsElt message_ =
     Html.div [ class "mdc-snackbar__actions" ]
         (List.filterMap identity
-            [ actionButtonElt message
-            , actionIconElt message
+            [ actionButtonElt message_
+            , actionIconElt message_
             ]
         )
 
 
 actionButtonElt : Message msg -> Maybe (Html msg)
-actionButtonElt ({ actionButton } as message) =
+actionButtonElt ((Message { actionButton }) as message_) =
     Maybe.map
         (\actionButtonLabel ->
             Html.button
                 (List.filterMap identity
                     [ actionButtonCs
-                    , actionButtonClickHandler message
+                    , actionButtonClickHandler message_
                     ]
                 )
                 [ text actionButtonLabel ]
@@ -444,18 +540,18 @@ actionButtonCs =
 
 
 actionButtonClickHandler : Message msg -> Maybe (Html.Attribute msg)
-actionButtonClickHandler { onActionButtonClick } =
+actionButtonClickHandler (Message { onActionButtonClick }) =
     Maybe.map Html.Events.onClick onActionButtonClick
 
 
 actionIconElt : Message msg -> Maybe (Html msg)
-actionIconElt ({ actionIcon } as message) =
+actionIconElt ((Message { actionIcon }) as message_) =
     Maybe.map
         (\actionIconLabel ->
             Html.i
                 (List.filterMap identity
                     [ actionIconCs
-                    , actionIconClickHandler message
+                    , actionIconClickHandler message_
                     ]
                 )
                 [ text actionIconLabel ]
@@ -469,5 +565,5 @@ actionIconCs =
 
 
 actionIconClickHandler : Message msg -> Maybe (Html.Attribute msg)
-actionIconClickHandler { onActionIconClick } =
+actionIconClickHandler (Message { onActionIconClick }) =
     Maybe.map Html.Events.onClick onActionIconClick

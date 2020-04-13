@@ -38,6 +38,7 @@
         "Material.Slider",
         "Material.Snackbar",
         "Material.Switch",
+        "Material.Tab",
         "Material.TabBar",
         "Material.TextArea",
         "Material.TextField",

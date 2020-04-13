@@ -1,11 +1,14 @@
 module Material.Card exposing
-    ( card, cardConfig, CardConfig, CardContent
-    , CardBlock
-    , cardBlock
-    , cardMedia, cardMediaConfig, CardMediaConfig, CardMediaAspect(..)
-    , cardPrimaryActionConfig, cardPrimaryAction
-    , cardActions, CardActions, cardActionButton, cardActionIcon
-    , cardFullBleedActions
+    ( Config, config
+    , setOutlined
+    , setAdditionalAttributes
+    , card, Content
+    , Block
+    , block
+    , squareMedia, sixteenToNineMedia, media
+    , primaryAction
+    , actions, Actions, actionButton, actionIcon
+    , fullBleedActions
     )
 
 {-| Cards contain content and actions about a single subject.
@@ -15,6 +18,8 @@ module Material.Card exposing
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Card](#card)
       - [Outlined card](#outlined-card)
   - [Card Blocks](#card-blocks)
@@ -37,47 +42,50 @@ module Material.Card exposing
 
     import Html exposing (Html, text)
     import Material.Button as Button
-    import Material.Card
-        exposing
-            ( card
-            , cardActionButton
-            , cardActionIcon
-            , cardActions
-            , cardBlock
-            , cardConfig
-            )
-    import Material.IconButton exposing (iconButtonConfig)
+    import Material.Card as Card
+    import Material.IconButton as IconButton
 
     main =
-        card cardConfig
+        Card.card Card.config
             { blocks =
-                [ cardBlock <|
+                [ Card.block <|
                     Html.div []
                         [ Html.h2 [] [ text "Title" ]
                         , Html.h3 [] [ text "Subtitle" ]
                         ]
-                , cardBlock <|
+                , Card.block <|
                     Html.div []
                         [ Html.p [] [ text "Lorem ipsum…" ] ]
                 ]
             , actions =
                 Just <|
-                    cardActions
+                    Card.actions
                         { buttons =
-                            [ cardActionButton buttonConfig
+                            [ Card.actionButton Button.config
                                 "Visit"
                             ]
                         , icons =
-                            [ cardActionIcon iconButtonConfig
+                            [ Card.actionIcon IconButton.config
                                 "favorite"
                             ]
                         }
             }
 
 
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setOutlined
+@docs setAdditionalAttributes
+
+
 # Card
 
-@docs card, cardConfig, CardConfig, CardContent
+@docs card, Content
 
 
 ## Outlined Card
@@ -85,9 +93,12 @@ module Material.Card exposing
 A card may have a border by settings its `outlined` configuration field to
 `True`.
 
-    card { cardConfig | outlined = True }
+    Card.card
+        (Card.config
+            |> Card.setOutlined
+        )
         { blocks =
-            [ cardBlock <|
+            [ Card.block <|
                 Html.div [] [ Html.h1 [] [ text "Card" ] ]
             ]
         , actions = Nothing
@@ -101,7 +112,7 @@ arbitrary HTML (generic `cardBlock`) or a media element (`cardMedia`).
 Optionally, a group of card blocks can be marked as the card's primary action
 which makes the group of card blocks interactable.
 
-@docs CardBlock
+@docs Block
 
 
 ## Generic Block
@@ -110,13 +121,13 @@ Generic card blocks are the most common and allow you to specify card content
 using arbitrary HTML. Note that you will have to carefully adjust styling such
 as padding and typography yourself.
 
-    cardBlock <|
+    Card.block <|
         Html.div []
             [ Html.h2 [] [ text "Title" ]
             , Html.h3 [] [ text "Subtitle" ]
             ]
 
-@docs cardBlock
+@docs block
 
 
 ## Media Block
@@ -125,7 +136,7 @@ Card may contain a media block usually as the first content block. The media
 will be displayed using a background image, and you may chose from square or a
 16 to 9 aspect ratio.
 
-@docs cardMedia, cardMediaConfig, CardMediaConfig, CardMediaAspect
+@docs squareMedia, sixteenToNineMedia, media
 
 
 ## Primary Action Block
@@ -134,17 +145,15 @@ A group of card blocks can be marked as the primary action of the card. A
 primary action block may be clicked upon and displays a visual interaction
 effect.
 
-    cardPrimaryAction
-        { cardPrimaryActionConfig
-            | onClick = Just CardClicked
-        }
-        [ cardBlock <|
+    Card.primaryAction
+        [ Html.Events.onClick CardClicked ]
+        [ Card.block <|
             Html.h2 [] [ text "Title" ]
-        , cardBlock <|
+        , Card.block <|
             Html.p [] [ text "Lorem ipsum…" ]
         ]
 
-@docs cardPrimaryActionConfig, cardPrimaryAction
+@docs primaryAction
 
 
 # Card Actions
@@ -152,14 +161,14 @@ effect.
 Card actions are comprised of buttons and icons. These are exposed as variants
 to the standard buttons and icons, but they do share the same configuration.
 
-    cardActions
+    Card.actions
         { buttons =
-            [ cardActionButton buttonConfig "View" ]
+            [ Card.actionButton Button.config "View" ]
         , actions =
-            [ cardActionIcon iconButtonConfig "favorite" ]
+            [ Card.actionIcon IconButton.config "favorite" ]
         }
 
-@docs cardActions, CardActions, cardActionButton, cardActionIcon
+@docs actions, Actions, actionButton, actionIcon
 
 
 ## Card Full Bleed Actions
@@ -167,7 +176,7 @@ to the standard buttons and icons, but they do share the same configuration.
 While a card's action buttons are usually left-aligned, a special case exists
 when there is only a single button as card action.
 
-@docs cardFullBleedActions
+@docs fullBleedActions
 
 -}
 
@@ -182,31 +191,47 @@ import Material.IconButton.Internal
 
 {-| Configuration of a card
 -}
-type alias CardConfig msg =
-    { outlined : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Config msg
+    = Config
+        { outlined : Bool
+        , additionalAttributes : List (Html.Attribute msg)
+        }
 
 
 {-| Card view function
 -}
-cardConfig : CardConfig msg
-cardConfig =
-    { outlined = False
-    , additionalAttributes = []
-    }
+config : Config msg
+config =
+    Config
+        { outlined = False
+        , additionalAttributes = []
+        }
+
+
+{-| Set a card to be outlined
+-}
+setOutlined : Config msg -> Config msg
+setOutlined (Config config_) =
+    Config { config_ | outlined = True }
+
+
+{-| Specify additional attributes
+-}
+setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAdditionalAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Card view function
 -}
-card : CardConfig msg -> CardContent msg -> Html msg
-card config content =
+card : Config msg -> Content msg -> Html msg
+card ((Config { additionalAttributes }) as config_) content =
     Html.node "mdc-card"
         (List.filterMap identity
             [ rootCs
-            , outlinedCs config
+            , outlinedCs config_
             ]
-            ++ config.additionalAttributes
+            ++ additionalAttributes
         )
         (List.concat
             [ blocksElt content
@@ -215,12 +240,12 @@ card config content =
         )
 
 
-blocksElt : CardContent msg -> List (Html msg)
+blocksElt : Content msg -> List (Html msg)
 blocksElt { blocks } =
     List.map (\(Block html) -> html) blocks
 
 
-actionsElt : CardContent msg -> List (Html msg)
+actionsElt : Content msg -> List (Html msg)
 actionsElt content =
     case content.actions of
         Just (Actions { buttons, icons, fullBleed }) ->
@@ -262,8 +287,8 @@ rootCs =
     Just (class "mdc-card")
 
 
-outlinedCs : CardConfig msg -> Maybe (Html.Attribute msg)
-outlinedCs { outlined } =
+outlinedCs : Config msg -> Maybe (Html.Attribute msg)
+outlinedCs (Config { outlined }) =
     if outlined then
         Just (class "mdc-card--outlined")
 
@@ -273,70 +298,67 @@ outlinedCs { outlined } =
 
 {-| The content of a card is comprised of _blocks_ and _actions_.
 -}
-type alias CardContent msg =
-    { blocks : List (CardBlock msg)
-    , actions : Maybe (CardActions msg)
+type alias Content msg =
+    { blocks : List (Block msg)
+    , actions : Maybe (Actions msg)
     }
 
 
 {-| Card's content block
 -}
-type CardBlock msg
+type Block msg
     = Block (Html msg)
 
 
 {-| An arbitrary card block
 
-    cardBlock <|
+    Card.block <|
         Html.div [] [ text "Lorem ipsum…" ]
 
 -}
-cardBlock : Html msg -> CardBlock msg
-cardBlock =
+block : Html msg -> Block msg
+block =
     Block
 
 
-{-| Configuration of a card's media block
--}
-type alias CardMediaConfig msg =
-    { aspect : Maybe CardMediaAspect
-    , additionalAttributes : List (Html.Attribute msg)
-    }
-
-
-{-| Default configuration of a card's media block
--}
-cardMediaConfig : CardMediaConfig msg
-cardMediaConfig =
-    { aspect = Nothing
-    , additionalAttributes = []
-    }
-
-
-{-| Card media block's aspect ratio
--}
-type CardMediaAspect
+type Aspect
     = Square
     | SixteenToNine
 
 
-{-| Card media block view function
-
-    cardMedia cardMediaConfig "media-image.jpg"
-
--}
-cardMedia : CardMediaConfig msg -> String -> CardBlock msg
-cardMedia config backgroundImage =
+mediaView : Maybe Aspect -> List (Html.Attribute msg) -> String -> Block msg
+mediaView aspect additionalAttributes backgroundImage =
     Block <|
         Html.div
             (List.filterMap identity
                 [ mediaCs
                 , backgroundImageAttr backgroundImage
-                , aspectCs config
+                , aspectCs aspect
                 ]
-                ++ config.additionalAttributes
+                ++ additionalAttributes
             )
             []
+
+
+{-| Card media block with a square aspect ratio
+-}
+squareMedia : List (Html.Attribute msg) -> String -> Block msg
+squareMedia additionalAttributes backgroundImage =
+    mediaView (Just Square) additionalAttributes backgroundImage
+
+
+{-| Card media block with a 16:9 aspect ratio
+-}
+sixteenToNineMedia : List (Html.Attribute msg) -> String -> Block msg
+sixteenToNineMedia additionalAttributes backgroundImage =
+    mediaView (Just SixteenToNine) additionalAttributes backgroundImage
+
+
+{-| Card media block of unspecified aspect ratio
+-}
+media : List (Html.Attribute msg) -> String -> Block msg
+media additionalAttributes backgroundImage =
+    mediaView Nothing additionalAttributes backgroundImage
 
 
 mediaCs : Maybe (Html.Attribute msg)
@@ -349,8 +371,8 @@ backgroundImageAttr url =
     Just (Html.Attributes.style "background-image" ("url(\"" ++ url ++ "\")"))
 
 
-aspectCs : CardMediaConfig msg -> Maybe (Html.Attribute msg)
-aspectCs { aspect } =
+aspectCs : Maybe Aspect -> Maybe (Html.Attribute msg)
+aspectCs aspect =
     case aspect of
         Just Square ->
             Just (class "mdc-card__media--square")
@@ -362,47 +384,25 @@ aspectCs { aspect } =
             Nothing
 
 
-{-| Configuration of a card's primary action block
--}
-type alias PrimaryActionConfig msg =
-    { additionalAttributes : List (Html.Attribute msg)
-    , onClick : Maybe msg
-    }
-
-
-{-| Default configuration of a card's primary action block
--}
-cardPrimaryActionConfig : PrimaryActionConfig msg
-cardPrimaryActionConfig =
-    { additionalAttributes = []
-    , onClick = Nothing
-    }
-
-
 {-| A card's primary action block
 
-    cardPrimaryAction
-        { cardPrimaryActionConfig
-            | onClick = Just CardClicked
-        }
-        [ cardBlock <|
+    Card.primaryAction
+        [ Html.Events.onClick CardClicked ]
+        [ Card.block <|
             Html.div []
                 [ Html.h1 [] [ text "Title" ] ]
-        , cardBlock <|
+        , Card.block <|
             Html.div []
                 [ Html.p [] [ text "Lorem ipsum…" ] ]
         ]
 
 -}
-cardPrimaryAction : PrimaryActionConfig msg -> List (CardBlock msg) -> List (CardBlock msg)
-cardPrimaryAction config blocks =
+primaryAction : List (Html.Attribute msg) -> List (Block msg) -> List (Block msg)
+primaryAction additionalAttributes blocks =
     [ Block <|
         Html.div
-            (List.filterMap identity
-                [ primaryActionCs
-                , primaryActionClickHandler config
-                ]
-                ++ config.additionalAttributes
+            (List.filterMap identity [ primaryActionCs ]
+                ++ additionalAttributes
             )
             (List.map (\(Block html) -> html) blocks)
     ]
@@ -413,14 +413,9 @@ primaryActionCs =
     Just (class "mdc-card__primary-action")
 
 
-primaryActionClickHandler : PrimaryActionConfig msg -> Maybe (Html.Attribute msg)
-primaryActionClickHandler { onClick } =
-    Maybe.map Html.Events.onClick onClick
-
-
 {-| Card actions type
 -}
-type CardActions msg
+type Actions msg
     = Actions
         { buttons : List (Button msg)
         , icons : List (Icon msg)
@@ -433,8 +428,8 @@ type CardActions msg
 A card may contain as actions buttons as well as icons.
 
 -}
-cardActions : { buttons : List (Button msg), icons : List (Icon msg) } -> CardActions msg
-cardActions { buttons, icons } =
+actions : { buttons : List (Button msg), icons : List (Icon msg) } -> Actions msg
+actions { buttons, icons } =
     Actions { buttons = buttons, icons = icons, fullBleed = False }
 
 
@@ -443,12 +438,12 @@ cardActions { buttons, icons } =
 If a card's action is comprised of a single button, that button can be made
 full width by using `cardFullBleedActions`.
 
-    cardFullBleedActions
-        (cardActionButton buttonConfig [ text "Visit" ])
+    fullBleedActions
+        (Card.actionButton Button.config "Visit")
 
 -}
-cardFullBleedActions : Button msg -> CardActions msg
-cardFullBleedActions button =
+fullBleedActions : Button msg -> Actions msg
+fullBleedActions button =
     Actions { buttons = [ button ], icons = [], fullBleed = True }
 
 
@@ -463,8 +458,8 @@ type Button msg
     cardActionButton buttonConfig "Visit"
 
 -}
-cardActionButton : Button.Config msg -> String -> Button msg
-cardActionButton (Material.Button.Internal.Config buttonConfig) label =
+actionButton : Button.Config msg -> String -> Button msg
+actionButton (Material.Button.Internal.Config buttonConfig) label =
     Button <|
         Button.text
             (Material.Button.Internal.Config
@@ -487,8 +482,8 @@ type Icon msg
     cardActionIcon iconButtonConfig "favorite"
 
 -}
-cardActionIcon : IconButton.Config msg -> String -> Icon msg
-cardActionIcon (Material.IconButton.Internal.Config iconButtonConfig) iconName =
+actionIcon : IconButton.Config msg -> String -> Icon msg
+actionIcon (Material.IconButton.Internal.Config iconButtonConfig) iconName =
     Icon <|
         IconButton.iconButton
             (Material.IconButton.Internal.Config

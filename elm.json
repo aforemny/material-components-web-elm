@@ -29,6 +29,8 @@
         "Material.LayoutGrid",
         "Material.LinearProgress",
         "Material.List",
+        "Material.ListDivider",
+        "Material.ListItem",
         "Material.Menu",
         "Material.ModalDrawer",
         "Material.PermanentDrawer",

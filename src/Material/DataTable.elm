@@ -1,11 +1,13 @@
 module Material.DataTable exposing
-    ( dataTable, dataTableConfig
-    , dataTableHeaderRow, DataTableHeaderRow
-    , dataTableHeaderCell, DataTableHeaderCell, dataTableHeaderCellConfig, DataTableHeaderCellConfig
-    , dataTableHeaderRowCheckbox
-    , dataTableRow, DataTableRow, dataTableRowConfig, DataTableRowConfig
-    , dataTableCell, DataTableCell, dataTableCellConfig, DataTableCellConfig
-    , dataTableRowCheckbox
+    ( Config, config
+    , setLabel
+    , setAdditionalAttributes
+    , dataTable
+    , Row, row
+    , selected, ariaSelected
+    , Cell, cell
+    , numericCell
+    , checkboxCell
     )
 
 {-| Data tables display information in a way that’s easy to scan, so that users
@@ -15,12 +17,10 @@ can look for patterns and insights.
 # Table of Contents
 
   - [Resources](#resources)
+  - [Configution](#configuration)
+      - [Configuration Options](#configuration-options)
   - [Basic Usage](#basic-usage)
   - [Data Table](#data-table)
-  - [Header Row](#header-row)
-  - [Header Cell](#header-cell)
-      - [Numeric Header Cell](#numeric-header-cell)
-      - [Checkbox Header Cell](#checkbox-header-cell)
   - [Row](#row)
       - [Selected Row](#selected-row)
   - [Cell](#cell)
@@ -38,100 +38,72 @@ can look for patterns and insights.
 
 # Basic Usage
 
-    import Material.DataTable
-        exposing
-            ( dataTable
-            , dataTableCell
-            , dataTableCellConfig
-            , dataTableConfig
-            , dataTableHeaderCell
-            , dataTableHeaderCellConfig
-            , dataTableHeaderRow
-            , dataTableRow
-            , dataTableRowConfig
-            )
+    import Material.DataTable as DataTable
 
     main =
-        dataTable dataTableConfig
+        DataTable.dataTable DataTable.config
             { thead =
-                [ dataTableHeaderRow []
-                    [ dataTableHeaderCell
-                        dataTableHeaderCellConfig
-                        [ text "Desert" ]
-                    ]
+                [ DataTable.row []
+                    [ DataTable.cell [] [ text "Desert" ] ]
                 ]
             , tbody =
-                [ dataTableRow dataTableRowConfig
-                    [ dataTableCell dataTableCellConfig
-                        [ text "Frozen yogurt" ]
-                    ]
+                [ DataTable.row []
+                    [ DataTable.cell [] [ text "Frozen yogurt" ] ]
                 ]
             }
 
 
+# Configuration
+
+@docs Config, config
+
+
+## Configuration Options
+
+@docs setLabel
+@docs setAdditionalAttributes
+
+
 # Data Table
 
-@docs dataTable, dataTableConfig
-
-
-# Header Row
-
-@docs dataTableHeaderRow, DataTableHeaderRow
-
-
-# Header Cell
-
-@docs dataTableHeaderCell, DataTableHeaderCell, dataTableHeaderCellConfig, DataTableHeaderCellConfig
-
-
-## Numeric Header Cell
-
-    dataTableHeaderCell
-        { dataTableHeaderCellConfig | numeric = True }
-        [ text "Number" ]
-
-
-## Checkbox Header Cell
-
-    import Material.Checkbox as Checkbox
-
-    dataTableHeaderCell
-        { dataTableHeaderCellConfig | checkbox = True }
-        [ dataTableHeaderRowCheckbox Checkbox.config ]
-
-@docs dataTableHeaderRowCheckbox
+@docs dataTable
 
 
 # Row
 
-@docs dataTableRow, DataTableRow, dataTableRowConfig, DataTableRowConfig
+@docs Row, row
 
 
 ## Selected Row
 
-    dataTableRow { dataTableRowConfig | selected = True }
-      [ … ]
+    DataTable.row
+        [ DataTable.selected
+        , DataTable.ariaSelected
+        ]
+        []
+
+@docs selected, ariaSelected
 
 
 # Cell
 
-@docs dataTableCell, DataTableCell, dataTableCellConfig, DataTableCellConfig
+@docs Cell, cell
 
 
 ## Numeric Cell
 
-    dataTableCell { dataTableCellConfig | numeric = True }
-        [ text "123" ]
+    DataTable.numericCell [] [ text "9.000,00" ]
+
+@docs numericCell
 
 
 ## Checkbox Cell
 
     import Material.Checkbox as Checkbox
 
-    dataTableCell { dataTableCellConfig | checkbox = True }
-        [ dataTableRowCheckbox Checkbox.config ]
+    DataTable.checkboxCell [] Checkbox.config
 
-@docs dataTableRowCheckbox
+@docs checkboxCell
 
 -}
 
@@ -145,42 +117,57 @@ import Material.Checkbox.Internal
 
 {-| Configuration of a data table
 -}
-type alias DataTableConfig msg =
-    { label : Maybe String
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Config msg
+    = Config
+        { label : Maybe String
+        , additionalAttributes : List (Html.Attribute msg)
+        }
 
 
 {-| Default configuration of a data table
 -}
-dataTableConfig : DataTableConfig msg
-dataTableConfig =
-    { label = Nothing
-    , additionalAttributes = []
-    }
+config : Config msg
+config =
+    Config
+        { label = Nothing
+        , additionalAttributes = []
+        }
+
+
+{-| Set the table's HTML5 aria-label attribute
+-}
+setLabel : String -> Config msg -> Config msg
+setLabel label (Config config_) =
+    Config { config_ | label = Just label }
+
+
+{-| Specify additional attributes
+-}
+setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAdditionalAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Data Table view function
 -}
 dataTable :
-    DataTableConfig msg
+    Config msg
     ->
-        { thead : List (DataTableHeaderRow msg)
-        , tbody : List (DataTableRow msg)
+        { thead : List (Row msg)
+        , tbody : List (Row msg)
         }
     -> Html msg
-dataTable config { thead, tbody } =
+dataTable ((Config { additionalAttributes }) as config_) { thead, tbody } =
     Html.node "mdc-data-table"
-        (dataTableCs :: config.additionalAttributes)
+        (dataTableCs :: additionalAttributes)
         [ Html.table
             (List.filterMap identity
                 [ dataTableTableCs
-                , ariaLabelAttr config
+                , ariaLabelAttr config_
                 ]
             )
-            [ Html.thead [] (List.map (\(DataTableHeaderRow node) -> node) thead)
-            , Html.tbody [ dataTableContentCs ]
-                (List.map (\(DataTableRow node) -> node) tbody)
+            [ Html.thead [] (List.map headerRow thead)
+            , Html.tbody [ dataTableContentCs ] (List.map bodyRow tbody)
             ]
         ]
 
@@ -195,72 +182,107 @@ dataTableTableCs =
     Just (class "mdc-data-table__table")
 
 
-ariaLabelAttr : DataTableConfig msg -> Maybe (Html.Attribute msg)
-ariaLabelAttr { label } =
-    Maybe.map (Html.Attributes.attribute "aria-label") label
-
-
-{-| Header row type
--}
-type DataTableHeaderRow msg
-    = DataTableHeaderRow (Html msg)
-
-
-{-| Header row view function
--}
-dataTableHeaderRow : List (Html.Attribute msg) -> List (DataTableHeaderCell msg) -> DataTableHeaderRow msg
-dataTableHeaderRow attributes nodes =
-    DataTableHeaderRow <|
-        Html.tr (class "mdc-data-table__header-row" :: attributes)
-            (List.map (\(DataTableHeaderCell node) -> node) nodes)
-
-
 dataTableContentCs : Html.Attribute msg
 dataTableContentCs =
     class "mdc-data-table__content"
 
 
-{-| Configuration of a header cell
+ariaLabelAttr : Config msg -> Maybe (Html.Attribute msg)
+ariaLabelAttr (Config { label }) =
+    Maybe.map (Html.Attributes.attribute "aria-label") label
+
+
+{-| Row type
 -}
-type alias DataTableHeaderCellConfig msg =
-    { numeric : Bool
-    , checkbox : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+type Row msg
+    = Row { attributes : List (Html.Attribute msg), nodes : List (Cell msg) }
 
 
-{-| Default configuration of a header cell
+{-| Row view function
 -}
-dataTableHeaderCellConfig : DataTableHeaderCellConfig msg
-dataTableHeaderCellConfig =
-    { numeric = False
-    , checkbox = False
-    , additionalAttributes = []
-    }
+row : List (Html.Attribute msg) -> List (Cell msg) -> Row msg
+row attributes nodes =
+    Row { attributes = attributes, nodes = nodes }
 
 
-{-| Header cell type
+{-| Attribute to mark a row as selected
+
+Does not work with a header row. You should set `ariaSelected` as well.
+
 -}
-type DataTableHeaderCell msg
-    = DataTableHeaderCell (Html msg)
+selected : Html.Attribute msg
+selected =
+    dataTableRowSelectedCs
 
 
-{-| Header cell view function
+{-| Attribute to mark a row as selected
 -}
-dataTableHeaderCell : DataTableHeaderCellConfig msg -> List (Html msg) -> DataTableHeaderCell msg
-dataTableHeaderCell config nodes =
-    DataTableHeaderCell <|
-        Html.th
-            (List.filterMap identity
-                [ dataTableHeaderCellCs
-                , columnHeaderRoleAttr
-                , colScopeAttr
-                , dataTableHeaderCellNumericCs config
-                , dataTableHeaderCellCheckboxCs config
+ariaSelected : Html.Attribute msg
+ariaSelected =
+    Html.Attributes.attribute "aria-selected" "true"
+
+
+dataTableRowSelectedCs : Html.Attribute msg
+dataTableRowSelectedCs =
+    class "mdc-data-table__row--selected"
+
+
+headerRow : Row msg -> Html msg
+headerRow (Row { attributes, nodes }) =
+    Html.tr (dataTableHeaderRowCs :: attributes) (List.map headerCell nodes)
+
+
+dataTableHeaderRowCs : Html.Attribute msg
+dataTableHeaderRowCs =
+    class "mdc-data-table__header-row"
+
+
+bodyRow : Row msg -> Html msg
+bodyRow (Row { attributes, nodes }) =
+    Html.tr (dataTableRowCs :: attributes) (List.map bodyCell nodes)
+
+
+dataTableRowCs : Html.Attribute msg
+dataTableRowCs =
+    class "mdc-data-table__header-row"
+
+
+headerCell : Cell msg -> Html msg
+headerCell cell_ =
+    case cell_ of
+        Cell { numeric, attributes, nodes } ->
+            Html.th
+                (List.filterMap identity
+                    [ dataTableHeaderCellCs
+                    , columnHeaderRoleAttr
+                    , colScopeAttr
+                    , dataTableHeaderCellNumericCs numeric
+                    ]
+                    ++ attributes
+                )
+                nodes
+
+        CheckboxCell { attributes, config_ } ->
+            Html.th
+                (List.filterMap identity
+                    [ dataTableHeaderCellCs
+                    , columnHeaderRoleAttr
+                    , colScopeAttr
+                    , dataTableHeaderCellCheckboxCs
+                    ]
+                    ++ attributes
+                )
+                [ Checkbox.checkbox
+                    (case config_ of
+                        Material.Checkbox.Internal.Config config__ ->
+                            Material.Checkbox.Internal.Config
+                                { config__
+                                    | additionalAttributes =
+                                        class "mdc-data-table__row-checkbox"
+                                            :: config__.additionalAttributes
+                                }
+                    )
                 ]
-                ++ config.additionalAttributes
-            )
-            nodes
 
 
 dataTableHeaderCellCs : Maybe (Html.Attribute msg)
@@ -278,8 +300,8 @@ colScopeAttr =
     Just (Html.Attributes.attribute "scope" "col")
 
 
-dataTableHeaderCellNumericCs : DataTableHeaderCellConfig msg -> Maybe (Html.Attribute msg)
-dataTableHeaderCellNumericCs { numeric } =
+dataTableHeaderCellNumericCs : Bool -> Maybe (Html.Attribute msg)
+dataTableHeaderCellNumericCs numeric =
     if numeric then
         Just (class "mdc-data-table__header-cell--numeric")
 
@@ -287,120 +309,78 @@ dataTableHeaderCellNumericCs { numeric } =
         Nothing
 
 
-dataTableHeaderCellCheckboxCs : DataTableHeaderCellConfig msg -> Maybe (Html.Attribute msg)
-dataTableHeaderCellCheckboxCs { checkbox } =
-    if checkbox then
-        Just (class "mdc-data-table__header-cell--checkbox")
-
-    else
-        Nothing
+dataTableHeaderCellCheckboxCs : Maybe (Html.Attribute msg)
+dataTableHeaderCellCheckboxCs =
+    Just (class "mdc-data-table__header-cell--checkbox")
 
 
-{-| Configuartion of a row
--}
-type alias DataTableRowConfig msg =
-    { selected : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
+bodyCell : Cell msg -> Html msg
+bodyCell cell_ =
+    case cell_ of
+        Cell { numeric, attributes, nodes } ->
+            Html.td
+                (List.filterMap identity
+                    [ dataTableCellCs
+                    , dataTableCellNumericCs numeric
+                    ]
+                    ++ attributes
+                )
+                nodes
 
-
-{-| Default configuration of a row
--}
-dataTableRowConfig : DataTableRowConfig msg
-dataTableRowConfig =
-    { selected = False
-    , additionalAttributes = []
-    }
-
-
-{-| Row type
--}
-type DataTableRow msg
-    = DataTableRow (Html msg)
-
-
-{-| Row view function
--}
-dataTableRow : DataTableRowConfig msg -> List (DataTableCell msg) -> DataTableRow msg
-dataTableRow config nodes =
-    DataTableRow <|
-        Html.tr
-            (List.filterMap identity
-                [ dataTableRowCs
-                , dataTableRowSelectedCs config
-                , ariaSelectedAttr config
+        CheckboxCell { attributes, config_ } ->
+            Html.td
+                (List.filterMap identity
+                    [ dataTableCellCs
+                    , dataTableCellCheckboxCs
+                    ]
+                    ++ attributes
+                )
+                [ Checkbox.checkbox
+                    (case config_ of
+                        Material.Checkbox.Internal.Config config__ ->
+                            Material.Checkbox.Internal.Config
+                                { config__
+                                    | additionalAttributes =
+                                        class "mdc-data-table__row-checkbox"
+                                            :: config__.additionalAttributes
+                                }
+                    )
                 ]
-                ++ config.additionalAttributes
-            )
-            (List.map (\(DataTableCell node) -> node) nodes)
-
-
-dataTableRowCs : Maybe (Html.Attribute msg)
-dataTableRowCs =
-    Just (class "mdc-data-table__row")
-
-
-dataTableRowSelectedCs : DataTableRowConfig msg -> Maybe (Html.Attribute msg)
-dataTableRowSelectedCs { selected } =
-    if selected then
-        Just (class "mdc-data-table__row--selected")
-
-    else
-        Nothing
-
-
-ariaSelectedAttr : DataTableRowConfig msg -> Maybe (Html.Attribute msg)
-ariaSelectedAttr { selected } =
-    Just
-        (Html.Attributes.attribute "aria-selected"
-            (if selected then
-                "true"
-
-             else
-                "false"
-            )
-        )
-
-
-{-| Configuration of a cell
--}
-type alias DataTableCellConfig msg =
-    { numeric : Bool
-    , checkbox : Bool
-    , additionalAttributes : List (Html.Attribute msg)
-    }
-
-
-{-| Default configuration of a cell
--}
-dataTableCellConfig : DataTableCellConfig msg
-dataTableCellConfig =
-    { numeric = False
-    , checkbox = False
-    , additionalAttributes = []
-    }
 
 
 {-| Cell type
 -}
-type DataTableCell msg
-    = DataTableCell (Html msg)
+type Cell msg
+    = Cell
+        { numeric : Bool
+        , attributes : List (Html.Attribute msg)
+        , nodes : List (Html msg)
+        }
+    | CheckboxCell
+        { config_ : Checkbox.Config msg
+        , attributes : List (Html.Attribute msg)
+        }
 
 
-{-| Cell view function
+{-| Data table cell
 -}
-dataTableCell : DataTableCellConfig msg -> List (Html msg) -> DataTableCell msg
-dataTableCell config nodes =
-    DataTableCell <|
-        Html.td
-            (List.filterMap identity
-                [ dataTableCellCs
-                , dataTableCellNumericCs config
-                , dataTableCellCheckboxCs config
-                ]
-                ++ config.additionalAttributes
-            )
-            nodes
+cell : List (Html.Attribute msg) -> List (Html msg) -> Cell msg
+cell attributes nodes =
+    Cell { numeric = False, attributes = attributes, nodes = nodes }
+
+
+{-| Numeric data table cell (right-aligned contents)
+-}
+numericCell : List (Html.Attribute msg) -> List (Html msg) -> Cell msg
+numericCell attributes nodes =
+    Cell { numeric = True, attributes = attributes, nodes = nodes }
+
+
+{-| Data table cell that contians a checkbox
+-}
+checkboxCell : List (Html.Attribute msg) -> Checkbox.Config msg -> Cell msg
+checkboxCell attributes config_ =
+    CheckboxCell { attributes = attributes, config_ = config_ }
 
 
 dataTableCellCs : Maybe (Html.Attribute msg)
@@ -408,8 +388,8 @@ dataTableCellCs =
     Just (class "mdc-data-table__cell")
 
 
-dataTableCellNumericCs : DataTableHeaderCellConfig msg -> Maybe (Html.Attribute msg)
-dataTableCellNumericCs { numeric } =
+dataTableCellNumericCs : Bool -> Maybe (Html.Attribute msg)
+dataTableCellNumericCs numeric =
     if numeric then
         Just (class "mdc-data-table__cell--numeric")
 
@@ -417,38 +397,6 @@ dataTableCellNumericCs { numeric } =
         Nothing
 
 
-dataTableCellCheckboxCs : DataTableHeaderCellConfig msg -> Maybe (Html.Attribute msg)
-dataTableCellCheckboxCs { checkbox } =
-    if checkbox then
-        Just (class "mdc-data-table__cell--checkbox")
-
-    else
-        Nothing
-
-
-{-| Checkbox view function (header row variant)
--}
-dataTableHeaderRowCheckbox : Checkbox.Config msg -> Html msg
-dataTableHeaderRowCheckbox (Material.Checkbox.Internal.Config checkboxConfig) =
-    Checkbox.checkbox
-        (Material.Checkbox.Internal.Config
-            { checkboxConfig
-                | additionalAttributes =
-                    class "mdc-data-table__header-row-checkbox"
-                        :: checkboxConfig.additionalAttributes
-            }
-        )
-
-
-{-| Checkbox view function (row variant)
--}
-dataTableRowCheckbox : Checkbox.Config msg -> Html msg
-dataTableRowCheckbox (Material.Checkbox.Internal.Config checkboxConfig) =
-    Checkbox.checkbox
-        (Material.Checkbox.Internal.Config
-            { checkboxConfig
-                | additionalAttributes =
-                    class "mdc-data-table__row-checkbox"
-                        :: checkboxConfig.additionalAttributes
-            }
-        )
+dataTableCellCheckboxCs : Maybe (Html.Attribute msg)
+dataTableCellCheckboxCs =
+    Just (class "mdc-data-table__cell--checkbox")

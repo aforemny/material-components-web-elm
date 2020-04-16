@@ -54,8 +54,8 @@ module Material.TextArea exposing
                 |> TextArea.setLabel "My text area"
                 |> TextArea.setValue "hello world"
                 |> TextArea.setOnInput ValueChanged
-                |> TextArea.setRows 4
-                |> TextArea.setCols 20
+                |> TextArea.setRows (Just 4)
+                |> TextArea.setCols (Just 20)
             )
 
 
@@ -95,7 +95,7 @@ configuration option.
 
     TextArea.textArea
         (TextArea.config
-            |> TextArea.setFullWidth
+            |> TextArea.setFullwidth True
         )
 
 Full width text areas do not support `setLabel` and will ignore this
@@ -112,7 +112,7 @@ To disable a text area use its `setDisabled` configuration option.
 
     TextArea.textArea
         (TextArea.config
-            |> TextArea.setDisabled
+            |> TextArea.setDisabled True
         )
 
 
@@ -122,7 +122,7 @@ To mark a text area as required, use its `setRequired` configuration option.
 
     TextArea.textArea
         (TextArea.config
-            |> TextArea.setRequired
+            |> TextArea.setRequired True
         )
 
 
@@ -132,7 +132,7 @@ To mark a text area as invalid, use its `setValid` configuration option.
 
     TextArea.textArea
         (TextArea.config
-            |> TextArea.setValid
+            |> TextArea.setValid True
         )
 
 
@@ -143,7 +143,7 @@ configuration option.
 
     TextArea.textArea
         (TextArea.config
-            |> TextArea.setOutlined
+            |> TextArea.setOutlined True
         )
 
 Note that this does not have any effect for fullwidth text areas.
@@ -157,7 +157,7 @@ of `HelperText.helperLine`.
 
     [ TextArea.textArea
         (TextArea.config
-            |> TextArea.setMaxLength 18
+            |> TextArea.setMaxLength (Just 18)
         )
     , HelperText.helperLine []
         [ HelperText.characterCounter [] ]
@@ -226,16 +226,16 @@ setLabel label (Config config_) =
 
 {-| Set a text area to be outlined
 -}
-setOutlined : Config msg -> Config msg
-setOutlined (Config config_) =
-    Config { config_ | outlined = True }
+setOutlined : Bool -> Config msg -> Config msg
+setOutlined outlined (Config config_) =
+    Config { config_ | outlined = outlined }
 
 
 {-| Set a text area to be fullwidth
 -}
-setFullwidth : Config msg -> Config msg
-setFullwidth (Config config_) =
-    Config { config_ | fullwidth = True }
+setFullwidth : Bool -> Config msg -> Config msg
+setFullwidth fullwidth (Config config_) =
+    Config { config_ | fullwidth = fullwidth }
 
 
 {-| Set a text area's value
@@ -247,58 +247,58 @@ setValue value (Config config_) =
 
 {-| Set a text area's placeholder
 -}
-setPlaceholder : String -> Config msg -> Config msg
+setPlaceholder : Maybe String -> Config msg -> Config msg
 setPlaceholder placeholder (Config config_) =
-    Config { config_ | placeholder = Just placeholder }
+    Config { config_ | placeholder = placeholder }
 
 
 {-| Set a text area's number of rows
 -}
-setRows : Int -> Config msg -> Config msg
+setRows : Maybe Int -> Config msg -> Config msg
 setRows rows (Config config_) =
-    Config { config_ | rows = Just rows }
+    Config { config_ | rows = rows }
 
 
 {-| Set a text area's number of columns
 -}
-setCols : Int -> Config msg -> Config msg
+setCols : Maybe Int -> Config msg -> Config msg
 setCols cols (Config config_) =
-    Config { config_ | cols = Just cols }
+    Config { config_ | cols = cols }
 
 
 {-| Set a text area to be disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Config config_) =
-    Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
 
 
 {-| Set a text area to be required
 -}
-setRequired : Config msg -> Config msg
-setRequired (Config config_) =
-    Config { config_ | required = True }
+setRequired : Bool -> Config msg -> Config msg
+setRequired required (Config config_) =
+    Config { config_ | required = required }
 
 
 {-| Set a text area to be valid
 -}
-setValid : Config msg -> Config msg
-setValid (Config config_) =
-    Config { config_ | valid = True }
+setValid : Bool -> Config msg -> Config msg
+setValid valid (Config config_) =
+    Config { config_ | valid = valid }
 
 
 {-| Set a text area's minimum length
 -}
-setMinLength : Int -> Config msg -> Config msg
+setMinLength : Maybe Int -> Config msg -> Config msg
 setMinLength minLength (Config config_) =
-    Config { config_ | minLength = Just minLength }
+    Config { config_ | minLength = minLength }
 
 
 {-| Set a text area's maximum length
 -}
-setMaxLength : Int -> Config msg -> Config msg
+setMaxLength : Maybe Int -> Config msg -> Config msg
 setMaxLength maxLength (Config config_) =
-    Config { config_ | maxLength = Just maxLength }
+    Config { config_ | maxLength = maxLength }
 
 
 {-| Specify additional attributes

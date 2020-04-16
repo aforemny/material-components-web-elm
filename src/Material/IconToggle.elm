@@ -45,7 +45,7 @@ If you are looking for a button that has an icon as well as text, refer to
     main =
         IconToggle.iconToggle
             (IconToggle.config
-                |> IconToggle.setOn
+                |> IconToggle.setOn True
                 |> IconToggle.setOnChange Clicked
             )
             { offIcon = "favorite_outlined"
@@ -74,7 +74,7 @@ clicked.
 
     IconToggle.iconToggle
         (IconToggle.config
-            |> IconToggle.setOn
+            |> IconToggle.setOn True
         )
         { offIcon = "favorite_border"
         , onIcon = "favorite"
@@ -89,7 +89,7 @@ To set an icon toggle to its on state, use its `setOn` configuration option.
 
     IconToggle.iconToggle
         (IconToggle.config
-            |> IconToggle.setOn
+            |> IconToggle.setOn True
         )
         { offIcon = "favorite_border"
         , onIcon = "favorite"
@@ -104,7 +104,7 @@ effect.
 
     IconToggle.iconToggle
         (IconToggle.config
-            |> IconToggle.setDisabled
+            |> IconToggle.setDisabled True
         )
         { offIcon = "favorite_border"
         , onIcon = "favorite"
@@ -160,16 +160,16 @@ config =
 
 {-| Make a icon toggle display its on state
 -}
-setOn : Config msg -> Config msg
-setOn (Config config_) =
-    Config { config_ | on = True }
+setOn : Bool -> Config msg -> Config msg
+setOn on (Config config_) =
+    Config { config_ | on = on }
 
 
 {-| Disable an icon toggle
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Config config_) =
-    Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
 
 
 {-| Set the HTML5 attribute `aria-label` of an icon toggle

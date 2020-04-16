@@ -86,7 +86,7 @@ configuration option.
 
     Button.text
         (Button.config
-            |> Button.setIcon "favorite"
+            |> Button.setIcon (Just "favorite")
         )
         "Like"
 
@@ -95,7 +95,7 @@ configuration option.
 
     Button.text
         (Button.config
-            |> Button.setIcon "favorite"
+            |> Button.setIcon (Just "favorite")
             |> Button.setTrailingIcon True
         )
         "Like"
@@ -108,7 +108,7 @@ buttons cannot be interacted with and have no visual interaction effect.
 
     Button.text
         (Button.config
-            |> Button.disabled
+            |> Button.setDisabled True
         )
         "Disabled"
 
@@ -120,7 +120,7 @@ configuration option.
 
     Button.text
         (Button.config
-            |> Button.dense
+            |> Button.setDense True
         )
         "Dense"
 
@@ -133,7 +133,7 @@ to specify a target.
 
     Button.text
         (Button.config
-            |> Button.setHref "https://elm-lang.org"
+            |> Button.setHref (Just "https://elm-lang.org")
         )
         "Visit"
 
@@ -172,45 +172,45 @@ config =
 
 {-| Set the icon of a button
 -}
-setIcon : String -> Config msg -> Config msg
+setIcon : Maybe String -> Config msg -> Config msg
 setIcon icon (Config config_) =
-    Config { config_ | icon = Just icon }
+    Config { config_ | icon = icon }
 
 
 {-| Specify whether a button's icon is a _trailing icon_, ie. whether it is
 displayed at the end
 -}
-setTrailingIcon : Config msg -> Config msg
-setTrailingIcon (Config config_) =
-    Config { config_ | trailingIcon = True }
+setTrailingIcon : Bool -> Config msg -> Config msg
+setTrailingIcon trailingIcon (Config config_) =
+    Config { config_ | trailingIcon = trailingIcon }
 
 
 {-| Make a button disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Config config_) =
-    Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
 
 
 {-| Make a button dense
 -}
-setDense : Config msg -> Config msg
-setDense (Config config_) =
-    Config { config_ | dense = True }
+setDense : Bool -> Config msg -> Config msg
+setDense dense (Config config_) =
+    Config { config_ | dense = dense }
 
 
 {-| Make a button a link button
 -}
-setHref : String -> Config msg -> Config msg
+setHref : Maybe String -> Config msg -> Config msg
 setHref href (Config config_) =
-    Config { config_ | href = Just href }
+    Config { config_ | href = href }
 
 
 {-| Specify the target for a link button
 -}
-setTarget : String -> Config msg -> Config msg
+setTarget : Maybe String -> Config msg -> Config msg
 setTarget target (Config config_) =
-    Config { config_ | target = Just target }
+    Config { config_ | target = target }
 
 
 {-| Specify additional attributes

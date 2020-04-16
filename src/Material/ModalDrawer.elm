@@ -119,9 +119,9 @@ config =
 
 {-| Set the drawer to be open
 -}
-setOpen : Config msg -> Config msg
-setOpen (Config config_) =
-    Config { config_ | open = True }
+setOpen : Bool -> Config msg -> Config msg
+setOpen open (Config config_) =
+    Config { config_ | open = open }
 
 
 {-| Specify message when the user closes the drawer

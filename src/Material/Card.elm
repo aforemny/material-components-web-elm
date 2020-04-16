@@ -95,7 +95,7 @@ A card may have a border by settings its `outlined` configuration field to
 
     Card.card
         (Card.config
-            |> Card.setOutlined
+            |> Card.setOutlined True
         )
         { blocks =
             [ Card.block <|
@@ -210,9 +210,9 @@ config =
 
 {-| Set a card to be outlined
 -}
-setOutlined : Config msg -> Config msg
-setOutlined (Config config_) =
-    Config { config_ | outlined = True }
+setOutlined : Bool -> Config msg -> Config msg
+setOutlined outlined (Config config_) =
+    Config { config_ | outlined = outlined }
 
 
 {-| Specify additional attributes

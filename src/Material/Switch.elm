@@ -43,7 +43,7 @@ Note that switches are usually used in conjunction with form fields. Refer to
     main =
         Switch.switch
             (Switch.config
-                |> Switch.setChecked
+                |> Switch.setChecked True
                 |> Switch.setOnChange Changed
             )
 
@@ -72,7 +72,7 @@ To set the state of a switch to on, use its `setChecked` configuration option.
 
     Switch.switch
         (Switch.config
-            |> Switch.setChecked
+            |> Switch.setChecked True
         )
 
 
@@ -83,7 +83,7 @@ switches cannot be interacted with and have no visual interaction effect.
 
     Switch.switch
         (Switch.config
-            |> Switch.setDisabled
+            |> Switch.setDisabled True
         )
 
 -}
@@ -120,16 +120,16 @@ config =
 
 {-| Mark a switch as on
 -}
-setChecked : Config msg -> Config msg
-setChecked (Config config_) =
-    Config { config_ | checked = True }
+setChecked : Bool -> Config msg -> Config msg
+setChecked checked (Config config_) =
+    Config { config_ | checked = checked }
 
 
 {-| Make a switch disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Config config_) =
-    Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
 
 
 {-| Specify additional attributes

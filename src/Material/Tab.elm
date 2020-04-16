@@ -47,16 +47,15 @@ Scroller and Tab components.
         TabBar.tabBar TabBar.config
             [ Tab.tab
                 (Tab.config
-                    |> Tab.setActive
+                    |> Tab.setActive True
                     |> Tab.setOnClick (TabClicked 0)
                 )
                 { label = "Tab 1", icon = Nothing }
             , Tab.tab
                 (Tab.config
-                    |> Tab.setActive
                     |> Tab.setOnClick (TabClicked 1)
                 )
-                { label = "Tab 1", icon = Nothing }
+                { label = "Tab 2", icon = Nothing }
             ]
 
 
@@ -83,7 +82,7 @@ Requires that the `tab`s have both `label` and `icon`.
 
     Tab.tab
         (Tab.config
-            |> Tab.setActive
+            |> Tab.setActive True
         )
 
 -}
@@ -123,9 +122,9 @@ setOnClick onClick (Material.Tab.Internal.Config config_) =
 
 {-| Set the tab to active
 -}
-setActive : Config msg -> Config msg
-setActive (Material.Tab.Internal.Config config_) =
-    Material.Tab.Internal.Config { config_ | active = True }
+setActive : Bool -> Config msg -> Config msg
+setActive active (Material.Tab.Internal.Config config_) =
+    Material.Tab.Internal.Config { config_ | active = active }
 
 
 {-| Specify additional attributes

@@ -106,7 +106,7 @@ sliders cannot be interacted with and have no visual interaction effect.
 
     Slider.slider
         (Slider.config
-            |> Slider.setDisabled
+            |> Slider.setDisabled True
         )
 
 
@@ -117,7 +117,7 @@ option.
 
     Slider.slider
         (Slider.config
-            |> Slider.setDiscrete
+            |> Slider.setDiscrete True
         )
 
 
@@ -128,7 +128,7 @@ configuration option.
 
     Slider.slider
         (Slider.config
-            |> Slider.setDisplayMarkers
+            |> Slider.setDisplayMarkers True
         )
 
 -}
@@ -181,16 +181,16 @@ config =
 
 {-| Set a slider to be a discrete slider
 -}
-setDiscrete : Config msg -> Config msg
-setDiscrete (Config config_) =
-    Config { config_ | discrete = True }
+setDiscrete : Bool -> Config msg -> Config msg
+setDiscrete discrete (Config config_) =
+    Config { config_ | discrete = discrete }
 
 
 {-| Set a discrete slider to display track markers
 -}
-setDisplayMarkers : Config msg -> Config msg
-setDisplayMarkers (Config config_) =
-    Config { config_ | displayMarkers = True }
+setDisplayMarkers : Bool -> Config msg -> Config msg
+setDisplayMarkers displayMarkers (Config config_) =
+    Config { config_ | displayMarkers = displayMarkers }
 
 
 {-| Set a slider's minimum value (default: 0)
@@ -223,9 +223,9 @@ setValue value (Config config_) =
 
 {-| Make a slider disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Config config_) =
-    Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
 
 
 {-| Specify additional attributes

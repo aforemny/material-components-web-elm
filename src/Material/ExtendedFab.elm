@@ -83,7 +83,7 @@ the button's label, also use its `setTrailingIcon` configuration option.
 
     ExtendedFab.extendedFab
         (ExtendedFab.config
-            |> ExtendedFab.setIcon "favorite"
+            |> ExtendedFab.setIcon (Just "favorite")
         )
         "Favorites"
 
@@ -92,8 +92,8 @@ the button's label, also use its `setTrailingIcon` configuration option.
 
     ExtendedFab.extendedFab
         (ExtendedFab.config
-            |> ExtendedFab.setIcon "favorite"
-            |> ExtendedFab.setTrailingIcon
+            |> ExtendedFab.setIcon (Just "favorite")
+            |> ExtendedFab.setTrailingIcon True
         )
         "Favorites"
 
@@ -105,7 +105,7 @@ use its `setExited` configuration option.
 
     ExtendedFab.extendedFab
         (ExtendedFab.config
-            |> ExtendedFab.setExited
+            |> ExtendedFab.setExited True
         )
         "Favorites"
 
@@ -143,24 +143,24 @@ config =
 
 {-| Set the icon of an extended floating action button
 -}
-setIcon : String -> Config msg -> Config msg
+setIcon : Maybe String -> Config msg -> Config msg
 setIcon icon (Config config_) =
-    Config { config_ | icon = Just icon }
+    Config { config_ | icon = icon }
 
 
 {-| Specify whether an extended floating action button is a _trailing icon_,
 ie. whether it is displayed at the end
 -}
-setTrailingIcon : Config msg -> Config msg
-setTrailingIcon (Config config_) =
-    Config { config_ | trailingIcon = True }
+setTrailingIcon : Bool -> Config msg -> Config msg
+setTrailingIcon trailingIcon (Config config_) =
+    Config { config_ | trailingIcon = trailingIcon }
 
 
 {-| Make a floating action button transition off the screen
 -}
-setExited : Config msg -> Config msg
-setExited (Config config_) =
-    Config { config_ | exited = True }
+setExited : Bool -> Config msg -> Config msg
+setExited exited (Config config_) =
+    Config { config_ | exited = exited }
 
 
 {-| Specify additional attributes

@@ -54,7 +54,7 @@ positioning, wrap the button and the menu within an element that sets the
                 "Open menu"
             , Menu.menu
                 (Menu.config
-                    |> Menu.setOpen
+                    |> Menu.setOpen True
                     |> Menu.setOnClose MenuClosed
                 )
                 [ List.list
@@ -93,7 +93,11 @@ positioning, wrap the button and the menu within an element that sets the
 A menu may not show a transition when opening by using its `setQuickOpen`
 configuration option.
 
-    Menu.menu (Menu.config |> Menu.setQuickOpen) []
+    Menu.menu
+        (Menu.config
+            |> Menu.setQuickOpen True
+        )
+        []
 
 -}
 
@@ -129,16 +133,16 @@ config =
 
 {-| Set a menu to be open
 -}
-setOpen : Config msg -> Config msg
-setOpen (Config config_) =
-    Config { config_ | open = True }
+setOpen : Bool -> Config msg -> Config msg
+setOpen open (Config config_) =
+    Config { config_ | open = open }
 
 
 {-| Set a menu to open quickly, without showing a transition
 -}
-setQuickOpen : Config msg -> Config msg
-setQuickOpen (Config config_) =
-    Config { config_ | quickOpen = True }
+setQuickOpen : Bool -> Config msg -> Config msg
+setQuickOpen quickOpen (Config config_) =
+    Config { config_ | quickOpen = quickOpen }
 
 
 {-| Specify a message when the user closes the menu

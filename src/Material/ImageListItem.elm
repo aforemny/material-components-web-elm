@@ -99,9 +99,9 @@ setLabel label (Material.ImageListItem.Internal.Config config_) =
 
 {-| Make an image list item behave like a HTML5 anchor element
 -}
-setHref : String -> Config msg -> Config msg
+setHref : Maybe String -> Config msg -> Config msg
 setHref href (Material.ImageListItem.Internal.Config config_) =
-    Material.ImageListItem.Internal.Config { config_ | href = Just href }
+    Material.ImageListItem.Internal.Config { config_ | href = href }
 
 
 {-| Specify additional attributes

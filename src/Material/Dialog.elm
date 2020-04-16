@@ -37,7 +37,7 @@ module Material.Dialog exposing
     main =
         Dialog.dialog
             (Dialog.config
-                |> Dialog.setOpen
+                |> Dialog.setOpen True
                 |> Dialog.setOnClose Closed
             )
             { title = Nothing
@@ -105,9 +105,9 @@ config =
 
 {-| Set a dialog to be open
 -}
-setOpen : Config msg -> Config msg
-setOpen (Config config_) =
-    Config { config_ | open = True }
+setOpen : Bool -> Config msg -> Config msg
+setOpen open (Config config_) =
+    Config { config_ | open = open }
 
 
 {-| Specify additional attributes

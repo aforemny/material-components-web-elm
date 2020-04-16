@@ -1,8 +1,14 @@
 module Material.Select exposing
     ( Config, config
+    , setOnChange
+    , setLabel
+    , setValue
+    , setDisabled
+    , setRequired
+    , setValid
+    , setAdditionalAttributes
     , filled
     , outlined
-    , setAdditionalAttributes, setDisabled, setLabel, setOnChange, setRequired, setValid, setValue
     )
 
 {-| MDC Select provides Material Design single-option select menus. It supports
@@ -67,13 +73,13 @@ accessible, and fully RTL-aware.
 
 ## Configuration Options
 
-    @docs setOnChange
-    @docs setLabel
-    @docs setValue
-    @docs setDisabled
-    @docs setRequired
-    @docs setValid
-    @docs setAdditionalAttributes
+@docs setOnChange
+@docs setLabel
+@docs setValue
+@docs setDisabled
+@docs setRequired
+@docs setValid
+@docs setAdditionalAttributes
 
 
 # Filled Select
@@ -100,7 +106,9 @@ Instead of a filled select, you may choose a select with a outline by using the
 To disable a select, use its `setDisabled` configuration option.
 
     Select.filled
-        (Select.config |> Select.setDisabled)
+        (Select.config
+            |> Select.setDisabled True
+        )
         []
 
 
@@ -109,7 +117,9 @@ To disable a select, use its `setDisabled` configuration option.
 To mark a select as required, use its `setRequired` configuration option.
 
     Select.filled
-        (Select.config |> Select.setRequired)
+        (Select.config
+            |> Select.setRequired True
+        )
         []
 
 
@@ -178,23 +188,23 @@ setValue value (Config config_) =
 
 {-| Set a select to be disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Config config_) =
-    Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
 
 
 {-| Set a select to be required
 -}
-setRequired : Config msg -> Config msg
-setRequired (Config config_) =
-    Config { config_ | required = True }
+setRequired : Bool -> Config msg -> Config msg
+setRequired required (Config config_) =
+    Config { config_ | required = required }
 
 
 {-| Set a select's validity
 -}
-setValid : Config msg -> Config msg
-setValid (Config config_) =
-    Config { config_ | valid = True }
+setValid : Bool -> Config msg -> Config msg
+setValid valid (Config config_) =
+    Config { config_ | valid = valid }
 
 
 {-| Specify additional attributes

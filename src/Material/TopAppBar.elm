@@ -132,7 +132,11 @@ To make a top app bar fixed to the top, use its `setFixed` configuration
 option. Since a fixed top app bar would overlay the pages content, an
 appropriate margin has to be applied to the page's content.
 
-    TopAppBar.topAppBar (TopAppBar.config |> TopAppBar.setFixed) []
+    TopAppBar.topAppBar
+        (TopAppBar.config
+            |> TopAppBar.setFixed True
+        )
+        []
 
 @docs fixedAdjust
 @docs denseFixedAdjust
@@ -173,7 +177,11 @@ To make a top app bar taller than the default, you may use a prominent top app b
 To make a top app bar shorter than the default, use its `setDense`
 configuration option.
 
-    TopAppBar.topAppBar (TopAppBar.config |> TopAppBar.setDense) []
+    TopAppBar.topAppBar
+        (TopAppBar.config
+            |> TopAppBar.setDense True
+        )
+        []
 
 -}
 
@@ -211,16 +219,16 @@ config =
 
 {-| Set a top app bar to be dense
 -}
-setDense : Config msg -> Config msg
-setDense (Config config_) =
-    Config { config_ | dense = True }
+setDense : Bool -> Config msg -> Config msg
+setDense dense (Config config_) =
+    Config { config_ | dense = dense }
 
 
 {-| Set a top app bar to be fixed
 -}
-setFixed : Config msg -> Config msg
-setFixed (Config config_) =
-    Config { config_ | fixed = True }
+setFixed : Bool -> Config msg -> Config msg
+setFixed fixed (Config config_) =
+    Config { config_ | fixed = fixed }
 
 
 {-| Specify additional attributes

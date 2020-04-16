@@ -132,9 +132,9 @@ config =
 Use this if you do not want the list divider to intersect a list item's meta.
 
 -}
-setInset : Config msg -> Config msg
-setInset (Config config_) =
-    Config { config_ | inset = True }
+setInset : Bool -> Config msg -> Config msg
+setInset inset (Config config_) =
+    Config { config_ | inset = inset }
 
 
 {-| Set a list divider to be _padded_.
@@ -142,9 +142,9 @@ setInset (Config config_) =
 Use this if you do not want the list divider to intersect a list item's avatar.
 
 -}
-setPadded : Config msg -> Config msg
-setPadded (Config config_) =
-    Config { config_ | padded = True }
+setPadded : Bool -> Config msg -> Config msg
+setPadded padded (Config config_) =
+    Config { config_ | padded = padded }
 
 
 {-| Specify additional attributes

@@ -76,7 +76,7 @@ If you want the floating action button to appear in smaller size, use its
 
     Fab.fab
         (Fab.config
-            |> setMini
+            |> setMini True
         )
         "favorite"
 
@@ -88,7 +88,7 @@ If you want the floating action button to transition off the screen, use its
 
     Fab.fab
         (Fab.config
-            |> setExited
+            |> setExited True
         )
         "favorite"
 
@@ -124,16 +124,16 @@ config =
 
 {-| Make a floating action button smaller
 -}
-setMini : Config msg -> Config msg
-setMini (Config config_) =
-    Config { config_ | mini = True }
+setMini : Bool -> Config msg -> Config msg
+setMini mini (Config config_) =
+    Config { config_ | mini = mini }
 
 
 {-| Make a floating action button transition off the screen
 -}
-setExited : Config msg -> Config msg
-setExited (Config config_) =
-    Config { config_ | exited = True }
+setExited : Bool -> Config msg -> Config msg
+setExited exited (Config config_) =
+    Config { config_ | exited = exited }
 
 
 {-| Specify additional attributes

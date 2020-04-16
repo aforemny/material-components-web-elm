@@ -108,7 +108,7 @@ configuration option.
 
     TextField.textField
         (TextField.config
-            |> TextField.setFullWidth
+            |> TextField.setFullwidth True
         )
 
 Full width text fields do not support `label` and will ignore this
@@ -125,7 +125,7 @@ To disable a text field use its `setDisabled` configuration option.
 
     TextField.textField
         (TextField.config
-            |> TextField.setDisabled
+            |> TextField.setDisabled True
         )
 
 
@@ -148,7 +148,7 @@ To mark a text field as required, use its `setRequired` configuration option.
 
     TextField.textField
         (TextField.config
-            |> TextField.setRequired
+            |> TextField.setRequired True
         )
 
 
@@ -158,7 +158,7 @@ To mark a text field as invalid, use its `setValid` configuration option.
 
     TextField.textField
         (TextField.config
-            |> TextField.setValid
+            |> TextField.setValid True
         )
 
 
@@ -169,7 +169,7 @@ Text fields may have a visible outlined around them by using their
 
     TextField.textField
         (TextField.config
-            |> TextField.setOutlined
+            |> TextField.setOutlined True
         )
 
 Note that this does not have any effect for fullwidth text fields.
@@ -183,7 +183,7 @@ configuration option to specify a `TextFieldIcon`.
     TextField.textField
         (TextField.config
             |> TextField.setLeadingIcon
-                (TextField.icon Icon.config "wifi")
+                (Just (TextField.icon Icon.config "wifi"))
         )
 
 @docs Icon, icon
@@ -197,7 +197,7 @@ configuration option to specify a `TextFieldIcon`.
     TextField.textField
         (TextField.config
             |> TextField.setTrailingIcon
-                (TextField.icon Icon.config "clear")
+                (Just (TextField.icon Icon.config "clear"))
         )
 
 
@@ -209,7 +209,7 @@ of `HelperText.helperLine`.
 
     [ TextField.textField
         (TextField.config
-            |> TextField.setMaxLength 18
+            |> TextField.setMaxLength (Just 18)
         )
     , HelperText.helperLine []
         [ HelperText.characterCounter [] ]
@@ -244,8 +244,8 @@ type Config msg
         , min : Maybe Int
         , max : Maybe Int
         , step : Maybe Int
-        , leadingIcon : Icon msg
-        , trailingIcon : Icon msg
+        , leadingIcon : Maybe (Icon msg)
+        , trailingIcon : Maybe (Icon msg)
         , additionalAttributes : List (Html.Attribute msg)
         , onInput : Maybe (String -> msg)
         , onChange : Maybe (String -> msg)
@@ -255,8 +255,7 @@ type Config msg
 {-| Text field trailing or leading icon -
 -}
 type Icon msg
-    = NoIcon
-    | Icon (Html msg)
+    = Icon (Html msg)
 
 
 {-| Default configuration of a text field
@@ -279,8 +278,8 @@ config =
         , min = Nothing
         , max = Nothing
         , step = Nothing
-        , leadingIcon = NoIcon
-        , trailingIcon = NoIcon
+        , leadingIcon = Nothing
+        , trailingIcon = Nothing
         , additionalAttributes = []
         , onInput = Nothing
         , onChange = Nothing
@@ -296,16 +295,16 @@ setLabel label (Config config_) =
 
 {-| Set a text field to be outlined
 -}
-setOutlined : Config msg -> Config msg
-setOutlined (Config config_) =
-    Config { config_ | outlined = True }
+setOutlined : Bool -> Config msg -> Config msg
+setOutlined outlined (Config config_) =
+    Config { config_ | outlined = outlined }
 
 
 {-| Set a text field to be fullwidth
 -}
-setFullwidth : Config msg -> Config msg
-setFullwidth (Config config_) =
-    Config { config_ | fullwidth = True }
+setFullwidth : Bool -> Config msg -> Config msg
+setFullwidth fullwidth (Config config_) =
+    Config { config_ | fullwidth = fullwidth }
 
 
 {-| Set a text field's value
@@ -317,51 +316,51 @@ setValue value (Config config_) =
 
 {-| Set a text field's placeholder
 -}
-setPlaceholder : String -> Config msg -> Config msg
+setPlaceholder : Maybe String -> Config msg -> Config msg
 setPlaceholder placeholder (Config config_) =
-    Config { config_ | placeholder = Just placeholder }
+    Config { config_ | placeholder = placeholder }
 
 
 {-| Set a text field to be disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Config config_) =
-    Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
 
 
 {-| Set a text field to be required
 -}
-setRequired : Config msg -> Config msg
-setRequired (Config config_) =
-    Config { config_ | required = True }
+setRequired : Bool -> Config msg -> Config msg
+setRequired required (Config config_) =
+    Config { config_ | required = required }
 
 
 {-| Set a text field to be valid
 -}
-setValid : Config msg -> Config msg
-setValid (Config config_) =
-    Config { config_ | valid = True }
+setValid : Bool -> Config msg -> Config msg
+setValid valid (Config config_) =
+    Config { config_ | valid = valid }
 
 
 {-| Set a text field's minimum length
 -}
-setMinLength : Int -> Config msg -> Config msg
+setMinLength : Maybe Int -> Config msg -> Config msg
 setMinLength minLength (Config config_) =
-    Config { config_ | minLength = Just minLength }
+    Config { config_ | minLength = minLength }
 
 
 {-| Set a text field's maximum length
 -}
-setMaxLength : Int -> Config msg -> Config msg
+setMaxLength : Maybe Int -> Config msg -> Config msg
 setMaxLength maxLength (Config config_) =
-    Config { config_ | maxLength = Just maxLength }
+    Config { config_ | maxLength = maxLength }
 
 
 {-| Set a text field's pattern
 -}
-setPattern : String -> Config msg -> Config msg
+setPattern : Maybe String -> Config msg -> Config msg
 setPattern pattern (Config config_) =
-    Config { config_ | pattern = Just pattern }
+    Config { config_ | pattern = pattern }
 
 
 {-| Set a text field's type
@@ -373,35 +372,35 @@ setType type_ (Config config_) =
 
 {-| Set a text field's minimum value
 -}
-setMin : Int -> Config msg -> Config msg
+setMin : Maybe Int -> Config msg -> Config msg
 setMin min (Config config_) =
-    Config { config_ | min = Just min }
+    Config { config_ | min = min }
 
 
 {-| Set a text field's maximum value
 -}
-setMax : Int -> Config msg -> Config msg
+setMax : Maybe Int -> Config msg -> Config msg
 setMax max (Config config_) =
-    Config { config_ | max = Just max }
+    Config { config_ | max = max }
 
 
 {-| Set a text field's step value
 -}
-setStep : Int -> Config msg -> Config msg
+setStep : Maybe Int -> Config msg -> Config msg
 setStep step (Config config_) =
-    Config { config_ | step = Just step }
+    Config { config_ | step = step }
 
 
 {-| Set a text field's leading icon
 -}
-setLeadingIcon : Icon msg -> Config msg -> Config msg
+setLeadingIcon : Maybe (Icon msg) -> Config msg -> Config msg
 setLeadingIcon leadingIcon (Config config_) =
     Config { config_ | leadingIcon = leadingIcon }
 
 
 {-| Set a text field's trailing icon
 -}
-setTrailingIcon : Icon msg -> Config msg -> Config msg
+setTrailingIcon : Maybe (Icon msg) -> Config msg -> Config msg
 setTrailingIcon trailingIcon (Config config_) =
     Config { config_ | trailingIcon = trailingIcon }
 
@@ -523,7 +522,7 @@ disabledCs (Config { disabled }) =
 
 withLeadingIconCs : Config msg -> Maybe (Html.Attribute msg)
 withLeadingIconCs (Config { leadingIcon }) =
-    if leadingIcon /= NoIcon then
+    if leadingIcon /= Nothing then
         Just (class "mdc-text-field--with-leading-icon")
 
     else
@@ -532,7 +531,7 @@ withLeadingIconCs (Config { leadingIcon }) =
 
 withTrailingIconCs : Config msg -> Maybe (Html.Attribute msg)
 withTrailingIconCs (Config { trailingIcon }) =
-    if trailingIcon /= NoIcon then
+    if trailingIcon /= Nothing then
         Just (class "mdc-text-field--with-trailing-icon")
 
     else
@@ -612,20 +611,20 @@ placeholderAttr (Config { placeholder }) =
 leadingIconElt : Config msg -> List (Html msg)
 leadingIconElt (Config { leadingIcon }) =
     case leadingIcon of
-        NoIcon ->
+        Nothing ->
             []
 
-        Icon html ->
+        Just (Icon html) ->
             [ html ]
 
 
 trailingIconElt : Config msg -> List (Html msg)
 trailingIconElt (Config { trailingIcon }) =
     case trailingIcon of
-        NoIcon ->
+        Nothing ->
             []
 
-        Icon html ->
+        Just (Icon html) ->
             [ html ]
 
 

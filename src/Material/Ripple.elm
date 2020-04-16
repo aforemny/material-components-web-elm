@@ -77,7 +77,7 @@ If you want to set the ripple effect to either primary or accent color, use its
 
     Ripple.bounded
         (Ripple.config
-            |> setColor Ripple.primary
+            |> setColor (Just Ripple.primary)
         )
 
 @docs Color, primary, accent
@@ -110,9 +110,9 @@ config =
 
 {-| Set a ripple's color
 -}
-setColor : Color -> Config msg -> Config msg
+setColor : Maybe Color -> Config msg -> Config msg
 setColor color (Config config_) =
-    Config { config_ | color = Just color }
+    Config { config_ | color = color }
 
 
 {-| Specify additional attributes

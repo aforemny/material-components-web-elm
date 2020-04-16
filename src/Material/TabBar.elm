@@ -54,7 +54,7 @@ Scroller and Tab components.
         TabBar.tabBar TabBar.config
             [ Tab.tab
                 (Tab.config
-                    |> Tab.setActive
+                    |> Tab.setActive True
                     |> Tab.setOnClick (TabClicked 0)
                 )
                 { label = "Tab 1", icon = Nothing }
@@ -95,7 +95,7 @@ Requires that the `tab`s have both `label` and `icon`.
 
     TabBar.tabBar
         (TabBar.config
-            |> TabBar.setStacked
+            |> TabBar.setStacked True
         )
         []
 
@@ -107,7 +107,7 @@ possible, use the tab bar's `setMinWidth` configuration option.
 
     TabBar.tabBar
         (TabBar.config
-            |> TabBar.setMinWidth
+            |> TabBar.setMinWidth True
         )
         []
 
@@ -119,7 +119,9 @@ indicators to only span their tab's content, use the tab bar's
 `setIndicatorSpansContent` configuration option.
 
     TabBar.tabBar
-        (tabBarConfig |> TabBar.setIndicatorSpansContent)
+        (tabBarConfig
+            |> TabBar.setIndicatorSpansContent True
+        )
         []
 
 
@@ -136,7 +138,7 @@ content.
 
     TabBar.tabBar
         (TabBar.config
-            |> TabBar.setAlign TabBar.Center
+            |> TabBar.setAlign (Just TabBar.Center)
         )
         []
 
@@ -177,31 +179,31 @@ config =
 
 {-| Set a tab bar's tabs to be stacked
 -}
-setStacked : Config msg -> Config msg
-setStacked (Config config_) =
-    Config { config_ | stacked = True }
+setStacked : Bool -> Config msg -> Config msg
+setStacked stacked (Config config_) =
+    Config { config_ | stacked = stacked }
 
 
 {-| Set a tab bar's tabs to be as narrow as possible, ignoring their usual
 minimum width.
 -}
-setMinWidth : Config msg -> Config msg
-setMinWidth (Config config_) =
-    Config { config_ | minWidth = True }
+setMinWidth : Bool -> Config msg -> Config msg
+setMinWidth minWidth (Config config_) =
+    Config { config_ | minWidth = minWidth }
 
 
 {-| Set a tab bar's tab indicator to span its content
 -}
-setIndicatorSpansContent : Config msg -> Config msg
-setIndicatorSpansContent (Config config_) =
-    Config { config_ | indicatorSpansContent = True }
+setIndicatorSpansContent : Bool -> Config msg -> Config msg
+setIndicatorSpansContent indicatorSpansContent (Config config_) =
+    Config { config_ | indicatorSpansContent = indicatorSpansContent }
 
 
 {-| Set a tab bar's alignment of tabs in case they overflow horizontally
 -}
-setAlign : Align -> Config msg -> Config msg
+setAlign : Maybe Align -> Config msg -> Config msg
 setAlign align (Config config_) =
-    Config { config_ | align = Just align }
+    Config { config_ | align = align }
 
 
 {-| Set a tab bar's alignment of tabs in case they overflow horizontally

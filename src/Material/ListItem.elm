@@ -109,10 +109,7 @@ Common examples for metas are text, icons and images and selection controls.
 
 List items may be two-line list items by using `text`.
 
-    ListItem.listItem
-        (ListItem.config
-            |> ListItem.setDisabled
-        )
+    ListItem.listItem ListItem.config
         [ ListItem.text []
             { primary = [ text "First line" ]
             , secondary = [ text "Second line" ]
@@ -129,7 +126,7 @@ List items may be disabled by setting their `disabled` configuration field to
 
     ListItem.listItem
         (ListItem.config
-            |> ListItem.setDisabled
+            |> ListItem.setDisabled True
         )
         [ text "List item" ]
 
@@ -141,7 +138,7 @@ List items may be disabled by setting their `selected` configuration field to
 
     ListItem.listItem
         (ListItem.config
-            |> ListItem.setSelected
+            |> ListItem.setSelected True
         )
         [ text "List item" ]
 
@@ -153,7 +150,7 @@ List items may be disabled by setting their `activated` configuration field to
 
     ListItem.listItem
         (ListItem.config
-            |> ListItem.setActivated
+            |> ListItem.setActivated True
         )
         [ text "List item" ]
 
@@ -166,7 +163,7 @@ essentially behaves like a HTML `a` element. You may specify the configuration
 
     ListItem.listItem
         (ListItem.config
-            |> ListItem.setHref "https://elm-lang.org"
+            |> ListItem.setHref (Just "https://elm-lang.org")
         )
         [ text "Elm programming language" ]
 
@@ -206,37 +203,37 @@ config =
 
 {-| Set a list item to be disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Material.ListItem.Internal.Config config_) =
+    Material.ListItem.Internal.Config { config_ | disabled = disabled }
 
 
 {-| Set a list item to be selected
 -}
-setSelected : Config msg -> Config msg
-setSelected (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | selected = True }
+setSelected : Bool -> Config msg -> Config msg
+setSelected selected (Material.ListItem.Internal.Config config_) =
+    Material.ListItem.Internal.Config { config_ | selected = selected }
 
 
 {-| Set a list item to be activated
 -}
-setActivated : Config msg -> Config msg
-setActivated (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | activated = True }
+setActivated : Bool -> Config msg -> Config msg
+setActivated activated (Material.ListItem.Internal.Config config_) =
+    Material.ListItem.Internal.Config { config_ | activated = activated }
 
 
 {-| Set a link list item's HTML5 href attribute
 -}
-setHref : String -> Config msg -> Config msg
+setHref : Maybe String -> Config msg -> Config msg
 setHref href (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | href = Just href }
+    Material.ListItem.Internal.Config { config_ | href = href }
 
 
 {-| Set a link list item's HTML5 target attribute
 -}
-setTarget : String -> Config msg -> Config msg
+setTarget : Maybe String -> Config msg -> Config msg
 setTarget target (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | target = Just target }
+    Material.ListItem.Internal.Config { config_ | target = target }
 
 
 {-| Specify additional attributes

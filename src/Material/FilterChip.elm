@@ -39,7 +39,7 @@ choice, filter content, or trigger an action.
         FilterChip.set []
             [ FilterChip.chip
                 (FilterChip.config
-                    |> FilterChip.setSelected
+                    |> FilterChip.setSelected True
                     |> FilterChip.setOnClick (ChipClicked "Tops")
                 )
                 "Tops"
@@ -117,16 +117,16 @@ config =
 
 {-| Set a chip's icon
 -}
-setIcon : String -> Config msg -> Config msg
+setIcon : Maybe String -> Config msg -> Config msg
 setIcon icon (Config config_) =
-    Config { config_ | icon = Just icon }
+    Config { config_ | icon = icon }
 
 
 {-| Set a chip to be selected
 -}
-setSelected : Config msg -> Config msg
-setSelected (Config config_) =
-    Config { config_ | selected = True }
+setSelected : Bool -> Config msg -> Config msg
+setSelected selected (Config config_) =
+    Config { config_ | selected = selected }
 
 
 {-| Specify additional attributes

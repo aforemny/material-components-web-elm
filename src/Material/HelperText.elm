@@ -113,9 +113,9 @@ config =
 
 {-| Make a helper text persistent
 -}
-setPersistent : Config msg -> Config msg
-setPersistent (Config config_) =
-    Config { config_ | persistent = True }
+setPersistent : Bool -> Config msg -> Config msg
+setPersistent persistent (Config config_) =
+    Config { config_ | persistent = persistent }
 
 
 {-| Specify additional attributes

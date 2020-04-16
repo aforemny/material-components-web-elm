@@ -185,7 +185,7 @@ field to `True`.
     Snackbar.message
         |> Snackbar.setLabel "Something happened"
         |> Snackbar.setActionButton "Take action"
-        |> Snackbar.setStacked
+        |> Snackbar.setStacked True
 
 
 ## Leading messages
@@ -316,9 +316,9 @@ config =
 
 {-| Set the snackbar to close the current message when the user presses escape
 -}
-setCloseOnEscape : Config msg -> Config msg
-setCloseOnEscape (Config config_) =
-    Config { config_ | closeOnEscape = True }
+setCloseOnEscape : Bool -> Config msg -> Config msg
+setCloseOnEscape closeOnEscape (Config config_) =
+    Config { config_ | closeOnEscape = closeOnEscape }
 
 
 {-| Specify additional attributes
@@ -410,9 +410,9 @@ setLeading (Message message_) =
 
 {-| Set a message to be stacked
 -}
-setStacked : Message msg -> Message msg
-setStacked (Message message_) =
-    Message { message_ | stacked = True }
+setStacked : Bool -> Message msg -> Message msg
+setStacked stacked (Message message_) =
+    Message { message_ | stacked = stacked }
 
 
 {-| Set a message's timeout in milliseconds

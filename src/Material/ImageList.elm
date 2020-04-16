@@ -76,7 +76,7 @@ aspect ratios.
 
     ImageList.imageList
         (ImageList.config
-            |> ImageList.setMasonry
+            |> ImageList.setMasonry True
         )
         []
 
@@ -89,7 +89,7 @@ labels to be positioned in a scrim overlaying each image, use the image list's
 
     ImageList.imageList
         (ImageList.config
-            |> ImageList.setTextProtection
+            |> ImageList.setTextProtection True
         )
         [ ImageListItem.imageListItem
             (ImageListItem.config
@@ -129,16 +129,16 @@ config =
 
 {-| Make an image list a masonry image list
 -}
-setMasonry : Config msg -> Config msg
-setMasonry (Config config_) =
-    Config { config_ | masonry = True }
+setMasonry : Bool -> Config msg -> Config msg
+setMasonry masonry (Config config_) =
+    Config { config_ | masonry = masonry }
 
 
 {-| Make an image list item's label display below the item
 -}
-setTextProtection : Config msg -> Config msg
-setTextProtection (Config config_) =
-    Config { config_ | withTextProtection = True }
+setTextProtection : Bool -> Config msg -> Config msg
+setTextProtection withTextProtection (Config config_) =
+    Config { config_ | withTextProtection = withTextProtection }
 
 
 {-| Specify additional attributes

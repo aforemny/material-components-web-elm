@@ -81,7 +81,7 @@ configuration option.
 
     LinearProgress.indeterminate
         (LinearProgress.config
-            |> LinearProgress.setClosed
+            |> LinearProgress.setClosed True
         )
 
 
@@ -92,7 +92,7 @@ If you want to reverse the direction of the linear progress indicator, use its
 
     LinearProgress.indeterminate
         (LinearProgress.config
-            |> LinearProgress.reverse
+            |> LinearProgress.reverse True
         )
 
 -}
@@ -131,16 +131,16 @@ config =
 
 {-| Hide a linear progress indicator
 -}
-setClosed : Config msg -> Config msg
-setClosed (Config config_) =
-    Config { config_ | closed = True }
+setClosed : Bool -> Config msg -> Config msg
+setClosed closed (Config config_) =
+    Config { config_ | closed = closed }
 
 
 {-| Reverse the direction of a linear progress indicator
 -}
-setReverse : Config msg -> Config msg
-setReverse (Config config_) =
-    Config { config_ | reverse = True }
+setReverse : Bool -> Config msg -> Config msg
+setReverse reverse (Config config_) =
+    Config { config_ | reverse = reverse }
 
 
 {-| Specify additional attributes

@@ -75,7 +75,7 @@ effect.
 
     IconButton.iconButton
         (IconButton.config
-            |> IconButton.setDisabled
+            |> IconButton.setDisabled True
         )
         "favorite"
 
@@ -124,9 +124,9 @@ config =
 
 {-| Mark an icon button as disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Config config_) =
-    Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
 
 
 {-| Set an icon button's `arial-label` HTML5 attribute

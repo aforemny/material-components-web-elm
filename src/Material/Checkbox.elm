@@ -93,7 +93,7 @@ checkboxes cannot be interacted with and have no visual interaction effect.
 
     Checkbox.checkbox
         (Checkbox.config
-            |> Checkbox.setDisabled
+            |> Checkbox.setDisabled True
         )
 
 -}
@@ -135,9 +135,9 @@ setState state (Config config_) =
 
 {-| Make a checkbox disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Config config_) =
-    Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
 
 
 {-| Specify additional attributes

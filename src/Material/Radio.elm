@@ -73,7 +73,7 @@ configuration option.
 
     Radio.radio
         (Radio.config
-            |> Radio.setChecked
+            |> Radio.setChecked True
         )
 
 
@@ -84,7 +84,7 @@ radio buttons cannot be interacted with and have no visual interaction effect.
 
     Radio.radio
         (Radio.config
-            |> Radio.setDisabled
+            |> Radio.setDisabled True
         )
 
 -}
@@ -121,16 +121,16 @@ config =
 
 {-| Make a radio button checked
 -}
-setChecked : Config msg -> Config msg
-setChecked (Config config_) =
-    Config { config_ | checked = True }
+setChecked : Bool -> Config msg -> Config msg
+setChecked checked (Config config_) =
+    Config { config_ | checked = checked }
 
 
 {-| Make a radio button disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Config config_) =
-    Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Config config_) =
+    Config { config_ | disabled = disabled }
 
 
 {-| Specify additional attributes

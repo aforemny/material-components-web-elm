@@ -80,7 +80,7 @@ To disable one select's option, set its `disabled` configuration field to `True`
 
     SelectOption.selectOption
         (SelectOption.config
-            |> SelectOption.setDisabled
+            |> SelectOption.setDisabled True
         )
         [ text "" ]
 
@@ -117,9 +117,9 @@ config =
 
 {-| Set a select option to be disabled
 -}
-setDisabled : Config msg -> Config msg
-setDisabled (Material.SelectOption.Internal.Config config_) =
-    Material.SelectOption.Internal.Config { config_ | disabled = True }
+setDisabled : Bool -> Config msg -> Config msg
+setDisabled disabled (Material.SelectOption.Internal.Config config_) =
+    Material.SelectOption.Internal.Config { config_ | disabled = disabled }
 
 
 {-| Set a select option's value

@@ -77,7 +77,7 @@ line in `listItemSecondaryText`.
 
     List.list
         (List.config
-            |> List.setTwoLine
+            |> List.setTwoLine True
         )
         [ ListItem.listItem ListItem.config
             [ ListItem.text []
@@ -97,7 +97,7 @@ option.
 
     List.list
         (List.config
-            |> List.setNonInteractive
+            |> List.setNonInteractive True
         )
         [ ListItem.listItem ListItem.config [ text "List item" ] ]
 
@@ -106,7 +106,10 @@ option.
 
 Lists may be styled more compact by using the `setDense` configuration option.
 
-    List.list (List.config |> List.setDense)
+    List.list
+        (List.config
+            |> List.setDense True
+        )
         [ ListItem.listItem ListItem.config [ text "List item" ] ]
 
 
@@ -118,7 +121,10 @@ List item's graphics may be configured to appear larger by using the
 This is particularly useful when a list item's graphic includes an image rather
 than an icon.
 
-    List.list (List.config |> List.setDense)
+    List.list
+        (List.config
+            |> List.setAvatarList True
+        )
         [ ListItem.listItem ListItem.config
             [ ListItem.graphic [] [ Html.img [] [] ]
             , text "List item"
@@ -192,44 +198,44 @@ config =
 
 {-| Set a list to be non-interactive
 -}
-setNonInteractive : Config msg -> Config msg
-setNonInteractive (Config config_) =
-    Config { config_ | nonInteractive = True }
+setNonInteractive : Bool -> Config msg -> Config msg
+setNonInteractive nonInteractive (Config config_) =
+    Config { config_ | nonInteractive = nonInteractive }
 
 
 {-| Set a list to be dense
 -}
-setDense : Config msg -> Config msg
-setDense (Config config_) =
-    Config { config_ | dense = True }
+setDense : Bool -> Config msg -> Config msg
+setDense dense (Config config_) =
+    Config { config_ | dense = dense }
 
 
 {-| Set a list to be an avatar list
 -}
-setAvatarList : Config msg -> Config msg
-setAvatarList (Config config_) =
-    Config { config_ | avatarList = True }
+setAvatarList : Bool -> Config msg -> Config msg
+setAvatarList avatarList (Config config_) =
+    Config { config_ | avatarList = avatarList }
 
 
 {-| Set a list to be a two line list
 -}
-setTwoLine : Config msg -> Config msg
-setTwoLine (Config config_) =
-    Config { config_ | twoLine = True }
+setTwoLine : Bool -> Config msg -> Config msg
+setTwoLine twoLine (Config config_) =
+    Config { config_ | twoLine = twoLine }
 
 
 {-| TODO: Document setVertical
 -}
-setVertical : Config msg -> Config msg
-setVertical (Config config_) =
-    Config { config_ | vertical = True }
+setVertical : Bool -> Config msg -> Config msg
+setVertical vertical (Config config_) =
+    Config { config_ | vertical = vertical }
 
 
 {-| TODO: Document setWrapFocus
 -}
-setWrapFocus : Config msg -> Config msg
-setWrapFocus (Config config_) =
-    Config { config_ | wrapFocus = True }
+setWrapFocus : Bool -> Config msg -> Config msg
+setWrapFocus wrapFocus (Config config_) =
+    Config { config_ | wrapFocus = wrapFocus }
 
 
 {-| Specify additional attributes

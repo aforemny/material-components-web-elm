@@ -4,7 +4,7 @@ module Material.IconToggle exposing
     , setOn
     , setDisabled
     , setLabel
-    , setAdditionalAttributes
+    , setAttributes
     , iconToggle
     )
 
@@ -64,7 +64,7 @@ If you are looking for a button that has an icon as well as text, refer to
 @docs setOn
 @docs setDisabled
 @docs setLabel
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Icon Toggle
@@ -181,8 +181,8 @@ setLabel label (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

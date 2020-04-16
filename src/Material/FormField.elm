@@ -3,7 +3,7 @@ module Material.FormField exposing
     , setOnClick
     , setLabel, setAlignEnd
     , setFor
-    , setAdditionalAttributes
+    , setAttributes
     , formField
     )
 
@@ -51,7 +51,7 @@ interacting with the label.
 @docs setOnClick
 @docs setLabel, setAlignEnd
 @docs setFor
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Form Field
@@ -113,8 +113,8 @@ setAlignEnd alignEnd (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

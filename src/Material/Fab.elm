@@ -3,7 +3,7 @@ module Material.Fab exposing
     , setOnClick
     , setMini
     , setExited
-    , setAdditionalAttributes
+    , setAttributes
     , fab
     )
 
@@ -61,7 +61,7 @@ action button](#extended-fab) below.
 @docs setOnClick
 @docs setMini
 @docs setExited
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Floating Action Button
@@ -138,8 +138,8 @@ setExited exited (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

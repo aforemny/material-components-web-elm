@@ -5,7 +5,7 @@ module Material.Button exposing
     , setDisabled
     , setDense
     , setHref, setTarget
-    , setAdditionalAttributes
+    , setAttributes
     , text, outlined, raised, unelevated
     )
 
@@ -62,7 +62,7 @@ module Material.Button exposing
 @docs setDisabled
 @docs setDense
 @docs setHref, setTarget
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Button Variants
@@ -215,8 +215,8 @@ setTarget target (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

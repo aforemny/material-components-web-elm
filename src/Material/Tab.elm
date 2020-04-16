@@ -2,7 +2,7 @@ module Material.Tab exposing
     ( Config, config
     , setOnClick
     , setActive
-    , setAdditionalAttributes
+    , setAttributes
     , Tab, tab, Content
     )
 
@@ -68,7 +68,7 @@ Scroller and Tab components.
 
 @docs setOnClick
 @docs setActive
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Tab
@@ -129,8 +129,8 @@ setActive active (Material.Tab.Internal.Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Material.Tab.Internal.Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Material.Tab.Internal.Config config_) =
     Material.Tab.Internal.Config { config_ | additionalAttributes = additionalAttributes }
 
 

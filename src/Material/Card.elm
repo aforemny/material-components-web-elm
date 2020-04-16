@@ -1,7 +1,7 @@
 module Material.Card exposing
     ( Config, config
     , setOutlined
-    , setAdditionalAttributes
+    , setAttributes
     , card, Content
     , Block
     , block
@@ -80,7 +80,7 @@ module Material.Card exposing
 ## Configuration Options
 
 @docs setOutlined
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Card
@@ -217,8 +217,8 @@ setOutlined outlined (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

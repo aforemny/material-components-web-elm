@@ -3,7 +3,7 @@ module Material.InputChip exposing
     , setOnClick
     , setOnTrailingIconClick
     , setIcon
-    , setAdditionalAttributes
+    , setAttributes
     , set, chip, Chip
     )
 
@@ -57,7 +57,7 @@ choice, filter content, or trigger an action.
 @docs setOnClick
 @docs setOnTrailingIconClick
 @docs setIcon
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Input Chips
@@ -119,8 +119,8 @@ setIcon icon (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

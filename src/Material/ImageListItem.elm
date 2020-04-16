@@ -2,7 +2,7 @@ module Material.ImageListItem exposing
     ( Config, config
     , setLabel
     , setHref
-    , setAdditionalAttributes
+    , setAttributes
     , ImageListItem, imageListItem
     )
 
@@ -40,7 +40,7 @@ yourself, preferably through SASS.
         ImageList.imageList ImageList.config
             [ ImageListItem.imageListItem
                 (ImageList.itemConfig
-                    |> ImageList.setAdditionalAttributes
+                    |> ImageList.setAttributes
                         [ style "width" "calc(100% / 5 - 4.2px)"
                         , style "margin" "2px"
                         ]
@@ -58,7 +58,7 @@ yourself, preferably through SASS.
 
 @docs setLabel
 @docs setHref
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Image list Item
@@ -106,8 +106,8 @@ setHref href (Material.ImageListItem.Internal.Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Material.ImageListItem.Internal.Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Material.ImageListItem.Internal.Config config_) =
     Material.ImageListItem.Internal.Config { config_ | additionalAttributes = additionalAttributes }
 
 

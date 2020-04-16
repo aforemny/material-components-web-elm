@@ -1,7 +1,7 @@
 module Material.DataTable exposing
     ( Config, config
     , setLabel
-    , setAdditionalAttributes
+    , setAttributes
     , dataTable
     , Row, row
     , selected, ariaSelected
@@ -61,7 +61,7 @@ can look for patterns and insights.
 ## Configuration Options
 
 @docs setLabel
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Data Table
@@ -143,8 +143,8 @@ setLabel label (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

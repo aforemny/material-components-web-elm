@@ -3,7 +3,7 @@ module Material.Menu exposing
     , setOnClose
     , setOpen
     , setQuickOpen
-    , setAdditionalAttributes
+    , setAttributes
     , menu, surfaceAnchor
     )
 
@@ -80,7 +80,7 @@ positioning, wrap the button and the menu within an element that sets the
 @docs setOnClose
 @docs setOpen
 @docs setQuickOpen
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Menu
@@ -154,8 +154,8 @@ setOnClose onClose (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

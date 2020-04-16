@@ -3,7 +3,7 @@ module Material.Checkbox exposing
     , setOnChange
     , setState, State, checked, unchecked, indeterminate
     , setDisabled
-    , setAdditionalAttributes
+    , setAttributes
     , checkbox
     )
 
@@ -58,7 +58,7 @@ Note that checkboxes are usually used in conjunction with form fields. Refer to
 @docs setOnChange
 @docs setState, State, checked, unchecked, indeterminate
 @docs setDisabled
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Checkbox
@@ -142,8 +142,8 @@ setDisabled disabled (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

@@ -2,7 +2,7 @@ module Material.TopAppBar exposing
     ( Config, config
     , setFixed
     , setDense
-    , setAdditionalAttributes
+    , setAttributes
     , topAppBar
     , row, section, alignEnd, alignStart
     , navigationIcon, title
@@ -58,7 +58,7 @@ navigation icon, and action items.
                 [ TopAppBar.section [ TopAppBar.alignStart ]
                     [ IconButton.iconButton
                         (IconButton.config
-                            |> IconButton.setAdditionalAttributes
+                            |> IconButton.setAttributes
                                 [ TopAppBar.navigationIcon ]
                         )
                         "menu"
@@ -78,7 +78,7 @@ navigation icon, and action items.
 
 @docs setFixed
 @docs setDense
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Top App Bar
@@ -102,7 +102,7 @@ bar's row. Do not forget to set the `actionItem` attribute on the icons.
             [ TopAppBar.section [ TopAppBar.alignStart ]
                 [ IconButton.iconButton
                     (IconButton.config
-                        |> IconButton.setAdditionalAttributes [ TopAppBar.navigationIcon ]
+                        |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
                     )
                     "menu"
                 , Html.span [ TopAppBar.title ]
@@ -111,12 +111,12 @@ bar's row. Do not forget to set the `actionItem` attribute on the icons.
             , TopAppBar.section [ TopAppBar.alignEnd ]
                 [ IconButton.iconButton
                     (IconButton.config
-                        |> IconButton.setAdditionalAttributes [ TopAppBar.actionItem ]
+                        |> IconButton.setAttributes [ TopAppBar.actionItem ]
                     )
                     "print"
                 , IconButton.iconButton
                     (IconButton.config
-                        |> IconButton.setAdditionalAttributes [ TopAppBar.actionItem ]
+                        |> IconButton.setAttributes [ TopAppBar.actionItem ]
                     )
                     "bookmark"
                 ]
@@ -233,8 +233,8 @@ setFixed fixed (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

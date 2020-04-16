@@ -6,7 +6,7 @@ module Material.Select exposing
     , setDisabled
     , setRequired
     , setValid
-    , setAdditionalAttributes
+    , setAttributes
     , filled
     , outlined
     )
@@ -79,7 +79,7 @@ accessible, and fully RTL-aware.
 @docs setDisabled
 @docs setRequired
 @docs setValid
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Filled Select
@@ -209,8 +209,8 @@ setValid valid (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

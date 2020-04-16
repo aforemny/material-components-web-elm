@@ -14,7 +14,7 @@ module Material.TextArea exposing
     , setValid
     , setMinLength
     , setMaxLength
-    , setAdditionalAttributes
+    , setAttributes
     , textArea
     )
 
@@ -80,7 +80,7 @@ module Material.TextArea exposing
 @docs setValid
 @docs setMinLength
 @docs setMaxLength
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Text Area
@@ -303,8 +303,8 @@ setMaxLength maxLength (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

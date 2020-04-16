@@ -4,7 +4,7 @@ module Material.Switch exposing
     , setOnChange
     , setChecked
     , setDisabled
-    , setAdditionalAttributes
+    , setAttributes
     )
 
 {-| Switches toggle the state of a single setting on or off. They are the
@@ -63,7 +63,7 @@ Note that switches are usually used in conjunction with form fields. Refer to
 @docs setOnChange
 @docs setChecked
 @docs setDisabled
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # On Switch
@@ -134,8 +134,8 @@ setDisabled disabled (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

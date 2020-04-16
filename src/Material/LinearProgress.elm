@@ -2,7 +2,7 @@ module Material.LinearProgress exposing
     ( Config, config
     , setReverse
     , setClosed
-    , setAdditionalAttributes
+    , setAttributes
     , indeterminate
     , determinate
     , buffered
@@ -50,7 +50,7 @@ determinate or indeterminate activities.
 
 @docs setReverse
 @docs setClosed
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Indeterminate Linear Progress
@@ -145,8 +145,8 @@ setReverse reverse (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

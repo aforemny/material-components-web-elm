@@ -19,7 +19,7 @@ module Material.TextField exposing
     , setStep
     , setLeadingIcon
     , setTrailingIcon
-    , setAdditionalAttributes
+    , setAttributes
     , textField
     , Icon, icon
     )
@@ -93,7 +93,7 @@ module Material.TextField exposing
 @docs setStep
 @docs setLeadingIcon
 @docs setTrailingIcon
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Text Field
@@ -407,8 +407,8 @@ setTrailingIcon trailingIcon (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

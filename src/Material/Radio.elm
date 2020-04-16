@@ -3,7 +3,7 @@ module Material.Radio exposing
     , setOnChange
     , setChecked
     , setDisabled
-    , setAdditionalAttributes
+    , setAttributes
     , radio
     )
 
@@ -58,7 +58,7 @@ to [FormField](Material-FormField) for more information.
 @docs setOnChange
 @docs setChecked
 @docs setDisabled
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Radio
@@ -135,8 +135,8 @@ setDisabled disabled (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

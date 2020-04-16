@@ -2,7 +2,7 @@ module Material.SelectOption exposing
     ( Config, config
     , setValue
     , setDisabled
-    , setAdditionalAttributes
+    , setAttributes
     , SelectOption, selectOption
     )
 
@@ -66,7 +66,7 @@ accessible, and fully RTL-aware.
 
 @docs setValue
 @docs setDisabled
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Select Option
@@ -131,8 +131,8 @@ setValue value (Material.SelectOption.Internal.Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Material.SelectOption.Internal.Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Material.SelectOption.Internal.Config config_) =
     Material.SelectOption.Internal.Config { config_ | additionalAttributes = additionalAttributes }
 
 

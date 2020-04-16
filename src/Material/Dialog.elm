@@ -2,7 +2,7 @@ module Material.Dialog exposing
     ( Config, config
     , setOnClose
     , setOpen
-    , setAdditionalAttributes
+    , setAttributes
     , dialog, Content
     )
 
@@ -66,7 +66,7 @@ module Material.Dialog exposing
 
 @docs setOnClose
 @docs setOpen
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Dialog
@@ -112,8 +112,8 @@ setOpen open (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

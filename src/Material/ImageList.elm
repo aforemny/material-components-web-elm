@@ -2,7 +2,7 @@ module Material.ImageList exposing
     ( Config, config
     , setMasonry
     , setTextProtection
-    , setAdditionalAttributes
+    , setAttributes
     , imageList
     )
 
@@ -42,7 +42,7 @@ yourself, preferably through SASS.
         ImageList.imageList ImageList.config
             [ ImageListItem.imageListItem
                 (ImageListItem.config
-                    |> ImageListItem.setAdditionalAttributes
+                    |> ImageListItem.setAttributes
                         [ style "width" "calc(100% / 5 - 4.2px)"
                         , style "margin" "2px"
                         ]
@@ -60,7 +60,7 @@ yourself, preferably through SASS.
 
 @docs setMasonry
 @docs setTextProtection
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Image List
@@ -143,8 +143,8 @@ setTextProtection withTextProtection (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

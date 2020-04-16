@@ -6,7 +6,7 @@ module Material.ListItem exposing
     , setActivated
     , setHref
     , setTarget
-    , setAdditionalAttributes
+    , setAttributes
     , ListItem, listItem
     , graphic
     , meta
@@ -66,7 +66,7 @@ module Material.ListItem exposing
 @docs setActivated
 @docs setHref
 @docs setTarget
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # List Item
@@ -238,8 +238,8 @@ setTarget target (Material.ListItem.Internal.Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Material.ListItem.Internal.Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Material.ListItem.Internal.Config config_) =
     Material.ListItem.Internal.Config
         { config_ | additionalAttributes = additionalAttributes }
 

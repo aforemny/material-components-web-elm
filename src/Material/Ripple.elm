@@ -1,7 +1,7 @@
 module Material.Ripple exposing
     ( Config, config
     , setColor
-    , setAdditionalAttributes
+    , setAttributes
     , bounded
     , unbounded
     , Color, primary, accent
@@ -52,7 +52,7 @@ ripple effects which work best with icons.
 ## Configuration Options
 
 @docs setColor
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Bounded Ripple
@@ -117,8 +117,8 @@ setColor color (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

@@ -3,7 +3,7 @@ module Material.ExtendedFab exposing
     , setOnClick
     , setIcon, setTrailingIcon
     , setExited
-    , setAdditionalAttributes
+    , setAttributes
     , extendedFab
     )
 
@@ -63,7 +63,7 @@ action button](#extended-fab) below.
 @docs setOnClick
 @docs setIcon, setTrailingIcon
 @docs setExited
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Extended Floating Action Button
@@ -165,8 +165,8 @@ setExited exited (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

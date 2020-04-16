@@ -2,7 +2,7 @@ module Material.ModalDrawer exposing
     ( Config, config
     , setOnClose
     , setOpen
-    , setAdditionalAttributes
+    , setAttributes
     , drawer, content
     , scrim
     , header, title, subtitle
@@ -67,7 +67,7 @@ other functionality on an app.
 
 @docs setOnClose
 @docs setOpen
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Modal Drawer
@@ -133,8 +133,8 @@ setOnClose onClose (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

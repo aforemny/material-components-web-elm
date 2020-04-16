@@ -4,7 +4,7 @@ module Material.List exposing
     , setDense
     , setAvatarList
     , setTwoLine
-    , setAdditionalAttributes
+    , setAttributes
     , list
     , group, subheader
     )
@@ -60,7 +60,7 @@ module Material.List exposing
 @docs setDense
 @docs setAvatarList
 @docs setTwoLine
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # List
@@ -240,8 +240,8 @@ setWrapFocus wrapFocus (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

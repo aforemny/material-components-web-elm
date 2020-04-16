@@ -1,7 +1,7 @@
 module Material.Snackbar exposing
     ( Config, config
     , setCloseOnEscape
-    , setAdditionalAttributes
+    , setAttributes
     , snackbar
     , Queue, initialQueue, Msg, update
     , addMessage
@@ -74,7 +74,7 @@ screen.
 ## Configuration Options
 
 @docs setCloseOnEscape
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Snackbar
@@ -323,8 +323,8 @@ setCloseOnEscape closeOnEscape (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

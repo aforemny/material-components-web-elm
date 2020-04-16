@@ -1,7 +1,7 @@
 module Material.HelperText exposing
     ( Config, config
     , setPersistent
-    , setAdditionalAttributes
+    , setAttributes
     , helperText
     , helperLine, characterCounter
     )
@@ -52,7 +52,7 @@ be used. It should be visible either persistently or only on focus.
 ## Configuration Options
 
 @docs setPersistent
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Helper Text
@@ -120,8 +120,8 @@ setPersistent persistent (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

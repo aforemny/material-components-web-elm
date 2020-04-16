@@ -1,6 +1,6 @@
 module Material.PermanentDrawer exposing
     ( Config, config
-    , setAdditionalAttributes
+    , setAttributes
     , drawer, content
     , header, title, subtitle
     )
@@ -61,7 +61,7 @@ other functionality on an app.
 
 ## Configuration Options
 
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Permanent Drawer
@@ -101,8 +101,8 @@ config =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

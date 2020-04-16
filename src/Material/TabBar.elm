@@ -4,7 +4,7 @@ module Material.TabBar exposing
     , setMinWidth
     , setIndicatorSpansContent
     , setAlign
-    , setAdditionalAttributes
+    , setAttributes
     , tabBar
     , Align(..)
     )
@@ -77,7 +77,7 @@ Scroller and Tab components.
 @docs setMinWidth
 @docs setIndicatorSpansContent
 @docs setAlign
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Tab Bar
@@ -208,8 +208,8 @@ setAlign align (Config config_) =
 
 {-| Set a tab bar's alignment of tabs in case they overflow horizontally
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

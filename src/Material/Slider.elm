@@ -8,7 +8,7 @@ module Material.Slider exposing
     , setStep
     , setValue
     , setDisabled
-    , setAdditionalAttributes
+    , setAttributes
     , slider
     )
 
@@ -68,7 +68,7 @@ component.
 @docs setStep
 @docs setValue
 @docs setDisabled
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Continuous Slider
@@ -230,8 +230,8 @@ setDisabled disabled (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

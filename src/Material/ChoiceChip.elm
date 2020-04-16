@@ -3,7 +3,7 @@ module Material.ChoiceChip exposing
     , setOnClick
     , setIcon
     , setSelected
-    , setAdditionalAttributes
+    , setAttributes
     , set, chip, Chip
     )
 
@@ -61,7 +61,7 @@ choice, filter content, or trigger an action.
 @docs setOnClick
 @docs setIcon
 @docs setSelected
-@docs setAdditionalAttributes
+@docs setAttributes
 
 
 # Choice Chips
@@ -130,8 +130,8 @@ setSelected selected (Config config_) =
 
 {-| Specify additional attributes
 -}
-setAdditionalAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAdditionalAttributes additionalAttributes (Config config_) =
+setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
+setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 

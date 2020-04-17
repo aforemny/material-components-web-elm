@@ -92,7 +92,7 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Tab.Internal
+import Material.Tab.Internal exposing (Config(..), Tab(..))
 
 
 {-| Configuration of a tab
@@ -105,7 +105,7 @@ type alias Config msg =
 -}
 config : Config msg
 config =
-    Material.Tab.Internal.Config
+    Config
         { active = False
         , additionalAttributes = []
         , onClick = Nothing
@@ -116,22 +116,22 @@ config =
 {-| Specify a message when the user clicks a tab
 -}
 setOnClick : msg -> Config msg -> Config msg
-setOnClick onClick (Material.Tab.Internal.Config config_) =
-    Material.Tab.Internal.Config { config_ | onClick = Just onClick }
+setOnClick onClick (Config config_) =
+    Config { config_ | onClick = Just onClick }
 
 
 {-| Set the tab to active
 -}
 setActive : Bool -> Config msg -> Config msg
-setActive active (Material.Tab.Internal.Config config_) =
-    Material.Tab.Internal.Config { config_ | active = active }
+setActive active (Config config_) =
+    Config { config_ | active = active }
 
 
 {-| Specify additional attributes
 -}
 setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAttributes additionalAttributes (Material.Tab.Internal.Config config_) =
-    Material.Tab.Internal.Config { config_ | additionalAttributes = additionalAttributes }
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Content of a tab
@@ -151,6 +151,5 @@ type alias Tab msg =
 {-| Tab constructor
 -}
 tab : Config msg -> Content -> Tab msg
-tab (Material.Tab.Internal.Config config_) content =
-    Material.Tab.Internal.Tab
-        (Material.Tab.Internal.Config { config_ | content = content })
+tab (Config config_) content =
+    Tab (Config { config_ | content = content })

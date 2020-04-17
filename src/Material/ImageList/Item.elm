@@ -69,7 +69,7 @@ yourself, preferably through SASS.
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
-import Material.ImageList.Item.Internal
+import Material.ImageList.Item.Internal exposing (Config(..), ImageListItem(..))
 
 
 {-| Configuration of an image list item
@@ -82,7 +82,7 @@ type alias Config msg =
 -}
 config : Config msg
 config =
-    Material.ImageList.Item.Internal.Config
+    Config
         { label = Nothing
         , href = Nothing
         , additionalAttributes = []
@@ -93,23 +93,22 @@ config =
 {-| Set an image list item's label
 -}
 setLabel : String -> Config msg -> Config msg
-setLabel label (Material.ImageList.Item.Internal.Config config_) =
-    Material.ImageList.Item.Internal.Config { config_ | label = Just label }
+setLabel label (Config config_) =
+    Config { config_ | label = Just label }
 
 
 {-| Make an image list item behave like a HTML5 anchor element
 -}
 setHref : Maybe String -> Config msg -> Config msg
-setHref href (Material.ImageList.Item.Internal.Config config_) =
-    Material.ImageList.Item.Internal.Config { config_ | href = href }
+setHref href (Config config_) =
+    Config { config_ | href = href }
 
 
 {-| Specify additional attributes
 -}
 setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAttributes additionalAttributes (Material.ImageList.Item.Internal.Config config_) =
-    Material.ImageList.Item.Internal.Config
-        { config_ | additionalAttributes = additionalAttributes }
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Image list item
@@ -121,6 +120,5 @@ type alias ImageListItem msg =
 {-| Image list item constructor
 -}
 imageListItem : Config msg -> String -> ImageListItem msg
-imageListItem (Material.ImageList.Item.Internal.Config config_) image =
-    Material.ImageList.Item.Internal.ImageListItem
-        (Material.ImageList.Item.Internal.Config { config_ | image = image })
+imageListItem (Config config_) image =
+    ImageListItem (Config { config_ | image = image })

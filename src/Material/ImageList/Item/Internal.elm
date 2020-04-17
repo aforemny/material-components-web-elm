@@ -1,4 +1,4 @@
-module Material.ImageListItem.Internal exposing (Config(..), ImageListItem(..))
+module Material.ImageList.Item.Internal exposing (Config(..), ImageListItem(..))
 
 import Html
 

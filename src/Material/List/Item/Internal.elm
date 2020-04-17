@@ -1,4 +1,4 @@
-module Material.ListItem.Internal exposing
+module Material.List.Item.Internal exposing
     ( Config(..)
     , ListItem(..)
     , Selection(..)

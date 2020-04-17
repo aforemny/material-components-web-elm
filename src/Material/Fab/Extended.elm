@@ -1,4 +1,4 @@
-module Material.ExtendedFab exposing
+module Material.Fab.Extended exposing
     ( Config, config
     , setOnClick
     , setIcon, setTrailingIcon
@@ -40,7 +40,7 @@ A floating action button only contains an icon to indicate its action. For a
 floating action button that may contain text, refer to the [extended floating
 action button](#extended-fab) below.
 
-    import Material.ExtendedFab as ExtendedFab
+    import Material.Fab.Extended as ExtendedFab
 
     type Msg
         = Clicked

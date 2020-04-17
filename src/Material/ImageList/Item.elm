@@ -1,4 +1,4 @@
-module Material.ImageListItem exposing
+module Material.ImageList.Item exposing
     ( Config, config
     , setLabel
     , setHref
@@ -34,7 +34,7 @@ yourself, preferably through SASS.
 
     import Html.Attributes exposing (style)
     import Material.ImageList as ImageList
-    import Material.ImageListItem as ImageListItem
+    import Material.ImageList.Item as ImageListItem
 
     main =
         ImageList.imageList ImageList.config
@@ -69,20 +69,20 @@ yourself, preferably through SASS.
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
-import Material.ImageListItem.Internal
+import Material.ImageList.Item.Internal
 
 
 {-| Configuration of an image list item
 -}
 type alias Config msg =
-    Material.ImageListItem.Internal.Config msg
+    Material.ImageList.Item.Internal.Config msg
 
 
 {-| Default configuration of an image list item
 -}
 config : Config msg
 config =
-    Material.ImageListItem.Internal.Config
+    Material.ImageList.Item.Internal.Config
         { label = Nothing
         , href = Nothing
         , additionalAttributes = []
@@ -93,33 +93,34 @@ config =
 {-| Set an image list item's label
 -}
 setLabel : String -> Config msg -> Config msg
-setLabel label (Material.ImageListItem.Internal.Config config_) =
-    Material.ImageListItem.Internal.Config { config_ | label = Just label }
+setLabel label (Material.ImageList.Item.Internal.Config config_) =
+    Material.ImageList.Item.Internal.Config { config_ | label = Just label }
 
 
 {-| Make an image list item behave like a HTML5 anchor element
 -}
 setHref : Maybe String -> Config msg -> Config msg
-setHref href (Material.ImageListItem.Internal.Config config_) =
-    Material.ImageListItem.Internal.Config { config_ | href = href }
+setHref href (Material.ImageList.Item.Internal.Config config_) =
+    Material.ImageList.Item.Internal.Config { config_ | href = href }
 
 
 {-| Specify additional attributes
 -}
 setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAttributes additionalAttributes (Material.ImageListItem.Internal.Config config_) =
-    Material.ImageListItem.Internal.Config { config_ | additionalAttributes = additionalAttributes }
+setAttributes additionalAttributes (Material.ImageList.Item.Internal.Config config_) =
+    Material.ImageList.Item.Internal.Config
+        { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Image list item
 -}
 type alias ImageListItem msg =
-    Material.ImageListItem.Internal.ImageListItem msg
+    Material.ImageList.Item.Internal.ImageListItem msg
 
 
 {-| Image list item constructor
 -}
 imageListItem : Config msg -> String -> ImageListItem msg
-imageListItem (Material.ImageListItem.Internal.Config config_) image =
-    Material.ImageListItem.Internal.ImageListItem
-        (Material.ImageListItem.Internal.Config { config_ | image = image })
+imageListItem (Material.ImageList.Item.Internal.Config config_) image =
+    Material.ImageList.Item.Internal.ImageListItem
+        (Material.ImageList.Item.Internal.Config { config_ | image = image })

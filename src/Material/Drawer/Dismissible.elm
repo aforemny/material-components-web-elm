@@ -1,4 +1,4 @@
-module Material.DismissibleDrawer exposing
+module Material.Drawer.Dismissible exposing
     ( Config, config
     , setOnClose
     , setOpen
@@ -34,7 +34,7 @@ other functionality on an app.
 
     import Html exposing (Html, text)
     import Html.Attributes exposing (style)
-    import Material.DismissibleDrawer as DismissibleDrawer
+    import Material.Drawer.Dismissible as DismissibleDrawer
     import Material.List as List
     import Material.ListItem as ListItem
 

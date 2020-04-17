@@ -1,4 +1,4 @@
-module Material.FilterChip exposing
+module Material.Chip.Filter exposing
     ( Config, config
     , setOnClick
     , setIcon
@@ -30,7 +30,7 @@ choice, filter content, or trigger an action.
 
 # Basic Usage
 
-    import Material.FilterChip as FilterChip
+    import Material.Chip.Filter as FilterChip
 
     type Msg
         = ChipClicked String

@@ -1,4 +1,4 @@
-module Material.ListDivider exposing
+module Material.List.Divider exposing
     ( Config, config
     , setPadded
     , setInset
@@ -31,8 +31,8 @@ module Material.ListDivider exposing
 # Basic Usage
 
     import Material.List as List
-    import Material.ListDivider as ListDivider
-    import Material.ListItem as ListItem
+    import Material.List.Divider as ListDivider
+    import Material.List.Item as ListItem
 
     main =
         List.list List.config
@@ -102,8 +102,8 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.ListItem exposing (ListItem)
-import Material.ListItem.Internal as ListItem
+import Material.List.Item exposing (ListItem)
+import Material.List.Item.Internal as ListItem
 
 
 {-| Configuration of a list item divider

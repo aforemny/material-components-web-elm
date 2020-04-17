@@ -1,4 +1,4 @@
-module Material.SelectOption.Internal exposing
+module Material.Select.Option.Internal exposing
     ( Config(..)
     , SelectOption(..)
     )

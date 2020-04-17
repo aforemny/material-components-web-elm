@@ -1,4 +1,4 @@
-module Material.ListItem exposing
+module Material.List.Item exposing
     ( Config, config
     , setOnClick
     , setDisabled
@@ -45,7 +45,7 @@ module Material.ListItem exposing
 # Basic Usage
 
     import Material.List as List
-    import Material.ListItem as ListItem
+    import Material.List.Item as ListItem
 
     main =
         List.list List.config
@@ -177,20 +177,20 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.ListItem.Internal
+import Material.List.Item.Internal
 
 
 {-| Configuration of a list item
 -}
 type alias Config msg =
-    Material.ListItem.Internal.Config msg
+    Material.List.Item.Internal.Config msg
 
 
 {-| Default configuration of a list item
 -}
 config : Config msg
 config =
-    Material.ListItem.Internal.Config
+    Material.List.Item.Internal.Config
         { disabled = False
         , selection = Nothing
         , href = Nothing
@@ -204,8 +204,8 @@ config =
 {-| Set a list item to be disabled
 -}
 setDisabled : Bool -> Config msg -> Config msg
-setDisabled disabled (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | disabled = disabled }
+setDisabled disabled (Material.List.Item.Internal.Config config_) =
+    Material.List.Item.Internal.Config { config_ | disabled = disabled }
 
 
 {-| Selection state of a list item.
@@ -214,80 +214,80 @@ A list item may be either in selected or in activated selection state.
 
 -}
 type alias Selection =
-    Material.ListItem.Internal.Selection
+    Material.List.Item.Internal.Selection
 
 
 {-| Selection state that sets a list item to be selected
 -}
 selected : Selection
 selected =
-    Material.ListItem.Internal.Selected
+    Material.List.Item.Internal.Selected
 
 
 {-| Selection state that sets a list item to be activated
 -}
 activated : Selection
 activated =
-    Material.ListItem.Internal.Activated
+    Material.List.Item.Internal.Activated
 
 
 {-| Set a list item to be activated
 -}
 setSelected : Maybe Selection -> Config msg -> Config msg
-setSelected selection (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | selection = selection }
+setSelected selection (Material.List.Item.Internal.Config config_) =
+    Material.List.Item.Internal.Config { config_ | selection = selection }
 
 
 {-| Set a link list item's HTML5 href attribute
 -}
 setHref : Maybe String -> Config msg -> Config msg
-setHref href (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | href = href }
+setHref href (Material.List.Item.Internal.Config config_) =
+    Material.List.Item.Internal.Config { config_ | href = href }
 
 
 {-| Set a link list item's HTML5 target attribute
 -}
 setTarget : Maybe String -> Config msg -> Config msg
-setTarget target (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | target = target }
+setTarget target (Material.List.Item.Internal.Config config_) =
+    Material.List.Item.Internal.Config { config_ | target = target }
 
 
 {-| Specify additional attributes
 -}
 setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAttributes additionalAttributes (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config
+setAttributes additionalAttributes (Material.List.Item.Internal.Config config_) =
+    Material.List.Item.Internal.Config
         { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Specify a message when the user interacts with the list item
 -}
 setOnClick : msg -> Config msg -> Config msg
-setOnClick onClick (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config
+setOnClick onClick (Material.List.Item.Internal.Config config_) =
+    Material.List.Item.Internal.Config
         { config_ | onClick = Just onClick }
 
 
 {-| Type of a list item
 -}
 type alias ListItem msg =
-    Material.ListItem.Internal.ListItem msg
+    Material.List.Item.Internal.ListItem msg
 
 
 {-| List item view function
 -}
 listItem : Config msg -> List (Html msg) -> ListItem msg
-listItem (Material.ListItem.Internal.Config ({ additionalAttributes, href } as config_)) nodes =
-    Material.ListItem.Internal.ListItem
-        (Material.ListItem.Internal.Config
+listItem (Material.List.Item.Internal.Config ({ additionalAttributes, href } as config_)) nodes =
+    Material.List.Item.Internal.ListItem
+        (Material.List.Item.Internal.Config
             { config_
-                | node = listItemView (Material.ListItem.Internal.Config config_) nodes
+                | node = listItemView (Material.List.Item.Internal.Config config_) nodes
             }
         )
 
 
 listItemView : Config msg -> List (Html msg) -> Html msg
-listItemView ((Material.ListItem.Internal.Config { additionalAttributes, href }) as config_) nodes =
+listItemView ((Material.List.Item.Internal.Config { additionalAttributes, href }) as config_) nodes =
     (\attributes ->
         if href /= Nothing then
             Html.node "mdc-list-item" [] [ Html.a attributes nodes ]
@@ -314,7 +314,7 @@ listItemCs =
 
 
 disabledCs : Config msg -> Maybe (Html.Attribute msg)
-disabledCs (Material.ListItem.Internal.Config { disabled }) =
+disabledCs (Material.List.Item.Internal.Config { disabled }) =
     if disabled then
         Just (class "mdc-list-item--disabled")
 
@@ -323,8 +323,8 @@ disabledCs (Material.ListItem.Internal.Config { disabled }) =
 
 
 selectedCs : Config msg -> Maybe (Html.Attribute msg)
-selectedCs (Material.ListItem.Internal.Config { selection }) =
-    if selection == Just Material.ListItem.Internal.Selected then
+selectedCs (Material.List.Item.Internal.Config { selection }) =
+    if selection == Just Material.List.Item.Internal.Selected then
         Just (class "mdc-list-item--selected")
 
     else
@@ -332,8 +332,8 @@ selectedCs (Material.ListItem.Internal.Config { selection }) =
 
 
 activatedCs : Config msg -> Maybe (Html.Attribute msg)
-activatedCs (Material.ListItem.Internal.Config { selection }) =
-    if selection == Just Material.ListItem.Internal.Activated then
+activatedCs (Material.List.Item.Internal.Config { selection }) =
+    if selection == Just Material.List.Item.Internal.Activated then
         Just (class "mdc-list-item--activated")
 
     else
@@ -341,7 +341,7 @@ activatedCs (Material.ListItem.Internal.Config { selection }) =
 
 
 ariaSelectedAttr : Config msg -> Maybe (Html.Attribute msg)
-ariaSelectedAttr (Material.ListItem.Internal.Config { selection }) =
+ariaSelectedAttr (Material.List.Item.Internal.Config { selection }) =
     if selection /= Nothing then
         Just (Html.Attributes.attribute "aria-selected" "true")
 
@@ -350,12 +350,12 @@ ariaSelectedAttr (Material.ListItem.Internal.Config { selection }) =
 
 
 hrefAttr : Config msg -> Maybe (Html.Attribute msg)
-hrefAttr (Material.ListItem.Internal.Config { href }) =
+hrefAttr (Material.List.Item.Internal.Config { href }) =
     Maybe.map Html.Attributes.href href
 
 
 targetAttr : Config msg -> Maybe (Html.Attribute msg)
-targetAttr (Material.ListItem.Internal.Config { href, target }) =
+targetAttr (Material.List.Item.Internal.Config { href, target }) =
     if href /= Nothing then
         Maybe.map Html.Attributes.target target
 

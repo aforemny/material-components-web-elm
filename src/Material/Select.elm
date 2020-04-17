@@ -41,7 +41,7 @@ accessible, and fully RTL-aware.
 # Basic Usage
 
     import Material.Select as Select
-    import Material.SelectOption as SelectOption
+    import Material.Select.Option as SelectOption
 
     type Msg
         = ValueChanged String
@@ -139,8 +139,8 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.SelectOption exposing (SelectOption)
-import Material.SelectOption.Internal as SelectOption
+import Material.Select.Option exposing (SelectOption)
+import Material.Select.Option.Internal as SelectOption
 
 
 {-| Configuration of a select

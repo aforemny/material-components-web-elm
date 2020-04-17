@@ -38,7 +38,7 @@ module Material.List exposing
 # Basic Usage
 
     import Material.List as List
-    import Material.ListItem as ListItem
+    import Material.List.Item as ListItem
 
     main =
         List.list List.config
@@ -163,8 +163,8 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.ListItem exposing (Config, ListItem)
-import Material.ListItem.Internal as ListItem
+import Material.List.Item exposing (Config, ListItem)
+import Material.List.Item.Internal as ListItem
 
 
 {-| Configuration of a list

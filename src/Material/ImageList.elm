@@ -36,7 +36,7 @@ yourself, preferably through SASS.
 
     import Html.Attributes exposing (style)
     import Material.ImageList as ImageList
-    import Material.ImageListItem as ImageListItem
+    import Material.ImageList.Item as ImageListItem
 
     main =
         ImageList.imageList ImageList.config
@@ -102,8 +102,8 @@ labels to be positioned in a scrim overlaying each image, use the image list's
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
-import Material.ImageListItem exposing (ImageListItem)
-import Material.ImageListItem.Internal
+import Material.ImageList.Item exposing (ImageListItem)
+import Material.ImageList.Item.Internal
 
 
 {-| Configuration of an image list
@@ -187,7 +187,7 @@ withTextProtectionCs (Config { withTextProtection }) =
 
 
 listItemElt : Config msg -> ImageListItem msg -> Html msg
-listItemElt ((Config { masonry }) as config_) ((Material.ImageListItem.Internal.ImageListItem (Material.ImageListItem.Internal.Config { href, additionalAttributes })) as listItem) =
+listItemElt ((Config { masonry }) as config_) ((Material.ImageList.Item.Internal.ImageListItem (Material.ImageList.Item.Internal.Config { href, additionalAttributes })) as listItem) =
     let
         inner =
             [ if masonry then
@@ -207,7 +207,7 @@ listItemElt ((Config { masonry }) as config_) ((Material.ImageListItem.Internal.
 
 
 imageAspectContainerElt : Bool -> ImageListItem msg -> Html msg
-imageAspectContainerElt masonry ((Material.ImageListItem.Internal.ImageListItem (Material.ImageListItem.Internal.Config { href })) as listItem) =
+imageAspectContainerElt masonry ((Material.ImageList.Item.Internal.ImageListItem (Material.ImageList.Item.Internal.Config { href })) as listItem) =
     Html.div
         (List.filterMap identity
             [ Just (class "mdc-image-list__image-aspect-container")
@@ -218,7 +218,7 @@ imageAspectContainerElt masonry ((Material.ImageListItem.Internal.ImageListItem 
 
 
 imageElt : Bool -> ImageListItem msg -> Html msg
-imageElt masonry (Material.ImageListItem.Internal.ImageListItem (Material.ImageListItem.Internal.Config { href, image })) =
+imageElt masonry (Material.ImageList.Item.Internal.ImageListItem (Material.ImageList.Item.Internal.Config { href, image })) =
     let
         img =
             Html.img
@@ -243,7 +243,7 @@ imageElt masonry (Material.ImageListItem.Internal.ImageListItem (Material.ImageL
 
 
 supportingElt : ImageListItem msg -> Html msg
-supportingElt (Material.ImageListItem.Internal.ImageListItem (Material.ImageListItem.Internal.Config { label })) =
+supportingElt (Material.ImageList.Item.Internal.ImageListItem (Material.ImageList.Item.Internal.Config { label })) =
     case label of
         Just string ->
             Html.div

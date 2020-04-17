@@ -1,4 +1,4 @@
-module Material.SelectOption exposing
+module Material.Select.Option exposing
     ( Config, config
     , setValue
     , setDisabled
@@ -32,7 +32,7 @@ accessible, and fully RTL-aware.
 # Basic Usage
 
     import Material.Select as Select
-    import Material.SelectOption as SelectOption
+    import Material.Select.Option as SelectOption
 
     type Msg
         = ValueChanged String
@@ -94,20 +94,20 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.SelectOption.Internal
+import Material.Select.Option.Internal
 
 
 {-| Configuration of a select option
 -}
 type alias Config msg =
-    Material.SelectOption.Internal.Config msg
+    Material.Select.Option.Internal.Config msg
 
 
 {-| Default configuration of a select option
 -}
 config : Config msg
 config =
-    Material.SelectOption.Internal.Config
+    Material.Select.Option.Internal.Config
         { disabled = False
         , value = ""
         , additionalAttributes = []
@@ -118,33 +118,33 @@ config =
 {-| Set a select option to be disabled
 -}
 setDisabled : Bool -> Config msg -> Config msg
-setDisabled disabled (Material.SelectOption.Internal.Config config_) =
-    Material.SelectOption.Internal.Config { config_ | disabled = disabled }
+setDisabled disabled (Material.Select.Option.Internal.Config config_) =
+    Material.Select.Option.Internal.Config { config_ | disabled = disabled }
 
 
 {-| Set a select option's value
 -}
 setValue : String -> Config msg -> Config msg
-setValue value (Material.SelectOption.Internal.Config config_) =
-    Material.SelectOption.Internal.Config { config_ | value = value }
+setValue value (Material.Select.Option.Internal.Config config_) =
+    Material.Select.Option.Internal.Config { config_ | value = value }
 
 
 {-| Specify additional attributes
 -}
 setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
-setAttributes additionalAttributes (Material.SelectOption.Internal.Config config_) =
-    Material.SelectOption.Internal.Config { config_ | additionalAttributes = additionalAttributes }
+setAttributes additionalAttributes (Material.Select.Option.Internal.Config config_) =
+    Material.Select.Option.Internal.Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Select option type
 -}
 type alias SelectOption msg =
-    Material.SelectOption.Internal.SelectOption msg
+    Material.Select.Option.Internal.SelectOption msg
 
 
 {-| Select option view function
 -}
 selectOption : Config msg -> List (Html msg) -> SelectOption msg
-selectOption (Material.SelectOption.Internal.Config config_) nodes =
-    Material.SelectOption.Internal.SelectOption
-        (Material.SelectOption.Internal.Config { config_ | nodes = nodes })
+selectOption (Material.Select.Option.Internal.Config config_) nodes =
+    Material.Select.Option.Internal.SelectOption
+        (Material.Select.Option.Internal.Config { config_ | nodes = nodes })

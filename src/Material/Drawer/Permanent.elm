@@ -1,10 +1,7 @@
-module Material.ModalDrawer exposing
+module Material.Drawer.Permanent exposing
     ( Config, config
-    , setOnClose
-    , setOpen
     , setAttributes
     , drawer, content
-    , scrim
     , header, title, subtitle
     )
 
@@ -18,7 +15,7 @@ other functionality on an app.
   - [Basic Usage](#basic-usage)
   - [Configuration](#configuration)
       - [Configuration Options](#configuration-options)
-  - [Modal Drawer](#modal-drawer)
+  - [Permanent Drawer](#permanent-drawer)
   - [Drawer with Header](#drawer-with-header)
 
 
@@ -34,17 +31,17 @@ other functionality on an app.
 
     import Html exposing (Html, text)
     import Html.Attributes exposing (style)
+    import Material.Drawer.Permanent as PermanentDrawer
     import Material.List as List
     import Material.ListItem as ListItem
-    import Material.ModalDrawer as ModalDrawer
 
     main =
         Html.div
             [ style "display" "flex"
             , style "flex-flow" "row nowrap"
             ]
-            [ ModalDrawer.drawer ModalDrawer.config
-                [ ModalDrawer.content []
+            [ PermanentDrawer.drawer PermanentDrawer.config
+                [ PermanentDrawer.content []
                     [ List.list List.config
                         [ ListItem.listItem ListItem.config
                             [ text "Home" ]
@@ -53,7 +50,6 @@ other functionality on an app.
                         ]
                     ]
                 ]
-            , ModalDrawer.scrim [] []
             , Html.div [] [ text "Main Content" ]
             ]
 
@@ -65,18 +61,12 @@ other functionality on an app.
 
 ## Configuration Options
 
-@docs setOnClose
-@docs setOpen
 @docs setAttributes
 
 
-# Modal Drawer
-
-Modal drawers are elevated above most of the app's UI and don't affect the
-screen's layout grid.
+# Permanent Drawer
 
 @docs drawer, content
-@docs scrim
 
 
 # Drawer with Header
@@ -96,39 +86,17 @@ import Json.Decode as Decode
 import Json.Encode as Encode
 
 
-{-| Configuration of a model drawer
+{-| Configuration of a permanent drawer
 -}
 type Config msg
-    = Config
-        { open : Bool
-        , additionalAttributes : List (Html.Attribute msg)
-        , onClose : Maybe msg
-        }
+    = Config { additionalAttributes : List (Html.Attribute msg) }
 
 
-{-| Default configuration of a modal drawer
+{-| Default configuration of a permanent drawer
 -}
 config : Config msg
 config =
-    Config
-        { open = False
-        , additionalAttributes = []
-        , onClose = Nothing
-        }
-
-
-{-| Set the drawer to be open
--}
-setOpen : Bool -> Config msg -> Config msg
-setOpen open (Config config_) =
-    Config { config_ | open = open }
-
-
-{-| Specify message when the user closes the drawer
--}
-setOnClose : msg -> Config msg -> Config msg
-setOnClose onClose (Config config_) =
-    Config { config_ | onClose = Just onClose }
+    Config { additionalAttributes = [] }
 
 
 {-| Specify additional attributes
@@ -138,19 +106,12 @@ setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 
-{-| Modal drawer view function
+{-| Permanent drawer view function
 -}
 drawer : Config msg -> List (Html msg) -> Html msg
-drawer ((Config { additionalAttributes }) as config_) nodes =
-    Html.node "mdc-drawer"
-        (List.filterMap identity
-            [ rootCs
-            , modalCs
-            , openProp config_
-            , closeHandler config_
-            ]
-            ++ additionalAttributes
-        )
+drawer (Config { additionalAttributes }) nodes =
+    Html.div
+        (List.filterMap identity [ rootCs ] ++ additionalAttributes)
         nodes
 
 
@@ -163,12 +124,12 @@ content attributes nodes =
 
 {-| Drawer header view function
 
-    ModalDrawer.drawer ModalDrawer.config
-        [ ModalDrawer.header []
-            [ Html.h3 [ ModalDrawer.title ] [ text "Title" ]
-            , Html.h6 [ ModalDrawer.subtitle ] [ text "Subtitle" ]
+    PermanentDrawer.drawer PermanentDrawer.config
+        [ PermanentDrawer.header []
+            [ Html.h3 [ PermanentDrawer.title ] [ text "Title" ]
+            , Html.h6 [ PermanentDrawer.subtitle ] [ text "Subtitle" ]
             ]
-        , ModalDrawer.content [] []
+        , PermanentDrawer.content [] []
         ]
 
 -}
@@ -194,34 +155,3 @@ subtitle =
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-drawer")
-
-
-modalCs : Maybe (Html.Attribute msg)
-modalCs =
-    Just (class "mdc-drawer--modal")
-
-
-dismissibleCs : Maybe (Html.Attribute msg)
-dismissibleCs =
-    Just (class "mdc-drawer--dismissible")
-
-
-openProp : Config msg -> Maybe (Html.Attribute msg)
-openProp (Config { open }) =
-    Just (Html.Attributes.property "open" (Encode.bool open))
-
-
-closeHandler : Config msg -> Maybe (Html.Attribute msg)
-closeHandler (Config { onClose }) =
-    Maybe.map (Html.Events.on "MDCDrawer:close" << Decode.succeed) onClose
-
-
-{-| Modal drawer's scrim element
-
-Prevents the application from interaction while the modal drawer is open. Has
-to be the next sibling after the `modalDrawer` and before the page's content.
-
--}
-scrim : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-scrim additionalAttributes nodes =
-    Html.div (class "mdc-drawer-scrim" :: additionalAttributes) nodes

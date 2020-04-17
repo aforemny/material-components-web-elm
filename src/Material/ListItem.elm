@@ -3,7 +3,6 @@ module Material.ListItem exposing
     , setOnClick
     , setDisabled
     , setSelected
-    , setActivated
     , setHref
     , setTarget
     , setAttributes
@@ -11,6 +10,8 @@ module Material.ListItem exposing
     , graphic
     , meta
     , text
+    , Selection, selected
+    , activated
     )
 
 {-| Lists are continuous, vertical indexes of text or images.
@@ -63,7 +64,6 @@ module Material.ListItem exposing
 @docs setOnClick
 @docs setDisabled
 @docs setSelected
-@docs setActivated
 @docs setHref
 @docs setTarget
 @docs setAttributes
@@ -121,8 +121,7 @@ List items may be two-line list items by using `text`.
 
 # Disabled List Item
 
-List items may be disabled by setting their `disabled` configuration field to
-`True`.
+List items may be disabled by using their `setDisabled` configuration option.
 
     ListItem.listItem
         (ListItem.config
@@ -133,33 +132,35 @@ List items may be disabled by setting their `disabled` configuration field to
 
 ### Selected List Item
 
-List items may be disabled by setting their `selected` configuration field to
-`True`.
+List items may be selected by using their `setSelected` configuration option.
 
     ListItem.listItem
         (ListItem.config
-            |> ListItem.setSelected True
+            |> ListItem.setSelected (Just ListItem.selected)
         )
         [ text "List item" ]
+
+@docs Selection, selected
 
 
 ### Activated List Item
 
-List items may be disabled by setting their `activated` configuration field to
-`True`.
+List items may be activated by using their `setSelected` configuration option.
 
     ListItem.listItem
         (ListItem.config
-            |> ListItem.setActivated True
+            |> ListItem.setSelected (Just ListItem.activated)
         )
         [ text "List item" ]
+
+@docs activated
 
 
 ## Link List Item
 
-List items may specify the `href` attribute in which case the list item
-essentially behaves like a HTML `a` element. You may specify the configuration
-`target` target as well.
+List items may using the `setHref` configuration option in which case the list
+item essentially behaves like a HTML `a` element. You may specify the
+configuration option `setTarget` as well.
 
     ListItem.listItem
         (ListItem.config
@@ -191,8 +192,7 @@ config : Config msg
 config =
     Material.ListItem.Internal.Config
         { disabled = False
-        , selected = False
-        , activated = False
+        , selection = Nothing
         , href = Nothing
         , target = Nothing
         , additionalAttributes = []
@@ -208,18 +208,34 @@ setDisabled disabled (Material.ListItem.Internal.Config config_) =
     Material.ListItem.Internal.Config { config_ | disabled = disabled }
 
 
-{-| Set a list item to be selected
+{-| Selection state of a list item.
+
+A list item may be either in selected or in activated selection state.
+
 -}
-setSelected : Bool -> Config msg -> Config msg
-setSelected selected (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | selected = selected }
+type alias Selection =
+    Material.ListItem.Internal.Selection
+
+
+{-| Selection state that sets a list item to be selected
+-}
+selected : Selection
+selected =
+    Material.ListItem.Internal.Selected
+
+
+{-| Selection state that sets a list item to be activated
+-}
+activated : Selection
+activated =
+    Material.ListItem.Internal.Activated
 
 
 {-| Set a list item to be activated
 -}
-setActivated : Bool -> Config msg -> Config msg
-setActivated activated (Material.ListItem.Internal.Config config_) =
-    Material.ListItem.Internal.Config { config_ | activated = activated }
+setSelected : Maybe Selection -> Config msg -> Config msg
+setSelected selection (Material.ListItem.Internal.Config config_) =
+    Material.ListItem.Internal.Config { config_ | selection = selection }
 
 
 {-| Set a link list item's HTML5 href attribute
@@ -307,8 +323,8 @@ disabledCs (Material.ListItem.Internal.Config { disabled }) =
 
 
 selectedCs : Config msg -> Maybe (Html.Attribute msg)
-selectedCs (Material.ListItem.Internal.Config { selected }) =
-    if selected then
+selectedCs (Material.ListItem.Internal.Config { selection }) =
+    if selection == Just Material.ListItem.Internal.Selected then
         Just (class "mdc-list-item--selected")
 
     else
@@ -316,8 +332,8 @@ selectedCs (Material.ListItem.Internal.Config { selected }) =
 
 
 activatedCs : Config msg -> Maybe (Html.Attribute msg)
-activatedCs (Material.ListItem.Internal.Config { activated }) =
-    if activated then
+activatedCs (Material.ListItem.Internal.Config { selection }) =
+    if selection == Just Material.ListItem.Internal.Activated then
         Just (class "mdc-list-item--activated")
 
     else
@@ -325,8 +341,8 @@ activatedCs (Material.ListItem.Internal.Config { activated }) =
 
 
 ariaSelectedAttr : Config msg -> Maybe (Html.Attribute msg)
-ariaSelectedAttr (Material.ListItem.Internal.Config { selected, activated }) =
-    if selected || activated then
+ariaSelectedAttr (Material.ListItem.Internal.Config { selection }) =
+    if selection /= Nothing then
         Just (Html.Attributes.attribute "aria-selected" "true")
 
     else

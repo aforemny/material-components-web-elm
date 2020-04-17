@@ -376,8 +376,8 @@ selectedIndexProp listItems =
                 |> List.indexedMap
                     (\index listItem_ ->
                         case listItem_ of
-                            ListItem.ListItem (ListItem.Config { selected, activated }) ->
-                                if selected || activated then
+                            ListItem.ListItem (ListItem.Config { selection }) ->
+                                if selection /= Nothing then
                                     Just index
 
                                 else

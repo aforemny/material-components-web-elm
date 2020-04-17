@@ -3,7 +3,6 @@ module Material.TextArea exposing
     , setOnInput
     , setOnChange
     , setLabel
-    , setOutlined
     , setFullwidth
     , setValue
     , setPlaceholder
@@ -15,7 +14,8 @@ module Material.TextArea exposing
     , setMinLength
     , setMaxLength
     , setAttributes
-    , textArea
+    , filled
+    , outlined
     )
 
 {-| Text areas allow users to input, edit, and select multiline text.
@@ -25,11 +25,14 @@ module Material.TextArea exposing
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
+  - [Filled Text Area](#filled-text-area)
+  - [Outlined Text Area](#outlined-text-area)
   - [Full Width Text Area](#full-width-text-area)
   - [Disabled Text Area](#disabled-text-area)
   - [Required Text Area](#required-text-area)
   - [Invalid Text Area](#invalid-text-area)
-  - [Outlined Text Area](#outlined-text-area)
   - [Text Area with Character Counter](#text-area-with-character-counter)
 
 
@@ -49,7 +52,7 @@ module Material.TextArea exposing
         = ValueChanged String
 
     main =
-        TextArea.textArea
+        TextArea.filled
             (TextArea.config
                 |> TextArea.setLabel "My text area"
                 |> TextArea.setValue "hello world"
@@ -69,7 +72,6 @@ module Material.TextArea exposing
 @docs setOnInput
 @docs setOnChange
 @docs setLabel
-@docs setOutlined
 @docs setFullwidth
 @docs setValue
 @docs setPlaceholder
@@ -83,9 +85,23 @@ module Material.TextArea exposing
 @docs setAttributes
 
 
-# Text Area
+# Filled Text Area
 
-@docs textArea
+    TextArea.filled TextArea.config
+
+@docs filled
+
+
+# Outlined Text Area
+
+Text areas may have a visible outlined around them by using their `outlined`
+variant.
+
+    TextArea.outlined TextArea.config
+
+Note that `setFullwidth` does not have any effect for outlined text areas.
+
+@docs outlined
 
 
 # Full Width Text Area
@@ -93,7 +109,7 @@ module Material.TextArea exposing
 To make a text area span all of its available width, use its `setFullwidth`
 configuration option.
 
-    TextArea.textArea
+    TextArea.filled
         (TextArea.config
             |> TextArea.setFullwidth True
         )
@@ -102,7 +118,7 @@ Full width text areas do not support `setLabel` and will ignore this
 configuration option. You may use `setPlaceholder` or provide an extraneous
 label for a full width text area.
 
-Full width text areas do not support `setOutlined` and will ignore this
+Outlined text areas do not support `setFullwidth` and will ignore this
 configuration option.
 
 
@@ -110,7 +126,7 @@ configuration option.
 
 To disable a text area use its `setDisabled` configuration option.
 
-    TextArea.textArea
+    TextArea.filled
         (TextArea.config
             |> TextArea.setDisabled True
         )
@@ -120,7 +136,7 @@ To disable a text area use its `setDisabled` configuration option.
 
 To mark a text area as required, use its `setRequired` configuration option.
 
-    TextArea.textArea
+    TextArea.filled
         (TextArea.config
             |> TextArea.setRequired True
         )
@@ -130,23 +146,10 @@ To mark a text area as required, use its `setRequired` configuration option.
 
 To mark a text area as invalid, use its `setValid` configuration option.
 
-    TextArea.textArea
+    TextArea.filled
         (TextArea.config
             |> TextArea.setValid True
         )
-
-
-# Outlined Text Area
-
-Text areas may have a visible outlined around them by using their `setOutlined`
-configuration option.
-
-    TextArea.textArea
-        (TextArea.config
-            |> TextArea.setOutlined True
-        )
-
-Note that this does not have any effect for fullwidth text areas.
 
 
 # Text Area with Character Counter
@@ -155,7 +158,7 @@ To have a text area display a character counter, use its `setMaxLength`
 configuration option, and also add a `HelperText.characterCounter` as a child
 of `HelperText.helperLine`.
 
-    [ TextArea.textArea
+    [ TextArea.filled
         (TextArea.config
             |> TextArea.setMaxLength (Just 18)
         )
@@ -177,7 +180,6 @@ import Json.Encode as Encode
 type Config msg
     = Config
         { label : Maybe String
-        , outlined : Bool
         , fullwidth : Bool
         , value : String
         , placeholder : Maybe String
@@ -200,7 +202,6 @@ config : Config msg
 config =
     Config
         { label = Nothing
-        , outlined = False
         , fullwidth = False
         , value = ""
         , placeholder = Nothing
@@ -222,13 +223,6 @@ config =
 setLabel : String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = Just label }
-
-
-{-| Set a text area to be outlined
--}
-setOutlined : Bool -> Config msg -> Config msg
-setOutlined outlined (Config config_) =
-    Config { config_ | outlined = outlined }
 
 
 {-| Set a text area to be fullwidth
@@ -323,15 +317,27 @@ setOnChange onChange (Config config_) =
     Config { config_ | onChange = Just onChange }
 
 
-{-| Text area view function
+{-| Filled text area view function
 -}
-textArea : Config msg -> Html msg
-textArea ((Config { additionalAttributes, fullwidth }) as config_) =
+filled : Config msg -> Html msg
+filled config_ =
+    textArea False config_
+
+
+{-| Outlined text area view function
+-}
+outlined : Config msg -> Html msg
+outlined config_ =
+    textArea True config_
+
+
+textArea : Bool -> Config msg -> Html msg
+textArea outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
     Html.node "mdc-text-field"
         (List.filterMap identity
             [ rootCs
             , noLabelCs config_
-            , outlinedCs config_
+            , outlinedCs outlined_
             , fullwidthCs config_
             , disabledCs config_
             , valueProp config_
@@ -362,9 +368,9 @@ rootCs =
     Just (class "mdc-text-field mdc-text-field--textarea")
 
 
-outlinedCs : Config msg -> Maybe (Html.Attribute msg)
-outlinedCs (Config { outlined }) =
-    if outlined then
+outlinedCs : Bool -> Maybe (Html.Attribute msg)
+outlinedCs outlined_ =
+    if outlined_ then
         Just (class "mdc-text-field--outlined")
 
     else

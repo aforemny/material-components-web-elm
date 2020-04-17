@@ -3,7 +3,6 @@ module Material.TextField exposing
     , setOnInput
     , setOnChange
     , setLabel
-    , setOutlined
     , setFullwidth
     , setValue
     , setPlaceholder
@@ -20,7 +19,8 @@ module Material.TextField exposing
     , setLeadingIcon
     , setTrailingIcon
     , setAttributes
-    , textField
+    , filled
+    , outlined
     , Icon, icon
     )
 
@@ -31,13 +31,16 @@ module Material.TextField exposing
 
   - [Resources](#resources)
   - [Basic Usage](#basic-usage)
+  - [Configuration](#configuration)
+      - [Configuration Options](#configuration-options)
+  - [Filled Text Field](#filled-text-field)
+  - [Outlined Text Field](#outlined-text-field)
   - [Full Width Text Field](#full-width-text-field)
   - [Multiline Text Field](#multiline-text-field)
   - [Disabled Text Field](#disabled-text-field)
   - [Password Text Field](#password-text-field)
   - [Required Text Field](#disabled-text-field)
   - [Invalid Text Field](#disabled-text-field)
-  - [Outlined Text Field](#outlined-text-field)
   - [Text Field with Leading Icon](#text-field-with-leading-icon)
   - [Text Field with Trailing Icon](#text-field-with-trailing-icon)
   - [Text Field with Character Counter](#text-field-with-character-counter)
@@ -59,7 +62,7 @@ module Material.TextField exposing
         = ValueChanged String
 
     main =
-        TextField.textField
+        TextField.filled
             (TextField.config
                 |> TextField.setLabel "My text field"
                 |> TextField.setValue "hello world"
@@ -77,7 +80,6 @@ module Material.TextField exposing
 @docs setOnInput
 @docs setOnChange
 @docs setLabel
-@docs setOutlined
 @docs setFullwidth
 @docs setValue
 @docs setPlaceholder
@@ -96,9 +98,26 @@ module Material.TextField exposing
 @docs setAttributes
 
 
-# Text Field
+# Filled Text Field
 
-@docs textField
+
+# Filled Text Field
+
+    TextField.filled TextField.config
+
+@docs filled
+
+
+# Outlined Text Field
+
+Text fields may have a visible outlined around them by using their
+`outlined` variant.
+
+    TextField.outlined TextField.config
+
+Note that outlined text fields cannot be fullwidth.
+
+@docs outlined
 
 
 # Full Width Text Field
@@ -106,7 +125,7 @@ module Material.TextField exposing
 To make a text field span all of its available width, use its `setFullwidth`
 configuration option.
 
-    TextField.textField
+    TextField.filled
         (TextField.config
             |> TextField.setFullwidth True
         )
@@ -115,7 +134,7 @@ Full width text fields do not support `label` and will ignore this
 configuration option. You may use `setPlaceholder` or provide an extraneous
 label for a full width text field.
 
-Full width text fields do not support `setOutlined` and will ignore this
+Outlined text fields do not support `setFullwidth` and wll ignore this
 configuration field.
 
 
@@ -123,7 +142,7 @@ configuration field.
 
 To disable a text field use its `setDisabled` configuration option.
 
-    TextField.textField
+    TextField.filled
         (TextField.config
             |> TextField.setDisabled True
         )
@@ -134,7 +153,7 @@ To disable a text field use its `setDisabled` configuration option.
 To mark a text field as an input for entering a passwort, use its `setType`
 configuration option to specify `"password"`.
 
-    TextField.textField
+    TextField.filled
         (TextField.config
             |> TextField.setType "password"
         )
@@ -146,7 +165,7 @@ Note: Other input types besides `"password"` may or may not be supported.
 
 To mark a text field as required, use its `setRequired` configuration option.
 
-    TextField.textField
+    TextField.filled
         (TextField.config
             |> TextField.setRequired True
         )
@@ -156,23 +175,10 @@ To mark a text field as required, use its `setRequired` configuration option.
 
 To mark a text field as invalid, use its `setValid` configuration option.
 
-    TextField.textField
+    TextField.filled
         (TextField.config
             |> TextField.setValid True
         )
-
-
-# Outlined Text Field
-
-Text fields may have a visible outlined around them by using their
-`setOutlined` configuration option.
-
-    TextField.textField
-        (TextField.config
-            |> TextField.setOutlined True
-        )
-
-Note that this does not have any effect for fullwidth text fields.
 
 
 # Text Field with Leading Icon
@@ -180,7 +186,7 @@ Note that this does not have any effect for fullwidth text fields.
 To have a text field display a leading icon, use its `setLeadingIcon`
 configuration option to specify a `TextFieldIcon`.
 
-    TextField.textField
+    TextField.filled
         (TextField.config
             |> TextField.setLeadingIcon
                 (Just (TextField.icon Icon.config "wifi"))
@@ -194,7 +200,7 @@ configuration option to specify a `TextFieldIcon`.
 To have a text field display a trailing icon, use its `setTrailingIcon`
 configuration option to specify a `TextFieldIcon`.
 
-    TextField.textField
+    TextField.filled
         (TextField.config
             |> TextField.setTrailingIcon
                 (Just (TextField.icon Icon.config "clear"))
@@ -207,7 +213,7 @@ To have a text field display a character counter, use its `setMaxLength`
 configuration option, and also add a `HelperText.characterCounter` as a child
 of `HelperText.helperLine`.
 
-    [ TextField.textField
+    [ TextField.filled
         (TextField.config
             |> TextField.setMaxLength (Just 18)
         )
@@ -230,7 +236,6 @@ import Material.Icon as Icon
 type Config msg
     = Config
         { label : Maybe String
-        , outlined : Bool
         , fullwidth : Bool
         , value : String
         , placeholder : Maybe String
@@ -264,7 +269,6 @@ config : Config msg
 config =
     Config
         { label = Nothing
-        , outlined = False
         , fullwidth = False
         , value = ""
         , placeholder = Nothing
@@ -291,13 +295,6 @@ config =
 setLabel : String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = Just label }
-
-
-{-| Set a text field to be outlined
--}
-setOutlined : Bool -> Config msg -> Config msg
-setOutlined outlined (Config config_) =
-    Config { config_ | outlined = outlined }
 
 
 {-| Set a text field to be fullwidth
@@ -427,15 +424,27 @@ setOnChange onChange (Config config_) =
     Config { config_ | onChange = Just onChange }
 
 
-{-| Text field view function
+{-| Filled text field view function
 -}
-textField : Config msg -> Html msg
-textField ((Config { additionalAttributes, fullwidth, outlined }) as config_) =
+filled : Config msg -> Html msg
+filled config_ =
+    textField False config_
+
+
+{-| Outlined text field view function
+-}
+outlined : Config msg -> Html msg
+outlined config_ =
+    textField True config_
+
+
+textField : Bool -> Config msg -> Html msg
+textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
     Html.node "mdc-text-field"
         (List.filterMap identity
             [ rootCs
             , noLabelCs config_
-            , outlinedCs config_
+            , outlinedCs outlined_
             , fullwidthCs config_
             , disabledCs config_
             , withLeadingIconCs config_
@@ -456,7 +465,7 @@ textField ((Config { additionalAttributes, fullwidth, outlined }) as config_) =
         (List.concat
             [ leadingIconElt config_
             , if fullwidth then
-                if outlined then
+                if outlined_ then
                     [ inputElt config_
                     , notchedOutlineElt config_
                     ]
@@ -466,7 +475,7 @@ textField ((Config { additionalAttributes, fullwidth, outlined }) as config_) =
                     , lineRippleElt
                     ]
 
-              else if outlined then
+              else if outlined_ then
                 [ inputElt config_
                 , notchedOutlineElt config_
                 ]
@@ -493,9 +502,9 @@ rootCs =
     Just (class "mdc-text-field")
 
 
-outlinedCs : Config msg -> Maybe (Html.Attribute msg)
-outlinedCs (Config { outlined }) =
-    if outlined then
+outlinedCs : Bool -> Maybe (Html.Attribute msg)
+outlinedCs outlined_ =
+    if outlined_ then
         Just (class "mdc-text-field--outlined")
 
     else

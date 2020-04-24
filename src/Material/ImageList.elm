@@ -1,7 +1,7 @@
 module Material.ImageList exposing
     ( Config, config
     , setMasonry
-    , setTextProtection
+    , setWithTextProtection
     , setAttributes
     , imageList
     )
@@ -59,7 +59,7 @@ yourself, preferably through SASS.
 ## Configuration Options
 
 @docs setMasonry
-@docs setTextProtection
+@docs setWithTextProtection
 @docs setAttributes
 
 
@@ -85,11 +85,11 @@ aspect ratios.
 
 Image's labels are by default positioned below the image. If you want image
 labels to be positioned in a scrim overlaying each image, use the image list's
-`setTextProtection` configuration option.
+`setWithTextProtection` configuration option.
 
     ImageList.imageList
         (ImageList.config
-            |> ImageList.setTextProtection True
+            |> ImageList.setWithTextProtection True
         )
         [ ImageListItem.imageListItem
             (ImageListItem.config
@@ -136,8 +136,8 @@ setMasonry masonry (Config config_) =
 
 {-| Make an image list item's label display below the item
 -}
-setTextProtection : Bool -> Config msg -> Config msg
-setTextProtection withTextProtection (Config config_) =
+setWithTextProtection : Bool -> Config msg -> Config msg
+setWithTextProtection withTextProtection (Config config_) =
     Config { config_ | withTextProtection = withTextProtection }
 
 

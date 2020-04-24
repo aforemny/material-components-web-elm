@@ -4,7 +4,7 @@ module Material.Fab.Extended exposing
     , setIcon, setTrailingIcon
     , setExited
     , setAttributes
-    , extendedFab
+    , fab
     )
 
 {-| A floating action button represents the primary action in an application.
@@ -46,7 +46,7 @@ action button](#extended-fab) below.
         = Clicked
 
     main =
-        ExtendedFab.extendedFab
+        ExtendedFab.fab
             (ExtendedFab.config
                 |> ExtendedFab.setOnClick FabClicked
             )
@@ -68,7 +68,7 @@ action button](#extended-fab) below.
 
 # Extended Floating Action Button
 
-@docs extendedFab
+@docs fab
 
 
 ## Extended FAB with Icon
@@ -81,7 +81,7 @@ the button's label, also use its `setTrailingIcon` configuration option.
 
 ### Extended FAB with Leading Icon
 
-    ExtendedFab.extendedFab
+    ExtendedFab.fab
         (ExtendedFab.config
             |> ExtendedFab.setIcon (Just "favorite")
         )
@@ -90,7 +90,7 @@ the button's label, also use its `setTrailingIcon` configuration option.
 
 ### Extended FAB with Trailing Icon
 
-    ExtendedFab.extendedFab
+    ExtendedFab.fab
         (ExtendedFab.config
             |> ExtendedFab.setIcon (Just "favorite")
             |> ExtendedFab.setTrailingIcon True
@@ -103,7 +103,7 @@ the button's label, also use its `setTrailingIcon` configuration option.
 If you want the extended floating action button to transition off the screen,
 use its `setExited` configuration option.
 
-    ExtendedFab.extendedFab
+    ExtendedFab.fab
         (ExtendedFab.config
             |> ExtendedFab.setExited True
         )
@@ -179,8 +179,8 @@ setOnClick onClick (Config config_) =
 
 {-| Extended floating action button view function
 -}
-extendedFab : Config msg -> String -> Html msg
-extendedFab ((Config { additionalAttributes }) as config_) label =
+fab : Config msg -> String -> Html msg
+fab ((Config { additionalAttributes }) as config_) label =
     Html.node "mdc-fab"
         (List.filterMap identity
             [ rootCs

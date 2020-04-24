@@ -3,7 +3,7 @@ module Material.TopAppBar exposing
     , setFixed
     , setDense
     , setAttributes
-    , topAppBar
+    , regular
     , row, section, alignEnd, alignStart
     , navigationIcon, title
     , actionItem
@@ -12,9 +12,9 @@ module Material.TopAppBar exposing
     , denseProminentFixedAdjust
     , prominentFixedAdjust
     , shortFixedAdjust
-    , shortTopAppBar
-    , shortCollapsedTopAppBar
-    , prominentTopAppBar
+    , short
+    , shortCollapsed
+    , prominent
     )
 
 {-| Top App Bar acts as a container for items such as application title,
@@ -47,13 +47,9 @@ navigation icon, and action items.
 # Basic Usage
 
     import Material.TopAppBar as TopAppBar
-        exposing
-            ( topAppBar
-            , topAppBarConfig
-            )
 
     main =
-        TopAppBar.topAppBar TopAppBar.config
+        TopAppBar.regular TopAppBar.config
             [ TopAppBar.row []
                 [ TopAppBar.section [ TopAppBar.alignStart ]
                     [ IconButton.iconButton
@@ -86,7 +82,7 @@ navigation icon, and action items.
 Usually a top app bar contains one row with at least one start-aligned section.
 This is where you would normally place your navigation icon and title.
 
-@docs topAppBar
+@docs regular
 @docs row, section, alignEnd, alignStart
 @docs navigationIcon, title
 
@@ -97,7 +93,7 @@ A top app bar can contain action items that are placed on the opposite side of
 the navigation icon. To do so, add another end-aligned section to the top app
 bar's row. Do not forget to set the `actionItem` attribute on the icons.
 
-    TopAppBar.topAppBar TopAppBar.config
+    TopAppBar.regular TopAppBar.config
         [ TopAppBar.row []
             [ TopAppBar.section [ TopAppBar.alignStart ]
                 [ IconButton.iconButton
@@ -132,7 +128,7 @@ To make a top app bar fixed to the top, use its `setFixed` configuration
 option. Since a fixed top app bar would overlay the pages content, an
 appropriate margin has to be applied to the page's content.
 
-    TopAppBar.topAppBar
+    TopAppBar.regular
         (TopAppBar.config
             |> TopAppBar.setFixed True
         )
@@ -149,18 +145,18 @@ appropriate margin has to be applied to the page's content.
 
 Short top app bars collapse to the navigation icon side when scrolled.
 
-    TopAppBar.shortTopAppBar TopAppBar.config []
+    TopAppBar.short TopAppBar.config []
 
-@docs shortTopAppBar
+@docs short
 
 
 ## Short Always Closed Variant
 
 A short top app bar can be configured to always appear closed.
 
-    TopAppBar.shortCollapsedTopAppBar TopAppBar.config []
+    TopAppBar.shortCollapsed TopAppBar.config []
 
-@docs shortCollapsedTopAppBar
+@docs shortCollapsed
 
 
 # Prominent Variant
@@ -169,7 +165,7 @@ To make a top app bar taller than the default, you may use a prominent top app b
 
     TopAppBar.prominentTopAppBar TopAppBar.config []
 
-@docs prominentTopAppBar
+@docs prominent
 
 
 # Dense Variant
@@ -177,7 +173,7 @@ To make a top app bar taller than the default, you may use a prominent top app b
 To make a top app bar shorter than the default, use its `setDense`
 configuration option.
 
-    TopAppBar.topAppBar
+    TopAppBar.regular
         (TopAppBar.config
             |> TopAppBar.setDense True
         )
@@ -200,7 +196,7 @@ type Config msg
 
 
 type Variant
-    = Default
+    = Regular
     | Short
     | ShortCollapsed
     | Prominent
@@ -254,29 +250,29 @@ genericTopAppBar variant ((Config { additionalAttributes }) as config_) nodes =
 
 {-| Top app bar view function
 -}
-topAppBar : Config msg -> List (Html msg) -> Html msg
-topAppBar config_ nodes =
-    genericTopAppBar Default config_ nodes
+regular : Config msg -> List (Html msg) -> Html msg
+regular config_ nodes =
+    genericTopAppBar Regular config_ nodes
 
 
 {-| Short top app bar view function
 -}
-shortTopAppBar : Config msg -> List (Html msg) -> Html msg
-shortTopAppBar config_ nodes =
+short : Config msg -> List (Html msg) -> Html msg
+short config_ nodes =
     genericTopAppBar Short config_ nodes
 
 
 {-| Short always closed top app bar view function
 -}
-shortCollapsedTopAppBar : Config msg -> List (Html msg) -> Html msg
-shortCollapsedTopAppBar config_ nodes =
+shortCollapsed : Config msg -> List (Html msg) -> Html msg
+shortCollapsed config_ nodes =
     genericTopAppBar ShortCollapsed config_ nodes
 
 
 {-| Prominent top app bar view function
 -}
-prominentTopAppBar : Config msg -> List (Html msg) -> Html msg
-prominentTopAppBar config_ nodes =
+prominent : Config msg -> List (Html msg) -> Html msg
+prominent config_ nodes =
     genericTopAppBar Prominent config_ nodes
 
 
@@ -342,7 +338,7 @@ rootCs =
 variantCs : Variant -> Maybe (Html.Attribute msg)
 variantCs variant =
     case variant of
-        Default ->
+        Regular ->
             Nothing
 
         Short ->

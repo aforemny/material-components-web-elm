@@ -160,7 +160,7 @@ action button, set the message's `actionButton` configuration field to a
 
     Snackbar.message
         |> Snackbar.setLabel "Something happened"
-        |> Snackbar.setActionButton "Take action"
+        |> Snackbar.setActionButton (Just "Take action")
         |> Snackbar.setOnActionButtonClick ActionButtonClicked
 
 
@@ -172,7 +172,7 @@ action icon, set the message's `actionIcon` configuration field to a
 
     Snackbar.message
         |> Snackbar.setLabel "Something happened"
-        |> Snackbar.setActionIcon "close"
+        |> Snackbar.setActionIcon (Just "close")
         |> Snackbar.setOnActionIconClick Dismissed
 
 
@@ -184,7 +184,7 @@ field to `True`.
 
     Snackbar.message
         |> Snackbar.setLabel "Something happened"
-        |> Snackbar.setActionButton "Take action"
+        |> Snackbar.setActionButton (Just "Take action")
         |> Snackbar.setStacked True
 
 
@@ -375,9 +375,9 @@ setLabel label (Message message_) =
 
 {-| Set a message's action button
 -}
-setActionButton : String -> Message msg -> Message msg
+setActionButton : Maybe String -> Message msg -> Message msg
 setActionButton actionButton (Message message_) =
-    Message { message_ | actionButton = Just actionButton }
+    Message { message_ | actionButton = actionButton }
 
 
 {-| Specify a message when the user clicks on a message's action button
@@ -389,9 +389,9 @@ setOnActionButtonClick onActionButtonClick (Message message_) =
 
 {-| Set a message's action icon
 -}
-setActionIcon : String -> Message msg -> Message msg
+setActionIcon : Maybe String -> Message msg -> Message msg
 setActionIcon actionIcon (Message message_) =
-    Message { message_ | actionIcon = Just actionIcon }
+    Message { message_ | actionIcon = actionIcon }
 
 
 {-| Specify a message when the user clicks on a message's action icon
@@ -403,9 +403,9 @@ setOnActionIconClick onActionIconClick (Message message_) =
 
 {-| Set a message to be leading
 -}
-setLeading : Message msg -> Message msg
-setLeading (Message message_) =
-    Message { message_ | leading = True }
+setLeading : Bool -> Message msg -> Message msg
+setLeading leading (Message message_) =
+    Message { message_ | leading = leading }
 
 
 {-| Set a message to be stacked

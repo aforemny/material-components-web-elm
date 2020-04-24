@@ -410,10 +410,9 @@ listGroupCs =
 
 {-| List group subheader view function
 -}
-subheader : List (Html.Attribute msg) -> List (Html msg) -> ListItem msg
+subheader : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 subheader additionalAttributes nodes =
-    ListItem.ListGroupSubheader <|
-        Html.div (listGroupSubheaderCs :: additionalAttributes) nodes
+    Html.span (listGroupSubheaderCs :: additionalAttributes) nodes
 
 
 listGroupSubheaderCs : Html.Attribute msg

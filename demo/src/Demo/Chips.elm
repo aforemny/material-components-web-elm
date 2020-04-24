@@ -3,8 +3,10 @@ module Demo.Chips exposing (Model, Msg(..), defaultModel, update, view)
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.Chips exposing (choiceChip, choiceChipConfig, choiceChipSet, filterChip, filterChipConfig, filterChipSet, inputChip, inputChipConfig, inputChipSet)
+import Html.Attributes exposing (style)
+import Material.Chip.Choice as ChoiceChip
+import Material.Chip.Filter as FilterChip
+import Material.Chip.Input as InputChip
 import Material.Typography as Typography
 import Set exposing (Set)
 
@@ -31,45 +33,38 @@ defaultModel =
 
 
 type Msg
-    = ChipClicked ChipType String
-
-
-type ChipType
-    = Choice
-    | Filter
-    | Action
-    | Input
+    = ChoiceChipClicked String
+    | FilterChipClicked String
+    | InputChipClicked String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        ChipClicked chipType index ->
-            case chipType of
-                Choice ->
-                    { model
-                        | choiceChip =
-                            if model.choiceChip == Just index then
-                                Nothing
+        ChoiceChipClicked index ->
+            { model
+                | choiceChip =
+                    if model.choiceChip == Just index then
+                        Nothing
+
+                    else
+                        Just index
+            }
+
+        FilterChipClicked index ->
+            { model
+                | selectedChips =
+                    model.selectedChips
+                        |> (if Set.member index model.selectedChips then
+                                Set.remove index
 
                             else
-                                Just index
-                    }
+                                Set.insert index
+                           )
+            }
 
-                Input ->
-                    { model | inputChips = Set.remove index model.inputChips }
-
-                _ ->
-                    { model
-                        | selectedChips =
-                            model.selectedChips
-                                |> (if Set.member index model.selectedChips then
-                                        Set.remove index
-
-                                    else
-                                        Set.insert index
-                                   )
-                    }
+        InputChipClicked index ->
+            { model | inputChips = Set.remove index model.inputChips }
 
 
 view : Model -> CatalogPage Msg
@@ -103,11 +98,11 @@ view model =
 
 heroChips : List (Html msg)
 heroChips =
-    [ choiceChipSet []
-        [ choiceChip choiceChipConfig "Chip One"
-        , choiceChip choiceChipConfig "Chip Two"
-        , choiceChip choiceChipConfig "Chip Three"
-        , choiceChip choiceChipConfig "Chip Four"
+    [ ChoiceChip.set []
+        [ ChoiceChip.chip ChoiceChip.config "Chip One"
+        , ChoiceChip.chip ChoiceChip.config "Chip Two"
+        , ChoiceChip.chip ChoiceChip.config "Chip Three"
+        , ChoiceChip.chip ChoiceChip.config "Chip Four"
         ]
     ]
 
@@ -115,105 +110,113 @@ heroChips =
 choiceChips : Model -> Html Msg
 choiceChips model =
     let
-        chip index label =
-            choiceChip
-                { choiceChipConfig
-                    | selected = Just index == model.choiceChip
-                    , onClick = Just (ChipClicked Choice index)
-                }
+        chip label =
+            ChoiceChip.chip
+                (ChoiceChip.config
+                    |> ChoiceChip.setSelected (Just label == model.choiceChip)
+                    |> ChoiceChip.setOnClick (ChoiceChipClicked label)
+                )
                 label
     in
-    choiceChipSet []
-        [ chip "chips-choice-extra-small" "Extra Small"
-        , chip "chips-choice-small" "Small"
-        , chip "chips-choice-medium" "Medium"
-        , chip "chips-choice-large" "Large"
-        , chip "chips-choice-extra-large" "Extra Large"
-        ]
+    ChoiceChip.set []
+        (List.map chip
+            [ "Extra Small"
+            , "Small"
+            , "Medium"
+            , "Large"
+            , "Extra Large"
+            ]
+        )
 
 
 filterChips1 : Model -> Html Msg
 filterChips1 model =
     let
-        chip index label =
-            filterChip
-                { filterChipConfig
-                    | selected = Set.member index model.selectedChips
-                    , onClick = Just (ChipClicked Filter index)
-                }
+        chip label =
+            FilterChip.chip
+                (FilterChip.config
+                    |> FilterChip.setSelected (Set.member label model.selectedChips)
+                    |> FilterChip.setOnClick (FilterChipClicked label)
+                )
                 label
     in
-    filterChipSet []
-        [ chip "chips-filter-chips-tops" "Tops"
-        , chip "chips-filter-chips-bottoms" "Bottoms"
-        , chip "chips-filter-chips-shoes" "Shoes"
-        , chip "chips-filter-chips-accessories" "Accessories"
-        ]
+    FilterChip.set []
+        (List.map chip
+            [ "Tops"
+            , "Bottoms"
+            , "Shoes"
+            , "Accessories"
+            ]
+        )
 
 
 filterChips2 : Model -> Html Msg
 filterChips2 model =
     let
-        chip index label =
-            filterChip
-                { filterChipConfig
-                    | selected = Set.member index model.selectedChips
-                    , icon = Just "face"
-                    , onClick = Just (ChipClicked Filter index)
-                }
+        chip label =
+            FilterChip.chip
+                (FilterChip.config
+                    |> FilterChip.setSelected (Set.member label model.selectedChips)
+                    |> FilterChip.setIcon (Just "face")
+                    |> FilterChip.setOnClick (FilterChipClicked label)
+                )
                 label
     in
-    filterChipSet []
-        [ chip "chips-filter-chips-alice" "Alice"
-        , chip "chips-filter-chips-bob" "Bob"
-        , chip "chips-filter-chips-charlie" "Charlie"
-        , chip "chips-filter-chips-danielle" "Danielle"
-        ]
+    FilterChip.set []
+        (List.map chip
+            [ "Alice"
+            , "Bob"
+            , "Charlie"
+            , "Danielle"
+            ]
+        )
 
 
 actionChips : Model -> Html Msg
 actionChips model =
     let
-        chip index ( icon, label ) =
-            choiceChip { choiceChipConfig | icon = Just icon } label
+        chip ( icon, label ) =
+            ChoiceChip.chip (ChoiceChip.config |> ChoiceChip.setIcon (Just icon)) label
     in
-    choiceChipSet []
-        [ chip "chips-action-chips-add-to-calendar" ( "event", "Add to calendar" )
-        , chip "chips-action-chips-bookmark" ( "bookmark", "Bookmark" )
-        , chip "chips-action-chips-set-alarm" ( "alarm", "Set alarm" )
-        , chip "chips-action-chips-get-directions" ( "directions", "Get directions" )
-        ]
+    ChoiceChip.set []
+        (List.map chip
+            [ ( "event", "Add to calendar" )
+            , ( "bookmark", "Bookmark" )
+            , ( "alarm", "Set alarm" )
+            , ( "directions", "Get directions" )
+            ]
+        )
 
 
 shapedChips : Model -> Html msg
 shapedChips model =
     let
-        chip index label =
-            choiceChip
-                { choiceChipConfig
-                    | additionalAttributes =
-                        [ Html.Attributes.style "border-radius" "4px" ]
-                }
+        chip label =
+            ChoiceChip.chip
+                (ChoiceChip.config
+                    |> ChoiceChip.setAttributes [ style "border-radius" "4px" ]
+                )
                 label
     in
-    choiceChipSet []
-        [ chip "chips-shaped-chips-bookcase" "Bookcase"
-        , chip "chips-shaped-chips-tv-stand" "TV Stand"
-        , chip "chips-shaped-chips-sofas" "Sofas"
-        , chip "chips-shaped-chips-office-chairs" "Office chairs"
-        ]
+    ChoiceChip.set []
+        (List.map chip
+            [ "Bookcase"
+            , "TV Stand"
+            , "Sofas"
+            , "Office chairs"
+            ]
+        )
 
 
 inputChips : Model -> Html Msg
 inputChips model =
     let
         chip index =
-            inputChip
-                { inputChipConfig
-                    | onTrailingIconClick = Just (ChipClicked Input index)
-                    , additionalAttributes =
-                        [ Html.Attributes.style "border-radius" "4px" ]
-                }
+            InputChip.chip
+                (InputChip.config
+                    |> InputChip.setOnTrailingIconClick (InputChipClicked index)
+                    |> InputChip.setAttributes [ style "border-radius" "4px" ]
+                )
                 index
     in
-    inputChipSet [] (List.map chip (Set.toList model.inputChips))
+    InputChip.set [] (List.map chip (Set.toList model.inputChips))

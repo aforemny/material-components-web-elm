@@ -3,10 +3,9 @@ module Demo.DataTable exposing (Model, Msg, defaultModel, update, view)
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.Button exposing (ButtonConfig, buttonConfig, outlinedButton, raisedButton, textButton, unelevatedButton)
-import Material.Checkbox as Checkbox exposing (checkboxConfig)
-import Material.DataTable exposing (dataTable, dataTableCell, dataTableCellConfig, dataTableConfig, dataTableHeaderCell, dataTableHeaderCellConfig, dataTableHeaderRow, dataTableHeaderRowCheckbox, dataTableRow, dataTableRowCheckbox, dataTableRowConfig)
+import Material.Button as Button
+import Material.Checkbox as Checkbox
+import Material.DataTable as DataTable
 import Material.Typography as Typography
 import Set exposing (Set)
 
@@ -78,43 +77,49 @@ heroDataTable =
     [ standardDataTable ]
 
 
+label : { desert : String, carbs : String, protein : String, comments : String }
+label =
+    { desert = "Desert"
+    , carbs = "Carbs (g)"
+    , protein = "Protein (g)"
+    , comments = "Comments"
+    }
+
+
+data : List { desert : String, carbs : String, protein : String, comments : String }
+data =
+    [ { desert = "Frozen yogurt"
+      , carbs = "24"
+      , protein = "4.0"
+      , comments = "Super tasty"
+      }
+    , { desert = "Ice cream sandwich"
+      , carbs = "37"
+      , protein = "4.33333333333"
+      , comments = "I like ice cream more"
+      }
+    , { desert = "Eclair"
+      , carbs = "24"
+      , protein = "6.0"
+      , comments = "New filing flavor"
+      }
+    ]
+
+
 standardDataTable : Html msg
 standardDataTable =
-    dataTable dataTableConfig
-        { thead =
-            [ dataTableHeaderRow []
-                [ dataTableHeaderCell dataTableHeaderCellConfig
-                    [ text "Desert" ]
-                , dataTableHeaderCell { dataTableHeaderCellConfig | numeric = True }
-                    [ text "Carbs (g)" ]
-                , dataTableHeaderCell { dataTableHeaderCellConfig | numeric = True }
-                    [ text "Protein (g)" ]
-                , dataTableHeaderCell dataTableHeaderCellConfig
-                    [ text "Comments" ]
+    let
+        row { desert, carbs, protein, comments } =
+            DataTable.row []
+                [ DataTable.cell [] [ text desert ]
+                , DataTable.numericCell [] [ text carbs ]
+                , DataTable.numericCell [] [ text protein ]
+                , DataTable.cell [] [ text comments ]
                 ]
-            ]
-        , tbody =
-            [ dataTableRow dataTableRowConfig
-                [ dataTableCell dataTableCellConfig [ text "Frozen yogurt" ]
-                , dataTableCell { dataTableCellConfig | numeric = True } [ text "24" ]
-                , dataTableCell { dataTableCellConfig | numeric = True } [ text "4.0" ]
-                , dataTableCell dataTableCellConfig [ text "Super tasty" ]
-                ]
-            , dataTableRow dataTableRowConfig
-                [ dataTableCell dataTableCellConfig [ text "Ice cream sandwich" ]
-                , dataTableCell { dataTableCellConfig | numeric = True }
-                    [ text "37" ]
-                , dataTableCell { dataTableCellConfig | numeric = True }
-                    [ text "4.33333333333" ]
-                , dataTableCell dataTableCellConfig [ text "I like ice cream more" ]
-                ]
-            , dataTableRow dataTableRowConfig
-                [ dataTableCell dataTableCellConfig [ text "Eclair" ]
-                , dataTableCell { dataTableCellConfig | numeric = True } [ text "24" ]
-                , dataTableCell { dataTableCellConfig | numeric = True } [ text "6.0" ]
-                , dataTableCell dataTableCellConfig [ text "New filing flavor" ]
-                ]
-            ]
+    in
+    DataTable.dataTable DataTable.config
+        { thead = [ row label ]
+        , tbody = List.map row data
         }
 
 
@@ -126,119 +131,58 @@ dataTableWithRowSelection model =
 
         allUnselected =
             Set.size model.selected == 0
-    in
-    dataTable dataTableConfig
-        { thead =
-            [ dataTableHeaderRow []
-                [ dataTableHeaderCell { dataTableHeaderCellConfig | checkbox = True }
-                    [ dataTableHeaderRowCheckbox
-                        { checkboxConfig
-                            | state =
-                                if allSelected then
-                                    Checkbox.Checked
 
-                                else if allUnselected then
-                                    Checkbox.Unchecked
-
-                                else
-                                    Checkbox.Indeterminate
-                            , onChange =
-                                Just
-                                    (if allSelected then
-                                        AllUnselected
-
-                                     else
-                                        AllSelected
-                                    )
-                        }
-                    ]
-                , dataTableHeaderCell dataTableHeaderCellConfig
-                    [ text "Desert" ]
-                , dataTableHeaderCell { dataTableHeaderCellConfig | numeric = True }
-                    [ text "Carbs (g)" ]
-                , dataTableHeaderCell { dataTableHeaderCellConfig | numeric = True }
-                    [ text "Protein (g)" ]
-                , dataTableHeaderCell dataTableHeaderCellConfig
-                    [ text "Comments" ]
+        row { onChange, state } { desert, carbs, protein, comments } =
+            DataTable.row []
+                [ DataTable.checkboxCell []
+                    (Checkbox.config
+                        |> Checkbox.setState state
+                        |> Checkbox.setOnChange onChange
+                    )
+                , DataTable.cell [] [ text desert ]
+                , DataTable.numericCell [] [ text carbs ]
+                , DataTable.numericCell [] [ text protein ]
+                , DataTable.cell [] [ text comments ]
                 ]
+    in
+    DataTable.dataTable DataTable.config
+        { thead =
+            [ row
+                { onChange =
+                    if allSelected then
+                        AllUnselected
+
+                    else
+                        AllSelected
+                , state =
+                    if allSelected then
+                        Checkbox.checked
+
+                    else if allUnselected then
+                        Checkbox.unchecked
+
+                    else
+                        Checkbox.indeterminate
+                }
+                label
             ]
         , tbody =
-            [ let
-                label =
-                    "Frozen yogurt"
+            List.map
+                (\({ desert } as data_) ->
+                    let
+                        selected =
+                            Set.member desert model.selected
+                    in
+                    row
+                        { onChange = ItemSelected desert
+                        , state =
+                            if selected then
+                                Checkbox.checked
 
-                selected =
-                    Set.member label model.selected
-              in
-              dataTableRow { dataTableRowConfig | selected = selected }
-                [ dataTableCell { dataTableCellConfig | checkbox = True }
-                    [ dataTableRowCheckbox
-                        { checkboxConfig
-                            | state =
-                                if selected then
-                                    Checkbox.Checked
-
-                                else
-                                    Checkbox.Unchecked
-                            , onChange = Just (ItemSelected label)
+                            else
+                                Checkbox.unchecked
                         }
-                    ]
-                , dataTableCell dataTableCellConfig [ text label ]
-                , dataTableCell { dataTableCellConfig | numeric = True } [ text "24" ]
-                , dataTableCell { dataTableCellConfig | numeric = True } [ text "4.0" ]
-                , dataTableCell dataTableCellConfig [ text "Super tasty" ]
-                ]
-            , let
-                label =
-                    "Ice cream sandwich"
-
-                selected =
-                    Set.member label model.selected
-              in
-              dataTableRow { dataTableRowConfig | selected = selected }
-                [ dataTableCell { dataTableCellConfig | checkbox = True }
-                    [ dataTableRowCheckbox
-                        { checkboxConfig
-                            | state =
-                                if selected then
-                                    Checkbox.Checked
-
-                                else
-                                    Checkbox.Unchecked
-                            , onChange = Just (ItemSelected label)
-                        }
-                    ]
-                , dataTableCell dataTableCellConfig [ text label ]
-                , dataTableCell { dataTableCellConfig | numeric = True }
-                    [ text "37" ]
-                , dataTableCell { dataTableCellConfig | numeric = True }
-                    [ text "4.33333333333" ]
-                , dataTableCell dataTableCellConfig [ text "I like ice cream more" ]
-                ]
-            , let
-                label =
-                    "Eclair"
-
-                selected =
-                    Set.member label model.selected
-              in
-              dataTableRow { dataTableRowConfig | selected = selected }
-                [ dataTableCell { dataTableCellConfig | checkbox = True }
-                    [ dataTableRowCheckbox
-                        { checkboxConfig
-                            | state =
-                                if selected then
-                                    Checkbox.Checked
-
-                                else
-                                    Checkbox.Unchecked
-                            , onChange = Just (ItemSelected label)
-                        }
-                    ]
-                , dataTableCell dataTableCellConfig [ text label ]
-                , dataTableCell { dataTableCellConfig | numeric = True } [ text "24" ]
-                , dataTableCell { dataTableCellConfig | numeric = True } [ text "6.0" ]
-                , dataTableCell dataTableCellConfig [ text "New filing flavor" ]
-                ]
-            ]
+                        data_
+                )
+                data
         }

@@ -181,7 +181,7 @@ when there is only a single button as card action.
 -}
 
 import Html exposing (Html, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style)
 import Html.Events
 import Material.Button as Button
 import Material.Button.Internal
@@ -368,7 +368,7 @@ mediaCs =
 
 backgroundImageAttr : String -> Maybe (Html.Attribute msg)
 backgroundImageAttr url =
-    Just (Html.Attributes.style "background-image" ("url(\"" ++ url ++ "\")"))
+    Just (style "background-image" ("url(\"" ++ url ++ "\")"))
 
 
 aspectCs : Maybe Aspect -> Maybe (Html.Attribute msg)

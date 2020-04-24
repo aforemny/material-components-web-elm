@@ -3,8 +3,8 @@ module Demo.Buttons exposing (Model, Msg, defaultModel, update, view)
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.Button exposing (ButtonConfig, buttonConfig, outlinedButton, raisedButton, textButton, unelevatedButton)
+import Html.Attributes exposing (style)
+import Material.Button as Button
 import Material.Typography as Typography
 
 
@@ -53,69 +53,61 @@ view model =
 
 heroButtons : List (Html msg)
 heroButtons =
-    [ textButton { buttonConfig | additionalAttributes = heroMargin } "Text"
-    , raisedButton { buttonConfig | additionalAttributes = heroMargin } "Raised"
-    , unelevatedButton { buttonConfig | additionalAttributes = heroMargin } "Unelevated"
-    , outlinedButton { buttonConfig | additionalAttributes = heroMargin } "Outlined"
+    let
+        config =
+            Button.config |> Button.setAttributes [ heroMargin ]
+    in
+    [ Button.text config "Text"
+    , Button.raised config "Raised"
+    , Button.unelevated config "Unelevated"
+    , Button.outlined config "Outlined"
     ]
 
 
 textButtons : Html msg
 textButtons =
-    buttonsRow textButton buttonConfig
+    buttonsRow Button.text []
 
 
 raisedButtons : Html msg
 raisedButtons =
-    buttonsRow raisedButton buttonConfig
+    buttonsRow Button.raised []
 
 
 unelevatedButtons : Html msg
 unelevatedButtons =
-    buttonsRow unelevatedButton buttonConfig
+    buttonsRow Button.unelevated []
 
 
 outlinedButtons : Html msg
 outlinedButtons =
-    buttonsRow outlinedButton buttonConfig
+    buttonsRow Button.outlined []
 
 
 shapedButtons : Html msg
 shapedButtons =
-    buttonsRow unelevatedButton
-        { buttonConfig
-            | additionalAttributes = [ Html.Attributes.style "border-radius" "18px" ]
-        }
+    buttonsRow Button.unelevated [ style "border-radius" "18px" ]
 
 
-buttonsRow : (ButtonConfig msg -> String -> Html msg) -> ButtonConfig msg -> Html msg
-buttonsRow button buttonConfig =
+buttonsRow : (Button.Config msg -> String -> Html msg) -> List (Html.Attribute msg) -> Html msg
+buttonsRow button additionalAttributes =
+    let
+        config =
+            Button.config
+                |> Button.setAttributes (rowMargin :: additionalAttributes)
+    in
     Html.div []
-        [ button
-            { buttonConfig
-                | additionalAttributes = buttonConfig.additionalAttributes ++ rowMargin
-            }
-            "Default"
-        , button
-            { buttonConfig
-                | dense = True
-                , additionalAttributes = buttonConfig.additionalAttributes ++ rowMargin
-            }
-            "Dense"
-        , button
-            { buttonConfig
-                | icon = Just "favorite"
-                , additionalAttributes = buttonConfig.additionalAttributes ++ rowMargin
-            }
-            "Icon"
+        [ button config "Default"
+        , button (config |> Button.setDense True) "Dense"
+        , button (config |> Button.setIcon (Just "favorite")) "Icon"
         ]
 
 
-heroMargin : List (Html.Attribute msg)
+heroMargin : Html.Attribute msg
 heroMargin =
-    [ Html.Attributes.style "margin" "16px 32px" ]
+    style "margin" "16px 32px"
 
 
-rowMargin : List (Html.Attribute msg)
+rowMargin : Html.Attribute msg
 rowMargin =
-    [ Html.Attributes.style "margin" "8px 16px" ]
+    style "margin" "8px 16px"

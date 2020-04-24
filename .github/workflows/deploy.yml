@@ -13,7 +13,7 @@ jobs:
       - uses: cachix/install-nix-action@v6
       - run: nix-shell --run "make build-pages"
         env:
-          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz
       - uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}

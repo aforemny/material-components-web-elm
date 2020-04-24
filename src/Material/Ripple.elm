@@ -85,7 +85,7 @@ If you want to set the ripple effect to either primary or accent color, use its
 -}
 
 import Html exposing (Html, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style)
 import Json.Encode as Encode
 
 
@@ -151,11 +151,11 @@ ripple isUnbounded ((Config { additionalAttributes }) as config_) =
             , unboundedData isUnbounded
             , colorCs config_
             , rippleSurface
-            , Just (Html.Attributes.style "position" "absolute")
-            , Just (Html.Attributes.style "top" "0")
-            , Just (Html.Attributes.style "left" "0")
-            , Just (Html.Attributes.style "right" "0")
-            , Just (Html.Attributes.style "bottom" "0")
+            , Just (style "position" "absolute")
+            , Just (style "top" "0")
+            , Just (style "left" "0")
+            , Just (style "right" "0")
+            , Just (style "bottom" "0")
             ]
             ++ additionalAttributes
         )

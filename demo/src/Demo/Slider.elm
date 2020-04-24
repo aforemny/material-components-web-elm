@@ -7,14 +7,13 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
 import Json.Decode as Json exposing (Decoder)
-import Material.Slider exposing (slider, sliderConfig)
+import Material.Slider as Slider
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =
-    { sliders : Dict String Float
-    }
+    { sliders : Dict String Float }
 
 
 defaultModel : Model
@@ -30,13 +29,13 @@ defaultModel =
 
 
 type Msg
-    = Change String Float
+    = Changed String Float
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Change id value ->
+        Changed id value ->
             { model | sliders = Dict.insert id value model.sliders }
 
 
@@ -67,11 +66,11 @@ heroSlider model =
         id =
             "hero-slider"
     in
-    slider
-        { sliderConfig
-            | value = Maybe.withDefault 0 (Dict.get id model.sliders)
-            , onChange = Just (Change id)
-        }
+    Slider.slider
+        (Slider.config
+            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
+            |> Slider.setOnChange (Changed id)
+        )
 
 
 continuousSlider : Model -> Html Msg
@@ -80,13 +79,13 @@ continuousSlider model =
         id =
             "continuous-slider"
     in
-    slider
-        { sliderConfig
-            | value = Maybe.withDefault 0 (Dict.get id model.sliders)
-            , onChange = Just (Change id)
-            , min = 0
-            , max = 50
-        }
+    Slider.slider
+        (Slider.config
+            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
+            |> Slider.setOnChange (Changed id)
+            |> Slider.setMin 0
+            |> Slider.setMax 50
+        )
 
 
 discreteSlider : Model -> Html Msg
@@ -95,15 +94,15 @@ discreteSlider model =
         id =
             "discrete-slider"
     in
-    slider
-        { sliderConfig
-            | value = Maybe.withDefault 0 (Dict.get id model.sliders)
-            , onChange = Just (Change id)
-            , discrete = True
-            , min = 0
-            , max = 50
-            , step = 1
-        }
+    Slider.slider
+        (Slider.config
+            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
+            |> Slider.setOnChange (Changed id)
+            |> Slider.setDiscrete True
+            |> Slider.setMin 0
+            |> Slider.setMax 50
+            |> Slider.setStep 1
+        )
 
 
 discreteSliderWithTickMarks : Model -> Html Msg
@@ -112,13 +111,13 @@ discreteSliderWithTickMarks model =
         id =
             "discrete-slider-with-tick-marks"
     in
-    slider
-        { sliderConfig
-            | value = Maybe.withDefault 0 (Dict.get id model.sliders)
-            , onChange = Just (Change id)
-            , discrete = True
-            , min = 0
-            , max = 50
-            , step = 1
-            , displayMarkers = True
-        }
+    Slider.slider
+        (Slider.config
+            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
+            |> Slider.setOnChange (Changed id)
+            |> Slider.setDiscrete True
+            |> Slider.setMin 0
+            |> Slider.setMax 50
+            |> Slider.setStep 1
+            |> Slider.setDisplayMarkers True
+        )

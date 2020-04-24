@@ -1,8 +1,9 @@
 module Demo.Helper.ResourceLink exposing (view)
 
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.List exposing (ListItem, listItem, listItemConfig, listItemGraphic)
+import Html.Attributes exposing (class)
+import Material.List as List
+import Material.List.Item as ListItem exposing (ListItem)
 
 
 view :
@@ -13,16 +14,16 @@ view :
     }
     -> ListItem msg
 view { link, title, icon, altText } =
-    listItem
-        { listItemConfig
-            | additionalAttributes =
+    ListItem.listItem
+        (ListItem.config
+            |> ListItem.setAttributes
                 [ Html.Attributes.href link
                 , Html.Attributes.target "_blank"
                 ]
-        }
-        [ listItemGraphic []
+        )
+        [ ListItem.graphic []
             [ Html.img
-                [ Html.Attributes.class "resources-icon"
+                [ class "resources-icon"
                 , Html.Attributes.src icon
                 , Html.Attributes.alt altText
                 ]

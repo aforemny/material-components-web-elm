@@ -6,21 +6,19 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events
-import Material.FormField exposing (formField, formFieldConfig)
-import Material.Switch exposing (switch, switchConfig)
+import Material.FormField as FormField
+import Material.Switch as Switch
 import Material.Typography as Typography
 import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =
-    { switches : Dict String Bool
-    }
+    { switches : Dict String Bool }
 
 
 defaultModel : Model
 defaultModel =
-    { switches = Dict.fromList [ ( "hero-switch", True ) ]
-    }
+    { switches = Dict.fromList [ ( "hero-switch", True ) ] }
 
 
 type Msg
@@ -67,17 +65,17 @@ heroSwitch model =
         id =
             "hero-switch"
     in
-    [ formField
-        { formFieldConfig
-            | label = "off/on"
-            , for = Just id
-            , onClick = Just (Toggle id)
-        }
-        [ switch
-            { switchConfig
-                | checked = isChecked id model
-                , onChange = Just (Toggle id)
-            }
+    [ FormField.formField
+        (FormField.config
+            |> FormField.setLabel "off/on"
+            |> FormField.setFor (Just id)
+            |> FormField.setOnClick (Toggle id)
+        )
+        [ Switch.switch
+            (Switch.config
+                |> Switch.setChecked (isChecked id model)
+                |> Switch.setOnChange (Toggle id)
+            )
         ]
     ]
 
@@ -88,15 +86,15 @@ demoSwitch model =
         id =
             "demo-switch"
     in
-    formField
-        { formFieldConfig
-            | label = "off/on"
-            , for = Just id
-            , onClick = Just (Toggle id)
-        }
-        [ switch
-            { switchConfig
-                | checked = isChecked id model
-                , onChange = Just (Toggle id)
-            }
+    FormField.formField
+        (FormField.config
+            |> FormField.setLabel "off/on"
+            |> FormField.setFor (Just id)
+            |> FormField.setOnClick (Toggle id)
+        )
+        [ Switch.switch
+            (Switch.config
+                |> Switch.setChecked (isChecked id model)
+                |> Switch.setOnChange (Toggle id)
+            )
         ]

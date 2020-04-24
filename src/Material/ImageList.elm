@@ -101,7 +101,7 @@ labels to be positioned in a scrim overlaying each image, use the image list's
 -}
 
 import Html exposing (Html, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style)
 import Material.ImageList.Item exposing (ImageListItem)
 import Material.ImageList.Item.Internal as ImageListItem
 
@@ -237,7 +237,7 @@ imageElt masonry (ImageListItem.ImageListItem (ImageListItem.Config { href, imag
     else
         Html.div
             [ class "mdc-image-list__image"
-            , Html.Attributes.style "background-image" ("url('" ++ image ++ "')")
+            , style "background-image" ("url('" ++ image ++ "')")
             ]
             []
 

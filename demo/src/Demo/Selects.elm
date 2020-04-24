@@ -4,24 +4,22 @@ import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Helper.ResourceLink as ResourceLink
 import Dict exposing (Dict)
 import Html exposing (Html, text)
-import Html.Attributes
+import Html.Attributes exposing (style)
 import Html.Events
-import Material.List exposing (list, listConfig, listItem, listItemConfig)
-import Material.Select exposing (SelectOption, filledSelect, outlinedSelect, selectConfig, selectOption, selectOptionConfig)
+import Material.List as List
+import Material.List.Item as ListItem
+import Material.Select as Select
+import Material.Select.Option as SelectOption exposing (SelectOption)
 import Material.Typography as Typography
 
 
 type alias Model =
-    { value : String
-    , enhancedValue : String
-    }
+    { value : String }
 
 
 defaultModel : Model
 defaultModel =
-    { value = ""
-    , enhancedValue = ""
-    }
+    { value = "" }
 
 
 type Msg
@@ -59,12 +57,12 @@ view model =
 
 heroSelects : Model -> Html Msg
 heroSelects model =
-    filledSelect
-        { selectConfig
-            | label = "Fruit"
-            , value = Just model.value
-            , onChange = Just SetValue
-        }
+    Select.filled
+        (Select.config
+            |> Select.setLabel "Fruit"
+            |> Select.setValue model.value
+            |> Select.setOnChange SetValue
+        )
         items
 
 
@@ -72,80 +70,87 @@ filledSelects : Model -> Html msg
 filledSelects model =
     Html.div []
         [ Html.h3 [ Typography.subtitle1 ] [ text "Filled" ]
-        , filledSelect
-            { selectConfig
-                | label = "Fruit"
-                , additionalAttributes = marginRight
-            }
+        , Select.filled
+            (Select.config
+                |> Select.setLabel "Fruit"
+                |> Select.setAttributes marginRight
+            )
             items
         ]
 
 
 outlinedSelects : Model -> Html msg
 outlinedSelects model =
-    outlinedSelect
-        { selectConfig
-            | label = "Fruit"
-            , additionalAttributes = marginRight
-        }
+    Select.outlined
+        (Select.config
+            |> Select.setLabel "Fruit"
+            |> Select.setAttributes marginRight
+        )
         items
 
 
 shapedFilledSelects : Model -> Html msg
 shapedFilledSelects model =
-    filledSelect
-        { selectConfig
-            | label = "Fruit"
-            , additionalAttributes =
-                Html.Attributes.style "border-radius" "17.92px 17.92px 0 0"
+    Select.filled
+        (Select.config
+            |> Select.setLabel "Fruit"
+            |> Select.setAttributes
+                (style "border-radius" "17.92px 17.92px 0 0"
                     :: marginRight
-        }
+                )
+        )
         items
 
 
 shapedOutlinedSelects : Model -> Html msg
 shapedOutlinedSelects model =
-    outlinedSelect
-        { selectConfig
-            | label = "Fruit"
-            , additionalAttributes =
+    Select.outlined
+        (Select.config
+            |> Select.setLabel "Fruit"
+            |> Select.setAttributes
                 -- TODO:
-                -- [ Html.Attributes.style "border-radius" "28px"
-                -- , Html.Attributes.style "padding-left" "32px"
-                -- , Html.Attributes.style "padding-right" "52px"
+                -- [ style "border-radius" "28px"
+                -- , style "padding-left" "32px"
+                -- , style "padding-right" "52px"
                 -- ]
                 marginRight
-        }
+        )
         items
 
 
 items : List (SelectOption msg)
 items =
-    [ selectOption { selectOptionConfig | value = "" } [ text "" ]
-    , selectOption { selectOptionConfig | value = "Apple" } [ text "Apple" ]
-    , selectOption { selectOptionConfig | value = "Orange" } [ text "Orange" ]
-    , selectOption { selectOptionConfig | value = "Banana" } [ text "Banana" ]
-    ]
+    List.map
+        (\value ->
+            SelectOption.selectOption
+                (SelectOption.config |> SelectOption.setValue value)
+                [ text value ]
+        )
+        [ ""
+        , "Apple"
+        , "Orange"
+        , "Banana"
+        ]
 
 
 selectRow : List (Html.Attribute msg)
 selectRow =
-    [ Html.Attributes.style "display" "-ms-flexbox"
-    , Html.Attributes.style "display" "flex"
-    , Html.Attributes.style "-ms-flex-align" "start"
-    , Html.Attributes.style "align-items" "flex-start"
-    , Html.Attributes.style "-ms-flex-pack" "start"
-    , Html.Attributes.style "justify-content" "flex-start"
-    , Html.Attributes.style "-ms-flex-wrap" "wrap"
-    , Html.Attributes.style "flex-wrap" "wrap"
+    [ style "display" "-ms-flexbox"
+    , style "display" "flex"
+    , style "-ms-flex-align" "start"
+    , style "align-items" "flex-start"
+    , style "-ms-flex-pack" "start"
+    , style "justify-content" "flex-start"
+    , style "-ms-flex-wrap" "wrap"
+    , style "flex-wrap" "wrap"
     ]
 
 
 marginRight : List (Html.Attribute msg)
 marginRight =
-    [ Html.Attributes.style "margin-right" "5rem" ]
+    [ style "margin-right" "5rem" ]
 
 
 demoWidth : List (Html.Attribute msg)
 demoWidth =
-    [ Html.Attributes.style "width" "7rem" ]
+    [ style "width" "7rem" ]

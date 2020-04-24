@@ -2,7 +2,7 @@ module Main exposing (main)
 
 import Browser
 import Html exposing (Html, text)
-import Material.Button exposing (buttonConfig, raisedButton)
+import Material.Button as Button
 import Material.Typography as Typography
 
 
@@ -33,9 +33,9 @@ update msg model =
 view : Model -> Html Msg
 view model =
     Html.div [ Typography.typography ]
-        [ raisedButton { buttonConfig | onClick = Just Increment } "+1"
+        [ Button.raised (Button.config |> Button.setOnClick Increment) "+1"
         , Html.div [] [ text <| String.fromInt model.count ]
-        , raisedButton { buttonConfig | onClick = Just Decrement } "-1"
+        , Button.raised (Button.config |> Button.setOnClick Decrement) "-1"
         ]
 
 

@@ -2,23 +2,24 @@ module Demo.Startpage exposing (view)
 
 import Demo.Url as Url exposing (Url(..))
 import Html exposing (Html, text)
-import Html.Attributes
+import Html.Attributes exposing (style)
 import Html.Events
-import Material.IconButton as IconButton exposing (customIconButton, iconButtonConfig)
-import Material.ImageList exposing (imageList, imageListConfig, imageListItem, imageListItemConfig)
-import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
+import Material.IconButton as IconButton
+import Material.ImageList as ImageList
+import Material.ImageList.Item as ImageListItem
+import Material.TopAppBar as TopAppBar
 
 
 view : Html msg
 view =
     Html.div []
-        [ topAppBar topAppBarConfig
+        [ TopAppBar.regular TopAppBar.config
             [ TopAppBar.row []
                 [ TopAppBar.section [ TopAppBar.alignStart ]
-                    [ customIconButton
-                        { iconButtonConfig
-                            | additionalAttributes = [ TopAppBar.navigationIcon ]
-                        }
+                    [ IconButton.custom
+                        (IconButton.config
+                            |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
+                        )
                         [ Html.img
                             [ Html.Attributes.src "images/ic_component_24px_white.svg"
                             ]
@@ -26,32 +27,32 @@ view =
                         ]
                     , Html.span
                         [ TopAppBar.title
-                        , Html.Attributes.style "text-transform" "uppercase"
-                        , Html.Attributes.style "font-weight" "400"
+                        , style "text-transform" "uppercase"
+                        , style "font-weight" "400"
                         ]
                         [ text "Material Components for Elm" ]
                     ]
                 ]
             ]
-        , imageList
-            { imageListConfig
-                | additionalAttributes =
-                    [ Html.Attributes.style "max-width" "900px"
-                    , Html.Attributes.style "padding-top" "128px"
-                    , Html.Attributes.style "padding-bottom" "100px"
+        , ImageList.imageList
+            (ImageList.config
+                |> ImageList.setAttributes
+                    [ style "max-width" "900px"
+                    , style "padding-top" "128px"
+                    , style "padding-bottom" "100px"
                     ]
-            }
+            )
             (List.map
                 (\{ url, title, icon } ->
-                    imageListItem
-                        { imageListItemConfig
-                            | label = Just title
-                            , href = Just (Url.toString url)
-                            , additionalAttributes =
-                                [ Html.Attributes.style "width" "calc(100% / 4 - 8.25px)"
-                                , Html.Attributes.style "margin" "4px"
+                    ImageListItem.imageListItem
+                        (ImageListItem.config
+                            |> ImageListItem.setLabel title
+                            |> ImageListItem.setHref (Just (Url.toString url))
+                            |> ImageListItem.setAttributes
+                                [ style "width" "calc(100% / 4 - 8.25px)"
+                                , style "margin" "4px"
                                 ]
-                        }
+                        )
                         icon
                 )
                 imageListItems

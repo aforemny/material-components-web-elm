@@ -2,14 +2,15 @@ module Demo.CatalogPage exposing (CatalogPage, CatalogPageResources, view)
 
 import Demo.Url as Url exposing (Url)
 import Html exposing (Html, text)
-import Html.Attributes
+import Html.Attributes exposing (style)
 import Html.Events
 import Json.Decode as Decode
-import Material.Drawer as Drawer exposing (dismissibleDrawer, dismissibleDrawerConfig, drawerContent)
-import Material.Icon exposing (icon, iconConfig)
-import Material.IconButton exposing (iconButton, iconButtonConfig)
-import Material.List exposing (list, listConfig, listItem, listItemConfig, listItemGraphic)
-import Material.TopAppBar as TopAppBar exposing (topAppBar, topAppBarConfig)
+import Material.Drawer.Dismissible as DismissibleDrawer
+import Material.Icon as Icon
+import Material.IconButton as IconButton
+import Material.List as List
+import Material.List.Item as ListItem
+import Material.TopAppBar as TopAppBar
 import Material.Typography as Typography
 
 
@@ -48,42 +49,48 @@ view lift catalogPageConfig catalogPage =
                 catalogPageConfig.openDrawer
     in
     Html.div catalogPageContainer
-        [ topAppBar topAppBarConfig
+        [ TopAppBar.regular TopAppBar.config
             [ TopAppBar.row []
                 [ TopAppBar.section [ TopAppBar.alignStart ]
-                    [ iconButton
-                        { iconButtonConfig
-                            | additionalAttributes = [ TopAppBar.navigationIcon ]
-                            , onClick = Just toggleCatalogDrawer
-                        }
+                    [ IconButton.iconButton
+                        (IconButton.config
+                            |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
+                            |> IconButton.setOnClick toggleCatalogDrawer
+                        )
                         "menu"
                     , Html.span
                         [ TopAppBar.title
-                        , Html.Attributes.style "text-transform" "uppercase"
-                        , Html.Attributes.style "font-weight" "400"
+                        , style "text-transform" "uppercase"
+                        , style "font-weight" "400"
                         ]
                         [ text "Material Components for Elm" ]
                     ]
                 ]
             ]
         , Html.div demoPanel
-            [ dismissibleDrawer
-                { dismissibleDrawerConfig
-                    | open = catalogPageConfig.drawerOpen
-                    , additionalAttributes =
+            [ DismissibleDrawer.drawer
+                (DismissibleDrawer.config
+                    |> DismissibleDrawer.setOpen catalogPageConfig.drawerOpen
+                    |> DismissibleDrawer.setAttributes
                         [ TopAppBar.fixedAdjust
-                        , Html.Attributes.style "z-index" "1"
+                        , style "z-index" "1"
                         ]
-                }
-                [ drawerContent []
-                    [ list listConfig
+                )
+                [ DismissibleDrawer.content []
+                    [ List.list List.config
                         (List.map
                             (\{ url, label } ->
-                                listItem
-                                    { listItemConfig
-                                        | activated = catalogPageConfig.url == url
-                                        , href = Just (Url.toString url)
-                                    }
+                                ListItem.listItem
+                                    (ListItem.config
+                                        |> ListItem.setSelected
+                                            (if catalogPageConfig.url == url then
+                                                Just ListItem.activated
+
+                                             else
+                                                Nothing
+                                            )
+                                        |> ListItem.setHref (Just (Url.toString url))
+                                    )
                                     [ text label ]
                             )
                             catalogDrawerItems
@@ -91,7 +98,11 @@ view lift catalogPageConfig catalogPage =
                     ]
                 ]
             , Html.map lift <|
-                Html.div (TopAppBar.fixedAdjust :: Drawer.appContent :: demoContent)
+                Html.div
+                    (TopAppBar.fixedAdjust
+                        :: DismissibleDrawer.appContent
+                        :: demoContent
+                    )
                     [ Html.div demoContentTransition
                         (Html.h1 [ Typography.headline5 ] [ text catalogPage.title ]
                             :: Html.p [ Typography.body1 ] [ text catalogPage.prelude ]
@@ -110,13 +121,13 @@ view lift catalogPageConfig catalogPage =
 
 resourcesList : CatalogPageResources -> Html msg
 resourcesList { materialDesignGuidelines, documentation, sourceCode } =
-    list listConfig
-        [ listItem
-            { listItemConfig
-                | href = materialDesignGuidelines
-                , target = Just "_blank"
-            }
-            [ listItemGraphic resourcesGraphic
+    List.list List.config
+        [ ListItem.listItem
+            (ListItem.config
+                |> ListItem.setHref materialDesignGuidelines
+                |> ListItem.setTarget (Just "_blank")
+            )
+            [ ListItem.graphic resourcesGraphic
                 [ Html.img
                     (Html.Attributes.src "images/ic_material_design_24px.svg"
                         :: resourcesGraphic
@@ -125,12 +136,12 @@ resourcesList { materialDesignGuidelines, documentation, sourceCode } =
                 ]
             , text "Material Design Guidelines"
             ]
-        , listItem
-            { listItemConfig
-                | href = documentation
-                , target = Just "_blank"
-            }
-            [ listItemGraphic resourcesGraphic
+        , ListItem.listItem
+            (ListItem.config
+                |> ListItem.setHref documentation
+                |> ListItem.setTarget (Just "_blank")
+            )
+            [ ListItem.graphic resourcesGraphic
                 [ Html.img
                     (Html.Attributes.src "images/ic_drive_document_24px.svg"
                         :: resourcesGraphic
@@ -139,12 +150,12 @@ resourcesList { materialDesignGuidelines, documentation, sourceCode } =
                 ]
             , text "Documentation"
             ]
-        , listItem
-            { listItemConfig
-                | href = sourceCode
-                , target = Just "_blank"
-            }
-            [ listItemGraphic resourcesGraphic
+        , ListItem.listItem
+            (ListItem.config
+                |> ListItem.setHref sourceCode
+                |> ListItem.setTarget (Just "_blank")
+            )
+            [ ListItem.graphic resourcesGraphic
                 [ Html.img
                     (Html.Attributes.src "images/ic_code_24px.svg"
                         :: resourcesGraphic
@@ -190,75 +201,75 @@ catalogDrawerItems =
 
 catalogPageContainer : List (Html.Attribute msg)
 catalogPageContainer =
-    [ Html.Attributes.style "position" "relative"
+    [ style "position" "relative"
     , Typography.typography
     ]
 
 
 demoPanel : List (Html.Attribute msg)
 demoPanel =
-    [ Html.Attributes.style "display" "-ms-flexbox"
-    , Html.Attributes.style "display" "flex"
-    , Html.Attributes.style "position" "relative"
-    , Html.Attributes.style "height" "100vh"
-    , Html.Attributes.style "overflow" "hidden"
+    [ style "display" "-ms-flexbox"
+    , style "display" "flex"
+    , style "position" "relative"
+    , style "height" "100vh"
+    , style "overflow" "hidden"
     ]
 
 
 demoContent : List (Html.Attribute msg)
 demoContent =
     [ Html.Attributes.id "demo-content"
-    , Html.Attributes.style "height" "100%"
-    , Html.Attributes.style "-webkit-box-sizing" "border-box"
-    , Html.Attributes.style "box-sizing" "border-box"
-    , Html.Attributes.style "max-width" "100%"
-    , Html.Attributes.style "padding-left" "16px"
-    , Html.Attributes.style "padding-right" "16px"
-    , Html.Attributes.style "padding-bottom" "100px"
-    , Html.Attributes.style "width" "100%"
-    , Html.Attributes.style "overflow" "auto"
-    , Html.Attributes.style "display" "-ms-flexbox"
-    , Html.Attributes.style "display" "flex"
-    , Html.Attributes.style "-ms-flex-direction" "column"
-    , Html.Attributes.style "flex-direction" "column"
-    , Html.Attributes.style "-ms-flex-align" "center"
-    , Html.Attributes.style "align-items" "center"
-    , Html.Attributes.style "-ms-flex-pack" "start"
-    , Html.Attributes.style "justify-content" "flex-start"
+    , style "height" "100%"
+    , style "-webkit-box-sizing" "border-box"
+    , style "box-sizing" "border-box"
+    , style "max-width" "100%"
+    , style "padding-left" "16px"
+    , style "padding-right" "16px"
+    , style "padding-bottom" "100px"
+    , style "width" "100%"
+    , style "overflow" "auto"
+    , style "display" "-ms-flexbox"
+    , style "display" "flex"
+    , style "-ms-flex-direction" "column"
+    , style "flex-direction" "column"
+    , style "-ms-flex-align" "center"
+    , style "align-items" "center"
+    , style "-ms-flex-pack" "start"
+    , style "justify-content" "flex-start"
     ]
 
 
 demoContentTransition : List (Html.Attribute msg)
 demoContentTransition =
-    [ Html.Attributes.style "max-width" "900px"
-    , Html.Attributes.style "width" "100%"
+    [ style "max-width" "900px"
+    , style "width" "100%"
     ]
 
 
 hero : List (Html.Attribute msg)
 hero =
-    [ Html.Attributes.style "display" "-ms-flexbox"
-    , Html.Attributes.style "display" "flex"
-    , Html.Attributes.style "-ms-flex-flow" "row nowrap"
-    , Html.Attributes.style "flex-flow" "row nowrap"
-    , Html.Attributes.style "-ms-flex-align" "center"
-    , Html.Attributes.style "align-items" "center"
-    , Html.Attributes.style "-ms-flex-pack" "center"
-    , Html.Attributes.style "justify-content" "center"
-    , Html.Attributes.style "min-height" "360px"
-    , Html.Attributes.style "padding" "24px"
-    , Html.Attributes.style "background-color" "#f2f2f2"
+    [ style "display" "-ms-flexbox"
+    , style "display" "flex"
+    , style "-ms-flex-flow" "row nowrap"
+    , style "flex-flow" "row nowrap"
+    , style "-ms-flex-align" "center"
+    , style "align-items" "center"
+    , style "-ms-flex-pack" "center"
+    , style "justify-content" "center"
+    , style "min-height" "360px"
+    , style "padding" "24px"
+    , style "background-color" "#f2f2f2"
     ]
 
 
 demoTitle : List (Html.Attribute msg)
 demoTitle =
-    [ Html.Attributes.style "border-bottom" "1px solid rgba(0,0,0,.87)"
+    [ style "border-bottom" "1px solid rgba(0,0,0,.87)"
     ]
 
 
 resourcesGraphic : List (Html.Attribute msg)
 resourcesGraphic =
-    [ Html.Attributes.style "width" "30px"
-    , Html.Attributes.style "height" "30px"
+    [ style "width" "30px"
+    , style "height" "30px"
     ]

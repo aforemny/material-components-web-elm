@@ -5,38 +5,44 @@ import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 import Html.Events
-import Material.Button exposing (buttonConfig, textButton)
-import Material.Dialog exposing (dialog, dialogConfig)
-import Material.Icon exposing (icon, iconConfig)
-import Material.List exposing (list, listConfig, listItem, listItemConfig, listItemGraphic, listItemText)
-import Material.Radio exposing (radio, radioConfig)
+import Material.Button as Button
+import Material.Dialog as Dialog
+import Material.Icon as Icon
+import Material.List as List
+import Material.List.Item as ListItem
+import Material.Radio as Radio
 import Material.Typography as Typography
 
 
+type Dialog
+    = AlertDialog
+    | ConfirmationDialog
+    | ScrollableDialog
+    | SimpleDialog
+
+
 type alias Model =
-    { openDialog : Maybe String
-    }
+    { open : Maybe Dialog }
 
 
 defaultModel : Model
 defaultModel =
-    { openDialog = Nothing
-    }
+    { open = Nothing }
 
 
 type Msg
     = Close
-    | Show String
+    | Show Dialog
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
         Close ->
-            { model | openDialog = Nothing }
+            { model | open = Nothing }
 
-        Show index ->
-            { model | openDialog = Just index }
+        Show id ->
+            { model | open = Just id }
 
 
 view : Model -> CatalogPage Msg
@@ -50,20 +56,20 @@ view model =
         }
     , hero = heroDialog
     , content =
-        [ textButton
-            { buttonConfig | onClick = Just (Show "dialog-alert-dialog") }
+        [ Button.text
+            (Button.config |> Button.setOnClick (Show AlertDialog))
             "Alert"
         , text " "
-        , textButton
-            { buttonConfig | onClick = Just (Show "dialog-simple-dialog") }
+        , Button.text
+            (Button.config |> Button.setOnClick (Show SimpleDialog))
             "Simple"
         , text " "
-        , textButton
-            { buttonConfig | onClick = Just (Show "dialog-confirmation-dialog") }
+        , Button.text
+            (Button.config |> Button.setOnClick (Show ConfirmationDialog))
             "Confirmation"
         , text " "
-        , textButton
-            { buttonConfig | onClick = Just (Show "dialog-scrollable-dialog") }
+        , Button.text
+            (Button.config |> Button.setOnClick (Show ScrollableDialog))
             "Scrollable"
         , text " "
         , alertDialog model
@@ -74,96 +80,50 @@ view model =
     }
 
 
-heroDialog : List (Html Msg)
-heroDialog =
-    [ Html.div
-        [ class "mdc-dialog mdc-dialog--open"
-        , style "position" "relative"
-        ]
-        [ Html.div
-            [ class "mdc-dialog__surface" ]
-            [ Html.div [ class "mdc-dialog__title" ] [ text "Get this party started?" ]
-            , Html.div [ class "mdc-dialog__content" ]
-                [ text "Turn up the jams and have a good time." ]
-            , Html.div [ class "mdc-dialog__actions" ]
-                [ textButton buttonConfig "Decline"
-                , textButton buttonConfig "Accept"
-                ]
-            ]
-        ]
-    ]
-
-
 alertDialog : Model -> Html Msg
 alertDialog model =
-    dialog
-        { dialogConfig
-            | open = model.openDialog == Just "dialog-alert-dialog"
-            , onClose = Just Close
-        }
+    Dialog.dialog
+        (Dialog.config
+            |> Dialog.setOpen (model.open == Just AlertDialog)
+            |> Dialog.setOnClose Close
+        )
         { title = Nothing
-        , content =
-            [ text "Discard draft?" ]
+        , content = [ text "Discard draft?" ]
         , actions =
-            [ textButton { buttonConfig | onClick = Just Close } "Cancel"
-            , textButton { buttonConfig | onClick = Just Close } "Discard"
+            [ Button.text (Button.config |> Button.setOnClick Close) "Cancel"
+            , Button.text (Button.config |> Button.setOnClick Close) "Discard"
             ]
         }
 
 
 simpleDialog : Model -> Html Msg
 simpleDialog model =
-    dialog
-        { dialogConfig
-            | open = model.openDialog == Just "dialog-simple-dialog"
-            , onClose = Just Close
-        }
+    let
+        listItem ( icon, label ) =
+            ListItem.listItem
+                (ListItem.config |> ListItem.setOnClick Close)
+                [ ListItem.graphic
+                    [ style "background-color" "rgba(0,0,0,.3)"
+                    , style "color" "#fff"
+                    ]
+                    [ Icon.icon [] icon ]
+                , text label
+                ]
+    in
+    Dialog.dialog
+        (Dialog.config
+            |> Dialog.setOpen (model.open == Just SimpleDialog)
+            |> Dialog.setOnClose Close
+        )
         { title = Just "Select an account"
         , content =
-            [ list { listConfig | avatarList = True }
-                [ listItem
-                    { listItemConfig
-                        | additionalAttributes =
-                            [ Html.Attributes.tabindex 0
-                            , Html.Events.onClick Close
-                            ]
-                    }
-                    [ listItemGraphic
-                        [ Html.Attributes.style "background-color" "rgba(0,0,0,.3)"
-                        , Html.Attributes.style "color" "#fff"
-                        ]
-                        [ icon iconConfig "person" ]
-                    , listItemText [] [ text "user1@example.com" ]
+            [ List.list (List.config |> List.setAvatarList True)
+                (List.map listItem
+                    [ ( "person", "user1@example.com" )
+                    , ( "person", "user2@example.com" )
+                    , ( "add", "Add account" )
                     ]
-                , listItem
-                    { listItemConfig
-                        | additionalAttributes =
-                            [ Html.Attributes.tabindex 0
-                            , Html.Events.onClick Close
-                            ]
-                    }
-                    [ listItemGraphic
-                        [ Html.Attributes.style "background-color" "rgba(0,0,0,.3)"
-                        , Html.Attributes.style "color" "#fff"
-                        ]
-                        [ icon iconConfig "person" ]
-                    , listItemText [] [ text "user2@example.com" ]
-                    ]
-                , listItem
-                    { listItemConfig
-                        | additionalAttributes =
-                            [ Html.Attributes.tabindex 0
-                            , Html.Events.onClick Close
-                            ]
-                    }
-                    [ listItemGraphic
-                        [ Html.Attributes.style "background-color" "rgba(0,0,0,.3)"
-                        , Html.Attributes.style "color" "#fff"
-                        ]
-                        [ icon iconConfig "add" ]
-                    , listItemText [] [ text "Add account" ]
-                    ]
-                ]
+                )
             ]
         , actions = []
         }
@@ -171,42 +131,43 @@ simpleDialog model =
 
 confirmationDialog : Model -> Html Msg
 confirmationDialog model =
-    dialog
-        { dialogConfig
-            | open = model.openDialog == Just "dialog-confirmation-dialog"
-            , onClose = Just Close
-        }
+    let
+        listItem ( checked, label ) =
+            ListItem.listItem ListItem.config
+                [ ListItem.graphic []
+                    [ Radio.radio (Radio.config |> Radio.setChecked checked) ]
+                , text label
+                ]
+    in
+    Dialog.dialog
+        (Dialog.config
+            |> Dialog.setOpen (model.open == Just ConfirmationDialog)
+            |> Dialog.setOnClose Close
+        )
         { title = Just "Phone ringtone"
         , content =
-            [ list { listConfig | avatarList = True }
-                [ listItem listItemConfig
-                    [ listItemGraphic [] [ radio { radioConfig | checked = True } ]
-                    , listItemText [] [ text "Never Gonna Give You Up" ]
+            [ List.list (List.config |> List.setAvatarList True)
+                (List.map listItem
+                    [ ( True, "Never Gonna Give You Up" )
+                    , ( False, "Hot Cross Buns" )
+                    , ( False, "None" )
                     ]
-                , listItem listItemConfig
-                    [ listItemGraphic [] [ radio radioConfig ]
-                    , listItemText [] [ text "Hot Cross Buns" ]
-                    ]
-                , listItem listItemConfig
-                    [ listItemGraphic [] [ radio radioConfig ]
-                    , listItemText [] [ text "None" ]
-                    ]
-                ]
+                )
             ]
         , actions =
-            [ textButton { buttonConfig | onClick = Just Close } "Cancel"
-            , textButton { buttonConfig | onClick = Just Close } "OK"
+            [ Button.text (Button.config |> Button.setOnClick Close) "Cancel"
+            , Button.text (Button.config |> Button.setOnClick Close) "OK"
             ]
         }
 
 
 scrollableDialog : Model -> Html Msg
 scrollableDialog model =
-    dialog
-        { dialogConfig
-            | open = model.openDialog == Just "dialog-scrollable-dialog"
-            , onClose = Just Close
-        }
+    Dialog.dialog
+        (Dialog.config
+            |> Dialog.setOpen (model.open == Just ScrollableDialog)
+            |> Dialog.setOnClose Close
+        )
         { title = Just "The Wonderful Wizard of Oz"
         , content =
             [ Html.p []
@@ -297,7 +258,27 @@ scrollableDialog model =
                 ]
             ]
         , actions =
-            [ textButton { buttonConfig | onClick = Just Close } "Decline"
-            , textButton { buttonConfig | onClick = Just Close } "Continue"
+            [ Button.text (Button.config |> Button.setOnClick Close) "Decline"
+            , Button.text (Button.config |> Button.setOnClick Close) "Continue"
             ]
         }
+
+
+heroDialog : List (Html Msg)
+heroDialog =
+    [ Html.div
+        [ class "mdc-dialog mdc-dialog--open"
+        , style "position" "relative"
+        ]
+        [ Html.div
+            [ class "mdc-dialog__surface" ]
+            [ Html.div [ class "mdc-dialog__title" ] [ text "Get this party started?" ]
+            , Html.div [ class "mdc-dialog__content" ]
+                [ text "Turn up the jams and have a good time." ]
+            , Html.div [ class "mdc-dialog__actions" ]
+                [ Button.text Button.config "Decline"
+                , Button.text Button.config "Accept"
+                ]
+            ]
+        ]
+    ]

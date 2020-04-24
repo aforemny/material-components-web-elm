@@ -1,7 +1,7 @@
 module Demo.TopAppBarPage exposing (TopAppBarPage, view)
 
 import Html exposing (Html, text)
-import Html.Attributes
+import Html.Attributes exposing (style)
 import Material.Typography as Typography
 
 
@@ -15,7 +15,7 @@ view : (msg -> topMsg) -> TopAppBarPage msg -> Html topMsg
 view lift { topAppBar, fixedAdjust } =
     Html.map lift <|
         Html.div
-            [ Html.Attributes.style "height" "200vh"
+            [ style "height" "200vh"
             , Typography.typography
             ]
             [ topAppBar

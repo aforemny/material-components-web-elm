@@ -5,6 +5,7 @@ module Material.List exposing
     , setAvatarList
     , setTwoLine
     , setAttributes
+    , setWrapFocus
     , list
     , group, subheader
     )
@@ -61,6 +62,7 @@ module Material.List exposing
 @docs setAvatarList
 @docs setTwoLine
 @docs setAttributes
+@docs setWrapFocus
 
 
 # List

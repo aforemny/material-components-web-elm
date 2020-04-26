@@ -8,8 +8,9 @@ module Material.LayoutGrid exposing
     , span1Phone, span2Phone, span3Phone, span4Phone
     )
 
-{-| Material design’s responsive UI is based on a column-variate grid layout.
-It has 12 columns on desktop, 8 columns on tablet and 4 columns on phone.
+{-| Material Design’s responsive user interface is based on a _column-variate_
+grid layout: it has 12 columns on desktop, 8 columns on tablet and 4 columns on
+phone.
 
 
 # Table of Contents
@@ -37,6 +38,10 @@ It has 12 columns on desktop, 8 columns on tablet and 4 columns on phone.
 
 # Basic Usage
 
+Note that you are expected to wrap cells in `LayoutGrid.inner`. This has to do
+with nesting layout grids, but it is required for flat layout grids as
+well.
+
     import Material.LayoutGrid as LayoutGrid
 
     main =
@@ -57,7 +62,7 @@ It has 12 columns on desktop, 8 columns on tablet and 4 columns on phone.
 # Cell Spans
 
 Cells span by default four columns within the grid. Use one of the following
-functions to change this behavior.
+functions to make a cell span more or fewer columns.
 
 @docs span1, span2, span3, span4, span5, span6, span7, span8, span9, span10, span11, span12
 
@@ -65,7 +70,8 @@ functions to change this behavior.
 # Cell Alignment
 
 Cells are by default stretched. You can add attributes `alignTop`,
-`alignMiddle` or `alignBottom` to a cell to change this behavior.
+`alignMiddle` or `alignBottom` to a cell to make them not extend beyond their
+content and instead specify an alignment.
 
 @docs alignTop, alignMiddle, alignBottom
 
@@ -85,8 +91,7 @@ entire available width.
 
 When your contents need extra structure that cannot be supported by a single
 layout grid, you can nest layout grids within each other. To nest layout grid,
-add a new `layoutGridInner` around nested `layoutGridCell`s within an existing
-`layoutGridCell`.
+add a new `inner` around nested `cell`s within an existing `cell`.
 
 The nested layout grid behaves exactly like when they are not nested, e.g, they
 have 12 columns on desktop, 8 columns on tablet and 4 columns on phone. They
@@ -94,7 +99,7 @@ also use the same gutter size as their parents, but margins are not
 re-introduced since they are living within another cell.
 
 However, the Material Design guidelines do not recommend having a deeply nested
-grid as it might mean an over complicated UX.
+grid as it might mean an over complicated user experience.
 
     LayoutGrid.layoutGrid []
         [ LayoutGrid.inner []
@@ -138,7 +143,7 @@ type Device
     | Phone
 
 
-{-| Grid view function
+{-| Layout grid view function
 -}
 layoutGrid : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 layoutGrid attributes nodes =
@@ -147,14 +152,18 @@ layoutGrid attributes nodes =
         nodes
 
 
-{-| Cell view function
+{-| Layout grid cell view function
 -}
 cell : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 cell attributes nodes =
     Html.div (class "mdc-layout-grid__cell" :: attributes) nodes
 
 
-{-| Mandatory wrapper around `layoutGridCell`
+{-| Layout grid inner view function
+
+It is mandatory to wrap `cell`s within `inner`. This has to do with nesting
+layout grids, but it is mandatory for flat layout grids as well.
+
 -}
 inner : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 inner attributes nodes =

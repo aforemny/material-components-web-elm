@@ -6,9 +6,10 @@ module Material.Select.Option exposing
     , SelectOption, selectOption
     )
 
-{-| MDC Select provides Material Design single-option select menus. It supports
-using the browser's native `<select>` element, or a MDC Menu. It is fully
-accessible, and fully RTL-aware.
+{-| Select provides a single-option select menus.
+
+This module concerns the select option. If you are looking for information
+about the container select, refer to [Material.Select](Material-Select).
 
 
 # Table of Contents
@@ -76,12 +77,11 @@ accessible, and fully RTL-aware.
 
 # Disabled Select Option
 
-To disable one select's option, set its `disabled` configuration field to `True`.
+To disable one select's option, set its `setDisabled` configuration option to
+`True`.
 
     SelectOption.selectOption
-        (SelectOption.config
-            |> SelectOption.setDisabled True
-        )
+        (SelectOption.config |> SelectOption.setDisabled True)
         [ text "" ]
 
 This is particularly useful on the first emply option if you have a select that
@@ -115,14 +115,17 @@ config =
         }
 
 
-{-| Set a select option to be disabled
+{-| Specify whether a select option is disabled
+
+Disabled select options cannot be selected.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (SelectOption.Config config_) =
     SelectOption.Config { config_ | disabled = disabled }
 
 
-{-| Set a select option's value
+{-| Specify a select option's label
 -}
 setValue : String -> Config msg -> Config msg
 setValue value (SelectOption.Config config_) =
@@ -142,7 +145,7 @@ type alias SelectOption msg =
     SelectOption.SelectOption msg
 
 
-{-| Select option view function
+{-| Select option constructor
 -}
 selectOption : Config msg -> List (Html msg) -> SelectOption msg
 selectOption (SelectOption.Config config_) nodes =

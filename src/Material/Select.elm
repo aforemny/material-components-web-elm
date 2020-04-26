@@ -11,9 +11,11 @@ module Material.Select exposing
     , outlined
     )
 
-{-| MDC Select provides Material Design single-option select menus. It supports
-using the browser's native `<select>` element, or a MDC Menu. It is fully
-accessible, and fully RTL-aware.
+{-| Select provides a single-option select menus.
+
+This module concerns the container select. If you are looking for information
+about select options, refer to
+[Material.Select.Option](Material-Select-Option).
 
 
 # Table of Contents
@@ -54,9 +56,7 @@ accessible, and fully RTL-aware.
                 |> Select.setOnChange ValueChanged
             )
             [ SelectOption.selectOption
-                (SelectOption.config
-                    |> SelectOption.setValue ""
-                )
+                (SelectOption.config |> SelectOption.setValue "")
                 [ text "" ]
             , SelectOption.selectOption
                 (SelectOption.config
@@ -103,24 +103,17 @@ Instead of a filled select, you may choose a select with a outline by using the
 
 # Disabled Select
 
-To disable a select, use its `setDisabled` configuration option.
+To disable a select, set its `setDisabled` configuration option to `True`.
 
-    Select.filled
-        (Select.config
-            |> Select.setDisabled True
-        )
-        []
+    Select.filled (Select.config |> Select.setDisabled True) []
 
 
 # Required Select
 
-To mark a select as required, use its `setRequired` configuration option.
+To mark a select as required, set its `setRequired` configuration option to
+`True`.
 
-    Select.filled
-        (Select.config
-            |> Select.setRequired True
-        )
-        []
+    Select.filled (Select.config |> Select.setRequired True) []
 
 
 # Select with helper text
@@ -172,35 +165,39 @@ config =
         }
 
 
-{-| Set a select's label
+{-| Specify a select's label
 -}
 setLabel : String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = label }
 
 
-{-| Set a select's value
+{-| Specify a select's value
 -}
 setValue : String -> Config msg -> Config msg
 setValue value (Config config_) =
     Config { config_ | value = Just value }
 
 
-{-| Set a select to be disabled
+{-| Specify a select to be disabled
+
+Disabled selects cannot be interacted with an have no visual interaction
+effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =
     Config { config_ | disabled = disabled }
 
 
-{-| Set a select to be required
+{-| Specify whether a select is required
 -}
 setRequired : Bool -> Config msg -> Config msg
 setRequired required (Config config_) =
     Config { config_ | required = required }
 
 
-{-| Set a select's validity
+{-| Specify whether a select is valid
 -}
 setValid : Bool -> Config msg -> Config msg
 setValid valid (Config config_) =

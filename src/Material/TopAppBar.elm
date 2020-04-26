@@ -98,7 +98,8 @@ bar's row. Do not forget to set the `actionItem` attribute on the icons.
             [ TopAppBar.section [ TopAppBar.alignStart ]
                 [ IconButton.iconButton
                     (IconButton.config
-                        |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
+                        |> IconButton.setAttributes
+                            [ TopAppBar.navigationIcon ]
                     )
                     "menu"
                 , Html.span [ TopAppBar.title ]
@@ -107,12 +108,14 @@ bar's row. Do not forget to set the `actionItem` attribute on the icons.
             , TopAppBar.section [ TopAppBar.alignEnd ]
                 [ IconButton.iconButton
                     (IconButton.config
-                        |> IconButton.setAttributes [ TopAppBar.actionItem ]
+                        |> IconButton.setAttributes
+                            [ TopAppBar.actionItem ]
                     )
                     "print"
                 , IconButton.iconButton
                     (IconButton.config
-                        |> IconButton.setAttributes [ TopAppBar.actionItem ]
+                        |> IconButton.setAttributes
+                            [ TopAppBar.actionItem ]
                     )
                     "bookmark"
                 ]
@@ -124,14 +127,13 @@ bar's row. Do not forget to set the `actionItem` attribute on the icons.
 
 # Fixed Variant
 
-To make a top app bar fixed to the top, use its `setFixed` configuration
-option. Since a fixed top app bar would overlay the pages content, an
-appropriate margin has to be applied to the page's content.
+To make a top app bar fixed to the top, set its `setFixed` configuration option
+to `True`. Since a fixed top app bar would overlay the pages content, an
+appropriate margin has to be applied to the page's content, called the _fixed
+adjust_.
 
     TopAppBar.regular
-        (TopAppBar.config
-            |> TopAppBar.setFixed True
-        )
+        (TopAppBar.config |> TopAppBar.setFixed True)
         []
 
 @docs fixedAdjust
@@ -174,9 +176,7 @@ To make a top app bar shorter than the default, use its `setDense`
 configuration option.
 
     TopAppBar.regular
-        (TopAppBar.config
-            |> TopAppBar.setDense True
-        )
+        (TopAppBar.config |> TopAppBar.setDense True)
         []
 
 -}
@@ -213,14 +213,20 @@ config =
         }
 
 
-{-| Set a top app bar to be dense
+{-| Specify whether a top app bar is dense
+
+A dense top app bar is more compact, featuring smaller than usual margins.
+
 -}
 setDense : Bool -> Config msg -> Config msg
 setDense dense (Config config_) =
     Config { config_ | dense = dense }
 
 
-{-| Set a top app bar to be fixed
+{-| Specify whether a top app bar is fixed
+
+A fixed top app bar does not scroll away when the user is scrolling the page.
+
 -}
 setFixed : Bool -> Config msg -> Config msg
 setFixed fixed (Config config_) =
@@ -248,7 +254,7 @@ genericTopAppBar variant ((Config { additionalAttributes }) as config_) nodes =
         nodes
 
 
-{-| Top app bar view function
+{-| Regular top app bar view function
 -}
 regular : Config msg -> List (Html msg) -> Html msg
 regular config_ nodes =

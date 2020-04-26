@@ -32,8 +32,8 @@ all available options.
 
 # Basic Usage
 
-Note that radio buttons are usually used in conjunction with form fields. Refer
-to [FormField](Material-FormField) for more information.
+Note that radio buttons are usually used in conjunction with [form
+fields](Material-FormField).
 
     import Material.Radio as Radio
 
@@ -68,24 +68,20 @@ to [FormField](Material-FormField) for more information.
 
 # Checked Radio
 
-To make a radio button display its checked state, use its `setChecked`
-configuration option.
+To make a radio button display its checked state, set its `setChecked`
+configuration option to `True`.
 
-    Radio.radio
-        (Radio.config
-            |> Radio.setChecked True
-        )
+    Radio.radio (Radio.config |> Radio.setChecked True)
 
 
 # Disabled Radio
 
-To disable a radio button, use its `setDisabled` configuration option. Disabled
-radio buttons cannot be interacted with and have no visual interaction effect.
+To disable a radio button, set its `setDisabled` configuration option to `True`.
 
-    Radio.radio
-        (Radio.config
-            |> Radio.setDisabled True
-        )
+Disabled radio buttons cannot be interacted with and have no visual interaction
+effect.
+
+    Radio.radio (Radio.config |> Radio.setDisabled True)
 
 -}
 
@@ -119,14 +115,18 @@ config =
         }
 
 
-{-| Make a radio button checked
+{-| Specify whether a radio button is checked
 -}
 setChecked : Bool -> Config msg -> Config msg
 setChecked checked (Config config_) =
     Config { config_ | checked = checked }
 
 
-{-| Make a radio button disabled
+{-| Specify whether a radio button is disabled
+
+Disabled radio buttons cannot be interacted with and have no visual interaction
+effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =
@@ -140,7 +140,7 @@ setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 
-{-| Specify a message when the user changes a radio |
+{-| Specify a message when the user changes a radio
 -}
 setOnChange : msg -> Config msg -> Config msg
 setOnChange onChange (Config config_) =

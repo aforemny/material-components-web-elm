@@ -9,6 +9,11 @@ module Material.Fab.Extended exposing
 
 {-| A floating action button represents the primary action in an application.
 
+An extended floating action button primarily contains text to indicate its
+action, and optionally contains an icon. If you are looking for a floating
+action button that primarily contains an icon, and no text, refer to the
+[regular floating action button](Material-Fab).
+
 
 # Table of Contents
 
@@ -36,10 +41,7 @@ module Material.Fab.Extended exposing
 Developers are required to manually position the floating action button within
 their page layout, for instance by setting a fixed position via CSS.
 
-A floating action button only contains an icon to indicate its action. For a
-floating action button that may contain text, refer to the [extended floating
-action button](#extended-fab) below.
-
+    import Html.Attributes exposing (style)
     import Material.Fab.Extended as ExtendedFab
 
     type Msg
@@ -49,6 +51,11 @@ action button](#extended-fab) below.
         ExtendedFab.fab
             (ExtendedFab.config
                 |> ExtendedFab.setOnClick FabClicked
+                |> ExtendedFab.setAttributes
+                    [ style "position" "fixed"
+                    , style "bottom" "2rem"
+                    , style "right" "2rem"
+                    ]
             )
             "Favorites"
 
@@ -76,7 +83,8 @@ action button](#extended-fab) below.
 To add an icon to an extended floating action button, use its `setIcon`
 configuration option and specify the name of a [Material
 Icon](https://material.io/icons). If you want the icon to be positioned after
-the button's label, also use its `setTrailingIcon` configuration option.
+the button's label, also set its `setTrailingIcon` configuration option to
+`True`.
 
 
 ### Extended FAB with Leading Icon
@@ -101,12 +109,10 @@ the button's label, also use its `setTrailingIcon` configuration option.
 ## Exited Extended FAB
 
 If you want the extended floating action button to transition off the screen,
-use its `setExited` configuration option.
+set its `setExited` configuration option to `True`.
 
     ExtendedFab.fab
-        (ExtendedFab.config
-            |> ExtendedFab.setExited True
-        )
+        (ExtendedFab.config |> ExtendedFab.setExited True)
         "Favorites"
 
 -}
@@ -141,22 +147,24 @@ config =
         }
 
 
-{-| Set the icon of an extended floating action button
+{-| Specify whether a floating action button displays an icon
 -}
 setIcon : Maybe String -> Config msg -> Config msg
 setIcon icon (Config config_) =
     Config { config_ | icon = icon }
 
 
-{-| Specify whether an extended floating action button is a _trailing icon_,
-ie. whether it is displayed at the end
+{-| Specify whether a floating action button's icon is a _trailing icon_
+
+Trailing icons are displyed after the label rather than before.
+
 -}
 setTrailingIcon : Bool -> Config msg -> Config msg
 setTrailingIcon trailingIcon (Config config_) =
     Config { config_ | trailingIcon = trailingIcon }
 
 
-{-| Make a floating action button transition off the screen
+{-| Specify whether a floating action button transitions off the screen
 -}
 setExited : Bool -> Config msg -> Config msg
 setExited exited (Config config_) =

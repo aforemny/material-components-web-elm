@@ -61,14 +61,11 @@ interacting with the label.
 
 # Label Position
 
-If you want to position the label after the form field (ie. checkbox), use its
-`setAlignEnd` configuration option.
+If you want to position the label after the form field's control, set its
+`setAlignEnd` configuration option to `True`.
 
     FormField.formField
-        (FormField.config
-            |> FormField.setLabel "My checkbox"
-            |> FormField.setAlignEnd True
-        )
+        (FormField.config |> FormField.setAlignEnd True)
         [ Checkbox.checkbox Checkbox.config ]
 
 -}
@@ -90,21 +87,24 @@ type Config msg
         }
 
 
-{-| Set a form field's label
+{-| Specify a form field's label
 -}
 setLabel : String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = label }
 
 
-{-| Set a form field label's HTML5 `for` attribute
+{-| Specify a form field label's HTML5 for attribute
 -}
 setFor : Maybe String -> Config msg -> Config msg
 setFor for (Config config_) =
     Config { config_ | for = for }
 
 
-{-| Position a form field's label after its control. Useful for checkboxes
+{-| Specify whether the form field's label is positioned after its control
+
+This is usefile for, say, checkboxes.
+
 -}
 setAlignEnd : Bool -> Config msg -> Config msg
 setAlignEnd alignEnd (Config config_) =

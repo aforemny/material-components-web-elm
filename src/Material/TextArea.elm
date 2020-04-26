@@ -32,7 +32,7 @@ module Material.TextArea exposing
   - [Full Width Text Area](#full-width-text-area)
   - [Disabled Text Area](#disabled-text-area)
   - [Required Text Area](#required-text-area)
-  - [Invalid Text Area](#invalid-text-area)
+  - [Valid Text Area](#valid-text-area)
   - [Text Area with Character Counter](#text-area-with-character-counter)
 
 
@@ -99,22 +99,20 @@ variant.
 
     TextArea.outlined TextArea.config
 
-Note that `setFullwidth` does not have any effect for outlined text areas.
+Note that `setFullwidth` does not have any effect on an outlined text area.
 
 @docs outlined
 
 
 # Full Width Text Area
 
-To make a text area span all of its available width, use its `setFullwidth`
-configuration option.
+To make a text area span all of its available width, set its `setFullwidth`
+configuration option to `True`.
 
     TextArea.filled
-        (TextArea.config
-            |> TextArea.setFullwidth True
-        )
+        (TextArea.config |> TextArea.setFullwidth True)
 
-Full width text areas do not support `setLabel` and will ignore this
+Full width text areas do not support labels and will ignore the `setLabel`
 configuration option. You may use `setPlaceholder` or provide an extraneous
 label for a full width text area.
 
@@ -124,46 +122,38 @@ configuration option.
 
 # Disabled Text Area
 
-To disable a text area use its `setDisabled` configuration option.
+To disable a text area, set its `setDisabled` configuration option to `True`.
 
     TextArea.filled
-        (TextArea.config
-            |> TextArea.setDisabled True
-        )
+        (TextArea.config |> TextArea.setDisabled True)
 
 
 # Required Text Area
 
-To mark a text area as required, use its `setRequired` configuration option.
+To mark a text area as required, set its `setRequired` configuration option to
+`True`.
 
     TextArea.filled
-        (TextArea.config
-            |> TextArea.setRequired True
-        )
+        (TextArea.config |> TextArea.setRequired True)
 
 
-# Invalid Text Area
+# Valid Text Area
 
-To mark a text area as invalid, use its `setValid` configuration option.
+To mark a text area as valid, set its `setValid` configuration option to
+`True`.
 
-    TextArea.filled
-        (TextArea.config
-            |> TextArea.setValid True
-        )
+    TextArea.filled (TextArea.config |> TextArea.setValid True)
 
 
 # Text Area with Character Counter
 
-To have a text area display a character counter, use its `setMaxLength`
+To have a text area display a character counter, specify its `setMaxLength`
 configuration option, and also add a `HelperText.characterCounter` as a child
 of `HelperText.helperLine`.
 
     [ TextArea.filled
-        (TextArea.config
-            |> TextArea.setMaxLength (Just 18)
-        )
-    , HelperText.helperLine []
-        [ HelperText.characterCounter [] ]
+        (TextArea.config |> TextArea.setMaxLength (Just 18))
+    , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]
 
 -}
@@ -218,77 +208,81 @@ config =
         }
 
 
-{-| Set a text area's label
+{-| Specify a text area's label
 -}
 setLabel : String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = Just label }
 
 
-{-| Set a text area to be fullwidth
+{-| Specify a text area to be fullwidth
 -}
 setFullwidth : Bool -> Config msg -> Config msg
 setFullwidth fullwidth (Config config_) =
     Config { config_ | fullwidth = fullwidth }
 
 
-{-| Set a text area's value
+{-| Specify a text area's value
 -}
 setValue : String -> Config msg -> Config msg
 setValue value (Config config_) =
     Config { config_ | value = value }
 
 
-{-| Set a text area's placeholder
+{-| Specify a text area's placeholder
 -}
 setPlaceholder : Maybe String -> Config msg -> Config msg
 setPlaceholder placeholder (Config config_) =
     Config { config_ | placeholder = placeholder }
 
 
-{-| Set a text area's number of rows
+{-| Specify a text area's number of rows
 -}
 setRows : Maybe Int -> Config msg -> Config msg
 setRows rows (Config config_) =
     Config { config_ | rows = rows }
 
 
-{-| Set a text area's number of columns
+{-| Specify a text area's number of columns
 -}
 setCols : Maybe Int -> Config msg -> Config msg
 setCols cols (Config config_) =
     Config { config_ | cols = cols }
 
 
-{-| Set a text area to be disabled
+{-| Specify a text area to be disabled
+
+Disabled text areas cannot be interacted with and have no visual interaction
+effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =
     Config { config_ | disabled = disabled }
 
 
-{-| Set a text area to be required
+{-| Specify a text area to be required
 -}
 setRequired : Bool -> Config msg -> Config msg
 setRequired required (Config config_) =
     Config { config_ | required = required }
 
 
-{-| Set a text area to be valid
+{-| Specify a text area to be valid
 -}
 setValid : Bool -> Config msg -> Config msg
 setValid valid (Config config_) =
     Config { config_ | valid = valid }
 
 
-{-| Set a text area's minimum length
+{-| Specify a text area's minimum length
 -}
 setMinLength : Maybe Int -> Config msg -> Config msg
 setMinLength minLength (Config config_) =
     Config { config_ | minLength = minLength }
 
 
-{-| Set a text area's maximum length
+{-| Specify a text area's maximum length
 -}
 setMaxLength : Maybe Int -> Config msg -> Config msg
 setMaxLength maxLength (Config config_) =

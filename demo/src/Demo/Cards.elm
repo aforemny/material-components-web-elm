@@ -165,12 +165,12 @@ demoActions : Card.Actions msg
 demoActions =
     Card.actions
         { buttons =
-            [ Card.actionButton Button.config "Read"
-            , Card.actionButton Button.config "Bookmark"
+            [ Card.button Button.config "Read"
+            , Card.button Button.config "Bookmark"
             ]
         , icons =
-            [ Card.actionIcon IconButton.config "favorite_border"
-            , Card.actionIcon IconButton.config "share"
-            , Card.actionIcon IconButton.config "more_vert"
+            [ Card.icon IconButton.config "favorite_border"
+            , Card.icon IconButton.config "share"
+            , Card.icon IconButton.config "more_vert"
             ]
         }

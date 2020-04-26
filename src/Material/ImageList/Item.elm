@@ -9,6 +9,10 @@ module Material.ImageList.Item exposing
 {-| An Image List consists of several items, each containing an image and
 optionally supporting a text label.
 
+This modules concerns the image list item. If you are looking for information
+about the image list contianer, refer to
+[Material.ImageList](Material-ImageList).
+
 
 # Table of Contents
 
@@ -30,7 +34,7 @@ optionally supporting a text label.
 # Basic Usage
 
 Note that you will have to set the width and margin of image list items
-yourself, preferably through SASS.
+yourself, preferably through SASS or through inline CSS.
 
     import Html.Attributes exposing (style)
     import Material.ImageList as ImageList
@@ -41,7 +45,7 @@ yourself, preferably through SASS.
             [ ImageListItem.imageListItem
                 (ImageList.itemConfig
                     |> ImageList.setAttributes
-                        [ style "width" "calc(100% / 5 - 4.2px)"
+                        [ style "width" "calc(100% / 5 - 4px)"
                         , style "margin" "2px"
                         ]
                 )
@@ -90,14 +94,17 @@ config =
         }
 
 
-{-| Set an image list item's label
+{-| Specify an image list item's label
 -}
 setLabel : String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = Just label }
 
 
-{-| Make an image list item behave like a HTML5 anchor element
+{-| Specify whether an image list item is supposed to be a _link image list item_
+
+A link image list items behaves essentially like a HTML5 anchor element.
+
 -}
 setHref : Maybe String -> Config msg -> Config msg
 setHref href (Config config_) =
@@ -111,7 +118,11 @@ setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 
-{-| Image list item
+{-| Image list item type
+
+Image list items can only be rendered within a [image list
+container](Material-ImageList)
+
 -}
 type alias ImageListItem msg =
     Material.ImageList.Item.Internal.ImageListItem msg

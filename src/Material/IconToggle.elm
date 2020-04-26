@@ -8,7 +8,7 @@ module Material.IconToggle exposing
     , iconToggle
     )
 
-{-| Icon toggles allow users to take actions, and make choices, with a single
+{-| Icon toggles allow users to take actions and make choices with a single
 tap.
 
 
@@ -33,9 +33,6 @@ tap.
 
 
 # Basic Usage
-
-If you are looking for a button that has an icon as well as text, refer to
-[Button](Material-Button).
 
     import Material.IconToggle as IconToggle
 
@@ -69,13 +66,11 @@ If you are looking for a button that has an icon as well as text, refer to
 
 # Icon Toggle
 
-Icon toggles are a variant of icon buttons that change their state when
-clicked.
+Icon toggles are a variant of [icon buttons](Material-IconButton) that change
+the icon when their state changes.
 
     IconToggle.iconToggle
-        (IconToggle.config
-            |> IconToggle.setOn True
-        )
+        (IconToggle.config |> IconToggle.setOn True)
         { offIcon = "favorite_border"
         , onIcon = "favorite"
         }
@@ -85,12 +80,11 @@ clicked.
 
 # On Icon Toggle
 
-To set an icon toggle to its on state, use its `setOn` configuration option.
+To set an icon toggle to its on state, set its `setOn` configuration option to
+`True`.
 
     IconToggle.iconToggle
-        (IconToggle.config
-            |> IconToggle.setOn True
-        )
+        (IconToggle.config |> IconToggle.setOn True)
         { offIcon = "favorite_border"
         , onIcon = "favorite"
         }
@@ -98,14 +92,13 @@ To set an icon toggle to its on state, use its `setOn` configuration option.
 
 # Disabled Icon Toggle
 
-To disable an icon toggle, use its `setDisabled` configuration option.
+To disable an icon toggle, set its `setDisabled` configuration option to
+`True`.
 Disabled icon buttons cannot be interacted with and have no visual interaction
 effect.
 
     IconToggle.iconToggle
-        (IconToggle.config
-            |> IconToggle.setDisabled True
-        )
+        (IconToggle.config |> IconToggle.setDisabled True)
         { offIcon = "favorite_border"
         , onIcon = "favorite"
         }
@@ -113,7 +106,7 @@ effect.
 
 # Labeled Icon Toggle
 
-To set the HTML5 attribute `arial-label` of an icon toggle, use its `setLabel`
+To set the HTML5 `arial-label` attribute of an icon toggle, use its `setLabel`
 configuration option.
 
     IconToggle.iconToggle
@@ -158,21 +151,25 @@ config =
         }
 
 
-{-| Make a icon toggle display its on state
+{-| Specify whether an icon toggle is on
 -}
 setOn : Bool -> Config msg -> Config msg
 setOn on (Config config_) =
     Config { config_ | on = on }
 
 
-{-| Disable an icon toggle
+{-| Specify whether an icon toggle is disabled
+
+Disabled icon buttons cannot be interacted with and have no visual interaction
+effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =
     Config { config_ | disabled = disabled }
 
 
-{-| Set the HTML5 attribute `aria-label` of an icon toggle
+{-| Specify the HTML5 aria-label attribute of an icon toggle
 -}
 setLabel : String -> Config msg -> Config msg
 setLabel label (Config config_) =

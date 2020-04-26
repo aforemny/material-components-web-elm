@@ -10,6 +10,10 @@ module Material.Chip.Filter exposing
 {-| Chips are compact elements that allow users to enter information, select a
 choice, filter content, or trigger an action.
 
+Filter chips are a variant of chips which allow multiple selection from a set
+of options. When a filter chip is selected, a checkmark appears as the leading
+icon. If the chip already has a leading icon, the checkmark replaces it.
+
 
 # Table of Contents
 
@@ -40,12 +44,14 @@ choice, filter content, or trigger an action.
             [ FilterChip.chip
                 (FilterChip.config
                     |> FilterChip.setSelected True
-                    |> FilterChip.setOnClick (ChipClicked "Tops")
+                    |> FilterChip.setOnClick
+                        (ChipClicked "Tops")
                 )
                 "Tops"
             , FilterChip.chip
                 (FilterChip.config
-                    |> FilterChip.setOnClick (ChipClicked "Shoes")
+                    |> FilterChip.setOnClick
+                        (ChipClicked "Shoes")
                 )
                 "Shoes"
             ]
@@ -65,10 +71,6 @@ choice, filter content, or trigger an action.
 
 
 # Filter Chips
-
-Filter chips are a variant of chips which allow multiple selection from a set
-of options. When a filter chip is selected, a checkmark appears as the leading
-icon. If the chip already has a leading icon, the checkmark replaces it.
 
 @docs set, chip, Chip
 
@@ -115,14 +117,14 @@ config =
         }
 
 
-{-| Set a chip's icon
+{-| Specify whether a chip displays an icon
 -}
 setIcon : Maybe String -> Config msg -> Config msg
 setIcon icon (Config config_) =
     Config { config_ | icon = icon }
 
 
-{-| Set a chip to be selected
+{-| Specify whether a chip is selected
 -}
 setSelected : Bool -> Config msg -> Config msg
 setSelected selected (Config config_) =

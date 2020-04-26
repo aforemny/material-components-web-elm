@@ -9,7 +9,7 @@ module Material.Button exposing
     , text, outlined, raised, unelevated
     )
 
-{-| Buttons allow users to take actions, and make choices, with a single tap.
+{-| Buttons allow users to take actions and make choices with a single tap.
 
 
 # Table of Contents
@@ -44,9 +44,7 @@ module Material.Button exposing
 
     main =
         Button.text
-            (Button.config
-                |> Button.setOnClick Clicked
-            )
+            (Button.config |> Button.setOnClick Clicked)
             "Text"
 
 
@@ -67,8 +65,8 @@ module Material.Button exposing
 
 # Button Variants
 
-Buttons may appear in different variants. Use eatext`or`outlined`if you want
-a button that is flush with the surface, and`raised`or`unelevated\` for a
+Buttons may appear in different variants. Use `text` or `outlined` if you want
+a button that is flush with the surface, and use `raised` or `unelevated` for a
 button that is contained.
 
 @docs text, outlined, raised, unelevated
@@ -76,18 +74,16 @@ button that is contained.
 
 # Button with Icons
 
-To add an icon to a button, use its `setIcon` configuration option to set the
-name of a [Material Icon](https://material.io/icons). If you want the icon to
-be positioned after the button's label, also use the `trailingIcon`
-configuration option.
+To add an icon to a button, use its `setIcon` configuration option to specify
+the name of a [Material Icon](https://material.io/icons). If you want the icon
+to be positioned after the button's label, also set the `setTrailingIcon`
+configuration option to `True`.
 
 
 ## Button with Leading Icon
 
     Button.text
-        (Button.config
-            |> Button.setIcon (Just "favorite")
-        )
+        (Button.config |> Button.setIcon (Just "favorite"))
         "Like"
 
 
@@ -107,9 +103,7 @@ To disable a button, use its `setDisabled` configuration option. Disabled
 buttons cannot be interacted with and have no visual interaction effect.
 
     Button.text
-        (Button.config
-            |> Button.setDisabled True
-        )
+        (Button.config |> Button.setDisabled True)
         "Disabled"
 
 
@@ -119,9 +113,7 @@ To make a button's text and container margins slightly smaller, use its `setDens
 configuration option.
 
     Button.text
-        (Button.config
-            |> Button.setDense True
-        )
+        (Button.config |> Button.setDense True)
         "Dense"
 
 
@@ -170,43 +162,60 @@ config =
         }
 
 
-{-| Set the icon of a button
+{-| Specify whether the button features an icon
 -}
 setIcon : Maybe String -> Config msg -> Config msg
 setIcon icon (Config config_) =
     Config { config_ | icon = icon }
 
 
-{-| Specify whether a button's icon is a _trailing icon_, ie. whether it is
-displayed at the end
+{-| Specify whether a button's icon is a _trailing icon_.
+
+Trailing icons are displayed after the button's label rather than before.
+
 -}
 setTrailingIcon : Bool -> Config msg -> Config msg
 setTrailingIcon trailingIcon (Config config_) =
     Config { config_ | trailingIcon = trailingIcon }
 
 
-{-| Make a button disabled
+{-| Specify whether the button is disabled
+
+Disabled buttons cannot be interacted with and do not have no visual
+interaction effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =
     Config { config_ | disabled = disabled }
 
 
-{-| Make a button dense
+{-| Specify whether a button is _dense_
+
+Dense buttons feature smaller than normal padding.
+
 -}
 setDense : Bool -> Config msg -> Config msg
 setDense dense (Config config_) =
     Config { config_ | dense = dense }
 
 
-{-| Make a button a link button
+{-| Specify whether a button is a _link button_.
+
+Link buttons behave like normal HTML5 anchor tags. Note that link buttons
+cannot be disabled and ignore that configuration option.
+
 -}
 setHref : Maybe String -> Config msg -> Config msg
 setHref href (Config config_) =
     Config { config_ | href = href }
 
 
-{-| Specify the target for a link button
+{-| Specify the target for a link button.
+
+Note that this configuration option will be ignored by buttons that do not also
+set `setHref`.
+
 -}
 setTarget : Maybe String -> Config msg -> Config msg
 setTarget target (Config config_) =
@@ -220,7 +229,7 @@ setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 
-{-| Specify message when the user clicks a button
+{-| Specify a message when the user clicks a button
 -}
 setOnClick : msg -> Config msg -> Config msg
 setOnClick onClick (Config config_) =

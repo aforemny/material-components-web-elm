@@ -5,7 +5,7 @@ module Material.Drawer.Permanent exposing
     , header, title, subtitle
     )
 
-{-| The MDC Navigation Drawer is used to organize access to destinations and
+{-| The drawer is used to organize access to destinations and
 other functionality on an app.
 
 
@@ -126,8 +126,10 @@ content attributes nodes =
 
     PermanentDrawer.drawer PermanentDrawer.config
         [ PermanentDrawer.header []
-            [ Html.h3 [ PermanentDrawer.title ] [ text "Title" ]
-            , Html.h6 [ PermanentDrawer.subtitle ] [ text "Subtitle" ]
+            [ Html.h3 [ PermanentDrawer.title ]
+                [ text "Title" ]
+            , Html.h6 [ PermanentDrawer.subtitle ]
+                [ text "Subtitle" ]
             ]
         , PermanentDrawer.content [] []
         ]

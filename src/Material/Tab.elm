@@ -7,8 +7,11 @@ module Material.Tab exposing
     )
 
 {-| Tabs organize and allow navigation between groups of content that are
-related and at the same level of hierarchy. The Tab Bar contains the Tab
-Scroller and Tab components.
+related and at the same level of hierarchy. The tab bar contains the tab
+components.
+
+This module concerns the tab items. If you are looking for information about
+the tab bar container, refer to [Material.TabBar](Material-TabBar).
 
 
 # Table of Contents
@@ -52,9 +55,7 @@ Scroller and Tab components.
                 )
                 { label = "Tab 1", icon = Nothing }
             , Tab.tab
-                (Tab.config
-                    |> Tab.setOnClick (TabClicked 1)
-                )
+                (Tab.config |> Tab.setOnClick (TabClicked 1))
                 { label = "Tab 2", icon = Nothing }
             ]
 
@@ -78,12 +79,9 @@ Scroller and Tab components.
 
 # Active Tab
 
-Requires that the `tab`s have both `label` and `icon`.
+To mark a tab as active, set its `setActive` configuration option to `True`.
 
-    Tab.tab
-        (Tab.config
-            |> Tab.setActive True
-        )
+    Tab.tab (Tab.config |> Tab.setActive True)
 
 -}
 
@@ -120,7 +118,7 @@ setOnClick onClick (Config config_) =
     Config { config_ | onClick = Just onClick }
 
 
-{-| Set the tab to active
+{-| Specify whether the tab is active
 -}
 setActive : Bool -> Config msg -> Config msg
 setActive active (Config config_) =
@@ -142,7 +140,10 @@ type alias Content =
     }
 
 
-{-| Tab
+{-| Tab type
+
+Tabs can only be rendered within a [tab bar](Material-TabBar).
+
 -}
 type alias Tab msg =
     Material.Tab.Internal.Tab msg

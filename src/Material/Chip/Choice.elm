@@ -10,6 +10,9 @@ module Material.Chip.Choice exposing
 {-| Chips are compact elements that allow users to enter information, select a
 choice, filter content, or trigger an action.
 
+Choice chips are a variant of chips which allow single selection from a set of
+options.
+
 
 # Table of Contents
 
@@ -66,9 +69,6 @@ choice, filter content, or trigger an action.
 
 # Choice Chips
 
-Choice chips are a variant of chips which allow single selection from a set of
-options.
-
 @docs set, chip, Chip
 
 -}
@@ -114,14 +114,14 @@ config =
         }
 
 
-{-| Set a chip's icon
+{-| Specify whether the chip displays an icon
 -}
 setIcon : Maybe String -> Config msg -> Config msg
 setIcon icon (Config config_) =
     Config { config_ | icon = icon }
 
 
-{-| Set a chip to be selected
+{-| Specify whether a chip is selected
 -}
 setSelected : Bool -> Config msg -> Config msg
 setSelected selected (Config config_) =
@@ -142,7 +142,7 @@ setOnClick onClick (Config config_) =
     Config { config_ | onClick = Just onClick }
 
 
-{-| Choice Chip type
+{-| Choice chip type
 -}
 type Chip msg
     = Chip (Html msg)

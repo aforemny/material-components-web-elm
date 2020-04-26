@@ -40,7 +40,7 @@ module Material.TextField exposing
   - [Disabled Text Field](#disabled-text-field)
   - [Password Text Field](#password-text-field)
   - [Required Text Field](#disabled-text-field)
-  - [Invalid Text Field](#disabled-text-field)
+  - [Valid Text Field](#valid-text-field)
   - [Text Field with Leading Icon](#text-field-with-leading-icon)
   - [Text Field with Trailing Icon](#text-field-with-trailing-icon)
   - [Text Field with Character Counter](#text-field-with-character-counter)
@@ -115,37 +115,33 @@ Text fields may have a visible outlined around them by using their
 
     TextField.outlined TextField.config
 
-Note that outlined text fields cannot be fullwidth.
+Note that `setFullwidth` does not have any effect on an outlined text field.
 
 @docs outlined
 
 
 # Full Width Text Field
 
-To make a text field span all of its available width, use its `setFullwidth`
-configuration option.
+To make a text field span all of its available width, set its `setFullwidth`
+configuration option to `True`.
 
     TextField.filled
-        (TextField.config
-            |> TextField.setFullwidth True
-        )
+        (TextField.config |> TextField.setFullwidth True)
 
-Full width text fields do not support `label` and will ignore this
+Full width text fields do not support a label and will ignore the `setLabel`
 configuration option. You may use `setPlaceholder` or provide an extraneous
 label for a full width text field.
 
 Outlined text fields do not support `setFullwidth` and wll ignore this
-configuration field.
+configuration option.
 
 
 # Disabled Text Field
 
-To disable a text field use its `setDisabled` configuration option.
+To disable a text field, set its `setDisabled` configuration option to `True`.
 
     TextField.filled
-        (TextField.config
-            |> TextField.setDisabled True
-        )
+        (TextField.config |> TextField.setDisabled True)
 
 
 # Password Text Field
@@ -154,37 +150,33 @@ To mark a text field as an input for entering a passwort, use its `setType`
 configuration option to specify `"password"`.
 
     TextField.filled
-        (TextField.config
-            |> TextField.setType "password"
-        )
+        (TextField.config |> TextField.setType "password")
 
-Note: Other input types besides `"password"` may or may not be supported.
+Other input types besides `"password"` may or may not be supported.
 
 
 # Required Text Field
 
-To mark a text field as required, use its `setRequired` configuration option.
+To mark a text field as required, set its `setRequired` configuration option to
+`True`.
 
     TextField.filled
-        (TextField.config
-            |> TextField.setRequired True
-        )
+        (TextField.config |> TextField.setRequired True)
 
 
-# Invalid Text Field
+# Valid Text Field
 
-To mark a text field as invalid, use its `setValid` configuration option.
+To mark a text field as valid, set its `setValid` configuration option to
+`True`.
 
     TextField.filled
-        (TextField.config
-            |> TextField.setValid True
-        )
+        (TextField.config |> TextField.setValid True)
 
 
 # Text Field with Leading Icon
 
 To have a text field display a leading icon, use its `setLeadingIcon`
-configuration option to specify a `TextFieldIcon`.
+configuration option to specify a value of `Icon`.
 
     TextField.filled
         (TextField.config
@@ -198,7 +190,7 @@ configuration option to specify a `TextFieldIcon`.
 # Text Field with Trailing Icon
 
 To have a text field display a trailing icon, use its `setTrailingIcon`
-configuration option to specify a `TextFieldIcon`.
+configuration option to specify a value of `Icon`.
 
     TextField.filled
         (TextField.config
@@ -209,16 +201,13 @@ configuration option to specify a `TextFieldIcon`.
 
 # Text Field with Character Counter
 
-To have a text field display a character counter, use its `setMaxLength`
+To have a text field display a character counter, specify its `setMaxLength`
 configuration option, and also add a `HelperText.characterCounter` as a child
 of `HelperText.helperLine`.
 
     [ TextField.filled
-        (TextField.config
-            |> TextField.setMaxLength (Just 18)
-        )
-    , HelperText.helperLine []
-        [ HelperText.characterCounter [] ]
+        (TextField.config |> TextField.setMaxLength (Just 18))
+    , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]
 
 -}
@@ -290,112 +279,116 @@ config =
         }
 
 
-{-| Set a text field's label
+{-| Specify a text field's label
 -}
 setLabel : String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = Just label }
 
 
-{-| Set a text field to be fullwidth
+{-| Specify a text field to be fullwidth
 -}
 setFullwidth : Bool -> Config msg -> Config msg
 setFullwidth fullwidth (Config config_) =
     Config { config_ | fullwidth = fullwidth }
 
 
-{-| Set a text field's value
+{-| Specify a text field's value
 -}
 setValue : String -> Config msg -> Config msg
 setValue value (Config config_) =
     Config { config_ | value = value }
 
 
-{-| Set a text field's placeholder
+{-| Specify a text field's placeholder
 -}
 setPlaceholder : Maybe String -> Config msg -> Config msg
 setPlaceholder placeholder (Config config_) =
     Config { config_ | placeholder = placeholder }
 
 
-{-| Set a text field to be disabled
+{-| Specify a text field to be disabled
+
+Disabled text fields cannot be interacted with and have no visual interaction
+effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =
     Config { config_ | disabled = disabled }
 
 
-{-| Set a text field to be required
+{-| Specify a text field to be required
 -}
 setRequired : Bool -> Config msg -> Config msg
 setRequired required (Config config_) =
     Config { config_ | required = required }
 
 
-{-| Set a text field to be valid
+{-| Specify a text field to be valid
 -}
 setValid : Bool -> Config msg -> Config msg
 setValid valid (Config config_) =
     Config { config_ | valid = valid }
 
 
-{-| Set a text field's minimum length
+{-| Specify a text field's minimum length
 -}
 setMinLength : Maybe Int -> Config msg -> Config msg
 setMinLength minLength (Config config_) =
     Config { config_ | minLength = minLength }
 
 
-{-| Set a text field's maximum length
+{-| Specify a text field's maximum length
 -}
 setMaxLength : Maybe Int -> Config msg -> Config msg
 setMaxLength maxLength (Config config_) =
     Config { config_ | maxLength = maxLength }
 
 
-{-| Set a text field's pattern
+{-| Specify a text field's pattern
 -}
 setPattern : Maybe String -> Config msg -> Config msg
 setPattern pattern (Config config_) =
     Config { config_ | pattern = pattern }
 
 
-{-| Set a text field's type
+{-| Specify a text field's type
 -}
 setType : String -> Config msg -> Config msg
 setType type_ (Config config_) =
     Config { config_ | type_ = type_ }
 
 
-{-| Set a text field's minimum value
+{-| Specify a text field's minimum value
 -}
 setMin : Maybe Int -> Config msg -> Config msg
 setMin min (Config config_) =
     Config { config_ | min = min }
 
 
-{-| Set a text field's maximum value
+{-| Specify a text field's maximum value
 -}
 setMax : Maybe Int -> Config msg -> Config msg
 setMax max (Config config_) =
     Config { config_ | max = max }
 
 
-{-| Set a text field's step value
+{-| Specify a text field's step value
 -}
 setStep : Maybe Int -> Config msg -> Config msg
 setStep step (Config config_) =
     Config { config_ | step = step }
 
 
-{-| Set a text field's leading icon
+{-| Specify a text field's leading icon
 -}
 setLeadingIcon : Maybe (Icon msg) -> Config msg -> Config msg
 setLeadingIcon leadingIcon (Config config_) =
     Config { config_ | leadingIcon = leadingIcon }
 
 
-{-| Set a text field's trailing icon
+{-| Specify a text field's trailing icon
 -}
 setTrailingIcon : Maybe (Icon msg) -> Config msg -> Config msg
 setTrailingIcon trailingIcon (Config config_) =

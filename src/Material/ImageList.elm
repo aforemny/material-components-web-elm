@@ -9,6 +9,10 @@ module Material.ImageList exposing
 {-| An Image List consists of several items, each containing an image and
 optionally supporting a text label.
 
+This modules concerns the container image list. If you are looking for
+information about the image list items, refer to
+[Material.ImageList.Item](Material-ImageList-Item).
+
 
 # Table of Contents
 
@@ -32,7 +36,7 @@ optionally supporting a text label.
 # Basic Usage
 
 Note that you will have to set the width and margin of image list items
-yourself, preferably through SASS.
+yourself, preferably through SASS or through inline CSS.
 
     import Html.Attributes exposing (style)
     import Material.ImageList as ImageList
@@ -43,7 +47,7 @@ yourself, preferably through SASS.
             [ ImageListItem.imageListItem
                 (ImageListItem.config
                     |> ImageListItem.setAttributes
-                        [ style "width" "calc(100% / 5 - 4.2px)"
+                        [ style "width" "calc(100% / 5 - 4px)"
                         , style "margin" "2px"
                         ]
                 )
@@ -70,14 +74,12 @@ yourself, preferably through SASS.
 
 # Masonry Image List
 
-The Masonry Image List variant presents images vertically arranged into several
-columns, using CSS Columns. In this layout, images may be any combination of
-aspect ratios.
+The _masonry image list_ variant presents images vertically arranged into
+several columns. In this layout, images may be any combination of aspect
+ratios.
 
     ImageList.imageList
-        (ImageList.config
-            |> ImageList.setMasonry True
-        )
+        (ImageList.config |> ImageList.setMasonry True)
         []
 
 
@@ -127,14 +129,22 @@ config =
         }
 
 
-{-| Make an image list a masonry image list
+{-| Specify whether an image list is a _masonry image list_
+
+The masonry image list variant presents images vertically arranged into several
+columns. In this layout, images may be any combination of aspect ratios.
+
 -}
 setMasonry : Bool -> Config msg -> Config msg
 setMasonry masonry (Config config_) =
     Config { config_ | masonry = masonry }
 
 
-{-| Make an image list item's label display below the item
+{-| Specify whether an image list item's label should display in a scrim on top
+of the image
+
+By default, image list item's labels display below the image.
+
 -}
 setWithTextProtection : Bool -> Config msg -> Config msg
 setWithTextProtection withTextProtection (Config config_) =

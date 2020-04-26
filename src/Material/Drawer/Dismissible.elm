@@ -8,8 +8,12 @@ module Material.Drawer.Dismissible exposing
     , header, title, subtitle
     )
 
-{-| The MDC Navigation Drawer is used to organize access to destinations and
+{-| The drawer is used to organize access to destinations and
 other functionality on an app.
+
+Dismissible drawers are by default hidden off screen, and can slide into view.
+Dismissible drawers should be used when navigation is not common, and the main
+app content is prioritized.
 
 
 # Table of Contents
@@ -72,10 +76,6 @@ other functionality on an app.
 
 # Dismissible Drawer
 
-Dismissible drawers are by default hidden off screen, and can slide into view.
-Dismissible drawers should be used when navigation is not common, and the main
-app content is prioritized.
-
 @docs drawer, content
 @docs appContent
 
@@ -118,7 +118,7 @@ config =
         }
 
 
-{-| Set the drawer to be open
+{-| Specify whether the drawer is open
 -}
 setOpen : Bool -> Config msg -> Config msg
 setOpen open (Config config_) =
@@ -166,8 +166,10 @@ content attributes nodes =
 
     DismissibleDrawer.drawer DismissibleDrawer.config
         [ DismissibleDrawer.header []
-            [ Html.h3 [ DismissibleDrawer.title ] [ text "Title" ]
-            , Html.h6 [ DismissibleDrawer.subtitle ] [ text "Subtitle" ]
+            [ Html.h3 [ DismissibleDrawer.title ]
+                [ text "Title" ]
+            , Html.h6 [ DismissibleDrawer.subtitle ]
+                [ text "Subtitle" ]
             ]
         , DismissibleDrawer.content [] []
         ]
@@ -214,8 +216,8 @@ closeHandler (Config { onClose }) =
 
 {-| Dismissible drawer's app content marker
 
-Apply this attribute to the page's content for open/close animation to work.
-The page content has to be the next sibling of the dismissible drawer.
+Apply this attribute to the page's content for the open/close animation to
+work. The page content has to be the next sibling of the dismissible drawer.
 
 -}
 appContent : Html.Attribute msg

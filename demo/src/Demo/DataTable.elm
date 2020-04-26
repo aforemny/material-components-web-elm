@@ -132,8 +132,8 @@ dataTableWithRowSelection model =
         allUnselected =
             Set.size model.selected == 0
 
-        row { onChange, state } { desert, carbs, protein, comments } =
-            DataTable.row []
+        headerRow { onChange, state } { desert, carbs, protein, comments } =
+            [ DataTable.row []
                 [ DataTable.checkboxCell []
                     (Checkbox.config
                         |> Checkbox.setState state
@@ -144,10 +144,36 @@ dataTableWithRowSelection model =
                 , DataTable.numericCell [] [ text protein ]
                 , DataTable.cell [] [ text comments ]
                 ]
+            ]
+
+        row { onChange, selected } { desert, carbs, protein, comments } =
+            DataTable.row
+                (if selected then
+                    DataTable.selected
+
+                 else
+                    []
+                )
+                [ DataTable.checkboxCell []
+                    (Checkbox.config
+                        |> Checkbox.setState
+                            (if selected then
+                                Checkbox.checked
+
+                             else
+                                Checkbox.unchecked
+                            )
+                        |> Checkbox.setOnChange onChange
+                    )
+                , DataTable.cell [] [ text desert ]
+                , DataTable.numericCell [] [ text carbs ]
+                , DataTable.numericCell [] [ text protein ]
+                , DataTable.cell [] [ text comments ]
+                ]
     in
     DataTable.dataTable DataTable.config
         { thead =
-            [ row
+            headerRow
                 { onChange =
                     if allSelected then
                         AllUnselected
@@ -165,22 +191,12 @@ dataTableWithRowSelection model =
                         Checkbox.indeterminate
                 }
                 label
-            ]
         , tbody =
             List.map
                 (\({ desert } as data_) ->
-                    let
-                        selected =
-                            Set.member desert model.selected
-                    in
                     row
                         { onChange = ItemSelected desert
-                        , state =
-                            if selected then
-                                Checkbox.checked
-
-                            else
-                                Checkbox.unchecked
+                        , selected = Set.member desert model.selected
                         }
                         data_
                 )

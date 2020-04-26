@@ -12,6 +12,9 @@ module Material.List exposing
 
 {-| Lists are continuous, vertical indexes of text or images.
 
+This module concerns the container list. If you are looking for information
+about the list items, refer to [Material.List.Item](Material-List-Item).
+
 
 # Table of Contents
 
@@ -72,61 +75,54 @@ module Material.List exposing
 
 # Two-Line List
 
-Lists may be two-line lists by settings the `twoLine` configuration field to
-`True`. In that case, list items should wrap their contents inside
-`listItemText` and their first line in `listItemPrimaryText` and their second
-line in `listItemSecondaryText`.
+Lists may be _two-line_ lists by setting its `setTwoLine` configuration option
+to `True`. In that case, list items should wrap their contents inside
+`ListItem.text`.
 
-    List.list
-        (List.config
-            |> List.setTwoLine True
-        )
+    List.list (List.config |> List.setTwoLine True)
         [ ListItem.listItem ListItem.config
             [ ListItem.text []
-                [ ListItem.primaryText []
-                    [ text "First line" ]
-                , ListItem.secondaryText []
-                    [ text "Second line" ]
-                ]
+                { primary = [ text "First line" ]
+                , secondary = [ text "Second line" ]
+                }
             ]
         ]
 
 
 # Non-interactive List
 
-Lists may be non-interactive by setting use `setNonInteractive` configuration
-option.
+Lists may be non-interactive by its setting `setNonInteractive` configuration
+option to `True`.
+
+Non-interactive lists do not feature keyboard interaction and list items have
+no visual interaction effect.
 
     List.list
-        (List.config
-            |> List.setNonInteractive True
-        )
-        [ ListItem.listItem ListItem.config [ text "List item" ] ]
+        (List.config |> List.setNonInteractive True)
+        [ ListItem.listItem ListItem.config [ text "List item" ]
+        ]
 
 
 ## Dense List
 
-Lists may be styled more compact by using the `setDense` configuration option.
+Lists may be styled more compact by setting its `setDense` configuration option
+to `True`.
+
+Dense lists feature smaller than normal margins.
 
     List.list
-        (List.config
-            |> List.setDense True
-        )
-        [ ListItem.listItem ListItem.config [ text "List item" ] ]
+        (List.config |> List.setDense True)
+        [ ListItem.listItem ListItem.config [ text "List item" ]
+        ]
 
 
 ## Avatar List
 
-List item's graphics may be configured to appear larger by using the
-`setAvatarList` configuration option.
-
-This is particularly useful when a list item's graphic includes an image rather
-than an icon.
+A list item's graphics may be configured to appear larger by setting its
+`setAvatarList` configuration option to `True`.
 
     List.list
-        (List.config
-            |> List.setAvatarList True
-        )
+        (List.config |> List.setAvatarList True)
         [ ListItem.listItem ListItem.config
             [ ListItem.graphic [] [ Html.img [] [] ]
             , text "List item"
@@ -137,22 +133,18 @@ than an icon.
 ## List Group
 
 Multiple related lists, such as folders and files in a file hierarchy, may be
-grouped using `listGroup` and labeled by `listGroupSubheader`.
+grouped using `group` and labeled by `subheader`.
 
     List.group []
         [ List.subheader [] [ text "Folders" ]
         , List.list List.config
-            [ ListItem.listItem ListItem.config
-                [ text "Folder" ]
-            , ListItem.listItem ListItem.config
-                [ text "Folder" ]
+            [ ListItem.listItem ListItem.config [ text "Folder" ]
+            , ListItem.listItem ListItem.config [ text "Folder" ]
             ]
         , List.subheader [] [ text "Files" ]
         , List.list List.config
-            [ ListItem.listItem ListItem.config
-                [ text "File" ]
-            , ListItem.listItem ListItem.config
-                [ text "File" ]
+            [ ListItem.listItem ListItem.config [ text "File" ]
+            , ListItem.listItem ListItem.config [ text "File" ]
             ]
         ]
 
@@ -198,42 +190,60 @@ config =
         }
 
 
-{-| Set a list to be non-interactive
+{-| Specify whether a list should be non-interactive
+
+Non-interactive lists do not feature keyboard interaction and list items have
+no visual interaction effect.
+
 -}
 setNonInteractive : Bool -> Config msg -> Config msg
 setNonInteractive nonInteractive (Config config_) =
     Config { config_ | nonInteractive = nonInteractive }
 
 
-{-| Set a list to be dense
+{-| Specify whether a list should be _dense_
+
+Dense lists are more compact and feature smaller than normal margins
+
 -}
 setDense : Bool -> Config msg -> Config msg
 setDense dense (Config config_) =
     Config { config_ | dense = dense }
 
 
-{-| Set a list to be an avatar list
+{-| Specify whether a list should be an _avatar_ list
+
+An avatar list features a larger than usual list item _graphic_.
+
 -}
 setAvatarList : Bool -> Config msg -> Config msg
 setAvatarList avatarList (Config config_) =
     Config { config_ | avatarList = avatarList }
 
 
-{-| Set a list to be a two line list
+{-| Specify whether a list should be a _two line_ list
+
+Two line lists feature list items with a primary and a secondary text line.
+
 -}
 setTwoLine : Bool -> Config msg -> Config msg
 setTwoLine twoLine (Config config_) =
     Config { config_ | twoLine = twoLine }
 
 
-{-| TODO: Document setVertical
+{-| Specify whether a list should be vertical
 -}
 setVertical : Bool -> Config msg -> Config msg
 setVertical vertical (Config config_) =
     Config { config_ | vertical = vertical }
 
 
-{-| TODO: Document setWrapFocus
+{-| Specify whether a list should wrap focus
+
+A list that wraps focus focuses the first list item after pressing tab on the
+last list item. By default, a list in that case passes focus to the next
+focusable control.
+
 -}
 setWrapFocus : Bool -> Config msg -> Config msg
 setWrapFocus wrapFocus (Config config_) =

@@ -48,9 +48,7 @@ positioning, wrap the button and the menu within an element that sets the
     main =
         Html.div [ Menu.surfaceAnchor ]
             [ Button.text
-                (Button.config
-                    |> Button.setOnClick MenuOpened
-                )
+                (Button.config |> Button.setOnClick MenuOpened)
                 "Open menu"
             , Menu.menu
                 (Menu.config
@@ -58,9 +56,7 @@ positioning, wrap the button and the menu within an element that sets the
                     |> Menu.setOnClose MenuClosed
                 )
                 [ List.list
-                    (List.config
-                        |> List.setWrapFocus
-                    )
+                    (List.config |> List.setWrapFocus)
                     [ ListItem.listItem ListItem.config
                         [ text "Menu item" ]
                     , ListItem.listItem ListItem.config
@@ -90,14 +86,10 @@ positioning, wrap the button and the menu within an element that sets the
 
 # Quick-opening menu
 
-A menu may not show a transition when opening by using its `setQuickOpen`
-configuration option.
+A menu may not show a transition when opening by setting its `setQuickOpen`
+configuration option to `True`.
 
-    Menu.menu
-        (Menu.config
-            |> Menu.setQuickOpen True
-        )
-        []
+    Menu.menu (Menu.config |> Menu.setQuickOpen True) []
 
 -}
 
@@ -131,14 +123,17 @@ config =
         }
 
 
-{-| Set a menu to be open
+{-| Specify whether a menu is open
 -}
 setOpen : Bool -> Config msg -> Config msg
 setOpen open (Config config_) =
     Config { config_ | open = open }
 
 
-{-| Set a menu to open quickly, without showing a transition
+{-| Specify whether a menu is _opening quickly_
+
+A quickly opening menu opens without showing an animation.
+
 -}
 setQuickOpen : Bool -> Config msg -> Config msg
 setQuickOpen quickOpen (Config config_) =
@@ -176,6 +171,10 @@ menu ((Config { additionalAttributes }) as config_) nodes =
 
 
 {-| Menu surface anchor attribute
+
+Use this on a HTML element that contains both the triggering element and the
+menu itself.
+
 -}
 surfaceAnchor : Html.Attribute msg
 surfaceAnchor =

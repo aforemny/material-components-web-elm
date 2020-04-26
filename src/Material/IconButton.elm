@@ -8,7 +8,7 @@ module Material.IconButton exposing
     , custom
     )
 
-{-| Icon buttons allow users to take actions, and make choices, with a single
+{-| Icon buttons allow users to take actions and make choices with a single
 tap.
 
 
@@ -33,9 +33,6 @@ tap.
 
 # Basic Usage
 
-If you are looking for a button that has an icon as well as text, refer to
-[Button](Material-Button).
-
     import Material.IconButton as IconButton
 
     type Msg
@@ -43,9 +40,7 @@ If you are looking for a button that has an icon as well as text, refer to
 
     main =
         IconButton.iconButton
-            (IconButton.config
-                |> IconButton.setOnClick Clicked
-            )
+            (IconButton.config |> IconButton.setOnClick Clicked)
             "favorite"
 
 
@@ -69,14 +64,12 @@ If you are looking for a button that has an icon as well as text, refer to
 
 # Disabled Icon Button
 
-To disable an icon button, use its `setDisabled` configuration option.
-Disabled icon buttons cannot be interacted with and have no visual interaction
-effect.
+To disable an icon button, set its `setDisabled` configuration option to
+`True`. Disabled icon buttons cannot be interacted with and have no visual
+interaction effect.
 
     IconButton.iconButton
-        (IconButton.config
-            |> IconButton.setDisabled True
-        )
+        (IconButton.config |> IconButton.setDisabled True)
         "favorite"
 
 
@@ -87,7 +80,7 @@ configuration option.
 
     IconButton.iconButton
         (IconButton.config
-            |> setLabel "Add to favorites"
+            |> IconButton.setLabel "Add to favorites"
         )
         "favorite"
 
@@ -122,14 +115,18 @@ config =
         }
 
 
-{-| Mark an icon button as disabled
+{-| Specify whether an icon button is disabled
+
+Disabled icon buttons cannot be interacted with and have no visual interaction
+effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =
     Config { config_ | disabled = disabled }
 
 
-{-| Set an icon button's `arial-label` HTML5 attribute
+{-| Specify an icon button's HTML5 arial-label attribute
 -}
 setLabel : String -> Config msg -> Config msg
 setLabel label (Config config_) =

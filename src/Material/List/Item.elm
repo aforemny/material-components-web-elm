@@ -16,6 +16,9 @@ module Material.List.Item exposing
 
 {-| Lists are continuous, vertical indexes of text or images.
 
+This module concerns the list items. If you are looking for the list container,
+refer to [Material.List](Material-List).
+
 
 # Table of Contents
 
@@ -76,8 +79,8 @@ module Material.List.Item exposing
 
 # List Item with Graphic
 
-In addition to their text child, lists may optionally contain a starting tile
-referred to as _graphic_ and/ or a last tile referred to as _meta_.
+In addition to their text, list itemss may optionally contain a starting tile
+referred to as _graphic_.
 
 Common examples for graphics are icons and images, avatar images and selection
 controls such as checkboxes.
@@ -92,8 +95,8 @@ controls such as checkboxes.
 
 # List Item with Meta
 
-In addition to their text child, lists may optionally contain a starting tile
-referred to as _graphic_ and/ or a last tile referred to as _meta_.
+In addition to their text child, list items may optionally contain a starting
+tile referred to as _meta_.
 
 Common examples for metas are text, icons and images and selection controls.
 
@@ -121,18 +124,24 @@ List items may be two-line list items by using `text`.
 
 # Disabled List Item
 
-List items may be disabled by using their `setDisabled` configuration option.
+List items may be disabled by setting their `setDisabled` configuration option
+to `True`.
 
     ListItem.listItem
-        (ListItem.config
-            |> ListItem.setDisabled True
-        )
+        (ListItem.config |> ListItem.setDisabled True)
         [ text "List item" ]
 
 
 ### Selected List Item
 
-List items may be selected by using their `setSelected` configuration option.
+List items may be selected by setting their `setSelected` configuration option
+to a value of `Selection`.
+
+A list item that may change its selection state within the current page, should
+be selected rather than activated.
+
+As a rule of thumb, a navigation list item should be activated, while any other
+list item should be selected.
 
     ListItem.listItem
         (ListItem.config
@@ -145,7 +154,14 @@ List items may be selected by using their `setSelected` configuration option.
 
 ### Activated List Item
 
-List items may be activated by using their `setSelected` configuration option.
+List items may be activated by setting their `setSelected` configuration option
+to a value of `Selection`.
+
+A list item that may not change its state within the current page should be
+activated rather than selected.
+
+As a rule of thumb, a navigation list item should be activated, while any other
+list item should be selected.
 
     ListItem.listItem
         (ListItem.config
@@ -159,7 +175,7 @@ List items may be activated by using their `setSelected` configuration option.
 ## Link List Item
 
 List items may using the `setHref` configuration option in which case the list
-item essentially behaves like a HTML `a` element. You may specify the
+item essentially behaves like a HTML anchor element. You may specify the
 configuration option `setTarget` as well.
 
     ListItem.listItem
@@ -201,14 +217,18 @@ config =
         }
 
 
-{-| Set a list item to be disabled
+{-| Specify whtehr a list item should be disabled
+
+Disabled list items cannot be interacted with and have not visual interaction
+effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =
     Config { config_ | disabled = disabled }
 
 
-{-| Selection state of a list item.
+{-| Selection of a list item
 
 A list item may be either in selected or in activated selection state.
 
@@ -217,35 +237,50 @@ type alias Selection =
     Material.List.Item.Internal.Selection
 
 
-{-| Selection state that sets a list item to be selected
+{-| Selected selection state
 -}
 selected : Selection
 selected =
     Selected
 
 
-{-| Selection state that sets a list item to be activated
+{-| Activated selection state
 -}
 activated : Selection
 activated =
     Activated
 
 
-{-| Set a list item to be activated
+{-| Specify whether a list item is selected
+
+A selected list item may be either _selected_ or _activated_. A list item that
+may change its selection state within the current page, should be selected. A
+list item that may not change its state within the current page should be
+activated.
+
+As a rule of thumb, a navigation list item should be activated, while any other
+list item should be selected.
+
 -}
 setSelected : Maybe Selection -> Config msg -> Config msg
 setSelected selection (Config config_) =
     Config { config_ | selection = selection }
 
 
-{-| Set a link list item's HTML5 href attribute
+{-| Specify whether a list item is a _link list item_
+
+Link list items essentially behave like a HTML5 anchor element.
+
 -}
 setHref : Maybe String -> Config msg -> Config msg
 setHref href (Config config_) =
     Config { config_ | href = href }
 
 
-{-| Set a link list item's HTML5 target attribute
+{-| Specify a link list item's HTML5 target attribute
+
+Note that non-link list items ignore this configuration option.
+
 -}
 setTarget : Maybe String -> Config msg -> Config msg
 setTarget target (Config config_) =
@@ -268,13 +303,16 @@ setOnClick onClick (Config config_) =
         { config_ | onClick = Just onClick }
 
 
-{-| Type of a list item
+{-| List item type
+
+List items can only be rendered within a [list container](Material-List).
+
 -}
 type alias ListItem msg =
     Material.List.Item.Internal.ListItem msg
 
 
-{-| List item view function
+{-| List item constructor
 -}
 listItem : Config msg -> List (Html msg) -> ListItem msg
 listItem (Config ({ additionalAttributes, href } as config_)) nodes =
@@ -358,7 +396,7 @@ targetAttr (Config { href, target }) =
         Nothing
 
 
-{-| List item's text for list items in a two-line list
+{-| Two-line list item's text
 -}
 text :
     List (Html.Attribute msg)

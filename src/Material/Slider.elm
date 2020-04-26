@@ -12,8 +12,7 @@ module Material.Slider exposing
     , slider
     )
 
-{-| MDC Slider provides an implementation of the Material Design slider
-component.
+{-| Slider provides a component to select a numerical value within a range.
 
 
 # Table of Contents
@@ -93,43 +92,36 @@ options.
 To allow for quantization of the user input, use the slider's `setStep`
 configuration option.
 
-    Slider.slider
-        (Slider.config
-            |> Slider.setStep 4.5
-        )
+    Slider.slider (Slider.config |> Slider.setStep 4.5)
 
 
 # Disabled Slider
 
-To disable a slider, use its `setDisabled` configuration option. Disabled
-sliders cannot be interacted with and have no visual interaction effect.
+To disable a slider, set its `setDisabled` configuration option to `True`.
 
-    Slider.slider
-        (Slider.config
-            |> Slider.setDisabled True
-        )
+Disabled sliders cannot be interacted with and have no visual interaction
+effect.
+
+    Slider.slider (Slider.config |> Slider.setDisabled True)
 
 
 # Discrete Slider
 
-To treat a slider as a discrete slider, use its `setDiscrete` configuration
-option.
+To treat a slider as a discrete slider, set its `setDiscrete` configuration
+option to `True`.
 
-    Slider.slider
-        (Slider.config
-            |> Slider.setDiscrete True
-        )
+    Slider.slider (Slider.config |> Slider.setDiscrete True)
 
 
 ## Track Markers
 
-To have a discrete slider show track markers, use its `setDisplayMarkers`
-configuration option.
+To have a discrete slider show track markers, set its `setDisplayMarkers`
+configuration option to `True`.
+
+Note that non-discrete sliders ignore this configuration option.
 
     Slider.slider
-        (Slider.config
-            |> Slider.setDisplayMarkers True
-        )
+        (Slider.config |> Slider.setDisplayMarkers True)
 
 -}
 
@@ -179,49 +171,62 @@ config =
         }
 
 
-{-| Set a slider to be a discrete slider
+{-| Specify whether a slider is _discrete_
+
+Discrete sliders feature a pin that indicates the current value while
+interacting with the slider.
+
+This works best for integer-valued sliders, but this is not a requirement.
+
 -}
 setDiscrete : Bool -> Config msg -> Config msg
 setDiscrete discrete (Config config_) =
     Config { config_ | discrete = discrete }
 
 
-{-| Set a discrete slider to display track markers
+{-| Specify whether a slider should display markers
+
+Note that this option is ignored by non-discrete sliders.
+
 -}
 setDisplayMarkers : Bool -> Config msg -> Config msg
 setDisplayMarkers displayMarkers (Config config_) =
     Config { config_ | displayMarkers = displayMarkers }
 
 
-{-| Set a slider's minimum value (default: 0)
+{-| Specify a slider's minimum value (default: 0)
 -}
 setMin : Float -> Config msg -> Config msg
 setMin min (Config config_) =
     Config { config_ | min = min }
 
 
-{-| Set a slider's maximum value (default: 100)
+{-| Specify a slider's maximum value (default: 100)
 -}
 setMax : Float -> Config msg -> Config msg
 setMax max (Config config_) =
     Config { config_ | max = max }
 
 
-{-| Set a slider's step value (default: 0)
+{-| Specify a slider's step value (default: 0, ie. continuous)
 -}
 setStep : Float -> Config msg -> Config msg
 setStep step (Config config_) =
     Config { config_ | step = step }
 
 
-{-| Set a slider's value (default: 0)
+{-| Specify a slider's value (default: 0)
 -}
 setValue : Float -> Config msg -> Config msg
 setValue value (Config config_) =
     Config { config_ | value = value }
 
 
-{-| Make a slider disabled
+{-| Specify whether a slider is disabled
+
+Disabled sliders canot be interacted with and have no visual interaction
+effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =

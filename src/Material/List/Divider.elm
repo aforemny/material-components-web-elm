@@ -9,6 +9,10 @@ module Material.List.Divider exposing
 
 {-| Lists are continuous, vertical indexes of text or images.
 
+This module concerns a list's divider elements. If you are looking for the list
+container, refer to [Material.List](Material-List), and if you are looking for
+the list item, refer to [Material.List.Item](Material-List-Item).
+
 
 # Table of Contents
 
@@ -58,8 +62,8 @@ module Material.List.Divider exposing
 
 # List Item Divider
 
-List items may be seperated by a divider. The divider may optionally be `inset`
-so that it does not intersect the list item's graphic, or `padded` so that it
+List items may be seperated by a divider. The divider may optionally be _inset_
+so that it does not intersect the list item's graphic, or _padded_ so that it
 does not intersect the list item's meta.
 
     List.list List.config
@@ -79,17 +83,13 @@ Multiple lists within a group may be visually seperated by a list group divider.
 
     List.group []
         [ List.list List.config
-            [ ListItem.listItem ListItem.config
-                [ text "Folder" ]
-            , ListItem.listItem ListItem.config
-                [ text "Folder" ]
+            [ ListItem.listItem ListItem.config [ text "Folder" ]
+            , ListItem.listItem ListItem.config [ text "Folder" ]
             ]
         , ListDivider.group []
         , List.list List.config
-            [ ListItem.listItem ListItem.config
-                [ text "File" ]
-            , ListItem.listItem ListItem.config
-                [ text "File" ]
+            [ ListItem.listItem ListItem.config [ text "File" ]
+            , ListItem.listItem ListItem.config [ text "File" ]
             ]
         ]
 
@@ -127,9 +127,9 @@ config =
         }
 
 
-{-| Set a list divider to be _inset_.
+{-| Specify whether a list divider should be _inset_
 
-Use this if you do not want the list divider to intersect a list item's meta.
+Insert list item dividers to not intersect a list item's meta.
 
 -}
 setInset : Bool -> Config msg -> Config msg
@@ -137,9 +137,9 @@ setInset inset (Config config_) =
     Config { config_ | inset = inset }
 
 
-{-| Set a list divider to be _padded_.
+{-| Specify whether a list divider should be _padded_
 
-Use this if you do not want the list divider to intersect a list item's avatar.
+Padded list item dividers do not intersect a list item's avatar.
 
 -}
 setPadded : Bool -> Config msg -> Config msg

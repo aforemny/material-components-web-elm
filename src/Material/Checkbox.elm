@@ -1,10 +1,12 @@
 module Material.Checkbox exposing
     ( Config, config
     , setOnChange
-    , setState, State, checked, unchecked, indeterminate
+    , State, setState
     , setDisabled
     , setAttributes
     , checkbox
+    , checked, unchecked
+    , indeterminate
     )
 
 {-| Checkboxes allow the user to select one or more items from a set.
@@ -56,7 +58,7 @@ Note that checkboxes are usually used in conjunction with form fields. Refer to
 ## Configuration Options
 
 @docs setOnChange
-@docs setState, State, checked, unchecked, indeterminate
+@docs State, setState
 @docs setDisabled
 @docs setAttributes
 
@@ -68,22 +70,24 @@ Note that checkboxes are usually used in conjunction with form fields. Refer to
 
 # Checked Checkbox
 
-To set the state of a checkbox , use its `setState` configuration option.
+To set the state of a checkbox, use its `setState` configuration option.
 
     Checkbox.checkbox
-        (Checkbox.config
-            |> Checkbox.setState Checkbox.Checked
-        )
+        (Checkbox.config |> Checkbox.setState Checkbox.checked)
+
+@docs checked, unchecked
 
 
 # Indeterminate Checkbox
 
-To set the state of a checkbox , use its `setState` configuration option.
+To set the state of a checkbox, use its `setState` configuration option.
 
     Checkbox.checkbox
         (Checkbox.config
-            |> Checkbox.setState Checkbox.Indeterminate
+            |> Checkbox.setState Checkbox.indeterminate
         )
+
+@docs indeterminate
 
 
 # Disabled Checkbox
@@ -92,9 +96,7 @@ To disable a checkbox, use its `setDisabled` configuration option. Disabled
 checkboxes cannot be interacted with and have no visual interaction effect.
 
     Checkbox.checkbox
-        (Checkbox.config
-            |> Checkbox.setDisabled True
-        )
+        (Checkbox.config |> Checkbox.setDisabled True)
 
 -}
 
@@ -126,14 +128,21 @@ config =
         }
 
 
-{-| Set a checkbox's state
+{-| Specify a checkbox' state
+
+A checkbox may be in `checked`, `unchecked` or `indeterminate` state.
+
 -}
 setState : State -> Config msg -> Config msg
 setState state (Config config_) =
     Config { config_ | state = state }
 
 
-{-| Make a checkbox disabled
+{-| Specify whether a checkbox is disabled
+
+Disabled checkboxes cannot be interacted with and have no visual interaction
+effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =

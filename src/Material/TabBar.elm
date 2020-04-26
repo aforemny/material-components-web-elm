@@ -10,8 +10,11 @@ module Material.TabBar exposing
     )
 
 {-| Tabs organize and allow navigation between groups of content that are
-related and at the same level of hierarchy. The Tab Bar contains the Tab
-Scroller and Tab components.
+related and at the same level of hierarchy. The tab bar contains the tab
+components.
+
+This module concerns the tab bar container. If you are looking for the tab
+item, refer to [Material.Tab](Material-Tab).
 
 
 # Table of Contents
@@ -59,9 +62,7 @@ Scroller and Tab components.
                 )
                 { label = "Tab 1", icon = Nothing }
             , Tab.tab
-                (Tab.config
-                    |> Tab.setOnClick (TabClicked 1)
-                )
+                (Tab.config |> Tab.setOnClick (TabClicked 1))
                 { label = "Tab 2", icon = Nothing }
             ]
 
@@ -87,41 +88,31 @@ Scroller and Tab components.
 
 # Stacked Tabs
 
-In a stacked tab bar, the label and icon of a tab flow vertically instead of
-horizontally. To make a tab bar stacked, use its `setStacked` configuration
-option.
+In a _stacked_ tab bar, the label and icon of a tab flow vertically instead of
+horizontally. To make a tab bar stacked, set its `setStacked` configuration
+option to `True`.
 
-Requires that the `tab`s have both `label` and `icon`.
+Tabs within a stacked tab bar should specify both a label and an icon.
 
-    TabBar.tabBar
-        (TabBar.config
-            |> TabBar.setStacked True
-        )
-        []
+    TabBar.tabBar (TabBar.config |> TabBar.setStacked True) []
 
 
 # Minimum Width Tabs
 
 Tabs by defauls span a minimum width. If you want tabs to be as narrow as
-possible, use the tab bar's `setMinWidth` configuration option.
+possible, set the tab bar's `setMinWidth` configuration option to `True`.
 
-    TabBar.tabBar
-        (TabBar.config
-            |> TabBar.setMinWidth True
-        )
-        []
+    TabBar.tabBar (TabBar.config |> TabBar.setMinWidth True) []
 
 
 # Content-Spanning Tab Indicator
 
 The tab's active indicator by default spans the entire tab. If you want active
-indicators to only span their tab's content, use the tab bar's
-`setIndicatorSpansContent` configuration option.
+indicators to only span their tab's content, set the tab bar's
+`setIndicatorSpansContent` configuration option to `True`.
 
     TabBar.tabBar
-        (tabBarConfig
-            |> TabBar.setIndicatorSpansContent True
-        )
+        (tabBarConfig |> TabBar.setIndicatorSpansContent True)
         []
 
 
@@ -137,9 +128,7 @@ content.
 ## Center-aligned tab scroller
 
     TabBar.tabBar
-        (TabBar.config
-            |> TabBar.setAlign (Just TabBar.Center)
-        )
+        (TabBar.config |> TabBar.setAlign (Just TabBar.Center))
         []
 
 -}
@@ -177,36 +166,46 @@ config =
         }
 
 
-{-| Set a tab bar's tabs to be stacked
+{-| Specify a tab bar's tabs to be stacked
+
+Stacked tabs display their icon below the their label.
+
 -}
 setStacked : Bool -> Config msg -> Config msg
 setStacked stacked (Config config_) =
     Config { config_ | stacked = stacked }
 
 
-{-| Set a tab bar's tabs to be as narrow as possible, ignoring their usual
-minimum width.
+{-| Specify whether a tab bar's tabs should be of minimum width
+
+Usually, a tab bar's tabs have a minimum with. Using this option, tabs are as
+narrow as possible.
+
 -}
 setMinWidth : Bool -> Config msg -> Config msg
 setMinWidth minWidth (Config config_) =
     Config { config_ | minWidth = minWidth }
 
 
-{-| Set a tab bar's tab indicator to span its content
+{-| Specify whether a tab bar's tab indicator spans its content
+
+Usually, a tab bar's tab indicator spans the entire tab. Use this option to
+make it span only it's label instead.
+
 -}
 setIndicatorSpansContent : Bool -> Config msg -> Config msg
 setIndicatorSpansContent indicatorSpansContent (Config config_) =
     Config { config_ | indicatorSpansContent = indicatorSpansContent }
 
 
-{-| Set a tab bar's alignment of tabs in case they overflow horizontally
+{-| Specify tab bar's alignment of tabs in case they overflow horizontally
 -}
 setAlign : Maybe Align -> Config msg -> Config msg
 setAlign align (Config config_) =
     Config { config_ | align = align }
 
 
-{-| Set a tab bar's alignment of tabs in case they overflow horizontally
+{-| Specify additional attribtues
 -}
 setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
 setAttributes additionalAttributes (Config config_) =

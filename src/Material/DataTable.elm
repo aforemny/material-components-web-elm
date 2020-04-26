@@ -4,7 +4,7 @@ module Material.DataTable exposing
     , setAttributes
     , dataTable
     , Row, row
-    , selected, ariaSelected
+    , selected
     , Cell, cell
     , numericCell
     , checkboxCell
@@ -48,7 +48,8 @@ can look for patterns and insights.
                 ]
             , tbody =
                 [ DataTable.row []
-                    [ DataTable.cell [] [ text "Frozen yogurt" ] ]
+                    [ DataTable.cell [] [ text "Frozen yogurt" ]
+                    ]
                 ]
             }
 
@@ -76,13 +77,9 @@ can look for patterns and insights.
 
 ## Selected Row
 
-    DataTable.row
-        [ DataTable.selected
-        , DataTable.ariaSelected
-        ]
-        []
+    DataTable.row DataTable.selected []
 
-@docs selected, ariaSelected
+@docs selected
 
 
 # Cell
@@ -134,7 +131,7 @@ config =
         }
 
 
-{-| Set the table's HTML5 aria-label attribute
+{-| Specify the data table's HTML5 aria-label attribute
 -}
 setLabel : String -> Config msg -> Config msg
 setLabel label (Config config_) =
@@ -148,7 +145,7 @@ setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 
-{-| Data Table view function
+{-| Data table view function
 -}
 dataTable :
     Config msg
@@ -207,19 +204,17 @@ row attributes nodes =
 
 {-| Attribute to mark a row as selected
 
-Does not work with a header row. You should set `ariaSelected` as well.
+This has no effect on a header row.
+
+Note that this is a list of attributes because it actually sets two HTML
+attributes at once.
 
 -}
-selected : Html.Attribute msg
+selected : List (Html.Attribute msg)
 selected =
-    dataTableRowSelectedCs
-
-
-{-| Attribute to mark a row as selected
--}
-ariaSelected : Html.Attribute msg
-ariaSelected =
-    Html.Attributes.attribute "aria-selected" "true"
+    [ dataTableRowSelectedCs
+    , Html.Attributes.attribute "aria-selected" "true"
+    ]
 
 
 dataTableRowSelectedCs : Html.Attribute msg

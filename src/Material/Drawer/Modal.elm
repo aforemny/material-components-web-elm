@@ -8,8 +8,11 @@ module Material.Drawer.Modal exposing
     , header, title, subtitle
     )
 
-{-| The MDC Navigation Drawer is used to organize access to destinations and
+{-| The drawer is used to organize access to destinations and
 other functionality on an app.
+
+Modal drawers are elevated above most of the app's UI and don't affect the
+screen's layout grid.
 
 
 # Table of Contents
@@ -72,9 +75,6 @@ other functionality on an app.
 
 # Modal Drawer
 
-Modal drawers are elevated above most of the app's UI and don't affect the
-screen's layout grid.
-
 @docs drawer, content
 @docs scrim
 
@@ -117,7 +117,7 @@ config =
         }
 
 
-{-| Set the drawer to be open
+{-| Specify whether the drawer is open
 -}
 setOpen : Bool -> Config msg -> Config msg
 setOpen open (Config config_) =
@@ -166,7 +166,8 @@ content attributes nodes =
     ModalDrawer.drawer ModalDrawer.config
         [ ModalDrawer.header []
             [ Html.h3 [ ModalDrawer.title ] [ text "Title" ]
-            , Html.h6 [ ModalDrawer.subtitle ] [ text "Subtitle" ]
+            , Html.h6 [ ModalDrawer.subtitle ]
+                [ text "Subtitle" ]
             ]
         , ModalDrawer.content [] []
         ]

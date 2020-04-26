@@ -9,10 +9,6 @@ module Material.Ripple exposing
 
 {-| Material “ink ripple” interaction effect.
 
-Ripples come in two variants. Use `bounded` for bounded ripple effects which
-work best when used for contained surfaces, and `unbounded` for unbounded
-ripple effects which work best with icons.
-
 
 # Table of Contents
 
@@ -34,6 +30,10 @@ ripple effects which work best with icons.
 
 
 # Basic Usage
+
+Ripples come in two variants. Use `bounded` for bounded ripple effects which
+work best when used for contained surfaces, and `unbounded` for unbounded
+ripple effects which work best with icons.
 
     import Material.Ripple as Ripple
 
@@ -76,9 +76,7 @@ If you want to set the ripple effect to either primary or accent color, use its
 `setColor` configuration option and specify a `Color`.
 
     Ripple.bounded
-        (Ripple.config
-            |> setColor (Just Ripple.primary)
-        )
+        (Ripple.config |> setColor (Just Ripple.primary))
 
 @docs Color, primary, accent
 
@@ -108,7 +106,7 @@ config =
         }
 
 
-{-| Set a ripple's color
+{-| Specify a ripple effect's color
 -}
 setColor : Maybe Color -> Config msg -> Config msg
 setColor color (Config config_) =
@@ -122,21 +120,21 @@ setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 
-{-| Ripple color
+{-| Ripple effect's color
 -}
 type Color
     = Primary
     | Accent
 
 
-{-| A ripple's primary color
+{-| Primary variant of a ripple effect's color
 -}
 primary : Color
 primary =
     Primary
 
 
-{-| A ripple's accent color
+{-| Accent variant of a ripple effect's color
 -}
 accent : Color
 accent =
@@ -162,14 +160,14 @@ ripple isUnbounded ((Config { additionalAttributes }) as config_) =
         []
 
 
-{-| Bounded ripple variant
+{-| Bounded ripple view function
 -}
 bounded : Config msg -> Html msg
 bounded =
     ripple False
 
 
-{-| Unbounded ripple variant
+{-| Unbounded ripple view function
 -}
 unbounded : Config msg -> Html msg
 unbounded =

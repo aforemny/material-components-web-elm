@@ -6,7 +6,8 @@ module Material.Dialog exposing
     , dialog, Content
     )
 
-{-| Dialogs inform users about a task and can contain critical information, require decisions, or involve multiple tasks.
+{-| Dialogs inform users about a task and can contain critical information,
+require decisions, or involve multiple tasks.
 
 
 # Table of Contents
@@ -44,14 +45,10 @@ module Material.Dialog exposing
             , content = [ text "Discard draft?" ]
             , actions =
                 [ Button.text
-                    (Button.config
-                        |> Button.setOnClick Closed
-                    )
+                    (Button.config |> Button.setOnClick Closed)
                     "Cancel"
                 , Button.text
-                    (Button.config
-                        |> Button.setOnClick Closed
-                    )
+                    (Button.config |> Button.setOnClick Closed)
                     "Discard"
                 ]
             }
@@ -103,7 +100,7 @@ config =
         }
 
 
-{-| Set a dialog to be open
+{-| Specify whether a dialog is open
 -}
 setOpen : Bool -> Config msg -> Config msg
 setOpen open (Config config_) =

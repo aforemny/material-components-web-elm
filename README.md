@@ -17,16 +17,16 @@ web](https://github.com/material-components/material-components-web) (MDC Web).
 ## Quick start
 
 This package relies upon JavaScript and CSS that need to be included in your
-project separately. As a result, this library will *not* work with e.g. `elm
-reactor`. Instead you will need to use either an HTML file or a bundler, such
-as webpack.
+project separately. As a result, this library will _not_ work with e.g. `elm
+reactor`. Instead you will need to use either a HTML file or a bundler, such as
+webpack.
 
 
 ### Using HTML
  
 You should [compile your Elm program to
-JavaScript](https://guide.elm-lang.org/install/elm.html#elm-make) and include it
-in a custom HTML document. From your HTML document, you have to include the
+JavaScript](https://guide.elm-lang.org/install/elm.html#elm-make) and include
+it in a custom HTML document. From that HTML document, you have to include the
 following assets to use this library.
 
 Please make sure that the last two assets match this library's version (ie.
@@ -48,7 +48,7 @@ and
 
 ### Using a bundler
 
-Install the assets JavaScript and CSS assets via npm:
+Install the JavaScript and CSS assets via npm:
 
 ```sh
 $ npm install --save material-components-web-elm@2.1.2
@@ -60,7 +60,6 @@ Then in your `index.js` add the following imports:
 require("material-components-web-elm/dist/material-components-web-elm.js");
 require("material-components-web-elm/dist/material-components-web-elm.css");
 ```
-
 
 
 ## Contributions

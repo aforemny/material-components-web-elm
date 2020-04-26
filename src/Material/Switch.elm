@@ -32,8 +32,8 @@ preferred way to adjust settings on mobile.
 
 # Basic Usage
 
-Note that switches are usually used in conjunction with form fields. Refer to
-[FormField](Material-FormField) for more information.
+Note that switches are usually used in conjunction with [form
+fields](Material-FormField).
 
     import Material.Switch as Switch
 
@@ -68,23 +68,20 @@ Note that switches are usually used in conjunction with form fields. Refer to
 
 # On Switch
 
-To set the state of a switch to on, use its `setChecked` configuration option.
+To set the state of a switch to on, set its `setChecked` configuration option
+to `True`.
 
-    Switch.switch
-        (Switch.config
-            |> Switch.setChecked True
-        )
+    Switch.switch (Switch.config |> Switch.setChecked True)
 
 
 # Disabled Switch
 
-To disable a switch, use its `setDisabled` configuration option. Disabled
-switches cannot be interacted with and have no visual interaction effect.
+To disable a switch, set its `setDisabled` configuration option to `True`.
 
-    Switch.switch
-        (Switch.config
-            |> Switch.setDisabled True
-        )
+Disabled switches cannot be interacted with and have no visual interaction
+effect.
+
+    Switch.switch (Switch.config |> Switch.setDisabled True)
 
 -}
 
@@ -118,14 +115,18 @@ config =
         }
 
 
-{-| Mark a switch as on
+{-| Specify whether a switch is checked
 -}
 setChecked : Bool -> Config msg -> Config msg
 setChecked checked (Config config_) =
     Config { config_ | checked = checked }
 
 
-{-| Make a switch disabled
+{-| Specify whether a switch is disabled
+
+Disabled switches cannot be interacted with and have no visual interaction
+effect.
+
 -}
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =

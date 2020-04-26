@@ -10,6 +10,9 @@ module Material.Chip.Input exposing
 {-| Chips are compact elements that allow users to enter information, select a
 choice, filter content, or trigger an action.
 
+Input chips are a variant of chips which enable user input by converting text
+into chips.
+
 
 # Table of Contents
 
@@ -57,9 +60,6 @@ choice, filter content, or trigger an action.
 
 # Input Chips
 
-Input chips are a variant of chips which enable user input by converting text
-into chips.
-
 @docs set, chip, Chip
 
 -}
@@ -82,7 +82,7 @@ set additionalAttributes chips =
         (List.map (\(Chip html) -> html) chips)
 
 
-{-| Configuration of a input chip
+{-| Configuration of an input chip
 -}
 type Config msg
     = Config
@@ -93,7 +93,7 @@ type Config msg
         }
 
 
-{-| Default configuration of a input chip
+{-| Default configuration of an input chip
 -}
 config : Config msg
 config =
@@ -105,7 +105,7 @@ config =
         }
 
 
-{-| Set a chip's icon
+{-| Specify whether a chip displays an icon
 -}
 setIcon : String -> Config msg -> Config msg
 setIcon icon (Config config_) =

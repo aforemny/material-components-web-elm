@@ -76,24 +76,20 @@ determinate or indeterminate activities.
 
 # Closed Linear Progress
 
-If you want to hide the linear progress indicator, use its `setClosed`
-configuration option.
+If you want to hide the linear progress indicator, set its `setClosed`
+configuration option to `True`.
 
     LinearProgress.indeterminate
-        (LinearProgress.config
-            |> LinearProgress.setClosed True
-        )
+        (LinearProgress.config |> LinearProgress.setClosed True)
 
 
 # Reverse Linear Progress
 
-If you want to reverse the direction of the linear progress indicator, use its
-`setReverse` configuration option.
+If you want to reverse the direction of the linear progress indicator, set its
+`setReverse` configuration option to `True`.
 
     LinearProgress.indeterminate
-        (LinearProgress.config
-            |> LinearProgress.reverse True
-        )
+        (LinearProgress.config |> LinearProgress.reverse True)
 
 -}
 
@@ -129,14 +125,14 @@ config =
         }
 
 
-{-| Hide a linear progress indicator
+{-| Specify whether a linear progress indicator should be hidden
 -}
 setClosed : Bool -> Config msg -> Config msg
 setClosed closed (Config config_) =
     Config { config_ | closed = closed }
 
 
-{-| Reverse the direction of a linear progress indicator
+{-| Specify whether the direction of a linear progress indicator should be reversed
 -}
 setReverse : Bool -> Config msg -> Config msg
 setReverse reverse (Config config_) =

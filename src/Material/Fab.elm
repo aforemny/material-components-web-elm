@@ -9,6 +9,10 @@ module Material.Fab exposing
 
 {-| A floating action button represents the primary action in an application.
 
+A floating action button only contains an icon to indicate its action. For a
+floating action button that may contain text, refer to the [extended floating
+action button](Material-Fab-Extended).
+
 
 # Table of Contents
 
@@ -34,10 +38,7 @@ module Material.Fab exposing
 Developers are required to manually position the floating action button within
 their page layout, for instance by setting a fixed position via CSS.
 
-A floating action button only contains an icon to indicate its action. For a
-floating action button that may contain text, refer to the [extended floating
-action button](#extended-fab) below.
-
+    import Html.Attributes exposing (style)
     import Material.Fab as Fab
 
     type Msg
@@ -47,6 +48,11 @@ action button](#extended-fab) below.
         Fab.fab
             (Fab.config
                 |> Fab.setOnClick FabClicked
+                |> Fab.setAttributes
+                    [ style "position" "fixed"
+                    , style "bottom" "2rem"
+                    , style "right" "2rem"
+                    ]
             )
             "favorite"
 
@@ -71,26 +77,18 @@ action button](#extended-fab) below.
 
 # Mini FAB
 
-If you want the floating action button to appear in smaller size, use its
-`setMini` configuration option.
+If you want the floating action button to appear in smaller size, set its
+`setMini` configuration option to `True`.
 
-    Fab.fab
-        (Fab.config
-            |> setMini True
-        )
-        "favorite"
+    Fab.fab (Fab.config |> setMini True) "favorite"
 
 
 # Exited FAB
 
-If you want the floating action button to transition off the screen, use its
-`setExited` configuration option.
+If you want the floating action button to transition off the screen, set its
+`setExited` configuration option to `True`.
 
-    Fab.fab
-        (Fab.config
-            |> setExited True
-        )
-        "favorite"
+    Fab.fab (Fab.config |> setExited True) "favorite"
 
 -}
 
@@ -122,14 +120,14 @@ config =
         }
 
 
-{-| Make a floating action button smaller
+{-| Specify whether the floating actions button should be smaller than normally
 -}
 setMini : Bool -> Config msg -> Config msg
 setMini mini (Config config_) =
     Config { config_ | mini = mini }
 
 
-{-| Make a floating action button transition off the screen
+{-| Specify whether a floating action button should transition off the screen
 -}
 setExited : Bool -> Config msg -> Config msg
 setExited exited (Config config_) =

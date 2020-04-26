@@ -40,7 +40,8 @@ be used. It should be visible either persistently or only on focus.
                 (TextField.config
                     |> TextField.setLabel "Your name"
                 )
-            , HelperText.helperText HelperText.config "Please fill this"
+            , HelperText.helperText HelperText.config
+                "Please fill this"
             ]
 
 
@@ -66,22 +67,20 @@ line.
 
 # Persistent Helper Text
 
-A text field's helper text may show unconditionally by using its
-`setPersistent` configuration option. By default a text field's helper text
-only shows when the text field has focus.
+A text field's helper text may show unconditionally by setting its
+`setPersistent` configuration option to `True`. By default a text field's
+helper text only shows when the text field has focus.
 
 
 # Helper Text with Character Counter
 
-To have a text field or text area display a character counter, set specify its
+To have a text field or text area display a character counter, set its
 `setMaxLength` configuration option, and also add a `characterCounter` as a
 child of `helperLine`.
 
-    [ textField
-        { textFieldConfig
-            | maxLength = Just 18
-        }
-    , helperLine [] [ characterCounter [] ]
+    [ TextField.textField
+        (TextField.config |> TextField.setMaxLength (Just 18))
+    , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]
 
 @docs helperLine, characterCounter
@@ -111,7 +110,11 @@ config =
         }
 
 
-{-| Make a helper text persistent
+{-| Specify whether a helper text should be persistent
+
+Persistent helper texts always display regardless of whether the input has
+focus or not.
+
 -}
 setPersistent : Bool -> Config msg -> Config msg
 setPersistent persistent (Config config_) =
@@ -127,7 +130,7 @@ setAttributes additionalAttributes (Config config_) =
 
 {-| Helper text view function
 
-The helper text is expected to be a direct child of the text line.
+The helper text is expected to be a direct child of the helper line.
 
 -}
 helperText : Config msg -> String -> Html msg
@@ -145,8 +148,8 @@ helperText ((Config { additionalAttributes }) as config_) string =
 
 {-| Helper text line view function
 
-The text line is expected to be the wrapping element of the helper text. It is
-expected to be a direct sibling of the text field that it belongs to.
+The helper line is expected to be the wrapping element of the helper text. It
+is expected to be a direct sibling of the text field that it belongs to.
 
 -}
 helperLine : List (Html.Attribute msg) -> List (Html msg) -> Html msg

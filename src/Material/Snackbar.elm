@@ -16,8 +16,8 @@ module Material.Snackbar exposing
     , setTimeoutMs
     )
 
-{-| Snackbars provide brief messages about app processes at the bottom of the
-screen.
+{-| Snackbars provide brief messages about the application's processes at the
+bottom of the screen.
 
 
 # Table of Contents
@@ -108,9 +108,11 @@ Then from your application's update function, call `update` to handle
             SnackbarMsg snackbarMsg ->
                 Snackbar.update SnackbarMsg snackbarMsg model
                     |> Tuple.mapFirst
-                        (\newQueue -> { model | queue = newQueue })
+                        (\newQueue ->
+                            { model | queue = newQueue }
+                        )
 
-Now you are ready to call `addMessage` from your application update function.
+Now you are ready to call `addMessage` from your application's update function.
 
 @docs Queue, initialQueue, Msg, update
 
@@ -134,11 +136,11 @@ Note that `addMessage` takes `SnackbarMsg` as first parameter.
 
 # Messages
 
-At the minimum, a message contains only a label. To specify the label, set the
-`label` configuration field to a `String`.
+At the minimum, a message contains only a label. To specify the label, specify
+it using the `setLabel` configuration option.
 
     Snackbar.message
-        |> Snackbar.addLabel "Something happened"
+        |> Snackbar.setLabel "Something happened"
 
 @docs message, Message
 
@@ -155,8 +157,8 @@ At the minimum, a message contains only a label. To specify the label, set the
 ## Message with action button
 
 Messages may contain an action button that the user can click. To display an
-action button, set the message's `actionButton` configuration field to a
-`String`, and handle the event in `onActionButtonClick`.
+action button, set the message's `setActionButton` configuration option to a
+string, and handle the event in `onActionButtonClick`.
 
     Snackbar.message
         |> Snackbar.setLabel "Something happened"
@@ -167,8 +169,8 @@ action button, set the message's `actionButton` configuration field to a
 ## Message with action icon
 
 Messages may contain an action icon that the user can click. To display an
-action icon, set the message's `actionIcon` configuration field to a
-`String`, and handle the event in `onActionIconClick`.
+action icon, set the message's `setActionIcon` configuration option to a string
+representing a Material Icon, and handle the event in `onActionIconClick`.
 
     Snackbar.message
         |> Snackbar.setLabel "Something happened"
@@ -179,8 +181,8 @@ action icon, set the message's `actionIcon` configuration field to a
 ## Stacked messages
 
 Messages with a long label and action button should display the action button
-below the label. To archieve this, set the message's `stacked` configuration
-field to `True`.
+below the label. To archieve this, set the message's `setStacked` configuration
+option to `True`.
 
     Snackbar.message
         |> Snackbar.setLabel "Something happened"
@@ -192,7 +194,7 @@ field to `True`.
 
 Messages are by default centered within the viewport. On larger screens, they
 can optionally be displyed on the _leading_ edge of the screen. To display a
-message as leading, set its `leading` configuration field to `True`.
+message as leading, set its `setLeading` configuration option to `True`.
 
     Snackbar.message
         |> Snackbar.setLabel "Something happened"
@@ -201,8 +203,9 @@ message as leading, set its `leading` configuration field to `True`.
 
 ## Custom timeout
 
-To set a custom timeout for a message, set its `timeoutMs` configuration field
-to a `Float`, representing the on-screen time in milliseconds.
+To set a custom timeout for a message, set its `setTimeoutMs` configuration
+option to a floating point value, representing the on-screen time in
+milliseconds.
 
     Snackbar.message
         |> Snackbar.setLabel "Something happened"
@@ -314,7 +317,8 @@ config =
         }
 
 
-{-| Set the snackbar to close the current message when the user presses escape
+{-| Specify whether the snackbar's messages should close when the user presses
+escape
 -}
 setCloseOnEscape : Bool -> Config msg -> Config msg
 setCloseOnEscape closeOnEscape (Config config_) =
@@ -366,14 +370,14 @@ type Message msg
         }
 
 
-{-| Set a message's label
+{-| Specify a message's label
 -}
 setLabel : String -> Message msg -> Message msg
 setLabel label (Message message_) =
     Message { message_ | label = label }
 
 
-{-| Set a message's action button
+{-| Specify a message's action button label
 -}
 setActionButton : Maybe String -> Message msg -> Message msg
 setActionButton actionButton (Message message_) =
@@ -387,7 +391,7 @@ setOnActionButtonClick onActionButtonClick (Message message_) =
     Message { message_ | onActionButtonClick = Just onActionButtonClick }
 
 
-{-| Set a message's action icon
+{-| Specify a message's action icon
 -}
 setActionIcon : Maybe String -> Message msg -> Message msg
 setActionIcon actionIcon (Message message_) =
@@ -401,21 +405,30 @@ setOnActionIconClick onActionIconClick (Message message_) =
     Message { message_ | onActionIconClick = Just onActionIconClick }
 
 
-{-| Set a message to be leading
+{-| Specify whether a message should display _leading_
+
+Messages are by default centered within the viewport. On larger screens, they
+can optionally be displyed on the _leading_ edge of the screen. To display a
+message as leading, set its `setLeading` configuration option to `True`.
+
 -}
 setLeading : Bool -> Message msg -> Message msg
 setLeading leading (Message message_) =
     Message { message_ | leading = leading }
 
 
-{-| Set a message to be stacked
+{-| Specify whether a message should be stacked
+
+Stacked messages display their label above their action button or icon. This
+works best for messages with a long label.
+
 -}
 setStacked : Bool -> Message msg -> Message msg
 setStacked stacked (Message message_) =
     Message { message_ | stacked = stacked }
 
 
-{-| Set a message's timeout in milliseconds
+{-| Specify a message's timeout in milliseconds
 -}
 setTimeoutMs : Int -> Message msg -> Message msg
 setTimeoutMs timeoutMs (Message message_) =

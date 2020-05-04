@@ -442,7 +442,7 @@ type Button msg
 
 {-| A card action button
 
-    cardActionButton buttonConfig "Visit"
+    Card.button Button.config "Visit"
 
 -}
 button : Button.Config msg -> String -> Button msg
@@ -468,7 +468,7 @@ type Icon msg
 
 {-| Card action icon
 
-    cardActionIcon iconButtonConfig "favorite"
+    Card.icon IconButton.config "favorite"
 
 -}
 icon : IconButton.Config msg -> String -> Icon msg

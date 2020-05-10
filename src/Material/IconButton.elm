@@ -80,7 +80,7 @@ configuration option.
 
     IconButton.iconButton
         (IconButton.config
-            |> IconButton.setLabel "Add to favorites"
+            |> IconButton.setLabel (Just "Add to favorites")
         )
         "favorite"
 
@@ -128,9 +128,9 @@ setDisabled disabled (Config config_) =
 
 {-| Specify an icon button's HTML5 arial-label attribute
 -}
-setLabel : String -> Config msg -> Config msg
+setLabel : Maybe String -> Config msg -> Config msg
 setLabel label (Config config_) =
-    Config { config_ | label = Just label }
+    Config { config_ | label = label }
 
 
 {-| Specify additional attributes

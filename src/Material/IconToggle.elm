@@ -111,7 +111,7 @@ configuration option.
 
     IconToggle.iconToggle
         (IconToggle.config
-            |> IconToggle.setLabel "Add to favorites"
+            |> IconToggle.setLabel (Just "Add to favorites")
         )
         { offIcon = "favorite_border"
         , onIcon = "favorite"
@@ -171,9 +171,9 @@ setDisabled disabled (Config config_) =
 
 {-| Specify the HTML5 aria-label attribute of an icon toggle
 -}
-setLabel : String -> Config msg -> Config msg
+setLabel : Maybe String -> Config msg -> Config msg
 setLabel label (Config config_) =
-    Config { config_ | label = Just label }
+    Config { config_ | label = label }
 
 
 {-| Specify additional attributes

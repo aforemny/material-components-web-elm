@@ -133,9 +133,9 @@ config =
 
 {-| Specify the data table's HTML5 aria-label attribute
 -}
-setLabel : String -> Config msg -> Config msg
+setLabel : Maybe String -> Config msg -> Config msg
 setLabel label (Config config_) =
-    Config { config_ | label = Just label }
+    Config { config_ | label = label }
 
 
 {-| Specify additional attributes

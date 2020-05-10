@@ -83,7 +83,7 @@ radio : Model -> String -> String -> String -> Html Msg
 radio model group index label =
     FormField.formField
         (FormField.config
-            |> FormField.setLabel label
+            |> FormField.setLabel (Just label)
             |> FormField.setFor (Just index)
             |> FormField.setOnClick (Set group index)
             |> FormField.setAttributes [ style "margin" "0 10px" ]

@@ -36,7 +36,7 @@ interacting with the label.
     main =
         FormField.formField
             (FormField.config
-                |> FormField.setLabel "My checkbox"
+                |> FormField.setLabel (Just "My checkbox")
             )
             [ Checkbox.checkbox Checkbox.config ]
 
@@ -79,7 +79,7 @@ import Html.Events
 -}
 type Config msg
     = Config
-        { label : String
+        { label : Maybe String
         , for : Maybe String
         , alignEnd : Bool
         , additionalAttributes : List (Html.Attribute msg)
@@ -89,7 +89,7 @@ type Config msg
 
 {-| Specify a form field's label
 -}
-setLabel : String -> Config msg -> Config msg
+setLabel : Maybe String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = label }
 
@@ -130,7 +130,7 @@ setOnClick onClick (Config config_) =
 config : Config msg
 config =
     Config
-        { label = ""
+        { label = Nothing
         , for = Nothing
         , alignEnd = False
         , additionalAttributes = []
@@ -184,4 +184,4 @@ labelElt ((Config { label }) as config_) =
             , clickHandler config_
             ]
         )
-        [ text label ]
+        [ text (Maybe.withDefault "" label) ]

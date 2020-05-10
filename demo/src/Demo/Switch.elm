@@ -67,7 +67,7 @@ heroSwitch model =
     in
     [ FormField.formField
         (FormField.config
-            |> FormField.setLabel "off/on"
+            |> FormField.setLabel (Just "off/on")
             |> FormField.setFor (Just id)
             |> FormField.setOnClick (Toggle id)
         )
@@ -88,7 +88,7 @@ demoSwitch model =
     in
     FormField.formField
         (FormField.config
-            |> FormField.setLabel "off/on"
+            |> FormField.setLabel (Just "off/on")
             |> FormField.setFor (Just id)
             |> FormField.setOnClick (Toggle id)
         )

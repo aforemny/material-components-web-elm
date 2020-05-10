@@ -59,7 +59,7 @@ heroSelects : Model -> Html Msg
 heroSelects model =
     Select.filled
         (Select.config
-            |> Select.setLabel "Fruit"
+            |> Select.setLabel (Just "Fruit")
             |> Select.setValue (Just model.value)
             |> Select.setOnChange SetValue
         )
@@ -72,7 +72,7 @@ filledSelects model =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Filled" ]
         , Select.filled
             (Select.config
-                |> Select.setLabel "Fruit"
+                |> Select.setLabel (Just "Fruit")
                 |> Select.setAttributes marginRight
             )
             items
@@ -83,7 +83,7 @@ outlinedSelects : Model -> Html msg
 outlinedSelects model =
     Select.outlined
         (Select.config
-            |> Select.setLabel "Fruit"
+            |> Select.setLabel (Just "Fruit")
             |> Select.setAttributes marginRight
         )
         items
@@ -93,7 +93,7 @@ shapedFilledSelects : Model -> Html msg
 shapedFilledSelects model =
     Select.filled
         (Select.config
-            |> Select.setLabel "Fruit"
+            |> Select.setLabel (Just "Fruit")
             |> Select.setAttributes
                 (style "border-radius" "17.92px 17.92px 0 0"
                     :: marginRight
@@ -106,7 +106,7 @@ shapedOutlinedSelects : Model -> Html msg
 shapedOutlinedSelects model =
     Select.outlined
         (Select.config
-            |> Select.setLabel "Fruit"
+            |> Select.setLabel (Just "Fruit")
             |> Select.setAttributes
                 -- TODO:
                 -- [ style "border-radius" "28px"

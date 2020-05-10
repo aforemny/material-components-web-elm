@@ -140,7 +140,7 @@ import Material.Select.Option.Internal as SelectOption
 -}
 type Config msg
     = Config
-        { label : String
+        { label : Maybe String
         , value : Maybe String
         , disabled : Bool
         , required : Bool
@@ -155,7 +155,7 @@ type Config msg
 config : Config msg
 config =
     Config
-        { label = ""
+        { label = Nothing
         , value = Nothing
         , disabled = False
         , required = False
@@ -167,7 +167,7 @@ config =
 
 {-| Specify a select's label
 -}
-setLabel : String -> Config msg -> Config msg
+setLabel : Maybe String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = label }
 
@@ -377,7 +377,7 @@ floatingLabelElt (Config { label, value }) =
         , Html.Attributes.property "foucClassNames"
             (Encode.list Encode.string [ floatingLabelFloatAboveCs ])
         ]
-        [ text label ]
+        [ text (Maybe.withDefault "" label) ]
 
 
 lineRippleElt : Html msg
@@ -390,7 +390,8 @@ notchedOutlineElt (Config { label }) =
     Html.div [ class "mdc-notched-outline" ]
         [ Html.div [ class "mdc-notched-outline__leading" ] []
         , Html.div [ class "mdc-notched-outline__notch" ]
-            [ Html.label [ class "mdc-floating-label" ] [ text label ]
+            [ Html.label [ class "mdc-floating-label" ]
+                [ text (Maybe.withDefault "" label) ]
             ]
         , Html.div [ class "mdc-notched-outline__trailing" ] []
         ]

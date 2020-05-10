@@ -65,7 +65,7 @@ module Material.TextField exposing
         TextField.filled
             (TextField.config
                 |> TextField.setLabel "My text field"
-                |> TextField.setValue "hello world"
+                |> TextField.setValue (Just "hello world")
                 |> TextField.setOnInput ValueChanged
             )
 
@@ -226,7 +226,7 @@ type Config msg
     = Config
         { label : Maybe String
         , fullwidth : Bool
-        , value : String
+        , value : Maybe String
         , placeholder : Maybe String
         , disabled : Bool
         , required : Bool
@@ -234,7 +234,7 @@ type Config msg
         , minLength : Maybe Int
         , maxLength : Maybe Int
         , pattern : Maybe String
-        , type_ : String
+        , type_ : Maybe String
         , min : Maybe Int
         , max : Maybe Int
         , step : Maybe Int
@@ -259,7 +259,7 @@ config =
     Config
         { label = Nothing
         , fullwidth = False
-        , value = ""
+        , value = Nothing
         , placeholder = Nothing
         , disabled = False
         , required = False
@@ -267,7 +267,7 @@ config =
         , minLength = Nothing
         , maxLength = Nothing
         , pattern = Nothing
-        , type_ = "text"
+        , type_ = Nothing
         , min = Nothing
         , max = Nothing
         , step = Nothing
@@ -295,7 +295,7 @@ setFullwidth fullwidth (Config config_) =
 
 {-| Specify a text field's value
 -}
-setValue : String -> Config msg -> Config msg
+setValue : Maybe String -> Config msg -> Config msg
 setValue value (Config config_) =
     Config { config_ | value = value }
 
@@ -355,7 +355,7 @@ setPattern pattern (Config config_) =
 
 {-| Specify a text field's type
 -}
-setType : String -> Config msg -> Config msg
+setType : Maybe String -> Config msg -> Config msg
 setType type_ (Config config_) =
     Config { config_ | type_ = type_ }
 
@@ -602,7 +602,7 @@ stepProp (Config { step }) =
 
 valueProp : Config msg -> Maybe (Html.Attribute msg)
 valueProp (Config { value }) =
-    Just (Html.Attributes.property "value" (Encode.string value))
+    Maybe.map (Html.Attributes.property "value" << Encode.string) value
 
 
 placeholderAttr : Config msg -> Maybe (Html.Attribute msg)
@@ -673,7 +673,7 @@ patternProp (Config { pattern }) =
 
 typeAttr : Config msg -> Maybe (Html.Attribute msg)
 typeAttr (Config { type_ }) =
-    Just (Html.Attributes.type_ type_)
+    Maybe.map Html.Attributes.type_ type_
 
 
 ariaLabelAttr : Config msg -> Maybe (Html.Attribute msg)
@@ -702,7 +702,7 @@ labelElt (Config { label, value }) =
     case label of
         Just str ->
             Html.div
-                [ if value /= "" then
+                [ if Maybe.withDefault "" value /= "" then
                     class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
 
                   else

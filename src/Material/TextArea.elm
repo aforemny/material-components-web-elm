@@ -55,7 +55,7 @@ module Material.TextArea exposing
         TextArea.filled
             (TextArea.config
                 |> TextArea.setLabel "My text area"
-                |> TextArea.setValue "hello world"
+                |> TextArea.setValue (Just "hello world")
                 |> TextArea.setOnInput ValueChanged
                 |> TextArea.setRows (Just 4)
                 |> TextArea.setCols (Just 20)
@@ -171,7 +171,7 @@ type Config msg
     = Config
         { label : Maybe String
         , fullwidth : Bool
-        , value : String
+        , value : Maybe String
         , placeholder : Maybe String
         , rows : Maybe Int
         , cols : Maybe Int
@@ -193,7 +193,7 @@ config =
     Config
         { label = Nothing
         , fullwidth = False
-        , value = ""
+        , value = Nothing
         , placeholder = Nothing
         , rows = Nothing
         , cols = Nothing
@@ -224,7 +224,7 @@ setFullwidth fullwidth (Config config_) =
 
 {-| Specify a text area's value
 -}
-setValue : String -> Config msg -> Config msg
+setValue : Maybe String -> Config msg -> Config msg
 setValue value (Config config_) =
     Config { config_ | value = value }
 
@@ -427,7 +427,7 @@ maxLengthAttr (Config { maxLength }) =
 
 valueProp : Config msg -> Maybe (Html.Attribute msg)
 valueProp (Config { value }) =
-    Just (Html.Attributes.property "value" (Encode.string value))
+    Maybe.map (Html.Attributes.property "value" << Encode.string) value
 
 
 placeholderAttr : Config msg -> Maybe (Html.Attribute msg)
@@ -505,7 +505,7 @@ labelElt (Config { label, value }) =
     case label of
         Just str ->
             Html.div
-                [ if value /= "" then
+                [ if Maybe.withDefault "" value /= "" then
                     class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
 
                   else

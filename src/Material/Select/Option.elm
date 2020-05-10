@@ -42,17 +42,17 @@ about the container select, refer to [Material.Select](Material-Select).
         Select.filled
             (Select.config
                 |> Select.setLabel "Fruit"
-                |> Select.setValue ""
+                |> Select.setValue (Just "")
                 |> Select.setOnChange ValueChanged
             )
             [ SelectOption.selectOption
                 (SelectOption.config
-                    |> SelectOption.setValue ""
+                    |> SelectOption.setValue (Just "")
                 )
                 [ text "" ]
             , SelectOption.selectOption
                 (SelectOption.config
-                    |> SelectOption.setValue "Apple"
+                    |> SelectOption.setValue (Just "Apple")
                 )
                 [ text "Apple" ]
             ]
@@ -109,7 +109,7 @@ config : Config msg
 config =
     SelectOption.Config
         { disabled = False
-        , value = ""
+        , value = Nothing
         , additionalAttributes = []
         , nodes = []
         }
@@ -127,7 +127,7 @@ setDisabled disabled (SelectOption.Config config_) =
 
 {-| Specify a select option's label
 -}
-setValue : String -> Config msg -> Config msg
+setValue : Maybe String -> Config msg -> Config msg
 setValue value (SelectOption.Config config_) =
     SelectOption.Config { config_ | value = value }
 

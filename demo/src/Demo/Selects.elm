@@ -60,7 +60,7 @@ heroSelects model =
     Select.filled
         (Select.config
             |> Select.setLabel "Fruit"
-            |> Select.setValue model.value
+            |> Select.setValue (Just model.value)
             |> Select.setOnChange SetValue
         )
         items
@@ -123,7 +123,7 @@ items =
     List.map
         (\value ->
             SelectOption.selectOption
-                (SelectOption.config |> SelectOption.setValue value)
+                (SelectOption.config |> SelectOption.setValue (Just value))
                 [ text value ]
         )
         [ ""

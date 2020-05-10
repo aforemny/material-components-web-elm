@@ -52,15 +52,15 @@ about select options, refer to
         Select.filled
             (Select.config
                 |> Select.setLabel "Fruit"
-                |> Select.setValue ""
+                |> Select.setValue (Just "")
                 |> Select.setOnChange ValueChanged
             )
             [ SelectOption.selectOption
-                (SelectOption.config |> SelectOption.setValue "")
+                (SelectOption.config |> SelectOption.setValue (Just ""))
                 [ text "" ]
             , SelectOption.selectOption
                 (SelectOption.config
-                    |> SelectOption.setValue "Apple"
+                    |> SelectOption.setValue (Just "Apple")
                 )
                 [ text "Apple" ]
             ]
@@ -94,7 +94,7 @@ Instead of a filled select, you may choose a select with a outline by using the
 
     Select.outlined Select.config
         [ SelectOption.selectOption
-            (SelectOption.config |> SelectOption.setValue "")
+            (SelectOption.config |> SelectOption.setValue (Just ""))
             [ text "" ]
         ]
 
@@ -174,9 +174,9 @@ setLabel label (Config config_) =
 
 {-| Specify a select's value
 -}
-setValue : String -> Config msg -> Config msg
+setValue : Maybe String -> Config msg -> Config msg
 setValue value (Config config_) =
-    Config { config_ | value = Just value }
+    Config { config_ | value = value }
 
 
 {-| Specify a select to be disabled
@@ -323,28 +323,34 @@ nativeControlCs =
 selectOptionView : Config msg -> SelectOption msg -> Html msg
 selectOptionView topConfig (SelectOption.SelectOption ((SelectOption.Config { additionalAttributes, nodes }) as config_)) =
     Html.option
-        ([ selectedAttr topConfig config_
-         , disabledAttr config_
-         , optionValueAttr config_
-         ]
+        (List.filterMap identity
+            [ selectedAttr topConfig config_
+            , disabledAttr config_
+            , optionValueAttr config_
+            ]
             ++ additionalAttributes
         )
         nodes
 
 
-selectedAttr : Config msg -> SelectOption.Config msg -> Html.Attribute msg
+selectedAttr : Config msg -> SelectOption.Config msg -> Maybe (Html.Attribute msg)
 selectedAttr (Config topConfig) (SelectOption.Config config_) =
-    Html.Attributes.selected (Maybe.withDefault "" topConfig.value == config_.value)
+    Just
+        (Html.Attributes.selected
+            ((topConfig.value /= Nothing)
+                && (topConfig.value == config_.value)
+            )
+        )
 
 
-disabledAttr : SelectOption.Config msg -> Html.Attribute msg
+disabledAttr : SelectOption.Config msg -> Maybe (Html.Attribute msg)
 disabledAttr (SelectOption.Config { disabled }) =
-    Html.Attributes.disabled disabled
+    Just (Html.Attributes.disabled disabled)
 
 
-optionValueAttr : SelectOption.Config msg -> Html.Attribute msg
+optionValueAttr : SelectOption.Config msg -> Maybe (Html.Attribute msg)
 optionValueAttr (SelectOption.Config { value }) =
-    Html.Attributes.value value
+    Maybe.map Html.Attributes.value value
 
 
 changeHandler : Config msg -> Maybe (Html.Attribute msg)

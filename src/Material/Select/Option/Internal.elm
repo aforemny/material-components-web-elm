@@ -13,7 +13,7 @@ import Json.Encode as Encode
 type Config msg
     = Config
         { disabled : Bool
-        , value : String
+        , value : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , nodes : List (Html msg)
         }

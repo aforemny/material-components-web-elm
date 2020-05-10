@@ -165,7 +165,7 @@ A short top app bar can be configured to always appear closed.
 
 To make a top app bar taller than the default, you may use a prominent top app bar.
 
-    TopAppBar.prominentTopAppBar TopAppBar.config []
+    TopAppBar.prominent TopAppBar.config []
 
 @docs prominent
 

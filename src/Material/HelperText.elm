@@ -35,10 +35,10 @@ be used. It should be visible either persistently or only on focus.
     import Material.TextField as TextField
 
     main =
-        Html.div
-            [ TextField.textField
+        Html.div []
+            [ TextField.filled
                 (TextField.config
-                    |> TextField.setLabel "Your name"
+                    |> TextField.setLabel (Just "Your name")
                 )
             , HelperText.helperText HelperText.config
                 "Please fill this"
@@ -78,7 +78,7 @@ To have a text field or text area display a character counter, set its
 `setMaxLength` configuration option, and also add a `characterCounter` as a
 child of `helperLine`.
 
-    [ TextField.textField
+    [ TextField.filled
         (TextField.config |> TextField.setMaxLength (Just 18))
     , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]

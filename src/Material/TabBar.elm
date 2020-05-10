@@ -112,7 +112,7 @@ indicators to only span their tab's content, set the tab bar's
 `setIndicatorSpansContent` configuration option to `True`.
 
     TabBar.tabBar
-        (tabBarConfig |> TabBar.setIndicatorSpansContent True)
+        (TabBar.config |> TabBar.setIndicatorSpansContent True)
         []
 
 

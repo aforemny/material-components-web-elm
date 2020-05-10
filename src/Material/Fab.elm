@@ -42,7 +42,7 @@ their page layout, for instance by setting a fixed position via CSS.
     import Material.Fab as Fab
 
     type Msg
-        = Clicked
+        = FabClicked
 
     main =
         Fab.fab
@@ -80,7 +80,7 @@ their page layout, for instance by setting a fixed position via CSS.
 If you want the floating action button to appear in smaller size, set its
 `setMini` configuration option to `True`.
 
-    Fab.fab (Fab.config |> setMini True) "favorite"
+    Fab.fab (Fab.config |> Fab.setMini True) "favorite"
 
 
 # Exited FAB
@@ -88,7 +88,7 @@ If you want the floating action button to appear in smaller size, set its
 If you want the floating action button to transition off the screen, set its
 `setExited` configuration option to `True`.
 
-    Fab.fab (Fab.config |> setExited True) "favorite"
+    Fab.fab (Fab.config |> Fab.setExited True) "favorite"
 
 -}
 

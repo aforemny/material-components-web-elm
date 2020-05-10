@@ -89,7 +89,7 @@ If you want to reverse the direction of the linear progress indicator, set its
 `setReverse` configuration option to `True`.
 
     LinearProgress.indeterminate
-        (LinearProgress.config |> LinearProgress.reverse True)
+        (LinearProgress.config |> LinearProgress.setReverse True)
 
 -}
 

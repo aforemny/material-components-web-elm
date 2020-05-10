@@ -43,9 +43,9 @@ Note that checkboxes are usually used in conjunction with form fields. Refer to
         = Changed
 
     main =
-        checkbox
+        Checkbox.checkbox
             (Checkbox.config
-                |> Checkbox.setState Checkbox.Unchecked
+                |> Checkbox.setState (Just Checkbox.unchecked)
                 |> Checkbox.setOnChange Changed
             )
 

@@ -45,10 +45,14 @@ bottom of the screen.
     import Material.Snackbar as Snackbar
 
     type alias Model =
-        { queue : Snackbar.Queue }
+        { queue : Snackbar.Queue Msg }
+
+    initialModel : Model
+    initialModel =
+        { queue = Snackbar.initialQueue }
 
     type Msg
-        = SnackbarMsg Snackbar.Msg
+        = SnackbarMsg (Snackbar.Msg Msg)
 
     update : Msg -> Model -> ( Model, Cmd Msg )
     update msg model =
@@ -63,7 +67,9 @@ bottom of the screen.
                 ( { model | queue = newQueue }, cmd )
 
     main =
-        Snackbar.snackbar SnackbarMsg Snackbar.config model.queue
+        Snackbar.snackbar SnackbarMsg
+            Snackbar.config
+            initialModel.queue
 
 
 # Configuration
@@ -85,32 +91,33 @@ bottom of the screen.
 # Queue
 
 You will have to maintain a queue of snackbar messages inside your
-application's model. To do so, add a field `queue : Queue` and initialize it to
-`initialQueue`.
+application's model. To do so, add a field `queue : Queue msg` and initialize
+it to `initialQueue`.
+
+To add messages to the queue, you also have to tag `Snackbar.Msg`s within your
+application's `Msg` type.
 
     type alias Model =
-        { queue : Snackbar.Queue }
+        { queue : Snackbar.Queue Msg }
 
     initialModel =
         { queue = Snackbar.initialQueue }
 
-To add messages to the queue, you have to tag `Snackbar.Msg`s within your
-application's `Msg` type.
-
     type Msg
-        = SnackbarMsg Snackbar.Msg
+        = SnackbarMsg (Snackbar.Msg Msg)
 
 Then from your application's update function, call `update` to handle
 `Snackbar.Msg`. Note that the first argument to `update` is `SnackbarMsg`.
 
+    type Msg
+        = SnackbarMsg (Snackbar.Msg Msg)
+
     update msg model =
         case msg of
             SnackbarMsg snackbarMsg ->
-                Snackbar.update SnackbarMsg snackbarMsg model
+                Snackbar.update SnackbarMsg snackbarMsg model.queue
                     |> Tuple.mapFirst
-                        (\newQueue ->
-                            { model | queue = newQueue }
-                        )
+                        (\newQueue -> { model | queue = newQueue })
 
 Now you are ready to call `addMessage` from your application's update function.
 
@@ -121,15 +128,24 @@ Now you are ready to call `addMessage` from your application's update function.
 
 Note that `addMessage` takes `SnackbarMsg` as first parameter.
 
-    update : Msg -> ( Model, Cmd Msg )
+    type Msg
+        = SnackbarMsg (Snackbar.Msg Msg)
+        | SomethingHappened
+
     update msg model =
-        SomethingHappened ->
-            let
-                message =
-                  Snackbar.message
-                      |> Snackbar.setLabel "Something happened"
-            in
-            ( model, addMessage SnackbarMsg message )
+        case msg of
+            SomethingHappened ->
+                let
+                    message =
+                        Snackbar.message
+                            |> Snackbar.setLabel (Just "Something happened")
+                in
+                ( model, Snackbar.addMessage SnackbarMsg message )
+
+            SnackbarMsg snackbarMsg ->
+                Snackbar.update SnackbarMsg snackbarMsg model.queue
+                    |> Tuple.mapFirst
+                        (\newQueue -> { model | queue = newQueue })
 
 @docs addMessage
 
@@ -140,7 +156,7 @@ At the minimum, a message contains only a label. To specify the label, specify
 it using the `setLabel` configuration option.
 
     Snackbar.message
-        |> Snackbar.setLabel "Something happened"
+        |> Snackbar.setLabel (Just "Something happened")
 
 @docs message, Message
 
@@ -161,7 +177,7 @@ action button, set the message's `setActionButton` configuration option to a
 string, and handle the event in `onActionButtonClick`.
 
     Snackbar.message
-        |> Snackbar.setLabel "Something happened"
+        |> Snackbar.setLabel (Just "Something happened")
         |> Snackbar.setActionButton (Just "Take action")
         |> Snackbar.setOnActionButtonClick ActionButtonClicked
 
@@ -173,7 +189,7 @@ action icon, set the message's `setActionIcon` configuration option to a string
 representing a Material Icon, and handle the event in `onActionIconClick`.
 
     Snackbar.message
-        |> Snackbar.setLabel "Something happened"
+        |> Snackbar.setLabel (Just "Something happened")
         |> Snackbar.setActionIcon (Just "close")
         |> Snackbar.setOnActionIconClick Dismissed
 
@@ -185,7 +201,7 @@ below the label. To archieve this, set the message's `setStacked` configuration
 option to `True`.
 
     Snackbar.message
-        |> Snackbar.setLabel "Something happened"
+        |> Snackbar.setLabel (Just "Something happened")
         |> Snackbar.setActionButton (Just "Take action")
         |> Snackbar.setStacked True
 
@@ -197,8 +213,8 @@ can optionally be displyed on the _leading_ edge of the screen. To display a
 message as leading, set its `setLeading` configuration option to `True`.
 
     Snackbar.message
-        |> Snackbar.setLabel "Something happened"
-        |> Snackbar.setLeading
+        |> Snackbar.setLabel (Just "Something happened")
+        |> Snackbar.setLeading True
 
 
 ## Custom timeout
@@ -208,7 +224,7 @@ option to a floating point value, representing the on-screen time in
 milliseconds.
 
     Snackbar.message
-        |> Snackbar.setLabel "Something happened"
+        |> Snackbar.setLabel (Just "Something happened")
         |> Snackbar.setTimeoutMs 5000
 
 -}

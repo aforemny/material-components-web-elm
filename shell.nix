@@ -1,7 +1,12 @@
 { pkgs ? import <nixpkgs> {} }:
 with pkgs;
 mkShell {
-  buildInputs = [ elmPackages.elm nodejs chromium ];
+  buildInputs = [
+    chromium
+    elmPackages.elm
+    (ghc.withPackages(pkgs: [ pkgs.pandoc ]))
+    nodejs
+  ];
   shellHook = ''
     export PATH=./node_modules/.bin:$PATH
     export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true

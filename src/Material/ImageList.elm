@@ -95,7 +95,7 @@ labels to be positioned in a scrim overlaying each image, use the image list's
         )
         [ ImageListItem.imageListItem
             (ImageListItem.config
-                |> ImageListItem.setLabel "Photo"
+                |> ImageListItem.setLabel (Just "Photo")
             )
             "images/photos/3x2/1.jpg"
         ]

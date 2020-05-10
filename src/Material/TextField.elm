@@ -150,7 +150,7 @@ To mark a text field as an input for entering a passwort, use its `setType`
 configuration option to specify `"password"`.
 
     TextField.filled
-        (TextField.config |> TextField.setType "password")
+        (TextField.config |> TextField.setType (Just "password"))
 
 Other input types besides `"password"` may or may not be supported.
 
@@ -181,7 +181,7 @@ configuration option to specify a value of `Icon`.
     TextField.filled
         (TextField.config
             |> TextField.setLeadingIcon
-                (Just (TextField.icon Icon.config "wifi"))
+                (Just (TextField.icon [] "wifi"))
         )
 
 @docs Icon, icon
@@ -195,7 +195,7 @@ configuration option to specify a value of `Icon`.
     TextField.filled
         (TextField.config
             |> TextField.setTrailingIcon
-                (Just (TextField.icon Icon.config "clear"))
+                (Just (TextField.icon [] "clear"))
         )
 
 

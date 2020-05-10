@@ -162,7 +162,7 @@ to the standard buttons and icons, but they do share the same configuration.
     Card.actions
         { buttons =
             [ Card.button Button.config "View" ]
-        , actions =
+        , icons =
             [ Card.icon IconButton.config "favorite" ]
         }
 
@@ -427,7 +427,7 @@ actions { buttons, icons } =
 If a card's action is comprised of a single button, that button can be made
 full width by using `cardFullBleedActions`.
 
-    fullBleedActions
+    Card.fullBleedActions
         (Card.button Button.config "Visit")
 
 -}

@@ -51,7 +51,7 @@ about select options, refer to
     main =
         Select.filled
             (Select.config
-                |> Select.setLabel "Fruit"
+                |> Select.setLabel (Just "Fruit")
                 |> Select.setValue (Just "")
                 |> Select.setOnChange ValueChanged
             )

@@ -68,7 +68,7 @@ heroSlider model =
     in
     Slider.slider
         (Slider.config
-            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
+            |> Slider.setValue (Dict.get id model.sliders)
             |> Slider.setOnChange (Changed id)
         )
 
@@ -81,10 +81,10 @@ continuousSlider model =
     in
     Slider.slider
         (Slider.config
-            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
+            |> Slider.setValue (Dict.get id model.sliders)
             |> Slider.setOnChange (Changed id)
-            |> Slider.setMin 0
-            |> Slider.setMax 50
+            |> Slider.setMin (Just 0)
+            |> Slider.setMax (Just 50)
         )
 
 
@@ -96,12 +96,12 @@ discreteSlider model =
     in
     Slider.slider
         (Slider.config
-            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
+            |> Slider.setValue (Dict.get id model.sliders)
             |> Slider.setOnChange (Changed id)
             |> Slider.setDiscrete True
-            |> Slider.setMin 0
-            |> Slider.setMax 50
-            |> Slider.setStep 1
+            |> Slider.setMin (Just 0)
+            |> Slider.setMax (Just 50)
+            |> Slider.setStep (Just 1)
         )
 
 
@@ -113,11 +113,11 @@ discreteSliderWithTickMarks model =
     in
     Slider.slider
         (Slider.config
-            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
+            |> Slider.setValue (Dict.get id model.sliders)
             |> Slider.setOnChange (Changed id)
             |> Slider.setDiscrete True
-            |> Slider.setMin 0
-            |> Slider.setMax 50
-            |> Slider.setStep 1
+            |> Slider.setMin (Just 0)
+            |> Slider.setMax (Just 50)
+            |> Slider.setStep (Just 1)
             |> Slider.setDisplayMarkers True
         )

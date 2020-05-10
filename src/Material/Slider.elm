@@ -47,7 +47,7 @@ module Material.Slider exposing
     main =
         Slider.slider
             (Slider.config
-                |> Slider.setValue 50
+                |> Slider.setValue (Just 50)
                 |> Slider.setOnChange ValueChanged
             )
 
@@ -82,8 +82,8 @@ options.
 
     Slider.slider
         (Slider.config
-            |> Slider.setMin 0
-            |> Slider.setMax 100
+            |> Slider.setMin (Just 0)
+            |> Slider.setMax (Just 100)
         )
 
 
@@ -92,7 +92,7 @@ options.
 To allow for quantization of the user input, use the slider's `setStep`
 configuration option.
 
-    Slider.slider (Slider.config |> Slider.setStep 4.5)
+    Slider.slider (Slider.config |> Slider.setStep (Just 4.5))
 
 
 # Disabled Slider
@@ -144,10 +144,10 @@ type Config msg
     = Config
         { discrete : Bool
         , displayMarkers : Bool
-        , min : Float
-        , max : Float
-        , step : Float
-        , value : Float
+        , min : Maybe Float
+        , max : Maybe Float
+        , step : Maybe Float
+        , value : Maybe Float
         , disabled : Bool
         , additionalAttributes : List (Html.Attribute msg)
         , onChange : Maybe (Float -> msg)
@@ -161,10 +161,10 @@ config =
     Config
         { discrete = False
         , displayMarkers = False
-        , min = 0
-        , max = 100
-        , step = 0
-        , value = 0
+        , min = Nothing
+        , max = Nothing
+        , step = Nothing
+        , value = Nothing
         , disabled = False
         , additionalAttributes = []
         , onChange = Nothing
@@ -194,30 +194,30 @@ setDisplayMarkers displayMarkers (Config config_) =
     Config { config_ | displayMarkers = displayMarkers }
 
 
-{-| Specify a slider's minimum value (default: 0)
+{-| Specify a slider's minimum value
 -}
-setMin : Float -> Config msg -> Config msg
+setMin : Maybe Float -> Config msg -> Config msg
 setMin min (Config config_) =
     Config { config_ | min = min }
 
 
-{-| Specify a slider's maximum value (default: 100)
+{-| Specify a slider's maximum value
 -}
-setMax : Float -> Config msg -> Config msg
+setMax : Maybe Float -> Config msg -> Config msg
 setMax max (Config config_) =
     Config { config_ | max = max }
 
 
-{-| Specify a slider's step value (default: 0, ie. continuous)
+{-| Specify a slider's step value
 -}
-setStep : Float -> Config msg -> Config msg
+setStep : Maybe Float -> Config msg -> Config msg
 setStep step (Config config_) =
     Config { config_ | step = step }
 
 
-{-| Specify a slider's value (default: 0)
+{-| Specify a slider's value
 -}
-setValue : Float -> Config msg -> Config msg
+setValue : Maybe Float -> Config msg -> Config msg
 setValue value (Config config_) =
     Config { config_ | value = value }
 
@@ -316,22 +316,22 @@ sliderRoleAttr =
 
 valueProp : Config msg -> Maybe (Html.Attribute msg)
 valueProp (Config { value }) =
-    Just (Html.Attributes.property "value" (Encode.float value))
+    Maybe.map (Html.Attributes.property "value" << Encode.float) value
 
 
 minProp : Config msg -> Maybe (Html.Attribute msg)
 minProp (Config { min }) =
-    Just (Html.Attributes.property "min" (Encode.float min))
+    Maybe.map (Html.Attributes.property "min" << Encode.float) min
 
 
 maxProp : Config msg -> Maybe (Html.Attribute msg)
 maxProp (Config { max }) =
-    Just (Html.Attributes.property "max" (Encode.float max))
+    Maybe.map (Html.Attributes.property "max" << Encode.float) max
 
 
 stepProp : Config msg -> Maybe (Html.Attribute msg)
 stepProp (Config { step }) =
-    Just (Html.Attributes.property "step" (Encode.float step))
+    Maybe.map (Html.Attributes.property "step" << Encode.float) step
 
 
 disabledProp : Config msg -> Maybe (Html.Attribute msg)
@@ -341,17 +341,17 @@ disabledProp (Config { disabled }) =
 
 ariaValueMinAttr : Config msg -> Maybe (Html.Attribute msg)
 ariaValueMinAttr (Config { min }) =
-    Just (Html.Attributes.attribute "aria-valuemin" (String.fromFloat min))
+    Maybe.map (Html.Attributes.attribute "aria-valuemin" << String.fromFloat) min
 
 
 ariaValueMaxAttr : Config msg -> Maybe (Html.Attribute msg)
 ariaValueMaxAttr (Config { max }) =
-    Just (Html.Attributes.attribute "aria-valuemax" (String.fromFloat max))
+    Maybe.map (Html.Attributes.attribute "aria-valuemax" << String.fromFloat) max
 
 
 ariaValuenowAttr : Config msg -> Maybe (Html.Attribute msg)
 ariaValuenowAttr (Config { value }) =
-    Just (Html.Attributes.attribute "aria-valuenow" (String.fromFloat value))
+    Maybe.map (Html.Attributes.attribute "aria-valuenow" << String.fromFloat) value
 
 
 changeHandler : Config msg -> Maybe (Html.Attribute msg)

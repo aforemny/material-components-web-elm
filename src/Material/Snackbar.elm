@@ -359,7 +359,7 @@ snackbar lift ((Config { additionalAttributes }) as config_) queue =
 -}
 type Message msg
     = Message
-        { label : String
+        { label : Maybe String
         , actionButton : Maybe String
         , onActionButtonClick : Maybe msg
         , actionIcon : Maybe String
@@ -372,7 +372,7 @@ type Message msg
 
 {-| Specify a message's label
 -}
-setLabel : String -> Message msg -> Message msg
+setLabel : Maybe String -> Message msg -> Message msg
 setLabel label (Message message_) =
     Message { message_ | label = label }
 
@@ -440,7 +440,7 @@ setTimeoutMs timeoutMs (Message message_) =
 message : Message msg
 message =
     Message
-        { label = ""
+        { label = Nothing
         , actionButton = Nothing
         , onActionButtonClick = Nothing
         , actionIcon = Nothing
@@ -519,7 +519,7 @@ surfaceElt message_ =
 labelElt : Message msg -> Html msg
 labelElt (Message { label }) =
     Html.div [ class "mdc-snackbar__label", ariaStatusRoleAttr, ariaPoliteLiveAttr ]
-        [ text label ]
+        [ text (Maybe.withDefault "" label) ]
 
 
 actionsElt : Message msg -> Html msg

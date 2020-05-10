@@ -33,7 +33,7 @@ update msg model =
     let
         baselineMessage =
             Snackbar.message
-                |> Snackbar.setLabel "Can't send photo. Retry in 5 seconds."
+                |> Snackbar.setLabel (Just "Can't send photo. Retry in 5 seconds.")
                 |> Snackbar.setActionButton (Just "Retry")
                 |> Snackbar.setOnActionButtonClick Click
                 |> Snackbar.setActionIcon (Just "close")
@@ -41,7 +41,7 @@ update msg model =
 
         leadingMessage =
             Snackbar.message
-                |> Snackbar.setLabel "Your photo has been archived."
+                |> Snackbar.setLabel (Just "Your photo has been archived.")
                 |> Snackbar.setLeading True
                 |> Snackbar.setActionButton (Just "Undo")
                 |> Snackbar.setOnActionButtonClick Click
@@ -51,7 +51,7 @@ update msg model =
         stackedMessage =
             Snackbar.message
                 |> Snackbar.setLabel
-                    "This item already has the label \"travel\". You can add a new label."
+                    (Just "This item already has the label \"travel\". You can add a new label.")
                 |> Snackbar.setStacked True
                 |> Snackbar.setActionButton (Just "Add a new label")
                 |> Snackbar.setOnActionButtonClick Click

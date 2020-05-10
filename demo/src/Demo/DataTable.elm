@@ -136,7 +136,7 @@ dataTableWithRowSelection model =
             [ DataTable.row []
                 [ DataTable.checkboxCell []
                     (Checkbox.config
-                        |> Checkbox.setState state
+                        |> Checkbox.setState (Just state)
                         |> Checkbox.setOnChange onChange
                     )
                 , DataTable.cell [] [ text desert ]
@@ -157,11 +157,13 @@ dataTableWithRowSelection model =
                 [ DataTable.checkboxCell []
                     (Checkbox.config
                         |> Checkbox.setState
-                            (if selected then
-                                Checkbox.checked
+                            (Just
+                                (if selected then
+                                    Checkbox.checked
 
-                             else
-                                Checkbox.unchecked
+                                 else
+                                    Checkbox.unchecked
+                                )
                             )
                         |> Checkbox.setOnChange onChange
                     )

@@ -86,7 +86,7 @@ checkbox index model attributes =
     in
     Checkbox.checkbox
         (Checkbox.config
-            |> Checkbox.setState state
+            |> Checkbox.setState (Just state)
             |> Checkbox.setOnChange (Changed index)
             |> Checkbox.setAttributes attributes
         )

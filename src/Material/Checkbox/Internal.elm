@@ -5,7 +5,7 @@ import Html
 
 type Config msg
     = Config
-        { state : State
+        { state : Maybe State
         , disabled : Bool
         , additionalAttributes : List (Html.Attribute msg)
         , onChange : Maybe msg

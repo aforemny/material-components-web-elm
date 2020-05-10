@@ -283,11 +283,13 @@ listWithTrailingCheckbox model =
                         (Checkbox.config
                             |> Checkbox.setOnChange (ToggleCheckbox label)
                             |> Checkbox.setState
-                                (if Set.member label model.checkboxes then
-                                    Checkbox.checked
+                                (Just
+                                    (if Set.member label model.checkboxes then
+                                        Checkbox.checked
 
-                                 else
-                                    Checkbox.unchecked
+                                     else
+                                        Checkbox.unchecked
+                                    )
                                 )
                         )
                     ]

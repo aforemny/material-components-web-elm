@@ -73,7 +73,7 @@ Note that checkboxes are usually used in conjunction with form fields. Refer to
 To set the state of a checkbox, use its `setState` configuration option.
 
     Checkbox.checkbox
-        (Checkbox.config |> Checkbox.setState Checkbox.checked)
+        (Checkbox.config |> Checkbox.setState (Just Checkbox.checked))
 
 @docs checked, unchecked
 
@@ -84,7 +84,7 @@ To set the state of a checkbox, use its `setState` configuration option.
 
     Checkbox.checkbox
         (Checkbox.config
-            |> Checkbox.setState Checkbox.indeterminate
+            |> Checkbox.setState (Just Checkbox.indeterminate)
         )
 
 @docs indeterminate
@@ -121,7 +121,7 @@ type alias Config msg =
 config : Config msg
 config =
     Config
-        { state = Unchecked
+        { state = Nothing
         , disabled = False
         , additionalAttributes = []
         , onChange = Nothing
@@ -133,7 +133,7 @@ config =
 A checkbox may be in `checked`, `unchecked` or `indeterminate` state.
 
 -}
-setState : State -> Config msg -> Config msg
+setState : Maybe State -> Config msg -> Config msg
 setState state (Config config_) =
     Config { config_ | state = state }
 
@@ -215,12 +215,12 @@ rootCs =
 
 checkedProp : Config msg -> Maybe (Html.Attribute msg)
 checkedProp (Config { state }) =
-    Just (Html.Attributes.property "checked" (Encode.bool (state == Checked)))
+    Just (Html.Attributes.property "checked" (Encode.bool (state == Just Checked)))
 
 
 indeterminateProp : Config msg -> Maybe (Html.Attribute msg)
 indeterminateProp (Config { state }) =
-    Just (Html.Attributes.property "indeterminate" (Encode.bool (state == Indeterminate)))
+    Just (Html.Attributes.property "indeterminate" (Encode.bool (state == Just Indeterminate)))
 
 
 disabledProp : Config msg -> Maybe (Html.Attribute msg)
@@ -239,8 +239,8 @@ changeHandler (Config { state, onChange }) =
                     |> Decode.andThen
                         (\isChecked ->
                             if
-                                (isChecked && state /= Checked)
-                                    || (not isChecked && state /= Unchecked)
+                                (isChecked && state /= Just Checked)
+                                    || (not isChecked && state /= Just Unchecked)
                             then
                                 Decode.succeed msg
 

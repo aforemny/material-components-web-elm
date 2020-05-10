@@ -70,11 +70,15 @@ heroTextFields : Model -> Html Msg
 heroTextFields model =
     Html.div heroTextFieldContainer
         [ Html.div textFieldContainerHero
-            [ TextField.filled (TextField.config |> TextField.setLabel "Standard") ]
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "Standard")
+                )
+            ]
         , Html.div textFieldContainerHero
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                 )
             ]
         ]
@@ -84,13 +88,16 @@ filledTextFields : Model -> Html msg
 filledTextFields model =
     Html.div textFieldRow
         [ Html.div textFieldContainer
-            [ TextField.filled (TextField.config |> TextField.setLabel "Standard")
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "Standard")
+                )
             , demoHelperText
             ]
         , Html.div textFieldContainer
             [ TextField.filled
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                     |> TextField.setLeadingIcon (Just (TextField.icon [] "event"))
                 )
             , demoHelperText
@@ -98,7 +105,7 @@ filledTextFields model =
         , Html.div textFieldContainer
             [ TextField.filled
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                     |> TextField.setTrailingIcon (Just (TextField.icon [] "delete"))
                 )
             , demoHelperText
@@ -112,7 +119,7 @@ shapedFilledTextFields model =
         [ Html.div textFieldContainer
             [ TextField.filled
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                     |> TextField.setAttributes [ style "border-radius" "16px 16px 0 0" ]
                 )
             , demoHelperText
@@ -120,7 +127,7 @@ shapedFilledTextFields model =
         , Html.div textFieldContainer
             [ TextField.filled
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                     |> TextField.setLeadingIcon (Just (TextField.icon [] "event"))
                     |> TextField.setAttributes [ style "border-radius" "16px 16px 0 0" ]
                 )
@@ -129,7 +136,7 @@ shapedFilledTextFields model =
         , Html.div textFieldContainer
             [ TextField.filled
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                     |> TextField.setTrailingIcon (Just (TextField.icon [] "delete"))
                     |> TextField.setAttributes [ style "border-radius" "16px 16px 0 0" ]
                 )
@@ -144,14 +151,14 @@ outlinedTextFields model =
         [ Html.div textFieldContainer
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                 )
             , demoHelperText
             ]
         , Html.div textFieldContainer
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                     |> TextField.setLeadingIcon (Just (TextField.icon [] "event"))
                 )
             , demoHelperText
@@ -159,7 +166,7 @@ outlinedTextFields model =
         , Html.div textFieldContainer
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                     |> TextField.setTrailingIcon (Just (TextField.icon [] "delete"))
                 )
             , demoHelperText
@@ -173,14 +180,14 @@ shapedOutlinedTextFields model =
         [ Html.div textFieldContainer
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                 )
             , demoHelperText
             ]
         , Html.div textFieldContainer
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                     |> TextField.setLeadingIcon (Just (TextField.icon [] "event"))
                 )
             , demoHelperText
@@ -188,7 +195,7 @@ shapedOutlinedTextFields model =
         , Html.div textFieldContainer
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setLabel "Standard"
+                    |> TextField.setLabel (Just "Standard")
                     |> TextField.setTrailingIcon (Just (TextField.icon [] "delete"))
                 )
             , demoHelperText
@@ -251,7 +258,7 @@ textareaTextField : Model -> Html msg
 textareaTextField model =
     Html.div textFieldContainer
         [ TextArea.outlined
-            (TextArea.config |> TextArea.setLabel "Standard")
+            (TextArea.config |> TextArea.setLabel (Just "Standard"))
         , demoHelperText
         ]
 
@@ -274,7 +281,7 @@ fullwidthTextareaTextField model =
         [ Html.div textFieldContainer
             [ TextArea.outlined
                 (TextArea.config
-                    |> TextArea.setLabel "Standard"
+                    |> TextArea.setLabel (Just "Standard")
                     |> TextArea.setFullwidth True
                 )
             , demoHelperText

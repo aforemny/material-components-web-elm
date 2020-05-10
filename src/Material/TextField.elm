@@ -64,7 +64,7 @@ module Material.TextField exposing
     main =
         TextField.filled
             (TextField.config
-                |> TextField.setLabel "My text field"
+                |> TextField.setLabel (Just "My text field")
                 |> TextField.setValue (Just "hello world")
                 |> TextField.setOnInput ValueChanged
             )
@@ -281,9 +281,9 @@ config =
 
 {-| Specify a text field's label
 -}
-setLabel : String -> Config msg -> Config msg
+setLabel : Maybe String -> Config msg -> Config msg
 setLabel label (Config config_) =
-    Config { config_ | label = Just label }
+    Config { config_ | label = label }
 
 
 {-| Specify a text field to be fullwidth

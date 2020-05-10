@@ -54,7 +54,7 @@ module Material.TextArea exposing
     main =
         TextArea.filled
             (TextArea.config
-                |> TextArea.setLabel "My text area"
+                |> TextArea.setLabel (Just "My text area")
                 |> TextArea.setValue (Just "hello world")
                 |> TextArea.setOnInput ValueChanged
                 |> TextArea.setRows (Just 4)
@@ -210,9 +210,9 @@ config =
 
 {-| Specify a text area's label
 -}
-setLabel : String -> Config msg -> Config msg
+setLabel : Maybe String -> Config msg -> Config msg
 setLabel label (Config config_) =
-    Config { config_ | label = Just label }
+    Config { config_ | label = label }
 
 
 {-| Specify a text area to be fullwidth

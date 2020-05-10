@@ -65,7 +65,9 @@ module Material.Card exposing
                         { buttons =
                             [ Card.button Button.config "Visit" ]
                         , icons =
-                            [ Card.icon IconButton.config "favorite" ]
+                            [ Card.icon IconButton.config
+                                "favorite"
+                            ]
                         }
             }
 

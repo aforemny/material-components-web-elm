@@ -94,7 +94,9 @@ Instead of a filled select, you may choose a select with a outline by using the
 
     Select.outlined Select.config
         [ SelectOption.selectOption
-            (SelectOption.config |> SelectOption.setValue (Just ""))
+            (SelectOption.config
+                |> SelectOption.setValue (Just "")
+            )
             [ text "" ]
         ]
 

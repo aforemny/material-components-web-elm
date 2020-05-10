@@ -73,7 +73,9 @@ Note that checkboxes are usually used in conjunction with form fields. Refer to
 To set the state of a checkbox, use its `setState` configuration option.
 
     Checkbox.checkbox
-        (Checkbox.config |> Checkbox.setState (Just Checkbox.checked))
+        (Checkbox.config
+            |> Checkbox.setState (Just Checkbox.checked)
+        )
 
 @docs checked, unchecked
 

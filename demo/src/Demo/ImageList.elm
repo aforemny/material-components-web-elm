@@ -99,7 +99,7 @@ standardItem url =
     --   [ style "padding-bottom" "66.66667%" ]
     ImageListItem.imageListItem
         (ImageListItem.config
-            |> ImageListItem.setLabel "Text label"
+            |> ImageListItem.setLabel (Just "Text label")
             |> ImageListItem.setAttributes
                 [ style "width" "calc(100% / 5 - 4.2px)"
                 , style "margin" "2px"
@@ -112,7 +112,7 @@ masonryItem : String -> ImageListItem msg
 masonryItem url =
     ImageListItem.imageListItem
         (ImageListItem.config
-            |> ImageListItem.setLabel "Text label"
+            |> ImageListItem.setLabel (Just "Text label")
             |> ImageListItem.setAttributes [ style "margin-bottom" "16px" ]
         )
         url

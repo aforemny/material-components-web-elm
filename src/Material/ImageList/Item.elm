@@ -96,9 +96,9 @@ config =
 
 {-| Specify an image list item's label
 -}
-setLabel : String -> Config msg -> Config msg
+setLabel : Maybe String -> Config msg -> Config msg
 setLabel label (Config config_) =
-    Config { config_ | label = Just label }
+    Config { config_ | label = label }
 
 
 {-| Specify whether an image list item is supposed to be a _link image list item_

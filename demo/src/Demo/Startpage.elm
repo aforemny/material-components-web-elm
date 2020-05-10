@@ -46,7 +46,7 @@ view =
                 (\{ url, title, icon } ->
                     ImageListItem.imageListItem
                         (ImageListItem.config
-                            |> ImageListItem.setLabel title
+                            |> ImageListItem.setLabel (Just title)
                             |> ImageListItem.setHref (Just (Url.toString url))
                             |> ImageListItem.setAttributes
                                 [ style "width" "calc(100% / 4 - 8.25px)"

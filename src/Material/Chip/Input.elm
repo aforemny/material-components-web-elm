@@ -86,7 +86,7 @@ set additionalAttributes chips =
 -}
 type Config msg
     = Config
-        { icon : String
+        { icon : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
         , onTrailingIconClick : Maybe msg
@@ -98,7 +98,7 @@ type Config msg
 config : Config msg
 config =
     Config
-        { icon = "close"
+        { icon = Nothing
         , additionalAttributes = []
         , onClick = Nothing
         , onTrailingIconClick = Nothing
@@ -107,7 +107,7 @@ config =
 
 {-| Specify whether a chip displays an icon
 -}
-setIcon : String -> Config msg -> Config msg
+setIcon : Maybe String -> Config msg -> Config msg
 setIcon icon (Config config_) =
     Config { config_ | icon = icon }
 
@@ -182,7 +182,7 @@ trailingIconElt : Config msg -> Html msg
 trailingIconElt (Config { icon }) =
     Html.i
         [ class "material-icons mdc-chip__icon mdc-chip__icon--trailing" ]
-        [ text icon ]
+        [ text (Maybe.withDefault "close" icon) ]
 
 
 chipSetRootCs : Html.Attribute msg

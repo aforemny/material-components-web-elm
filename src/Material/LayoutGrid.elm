@@ -137,12 +137,6 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 
 
-type Device
-    = Desktop
-    | Tablet
-    | Phone
-
-
 {-| Layout grid view function
 -}
 layoutGrid : List (Html.Attribute msg) -> List (Html msg) -> Html msg

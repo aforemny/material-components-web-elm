@@ -240,10 +240,11 @@ import Task
 
 {-| Queue of messages
 -}
-type alias Queue msg =
-    { messages : List (Message msg)
-    , messageId : MessageId
-    }
+type Queue msg
+    = Queue
+        { messages : List (Message msg)
+        , messageId : MessageId
+        }
 
 
 type alias MessageId =
@@ -254,15 +255,16 @@ type alias MessageId =
 -}
 initialQueue : Queue msg
 initialQueue =
-    { messages = []
-    , messageId = 0
-    }
+    Queue
+        { messages = []
+        , messageId = 0
+        }
 
 
 {-| Queue update function
 -}
 update : (Msg msg -> msg) -> Msg msg -> Queue msg -> ( Queue msg, Cmd msg )
-update lift msg queue =
+update lift msg (Queue queue) =
     case msg of
         AddMessage message_ ->
             let
@@ -273,10 +275,11 @@ update lift msg queue =
                     else
                         queue.messageId
             in
-            ( { queue
-                | messages = queue.messages ++ [ message_ ]
-                , messageId = nextMessageId
-              }
+            ( Queue
+                { queue
+                    | messages = queue.messages ++ [ message_ ]
+                    , messageId = nextMessageId
+                }
             , Cmd.none
             )
 
@@ -292,10 +295,11 @@ update lift msg queue =
                     else
                         queue.messageId
             in
-            ( { queue
-                | messages = messages
-                , messageId = nextMessageId
-              }
+            ( Queue
+                { queue
+                    | messages = messages
+                    , messageId = nextMessageId
+                }
             , Cmd.none
             )
 
@@ -351,10 +355,10 @@ setAttributes additionalAttributes (Config config_) =
 {-| Snackbar view function
 -}
 snackbar : (Msg msg -> msg) -> Config msg -> Queue msg -> Html msg
-snackbar lift ((Config { additionalAttributes }) as config_) queue =
+snackbar lift ((Config { additionalAttributes }) as config_) ((Queue { messages }) as queue) =
     let
         message_ =
-            Maybe.withDefault message (List.head queue.messages)
+            Maybe.withDefault message (List.head messages)
     in
     Html.node "mdc-snackbar"
         (List.filterMap identity
@@ -496,7 +500,7 @@ stackedCs (Message { stacked }) =
 
 
 messageIdProp : Queue msg -> Maybe (Html.Attribute msg)
-messageIdProp { messageId } =
+messageIdProp (Queue { messageId }) =
     Just (Html.Attributes.property "messageId" (Encode.int messageId))
 
 

@@ -234,7 +234,6 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Process
 import Task
 
 
@@ -356,10 +355,6 @@ setAttributes additionalAttributes (Config config_) =
 -}
 snackbar : (Msg msg -> msg) -> Config msg -> Queue msg -> Html msg
 snackbar lift ((Config { additionalAttributes }) as config_) ((Queue { messages }) as queue) =
-    let
-        message_ =
-            Maybe.withDefault message (List.head messages)
-    in
     Html.node "mdc-snackbar"
         (List.filterMap identity
             [ rootCs

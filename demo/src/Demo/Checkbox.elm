@@ -1,13 +1,11 @@
 module Demo.Checkbox exposing (Model, Msg(..), defaultModel, update, view)
 
-import Demo.CatalogPage as Page exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
+import Demo.CatalogPage exposing (CatalogPage)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
 import Material.Checkbox as Checkbox
 import Material.Typography as Typography
-import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =

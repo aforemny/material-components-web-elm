@@ -78,8 +78,6 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Svg
-import Svg.Attributes
 
 
 {-| Choice chip container

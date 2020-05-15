@@ -1,13 +1,9 @@
 module Demo.TextFields exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
-import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
-import Html.Events
 import Material.HelperText as HelperText
-import Material.Icon as Icon
 import Material.TextArea as TextArea
 import Material.TextField as TextField
 import Material.Typography as Typography

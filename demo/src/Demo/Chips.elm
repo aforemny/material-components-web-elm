@@ -1,12 +1,10 @@
 module Demo.Chips exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
 import Material.Chip.Choice as ChoiceChip
 import Material.Chip.Filter as FilterChip
-import Material.Chip.Input as InputChip
 import Material.Typography as Typography
 import Set exposing (Set)
 
@@ -206,17 +204,3 @@ shapedChips model =
             , "Office chairs"
             ]
         )
-
-
-inputChips : Model -> Html Msg
-inputChips model =
-    let
-        chip index =
-            InputChip.chip
-                (InputChip.config
-                    |> InputChip.setOnTrailingIconClick (InputChipClicked index)
-                    |> InputChip.setAttributes [ style "border-radius" "4px" ]
-                )
-                index
-    in
-    InputChip.set [] (List.map chip (Set.toList model.inputChips))

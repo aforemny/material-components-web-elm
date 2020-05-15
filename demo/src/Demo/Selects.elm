@@ -1,13 +1,9 @@
 module Demo.Selects exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
-import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
-import Html.Events
 import Material.List as List
-import Material.List.Item as ListItem
 import Material.Select as Select
 import Material.Select.Option as SelectOption exposing (SelectOption)
 import Material.Typography as Typography
@@ -149,8 +145,3 @@ selectRow =
 marginRight : List (Html.Attribute msg)
 marginRight =
     [ style "margin-right" "5rem" ]
-
-
-demoWidth : List (Html.Attribute msg)
-demoWidth =
-    [ style "width" "7rem" ]

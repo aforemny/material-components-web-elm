@@ -102,7 +102,7 @@ checkboxes cannot be interacted with and have no visual interaction effect.
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode

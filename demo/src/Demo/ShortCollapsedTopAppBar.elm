@@ -1,14 +1,8 @@
 module Demo.ShortCollapsedTopAppBar exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.TopAppBarPage exposing (TopAppBarPage)
-import Demo.Url as Url
-import Dict exposing (Dict)
-import Html exposing (Html, text)
-import Html.Attributes
-import Html.Events
 import Material.IconButton as IconButton
 import Material.TopAppBar as TopAppBar
-import Material.Typography as Typography
 
 
 type alias Model =

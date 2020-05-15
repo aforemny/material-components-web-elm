@@ -82,7 +82,7 @@ If you want to set the ripple effect to either primary or accent color, use its
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class, style)
 import Json.Encode as Encode
 

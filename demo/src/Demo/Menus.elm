@@ -1,11 +1,8 @@
 module Demo.Menus exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
-import Html.Events
-import Json.Decode as Decode
 import Material.Button as Button
 import Material.List as List
 import Material.List.Divider as ListDivider

@@ -152,7 +152,7 @@ grouped using `group` and labeled by `subheader`.
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
@@ -229,13 +229,6 @@ Two line lists feature list items with a primary and a secondary text line.
 setTwoLine : Bool -> Config msg -> Config msg
 setTwoLine twoLine (Config config_) =
     Config { config_ | twoLine = twoLine }
-
-
-{-| Specify whether a list should be vertical
--}
-setVertical : Bool -> Config msg -> Config msg
-setVertical vertical (Config config_) =
-    Config { config_ | vertical = vertical }
 
 
 {-| Specify whether a list should wrap focus

@@ -3,10 +3,7 @@ module Demo.CatalogPage exposing (CatalogPage, CatalogPageResources, view)
 import Demo.Url as Url exposing (Url)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
-import Html.Events
-import Json.Decode as Decode
 import Material.Drawer.Dismissible as DismissibleDrawer
-import Material.Icon as Icon
 import Material.IconButton as IconButton
 import Material.List as List
 import Material.List.Item as ListItem

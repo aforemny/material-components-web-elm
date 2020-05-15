@@ -3,7 +3,6 @@ module Demo.DrawerPage exposing (DrawerPage, drawerBody, view)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
 import Html.Events
-import Json.Decode as Decode
 import Material.Drawer.Dismissible as DismissibleDrawer
 import Material.Drawer.Permanent as PermanentDrawer
 import Material.Icon as Icon

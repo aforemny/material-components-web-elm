@@ -188,24 +188,9 @@ materialIconsCs =
     Just (class "material-icons")
 
 
-iconCs : Maybe (Html.Attribute msg)
-iconCs =
-    Just (class "mdc-icon-button__icon")
-
-
 tabIndexProp : Maybe (Html.Attribute msg)
 tabIndexProp =
     Just (Html.Attributes.tabindex 0)
-
-
-ariaHiddenAttr : Maybe (Html.Attribute msg)
-ariaHiddenAttr =
-    Just (Html.Attributes.attribute "aria-hidden" "true")
-
-
-ariaLabelAttr : Config msg -> Maybe (Html.Attribute msg)
-ariaLabelAttr (Config { label }) =
-    Maybe.map (Html.Attributes.attribute "aria-label") label
 
 
 clickHandler : Config msg -> Maybe (Html.Attribute msg)

@@ -7,17 +7,7 @@ module Demo.ModalDrawer exposing
     )
 
 import Demo.DrawerPage as DrawerPage exposing (DrawerPage)
-import Demo.PermanentDrawer
-import Html exposing (Html, text)
-import Html.Attributes
-import Html.Events
-import Json.Decode as Decode
 import Material.Drawer.Modal as ModalDrawer
-import Material.Icon as Icon
-import Material.Theme as Theme
-import Material.TopAppBar as TopAppBar
-import Material.Typography as Typography
-import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =

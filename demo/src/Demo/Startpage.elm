@@ -3,7 +3,6 @@ module Demo.Startpage exposing (view)
 import Demo.Url as Url exposing (Url(..))
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
-import Html.Events
 import Material.IconButton as IconButton
 import Material.ImageList as ImageList
 import Material.ImageList.Item as ImageListItem

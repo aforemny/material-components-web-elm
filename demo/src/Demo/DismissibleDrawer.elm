@@ -7,10 +7,7 @@ module Demo.DismissibleDrawer exposing
     )
 
 import Demo.DrawerPage as DrawerPage exposing (DrawerPage)
-import Html exposing (Html, text)
 import Material.Drawer.Dismissible as DismissibleDrawer
-import Material.Icon as Icon
-import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =

@@ -1,8 +1,7 @@
 module Demo.Helper.ResourceLink exposing (view)
 
-import Html exposing (Html, text)
+import Html exposing (text)
 import Html.Attributes exposing (class)
-import Material.List as List
 import Material.List.Item as ListItem exposing (ListItem)
 
 

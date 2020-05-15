@@ -181,7 +181,7 @@ configuration option.
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class)
 
 

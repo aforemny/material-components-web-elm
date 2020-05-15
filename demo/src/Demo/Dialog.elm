@@ -1,17 +1,14 @@
 module Demo.Dialog exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
-import Html.Events
 import Material.Button as Button
 import Material.Dialog as Dialog
 import Material.Icon as Icon
 import Material.List as List
 import Material.List.Item as ListItem
 import Material.Radio as Radio
-import Material.Typography as Typography
 
 
 type Dialog

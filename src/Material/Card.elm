@@ -180,9 +180,8 @@ when there is only a single button as card action.
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class, style)
-import Html.Events
 import Material.Button as Button
 import Material.Button.Internal
 import Material.IconButton as IconButton

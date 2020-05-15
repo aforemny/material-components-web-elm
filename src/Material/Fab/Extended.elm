@@ -256,11 +256,6 @@ exitedCs (Config { exited }) =
         Nothing
 
 
-iconElt : String -> Html msg
-iconElt iconName =
-    Html.span [ class "material-icons", class "mdc-fab__icon" ] [ text iconName ]
-
-
 clickHandler : Config msg -> Maybe (Html.Attribute msg)
 clickHandler (Config { onClick }) =
     Maybe.map Html.Events.onClick onClick

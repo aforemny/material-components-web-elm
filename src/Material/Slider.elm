@@ -125,7 +125,7 @@ Note that non-discrete sliders ignore this configuration option.
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class, style)
 import Html.Events
 import Json.Decode as Decode

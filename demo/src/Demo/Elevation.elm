@@ -1,11 +1,9 @@
 module Demo.Elevation exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 import Material.Elevation as Elevation
-import Material.Typography as Typography
 
 
 type alias Model =

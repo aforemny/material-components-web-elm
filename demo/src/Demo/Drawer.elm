@@ -7,7 +7,6 @@ module Demo.Drawer exposing
     )
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
 import Material.Drawer.Permanent as PermanentDrawer

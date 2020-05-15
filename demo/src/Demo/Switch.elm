@@ -1,15 +1,11 @@
 module Demo.Switch exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
 import Dict exposing (Dict)
 import Html exposing (Html, text)
-import Html.Attributes
-import Html.Events
 import Material.FormField as FormField
 import Material.Switch as Switch
 import Material.Typography as Typography
-import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =

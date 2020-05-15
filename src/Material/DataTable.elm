@@ -104,10 +104,8 @@ can look for patterns and insights.
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class)
-import Html.Events
-import Json.Encode as Encode
 import Material.Checkbox as Checkbox
 import Material.Checkbox.Internal
 

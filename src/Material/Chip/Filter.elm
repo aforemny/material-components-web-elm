@@ -192,22 +192,6 @@ textElt label =
     Html.div [ class "mdc-chip__text" ] [ text label ]
 
 
-leadingIconElt : Config msg -> Maybe (Html msg)
-leadingIconElt (Config { icon }) =
-    case icon of
-        Just iconName ->
-            Just
-                (Html.i
-                    [ class "material-icons mdc-chip__icon"
-                    , class "mdc-chip__icon--leading"
-                    ]
-                    [ text iconName ]
-                )
-
-        _ ->
-            Nothing
-
-
 filterLeadingIconElt : Config msg -> Maybe (Html msg)
 filterLeadingIconElt (Config { icon, selected }) =
     case icon of

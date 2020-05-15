@@ -133,7 +133,7 @@ grid as it might mean an over complicated user experience.
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class, style)
 
 

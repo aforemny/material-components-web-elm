@@ -4,11 +4,7 @@ module Material.Tab.Internal exposing
     , Tab(..)
     )
 
-import Html exposing (Html, text)
-import Html.Attributes exposing (class)
-import Html.Events
-import Json.Decode as Decode
-import Json.Encode as Encode
+import Html
 
 
 type Config msg

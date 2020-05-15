@@ -89,11 +89,7 @@ must be filled but is not initially filled.
 
 -}
 
-import Html exposing (Html, text)
-import Html.Attributes exposing (class)
-import Html.Events
-import Json.Decode as Decode
-import Json.Encode as Encode
+import Html exposing (Html)
 import Material.Select.Option.Internal as SelectOption
 
 

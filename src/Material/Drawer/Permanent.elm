@@ -79,11 +79,8 @@ header element.
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class)
-import Html.Events
-import Json.Decode as Decode
-import Json.Encode as Encode
 
 
 {-| Configuration of a permanent drawer

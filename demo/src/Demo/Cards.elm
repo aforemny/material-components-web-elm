@@ -1,7 +1,6 @@
 module Demo.Cards exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
 import Material.Button as Button
@@ -9,7 +8,6 @@ import Material.Card as Card
 import Material.IconButton as IconButton
 import Material.Theme as Theme
 import Material.Typography as Typography
-import Platform.Cmd exposing (Cmd, none)
 
 
 type alias Model =

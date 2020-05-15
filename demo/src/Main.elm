@@ -44,8 +44,6 @@ import Demo.TopAppBarPage as TopAppBarPage
 import Demo.Typography
 import Demo.Url
 import Html exposing (Html, text)
-import Html.Attributes
-import Material.TopAppBar as TopAppBar
 import Material.Typography as Typography
 import Platform.Cmd exposing (..)
 import Task
@@ -548,11 +546,6 @@ body model =
                     [ text "404" ]
                 , text requestedHash
                 ]
-
-
-urlOf : Model -> String
-urlOf model =
-    Demo.Url.toString model.url
 
 
 main : Program () Model Msg

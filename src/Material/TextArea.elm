@@ -399,22 +399,6 @@ validProp (Config { valid }) =
     Just (Html.Attributes.property "valid" (Encode.bool valid))
 
 
-minLengthProp : Config msg -> Maybe (Html.Attribute msg)
-minLengthProp (Config { minLength }) =
-    Just
-        (Html.Attributes.property "minLength"
-            (Encode.int (Maybe.withDefault -1 minLength))
-        )
-
-
-maxLengthProp : Config msg -> Maybe (Html.Attribute msg)
-maxLengthProp (Config { maxLength }) =
-    Just
-        (Html.Attributes.property "maxLength"
-            (Encode.int (Maybe.withDefault -1 maxLength))
-        )
-
-
 minLengthAttr : Config msg -> Maybe (Html.Attribute msg)
 minLengthAttr (Config { minLength }) =
     Maybe.map (Html.Attributes.attribute "minLength" << String.fromInt) minLength
@@ -526,11 +510,6 @@ noLabelCs (Config { label }) =
 
     else
         Nothing
-
-
-lineRippleElt : Html msg
-lineRippleElt =
-    Html.div [ class "mdc-line-ripple" ] []
 
 
 notchedOutlineElt : Config msg -> Html msg

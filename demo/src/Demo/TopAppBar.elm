@@ -2,10 +2,8 @@ module Demo.TopAppBar exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
 import Demo.Url as Url exposing (Url)
-import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
-import Html.Events
 import Material.IconButton as IconButton
 import Material.TopAppBar as TopAppBar
 import Material.Typography as Typography

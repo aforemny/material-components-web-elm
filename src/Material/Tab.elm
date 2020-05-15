@@ -85,11 +85,7 @@ To mark a tab as active, set its `setActive` configuration option to `True`.
 
 -}
 
-import Html exposing (Html, text)
-import Html.Attributes exposing (class)
-import Html.Events
-import Json.Decode as Decode
-import Json.Encode as Encode
+import Html
 import Material.Tab.Internal exposing (Config(..), Tab(..))
 
 

@@ -93,7 +93,7 @@ If you want to reverse the direction of the linear progress indicator, set its
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class, style)
 import Json.Encode as Encode
 

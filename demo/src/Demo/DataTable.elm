@@ -1,9 +1,7 @@
 module Demo.DataTable exposing (Model, Msg, defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
-import Material.Button as Button
 import Material.Checkbox as Checkbox
 import Material.DataTable as DataTable
 import Material.Typography as Typography

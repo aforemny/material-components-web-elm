@@ -4,11 +4,7 @@ module Material.List.Item.Internal exposing
     , Selection(..)
     )
 
-import Html exposing (Html, text)
-import Html.Attributes exposing (class)
-import Html.Events
-import Json.Decode as Decode
-import Json.Encode as Encode
+import Html exposing (Html)
 
 
 type Config msg

@@ -1,10 +1,7 @@
 module Demo.IconButton exposing (Model, Msg(..), defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
-import Html exposing (Html, text)
-import Html.Attributes
-import Html.Events
+import Html exposing (text)
 import Material.IconButton as IconButton
 import Material.IconToggle as IconToggle
 import Material.Typography as Typography

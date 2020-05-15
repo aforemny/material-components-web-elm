@@ -1,11 +1,8 @@
 module Demo.Lists exposing (Model, Msg, defaultModel, update, view)
 
 import Demo.CatalogPage exposing (CatalogPage)
-import Demo.Helper.ResourceLink as ResourceLink
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
-import Html.Events
-import Json.Decode as Decode
 import Material.Checkbox as Checkbox
 import Material.Icon as Icon
 import Material.List as List

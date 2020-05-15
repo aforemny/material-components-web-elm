@@ -71,8 +71,7 @@ yourself, preferably through SASS or through inline CSS.
 
 -}
 
-import Html exposing (Html, text)
-import Html.Attributes exposing (class)
+import Html
 import Material.ImageList.Item.Internal exposing (Config(..), ImageListItem(..))
 
 

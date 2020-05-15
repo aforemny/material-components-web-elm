@@ -89,7 +89,7 @@ header element.
 
 -}
 
-import Html exposing (Html, text)
+import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
@@ -200,11 +200,6 @@ rootCs =
 modalCs : Maybe (Html.Attribute msg)
 modalCs =
     Just (class "mdc-drawer--modal")
-
-
-dismissibleCs : Maybe (Html.Attribute msg)
-dismissibleCs =
-    Just (class "mdc-drawer--dismissible")
 
 
 openProp : Config msg -> Maybe (Html.Attribute msg)

@@ -1,0 +1,13 @@
+name: elm-review
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Elm-review library and demo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: cachix/install-nix-action@v6
+      - run: nix-shell --run "make do-review"
+        env:
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz

@@ -37,6 +37,11 @@ build-docs: src/**/*.elm
 	elm make --docs=docs.json
 
 
+do-review: node_modules
+	elm-review
+	(cd demo && ../node_modules/.bin/elm-review)
+
+
 commit-pages: build-pages
 	(cd gh-pages && git add . && git commit -m 'Update' && git push)
 
@@ -45,7 +50,7 @@ docs: node_modules
 	elm-doc-preview
 
 
-release: distclean build-pages build-examples build-docs
+release: distclean build-pages build-examples build-docs do-review
 
 
 node_modules:

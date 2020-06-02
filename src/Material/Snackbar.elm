@@ -355,6 +355,10 @@ setAttributes additionalAttributes (Config config_) =
 -}
 snackbar : (Msg msg -> msg) -> Config msg -> Queue msg -> Html msg
 snackbar lift ((Config { additionalAttributes }) as config_) ((Queue { messages }) as queue) =
+    let
+        message_ =
+            Maybe.withDefault message (List.head messages)
+    in
     Html.node "mdc-snackbar"
         (List.filterMap identity
             [ rootCs
@@ -367,7 +371,7 @@ snackbar lift ((Config { additionalAttributes }) as config_) ((Queue { messages 
             ]
             ++ additionalAttributes
         )
-        [ surfaceElt message ]
+        [ surfaceElt message_ ]
 
 
 {-| Snackbar message

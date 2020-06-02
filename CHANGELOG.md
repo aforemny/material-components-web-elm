@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/aforemny/material-components-web-elm/compare/3.0.0...3.0.1) (2020-06-02)
+
+
+### Bug Fixes
+
+* Snackbar is always empty. Close [#106](https://github.com/aforemny/material-components-web-elm/issues/106) ([6e50300](https://github.com/aforemny/material-components-web-elm/commit/6e50300a7cef8a5c7cd5e0953e17f4a2cc887ca2))
+
 ## 3.0.0 (2020-05-11)
 
 

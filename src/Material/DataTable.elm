@@ -237,7 +237,7 @@ bodyRow (Row { attributes, nodes }) =
 
 dataTableRowCs : Html.Attribute msg
 dataTableRowCs =
-    class "mdc-data-table__header-row"
+    class "mdc-data-table__row"
 
 
 headerCell : Cell msg -> Html msg

@@ -223,9 +223,12 @@ To set a custom timeout for a message, set its `setTimeoutMs` configuration
 option to a floating point value, representing the on-screen time in
 milliseconds.
 
+This value must be between 4 and 10 seconds, and it defaults to 5 seconds. You
+may specify an indefinite timeout by setting it to `Nothing`.
+
     Snackbar.message
         |> Snackbar.setLabel (Just "Something happened")
-        |> Snackbar.setTimeoutMs 5000
+        |> Snackbar.setTimeoutMs (Just 4000)
 
 -}
 
@@ -385,7 +388,7 @@ type Message msg
         , onActionIconClick : Maybe msg
         , leading : Bool
         , stacked : Bool
-        , timeoutMs : Int
+        , timeoutMs : Maybe Int
         }
 
 
@@ -449,7 +452,7 @@ setStacked stacked (Message message_) =
 
 {-| Specify a message's timeout in milliseconds
 -}
-setTimeoutMs : Int -> Message msg -> Message msg
+setTimeoutMs : Maybe Int -> Message msg -> Message msg
 setTimeoutMs timeoutMs (Message message_) =
     Message { message_ | timeoutMs = timeoutMs }
 
@@ -466,7 +469,7 @@ message =
         , onActionIconClick = Nothing
         , leading = False
         , stacked = False
-        , timeoutMs = 5000
+        , timeoutMs = Just 5000
         }
 
 
@@ -507,7 +510,10 @@ timeoutMsProp : Message msg -> Maybe (Html.Attribute msg)
 timeoutMsProp (Message { timeoutMs }) =
     let
         normalizedTimeoutMs =
-            clamp 4000 10000 timeoutMs
+            Maybe.withDefault indefiniteTimeout (Maybe.map (clamp 4000 10000) timeoutMs)
+
+        indefiniteTimeout =
+            -1
     in
     Just (Html.Attributes.property "timeoutMs" (Encode.int normalizedTimeoutMs))
 

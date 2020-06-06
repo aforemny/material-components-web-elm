@@ -87,7 +87,7 @@ import Json.Decode as Decode
 set : List (Html.Attribute msg) -> List (Chip msg) -> Html msg
 set additionalAttributes chips =
     Html.node "mdc-chip-set"
-        (chipSetRootCs :: inputCs :: additionalAttributes)
+        (chipSetCs :: chipSetInputCs :: gridRole :: additionalAttributes)
         (List.map (\(Chip html) -> html) chips)
 
 
@@ -177,27 +177,79 @@ chip ((Config { touch, additionalAttributes }) as config_) label =
             else
                 node
     in
-    wrapTouch <|
-        Chip <|
-            Html.node "mdc-chip"
-                (List.filterMap identity
-                    [ chipRootCs
-                    , chipTouchCs config_
-                    , clickHandler config_
-                    , trailingIconClickHandler config_
-                    ]
-                    ++ additionalAttributes
-                )
-                (List.filterMap identity
-                    [ textElt label
-                    , trailingIconElt config_
-                    , touchElt config_
-                    ]
-                )
+    Chip
+        << wrapTouch
+    <|
+        Html.node "mdc-chip"
+            (List.filterMap identity
+                [ chipCs
+                , chipTouchCs config_
+                , rowRole
+                , clickHandler config_
+                , trailingIconClickHandler config_
+                ]
+                ++ additionalAttributes
+            )
+            (List.filterMap identity
+                [ rippleElt
+                , leadingIconElt config_
+                , gridcellElt config_ label
+                , trailingIconElt config_
+                ]
+            )
 
 
-chipRootCs : Maybe (Html.Attribute msg)
-chipRootCs =
+rippleElt : Maybe (Html msg)
+rippleElt =
+    Just (Html.div [ class "mdc-chip__ripple" ] [])
+
+
+leadingIconElt : Config msg -> Maybe (Html msg)
+leadingIconElt (Config { icon }) =
+    Maybe.map
+        (\iconName ->
+            Html.i [ class "material-icons mdc-chip__icon mdc-chip__icon--leading" ]
+                [ text iconName ]
+        )
+        icon
+
+
+gridcellElt : Config msg -> String -> Maybe (Html msg)
+gridcellElt config_ label =
+    Just <|
+        Html.span [ gridcellRole ]
+            (List.filterMap identity
+                [ textElt label
+                , touchElt config_
+                ]
+            )
+
+
+textElt : String -> Maybe (Html msg)
+textElt label =
+    Just (Html.span [ class "mdc-chip__text", buttonRole ] [ text label ])
+
+
+touchElt : Config msg -> Maybe (Html msg)
+touchElt (Config { touch }) =
+    if touch then
+        Just (Html.div [ class "mdc-chip__touch" ] [])
+
+    else
+        Nothing
+
+
+trailingIconElt : Config msg -> Maybe (Html msg)
+trailingIconElt (Config { icon }) =
+    Just
+        (Html.i
+            [ class "material-icons mdc-chip__icon mdc-chip__icon--trailing" ]
+            [ text (Maybe.withDefault "close" icon) ]
+        )
+
+
+chipCs : Maybe (Html.Attribute msg)
+chipCs =
     Just (class "mdc-chip")
 
 
@@ -210,45 +262,42 @@ chipTouchCs (Config { touch }) =
         Nothing
 
 
+chipSetCs : Html.Attribute msg
+chipSetCs =
+    class "mdc-chip-set"
+
+
+chipSetInputCs : Html.Attribute msg
+chipSetInputCs =
+    class "mdc-chip-set--input"
+
+
+rowRole : Maybe (Html.Attribute msg)
+rowRole =
+    Just (Html.Attributes.attribute "role" "row")
+
+
+gridcellRole : Html.Attribute msg
+gridcellRole =
+    Html.Attributes.attribute "role" "gridcell"
+
+
+gridRole : Html.Attribute msg
+gridRole =
+    Html.Attributes.attribute "role" "grid"
+
+
+buttonRole : Html.Attribute msg
+buttonRole =
+    Html.Attributes.attribute "role" "button"
+
+
 clickHandler : Config msg -> Maybe (Html.Attribute msg)
 clickHandler (Config { onClick }) =
     Maybe.map (Html.Events.on "MDCChip:interaction" << Decode.succeed) onClick
-
-
-textElt : String -> Maybe (Html msg)
-textElt label =
-    Just (Html.div [ class "mdc-chip__text" ] [ text label ])
-
-
-trailingIconElt : Config msg -> Maybe (Html msg)
-trailingIconElt (Config { icon }) =
-    Just
-        (Html.i
-            [ class "material-icons mdc-chip__icon mdc-chip__icon--trailing" ]
-            [ text (Maybe.withDefault "close" icon) ]
-        )
 
 
 trailingIconClickHandler : Config msg -> Maybe (Html.Attribute msg)
 trailingIconClickHandler (Config { onTrailingIconClick }) =
     Maybe.map (Html.Events.on "MDCChip:trailingIconInteraction" << Decode.succeed)
         onTrailingIconClick
-
-
-touchElt : Config msg -> Maybe (Html msg)
-touchElt (Config { touch }) =
-    if touch then
-        Just (Html.div [ class "mdc-chip__touch" ] [])
-
-    else
-        Nothing
-
-
-chipSetRootCs : Html.Attribute msg
-chipSetRootCs =
-    class "mdc-chip-set"
-
-
-inputCs : Html.Attribute msg
-inputCs =
-    class "mdc-chip-set--input"

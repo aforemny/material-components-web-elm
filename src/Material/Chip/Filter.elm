@@ -102,7 +102,7 @@ import Svg.Attributes
 set : List (Html.Attribute msg) -> List (Chip msg) -> Html msg
 set additionalAttributes chips =
     Html.node "mdc-chip-set"
-        (chipSetRootCs :: filterCs :: additionalAttributes)
+        (chipSetCs :: chipSetFilterCs :: gridRole :: additionalAttributes)
         (List.map (\(Chip html) -> html) chips)
 
 
@@ -192,61 +192,31 @@ chip ((Config { touch, additionalAttributes }) as config_) label =
             else
                 node
     in
-    Chip <|
+    Chip
+        << wrapTouch
+    <|
         Html.node "mdc-chip"
             (List.filterMap identity
-                [ chipRootCs
+                [ chipCs
                 , chipTouchCs config_
+                , rowRole
                 , selectedProp config_
                 , clickHandler config_
                 ]
                 ++ additionalAttributes
             )
             (List.filterMap identity
-                [ filterLeadingIconElt config_
+                [ rippleElt
+                , filterLeadingIconElt config_
                 , checkmarkElt
-                , textElt label
-                , touchElt config_
+                , gridcellElt config_ label
                 ]
             )
 
 
-chipRootCs : Maybe (Html.Attribute msg)
-chipRootCs =
-    Just (class "mdc-chip")
-
-
-chipTouchCs : Config msg -> Maybe (Html.Attribute msg)
-chipTouchCs (Config { touch }) =
-    if touch then
-        Just (class "mdc-chip--touch")
-
-    else
-        Nothing
-
-
-selectedProp : Config msg -> Maybe (Html.Attribute msg)
-selectedProp (Config { selected }) =
-    Just (Html.Attributes.property "selected" (Encode.bool selected))
-
-
-clickHandler : Config msg -> Maybe (Html.Attribute msg)
-clickHandler (Config { onClick }) =
-    Maybe.map (Html.Events.on "MDCChip:interaction" << Decode.succeed) onClick
-
-
-textElt : String -> Maybe (Html msg)
-textElt label =
-    Just (Html.div [ class "mdc-chip__text" ] [ text label ])
-
-
-touchElt : Config msg -> Maybe (Html msg)
-touchElt (Config { touch }) =
-    if touch then
-        Just (Html.div [ class "mdc-chip__touch" ] [])
-
-    else
-        Nothing
+rippleElt : Maybe (Html msg)
+rippleElt =
+    Just (Html.div [ class "mdc-chip__ripple" ] [])
 
 
 filterLeadingIconElt : Config msg -> Maybe (Html msg)
@@ -289,11 +259,80 @@ checkmarkElt =
         )
 
 
-chipSetRootCs : Html.Attribute msg
-chipSetRootCs =
+gridcellElt : Config msg -> String -> Maybe (Html msg)
+gridcellElt config_ label =
+    Just <|
+        Html.span [ gridcellRole ]
+            (List.filterMap identity
+                [ textElt label
+                , touchElt config_
+                ]
+            )
+
+
+textElt : String -> Maybe (Html msg)
+textElt label =
+    Just (Html.span [ class "mdc-chip__text", buttonRole ] [ text label ])
+
+
+touchElt : Config msg -> Maybe (Html msg)
+touchElt (Config { touch }) =
+    if touch then
+        Just (Html.div [ class "mdc-chip__touch" ] [])
+
+    else
+        Nothing
+
+
+chipCs : Maybe (Html.Attribute msg)
+chipCs =
+    Just (class "mdc-chip")
+
+
+chipTouchCs : Config msg -> Maybe (Html.Attribute msg)
+chipTouchCs (Config { touch }) =
+    if touch then
+        Just (class "mdc-chip--touch")
+
+    else
+        Nothing
+
+
+chipSetCs : Html.Attribute msg
+chipSetCs =
     class "mdc-chip-set"
 
 
-filterCs : Html.Attribute msg
-filterCs =
+chipSetFilterCs : Html.Attribute msg
+chipSetFilterCs =
     class "mdc-chip-set--filter"
+
+
+selectedProp : Config msg -> Maybe (Html.Attribute msg)
+selectedProp (Config { selected }) =
+    Just (Html.Attributes.property "selected" (Encode.bool selected))
+
+
+rowRole : Maybe (Html.Attribute msg)
+rowRole =
+    Just (Html.Attributes.attribute "role" "row")
+
+
+buttonRole : Html.Attribute msg
+buttonRole =
+    Html.Attributes.attribute "role" "button"
+
+
+gridcellRole : Html.Attribute msg
+gridcellRole =
+    Html.Attributes.attribute "role" "gridcell"
+
+
+gridRole : Html.Attribute msg
+gridRole =
+    Html.Attributes.attribute "role" "grid"
+
+
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler (Config { onClick }) =
+    Maybe.map (Html.Events.on "MDCChip:interaction" << Decode.succeed) onClick

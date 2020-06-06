@@ -13,4 +13,5 @@ type Config msg
         , target : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
+        , touch : Bool
         }

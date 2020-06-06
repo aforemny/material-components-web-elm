@@ -3,6 +3,7 @@ module Material.Chip.Input exposing
     , setOnClick
     , setOnTrailingIconClick
     , setIcon
+    , setTouch
     , setAttributes
     , set, chip, Chip
     )
@@ -21,6 +22,7 @@ into chips.
   - [Configuration](#configuration)
       - [Configuration Options](#configuration-options)
   - [Input Chips](#input-chips)
+  - [Touch Support](#touch-support)
 
 
 # Resources
@@ -55,12 +57,22 @@ into chips.
 @docs setOnClick
 @docs setOnTrailingIconClick
 @docs setIcon
+@docs setTouch
 @docs setAttributes
 
 
 # Input Chips
 
 @docs set, chip, Chip
+
+
+# Touch Support
+
+Touch support is enabled by default. To disable touch support set a chip's `setTouch` configuration option to `False`.
+
+    Chip.chip
+        (Chip.config |> Chip.setTouch False)
+        "Chip"
 
 -}
 
@@ -87,6 +99,7 @@ type Config msg
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
         , onTrailingIconClick : Maybe msg
+        , touch : Bool
         }
 
 
@@ -99,6 +112,7 @@ config =
         , additionalAttributes = []
         , onClick = Nothing
         , onTrailingIconClick = Nothing
+        , touch = True
         }
 
 
@@ -130,6 +144,21 @@ setOnClick onClick (Config config_) =
     Config { config_ | onClick = Just onClick }
 
 
+{-| Specify whether touch support is enabled (enabled by default)
+
+Touch support is an accessibility guideline that states that touch targets
+should be at least 48 x 48 pixels in size. Use this configuration option to
+disable increased touch target size.
+
+**Note:** Chips with touch support will be wrapped in a HTML div element to
+prevent potentially overlapping touch targets on adjacent elements.
+
+-}
+setTouch : Bool -> Config msg -> Config msg
+setTouch touch (Config config_) =
+    Config { config_ | touch = touch }
+
+
 {-| Input chip type
 -}
 type Chip msg
@@ -139,19 +168,32 @@ type Chip msg
 {-| Input chip view function
 -}
 chip : Config msg -> String -> Chip msg
-chip ((Config { additionalAttributes }) as config_) label =
-    Chip <|
-        Html.node "mdc-chip"
-            (List.filterMap identity
-                [ chipRootCs
-                , clickHandler config_
-                , trailingIconClickHandler config_
-                ]
-                ++ additionalAttributes
-            )
-            [ textElt label
-            , trailingIconElt config_
-            ]
+chip ((Config { touch, additionalAttributes }) as config_) label =
+    let
+        wrapTouch node =
+            if touch then
+                Html.div [ class "mdc-touch-target-wrapper" ] [ node ]
+
+            else
+                node
+    in
+    wrapTouch <|
+        Chip <|
+            Html.node "mdc-chip"
+                (List.filterMap identity
+                    [ chipRootCs
+                    , chipTouchCs config_
+                    , clickHandler config_
+                    , trailingIconClickHandler config_
+                    ]
+                    ++ additionalAttributes
+                )
+                (List.filterMap identity
+                    [ textElt label
+                    , trailingIconElt config_
+                    , touchElt config_
+                    ]
+                )
 
 
 chipRootCs : Maybe (Html.Attribute msg)
@@ -159,14 +201,32 @@ chipRootCs =
     Just (class "mdc-chip")
 
 
+chipTouchCs : Config msg -> Maybe (Html.Attribute msg)
+chipTouchCs (Config { touch }) =
+    if touch then
+        Just (class "mdc-chip--touch")
+
+    else
+        Nothing
+
+
 clickHandler : Config msg -> Maybe (Html.Attribute msg)
 clickHandler (Config { onClick }) =
     Maybe.map (Html.Events.on "MDCChip:interaction" << Decode.succeed) onClick
 
 
-textElt : String -> Html msg
+textElt : String -> Maybe (Html msg)
 textElt label =
-    Html.div [ class "mdc-chip__text" ] [ text label ]
+    Just (Html.div [ class "mdc-chip__text" ] [ text label ])
+
+
+trailingIconElt : Config msg -> Maybe (Html msg)
+trailingIconElt (Config { icon }) =
+    Just
+        (Html.i
+            [ class "material-icons mdc-chip__icon mdc-chip__icon--trailing" ]
+            [ text (Maybe.withDefault "close" icon) ]
+        )
 
 
 trailingIconClickHandler : Config msg -> Maybe (Html.Attribute msg)
@@ -175,11 +235,13 @@ trailingIconClickHandler (Config { onTrailingIconClick }) =
         onTrailingIconClick
 
 
-trailingIconElt : Config msg -> Html msg
-trailingIconElt (Config { icon }) =
-    Html.i
-        [ class "material-icons mdc-chip__icon mdc-chip__icon--trailing" ]
-        [ text (Maybe.withDefault "close" icon) ]
+touchElt : Config msg -> Maybe (Html msg)
+touchElt (Config { touch }) =
+    if touch then
+        Just (Html.div [ class "mdc-chip__touch" ] [])
+
+    else
+        Nothing
 
 
 chipSetRootCs : Html.Attribute msg

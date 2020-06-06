@@ -9,6 +9,7 @@ type Config msg
         , disabled : Bool
         , additionalAttributes : List (Html.Attribute msg)
         , onChange : Maybe msg
+        , touch : Bool
         }
 
 

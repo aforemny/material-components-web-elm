@@ -5,6 +5,7 @@ module Material.Button exposing
     , setDisabled
     , setDense
     , setHref, setTarget
+    , setTouch
     , setAttributes
     , text, outlined, raised, unelevated
     )
@@ -26,6 +27,7 @@ module Material.Button exposing
   - [Dense Button](#disabled-button)
   - [Link Button](#link-button)
   - [Focus a Button](#focus-a-button)
+  - [Touch Support](#touch-support)
 
 
 # Resources
@@ -61,6 +63,7 @@ module Material.Button exposing
 @docs setDisabled
 @docs setDense
 @docs setHref, setTarget
+@docs setTouch
 @docs setAttributes
 
 
@@ -145,6 +148,18 @@ use `Browser.Dom.focus`.
         )
         "Button"
 
+
+# Touch Support
+
+Touch support is enabled by default. To disable touch support set a button's
+`setTouch` configuration option to `False`.
+
+    Button.text
+        (Button.config
+            |> Button.setTouch False
+        )
+        "Click"
+
 -}
 
 import Html exposing (Html)
@@ -173,6 +188,7 @@ config =
         , target = Nothing
         , additionalAttributes = []
         , onClick = Nothing
+        , touch = True
         }
 
 
@@ -250,6 +266,21 @@ setOnClick onClick (Config config_) =
     Config { config_ | onClick = Just onClick }
 
 
+{-| Specify whether touch support is enabled (enabled by default)
+
+Touch support is an accessibility guideline that states that touch targets
+should be at least 48 x 48 pixels in size. Use this configuration option to
+disable increased touch target size.
+
+**Note:** Buttons with touch support will be wrapped in a HTML div element to
+prevent potentially overlapping touch targets on adjacent elements.
+
+-}
+setTouch : Bool -> Config msg -> Config msg
+setTouch touch (Config config_) =
+    Config { config_ | touch = touch }
+
+
 type Variant
     = Text
     | Raised
@@ -258,34 +289,45 @@ type Variant
 
 
 button : Variant -> Config msg -> String -> Html msg
-button variant ((Config { additionalAttributes, href }) as config_) label =
-    Html.node "mdc-button"
-        (List.filterMap identity [ disabledProp config_ ])
-        [ (if href /= Nothing then
-            Html.a
+button variant ((Config { additionalAttributes, touch, href }) as config_) label =
+    let
+        wrapTouch node =
+            if touch then
+                Html.div [ class "mdc-touch-target-wrapper" ] [ node ]
 
-           else
-            Html.button
-          )
-            (List.filterMap identity
-                [ rootCs
-                , variantCs variant
-                , denseCs config_
-                , disabledAttr config_
-                , tabIndexProp config_
-                , hrefAttr config_
-                , targetAttr config_
-                , clickHandler config_
-                ]
-                ++ additionalAttributes
-            )
-            (List.filterMap identity
-                [ leadingIconElt config_
-                , labelElt label
-                , trailingIconElt config_
-                ]
-            )
-        ]
+            else
+                node
+    in
+    wrapTouch <|
+        Html.node "mdc-button"
+            (List.filterMap identity [ disabledProp config_ ])
+            [ (if href /= Nothing then
+                Html.a
+
+               else
+                Html.button
+              )
+                (List.filterMap identity
+                    [ rootCs
+                    , variantCs variant
+                    , denseCs config_
+                    , touchCs config_
+                    , disabledAttr config_
+                    , tabIndexProp config_
+                    , hrefAttr config_
+                    , targetAttr config_
+                    , clickHandler config_
+                    ]
+                    ++ additionalAttributes
+                )
+                (List.filterMap identity
+                    [ leadingIconElt config_
+                    , labelElt label
+                    , trailingIconElt config_
+                    , touchElt config_
+                    ]
+                )
+            ]
 
 
 {-| Text button variant (flush without outline)
@@ -384,6 +426,15 @@ denseCs (Config { dense }) =
         Nothing
 
 
+touchCs : Config msg -> Maybe (Html.Attribute msg)
+touchCs (Config { touch }) =
+    if touch then
+        Just (class "mdc-button--touch")
+
+    else
+        Nothing
+
+
 iconElt : Config msg -> Maybe (Html msg)
 iconElt (Config { icon }) =
     Maybe.map
@@ -410,6 +461,15 @@ trailingIconElt : Config msg -> Maybe (Html msg)
 trailingIconElt ((Config { trailingIcon }) as config_) =
     if trailingIcon then
         iconElt config_
+
+    else
+        Nothing
+
+
+touchElt : Config msg -> Maybe (Html msg)
+touchElt (Config { touch }) =
+    if touch then
+        Just (Html.div [ class "mdc-button__touch" ] [])
 
     else
         Nothing

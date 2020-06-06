@@ -29,6 +29,6 @@
   "dependencies": {
     "@babel/runtime-corejs2": "^7.9.6",
     "@webcomponents/custom-elements": "^1.4.1",
-    "material-components-web": "3.2.0"
+    "material-components-web": "4.0.0"
   }
 }

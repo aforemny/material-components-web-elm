@@ -212,6 +212,7 @@ radio ((Config { touch, additionalAttributes }) as config_) =
             )
             [ nativeControlElt config_
             , backgroundElt
+            , rippleElt
             ]
 
 
@@ -296,3 +297,8 @@ outerCircleElt =
 innerCircleElt : Html msg
 innerCircleElt =
     Html.div [ class "mdc-radio__inner-circle" ] []
+
+
+rippleElt : Html msg
+rippleElt =
+    Html.div [ class "mdc-radio__ripple" ] []

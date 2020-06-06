@@ -321,7 +321,8 @@ button variant ((Config { additionalAttributes, touch, href }) as config_) label
                     ++ additionalAttributes
                 )
                 (List.filterMap identity
-                    [ leadingIconElt config_
+                    [ rippleElt
+                    , leadingIconElt config_
                     , labelElt label
                     , trailingIconElt config_
                     , touchElt config_
@@ -446,6 +447,11 @@ iconElt (Config { icon }) =
                 [ Html.text iconName ]
         )
         icon
+
+
+rippleElt : Maybe (Html msg)
+rippleElt =
+    Just (Html.div [ class "mdc-button__ripple" ] [])
 
 
 leadingIconElt : Config msg -> Maybe (Html msg)

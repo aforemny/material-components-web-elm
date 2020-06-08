@@ -29,7 +29,7 @@ import {MDCRippleFoundation} from '@material/ripple/foundation';
 import {MDCRippleCapableSurface} from '@material/ripple/types';
 import {MDCChipAdapter} from '@material/chips/chip/adapter';
 import {strings} from '@material/chips/chip/constants';
-import {MDCChipFoundation} from '@material/chips/chip/foundation';
+import {MDCChipFoundation} from './foundation';
 import {MDCChipInteractionEventDetail, MDCChipNavigationEventDetail, MDCChipRemovalEventDetail,
     MDCChipSelectionEventDetail} from '@material/chips/chip/types';
 
@@ -233,10 +233,13 @@ export class MDCChip extends MDCComponent<MDCChipFoundation> implements MDCRippl
     this.foundation_.removeFocus();
   }
 
-  remove() {
-    const parent = this.root_.parentNode;
-    if (parent !== null) {
-      parent.removeChild(this.root_);
-    }
+  makePrimaryActionFocusable() {
+    if (!this.primaryAction_) return;
+    this.primaryAction_.setAttribute('tabindex', '0');
+  }
+
+  isPrimaryActionFocusable() {
+    if (!this.primaryAction_) return false;
+    return this.primaryAction_.getAttribute('tabindex') === '0';
   }
 }

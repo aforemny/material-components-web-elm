@@ -1,6 +1,7 @@
 *~
 demo.js
 dist
+docs.json
 *.d.ts
 elm.js
 elm-stuff
@@ -8,6 +9,6 @@ public
 *.js.map
 node_modules
 src/*/component.js
+src/*/foundation.js
 src/*/*.patch
 src/*/*.ts.orig
-docs.json

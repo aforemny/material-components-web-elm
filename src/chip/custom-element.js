@@ -4,7 +4,17 @@ import {
   uninstallClassNameChangeHook,
 } from "../utils/className";
 
+let idCounter = 0;
+
 class MdcChip extends HTMLElement {
+
+  get id() {
+    return this.id_;
+  }
+
+  set id(id) {
+    this.id_ = id;
+  }
 
   get selected() {
     return this.selected_;
@@ -17,26 +27,26 @@ class MdcChip extends HTMLElement {
     }
   }
 
-  get shouldRemoveOnTrailingIconClick() {
-    return false;
-  }
-
-  set shouldRemoveOnTrailingIconClick(shouldRemove) {}
-
   constructor() {
     super();
     this.selected_ = false;
+    this.id_ = `mdc-chip-${++idCounter}`;
+    this.chipset_ = null;
   }
 
   connectedCallback() {
-    installClassNameChangeHook.call(this);
     this.chip_ = new MDCChip(this);
     this.chip_.selected = this.selected_;
-    this.chip_.shouldRemoveOnTrailingIconClick = false;
+
+    this.chipset_ = this.parentElement.parentElement.chipset_;
+    this.chipset_.addChip(this);
   }
 
   disconnectedCallback() {
     this.chip_.destroy();
+    this.chipset_.foundation_.adapter_.removeChipAtIndex(
+      this.chipset_.findChipIndex_(this.id)
+    );
     uninstallClassNameChangeHook.call(this);
   }
 };

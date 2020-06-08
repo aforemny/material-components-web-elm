@@ -1,15 +1,16 @@
-module Material.Chip.Choice exposing
+module Material.Chip.Action exposing
     ( Config, config
+    , setOnClick
     , setIcon
     , setAttributes
     , chip, Chip
     )
 
-{-| Chips are compact elements that allow users to enter information, select a
-choice, filter content, or trigger an action.
+{-| Action chips offer actions related to primary content. They should appear
+dynamically and contextually in a UI.
 
-Choice chips are a variant of chips which allow single selection from a set of
-options.
+An alternative to action chips are [buttons](Material-Button), which should
+appear persistently and consistently.
 
 
 # Table of Contents
@@ -18,7 +19,7 @@ options.
   - [Basic Usage](#basic-usage)
   - [Configuration](#configuration)
       - [Configuration Options](#configuration-options)
-  - [Choice Chips](#choice-chips)
+  - [Action Chips](#action-chips)
 
 
 # Resources
@@ -31,33 +32,20 @@ options.
 
 # Basic Usage
 
-    import Material.Chip.Choice as ChoiceChip
-    import Material.ChipSet.Choice as ChoiceChipSet
-
-    type Color
-        = Red
-        | Blue
+    import Material.Chip.Action as ActionChip
+    import Material.ChipSet.Action as ActionChipSet
 
     type Msg
-        = ColorChanged Color
+        = Clicked String
 
     main =
-        ChoiceChipSet.chipSet
-            (ChoiceChipSet.config
-                { toLabel =
-                    \color ->
-                        case color of
-                            Red ->
-                                "Red"
-
-                            Blue ->
-                                "Blue"
-                }
-                |> ChoiceChipSet.setSelected (Just Red)
-                |> ChocieChipSet.setOnClick ColorChanged
-            )
-            [ ChoiceChip.chip ChoiceChip.config Red
-            , ChoiceChip.chip ChoiceChip.config Blue
+        ActionChipSet.chipSet []
+            [ ActionChip.chip
+                (ActionChip.config
+                    |> ActionChip.setOnClick Clicked "Chip One"
+                )
+                "Chip One"
+            , ActionChip.chip ActionChip.config "Chip Two"
             ]
 
 
@@ -68,33 +56,35 @@ options.
 
 ## Configuration Options
 
+@docs setOnClick
 @docs setIcon
 @docs setAttributes
 
 
-# Choice Chips
+# Action Chips
 
 @docs chip, Chip
 
 -}
 
 import Html
-import Material.Chip.Choice.Internal exposing (Chip(..), Config(..))
+import Material.Chip.Action.Internal exposing (Chip(..), Config(..))
 
 
-{-| Configuration of a choice chip
+{-| Configuration of an action chip
 -}
 type alias Config msg =
-    Material.Chip.Choice.Internal.Config msg
+    Material.Chip.Action.Internal.Config msg
 
 
-{-| Default configuration of a choice chip
+{-| Default configuration of an action chip
 -}
 config : Config msg
 config =
     Config
         { icon = Nothing
         , additionalAttributes = []
+        , onClick = Nothing
         }
 
 
@@ -112,14 +102,21 @@ setAttributes additionalAttributes (Config config_) =
     Config { config_ | additionalAttributes = additionalAttributes }
 
 
-{-| Choice chip type
+{-| Specify a message when the user clicks on a chip
 -}
-type alias Chip a msg =
-    Material.Chip.Choice.Internal.Chip a msg
+setOnClick : msg -> Config msg -> Config msg
+setOnClick onClick (Config config_) =
+    Config { config_ | onClick = Just onClick }
 
 
-{-| Choice chip view function
+{-| Action chip type
 -}
-chip : Config msg -> a -> Chip a msg
+type alias Chip msg =
+    Material.Chip.Action.Internal.Chip msg
+
+
+{-| Action chip view function
+-}
+chip : Config msg -> String -> Chip msg
 chip =
     Chip

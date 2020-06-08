@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/aforemny/material-components-web-elm/compare/3.0.1...3.0.2) (2020-06-08)
+
+
+### Bug Fixes
+
+* Data table rows were being marked as header rows ([639b6f1](https://github.com/aforemny/material-components-web-elm/commit/639b6f1c2263a08374253673cc4709836ef1545b))
+
 ### [3.0.1](https://github.com/aforemny/material-components-web-elm/compare/3.0.0...3.0.1) (2020-06-02)
 
 

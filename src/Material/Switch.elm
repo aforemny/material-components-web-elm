@@ -4,6 +4,9 @@ module Material.Switch exposing
     , setOnChange
     , setChecked
     , setDisabled
+    , setId
+    , setName
+    , setValue
     , setAttributes
     )
 
@@ -63,6 +66,9 @@ fields](Material-FormField).
 @docs setOnChange
 @docs setChecked
 @docs setDisabled
+@docs setId
+@docs setName
+@docs setValue
 @docs setAttributes
 
 
@@ -98,6 +104,9 @@ type Config msg
     = Config
         { checked : Bool
         , disabled : Bool
+        , id : Maybe String
+        , name : Maybe String
+        , value : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , onChange : Maybe msg
         }
@@ -110,6 +119,9 @@ config =
     Config
         { checked = False
         , disabled = False
+        , id = Nothing
+        , name = Nothing
+        , value = Nothing
         , additionalAttributes = []
         , onChange = Nothing
         }
@@ -145,6 +157,27 @@ setAttributes additionalAttributes (Config config_) =
 setOnChange : msg -> Config msg -> Config msg
 setOnChange onChange (Config config_) =
     Config { config_ | onChange = Just onChange }
+
+
+{-| Specify a switch's id
+-}
+setId : Maybe String -> Config msg -> Config msg
+setId id (Config config_) =
+    Config { config_ | id = id }
+
+
+{-| Specify a switch's name
+-}
+setName : Maybe String -> Config msg -> Config msg
+setName name (Config config_) =
+    Config { config_ | name = name }
+
+
+{-| Specify a switch's value
+-}
+setValue : Maybe String -> Config msg -> Config msg
+setValue value (Config config_) =
+    Config { config_ | value = value }
 
 
 {-| Switch view function
@@ -221,8 +254,27 @@ nativeControlElt config_ =
             [ nativeControlCs
             , checkboxTypeAttr
             , switchRoleAttr
+            , idAttr config_
+            , nameAttr config_
+            , valueAttr config_
             , checkedProp config_
             , changeHandler config_
             ]
         )
         []
+
+
+idAttr : Config msg -> Maybe (Html.Attribute msg)
+idAttr (Config { id }) =
+    Maybe.map Html.Attributes.id id
+
+
+nameAttr : Config msg -> Maybe (Html.Attribute msg)
+nameAttr (Config { name }) =
+    Maybe.map Html.Attributes.name name
+
+
+valueAttr : Config msg -> Maybe (Html.Attribute msg)
+valueAttr (Config { value }) =
+    Maybe.map Html.Attributes.value value
+

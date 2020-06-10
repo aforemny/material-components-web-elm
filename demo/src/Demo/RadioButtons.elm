@@ -83,12 +83,12 @@ radio model group index label =
         (FormField.config
             |> FormField.setLabel (Just label)
             |> FormField.setFor (Just index)
-            |> FormField.setOnClick (Set group index)
             |> FormField.setAttributes [ style "margin" "0 10px" ]
         )
         [ Radio.radio
             (Radio.config
                 |> Radio.setChecked (isSelected group index model)
+                |> Radio.setId (Just index)
                 |> Radio.setOnChange (Set group index)
             )
         ]

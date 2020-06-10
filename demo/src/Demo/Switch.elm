@@ -65,11 +65,11 @@ heroSwitch model =
         (FormField.config
             |> FormField.setLabel (Just "off/on")
             |> FormField.setFor (Just id)
-            |> FormField.setOnClick (Toggle id)
         )
         [ Switch.switch
             (Switch.config
                 |> Switch.setChecked (isChecked id model)
+                |> Switch.setId (Just id)
                 |> Switch.setOnChange (Toggle id)
             )
         ]
@@ -86,11 +86,11 @@ demoSwitch model =
         (FormField.config
             |> FormField.setLabel (Just "off/on")
             |> FormField.setFor (Just id)
-            |> FormField.setOnClick (Toggle id)
         )
         [ Switch.switch
             (Switch.config
                 |> Switch.setChecked (isChecked id model)
+                |> Switch.setId (Just id)
                 |> Switch.setOnChange (Toggle id)
             )
         ]

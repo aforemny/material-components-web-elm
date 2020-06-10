@@ -3,9 +3,6 @@ module Material.Checkbox exposing
     , setOnChange
     , State, setState
     , setDisabled
-    , setId
-    , setName
-    , setValue
     , setAttributes
     , checkbox
     , checked, unchecked
@@ -63,9 +60,6 @@ Note that checkboxes are usually used in conjunction with form fields. Refer to
 @docs setOnChange
 @docs State, setState
 @docs setDisabled
-@docs setId
-@docs setName
-@docs setValue
 @docs setAttributes
 
 
@@ -131,9 +125,6 @@ config =
     Config
         { state = Nothing
         , disabled = False
-        , id = Nothing
-        , name = Nothing
-        , value = Nothing
         , additionalAttributes = []
         , onChange = Nothing
         }
@@ -172,27 +163,6 @@ setAttributes additionalAttributes (Config config_) =
 setOnChange : msg -> Config msg -> Config msg
 setOnChange onChange (Config config_) =
     Config { config_ | onChange = Just onChange }
-
-
-{-| Specify a checkbox's id
--}
-setId : Maybe String -> Config msg -> Config msg
-setId id (Config config_) =
-    Config { config_ | id = id }
-
-
-{-| Specify a checkbox's name
--}
-setName : Maybe String -> Config msg -> Config msg
-setName name (Config config_) =
-    Config { config_ | name = name }
-
-
-{-| Specify a checkbox's value
--}
-setValue : Maybe String -> Config msg -> Config msg
-setValue value (Config config_) =
-    Config { config_ | value = value }
 
 
 {-| State of a checkbox
@@ -260,21 +230,6 @@ disabledProp (Config { disabled }) =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
-idAttr : Config msg -> Maybe (Html.Attribute msg)
-idAttr (Config { id }) =
-    Maybe.map Html.Attributes.id id
-
-
-nameAttr : Config msg -> Maybe (Html.Attribute msg)
-nameAttr (Config { name }) =
-    Maybe.map Html.Attributes.name name
-
-
-valueAttr : Config msg -> Maybe (Html.Attribute msg)
-valueAttr (Config { value }) =
-    Maybe.map Html.Attributes.value value
-
-
 changeHandler : Config msg -> Maybe (Html.Attribute msg)
 changeHandler (Config { state, onChange }) =
     -- Note: MDCList choses to send a change event to all checkboxes, thus we
@@ -308,9 +263,6 @@ nativeControlElt config_ =
             , checkedProp config_
             , indeterminateProp config_
             , changeHandler config_
-            , idAttr config_
-            , nameAttr config_
-            , valueAttr config_
             ]
         )
         []

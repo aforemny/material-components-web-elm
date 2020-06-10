@@ -3,9 +3,6 @@ module Material.Radio exposing
     , setOnChange
     , setChecked
     , setDisabled
-    , setId
-    , setName
-    , setValue
     , setAttributes
     , radio
     )
@@ -61,9 +58,6 @@ fields](Material-FormField).
 @docs setOnChange
 @docs setChecked
 @docs setDisabled
-@docs setId
-@docs setName
-@docs setValue
 @docs setAttributes
 
 
@@ -96,9 +90,6 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Checkbox exposing (setId)
-import Material.Checkbox exposing (setName)
-import String exposing (String)
 
 
 {-| Radio button configuration
@@ -107,9 +98,6 @@ type Config msg
     = Config
         { checked : Bool
         , disabled : Bool
-        , id : Maybe String
-        , name : Maybe String
-        , value : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , onChange : Maybe msg
         }
@@ -122,9 +110,6 @@ config =
     Config
         { checked = False
         , disabled = False
-        , id = Nothing
-        , name = Nothing
-        , value = Nothing
         , additionalAttributes = []
         , onChange = Nothing
         }
@@ -160,27 +145,6 @@ setAttributes additionalAttributes (Config config_) =
 setOnChange : msg -> Config msg -> Config msg
 setOnChange onChange (Config config_) =
     Config { config_ | onChange = Just onChange }
-
-
-{-| Specify a radio button's id
--}
-setId : Maybe String -> Config msg -> Config msg
-setId id (Config config_) =
-    Config { config_ | id = id }
-
-
-{-| Specify a radio button's name
--}
-setName : Maybe String -> Config msg -> Config msg
-setName name (Config config_) =
-    Config { config_ | name = name }
-
-
-{-| Specify a radio button's value
--}
-setValue : Maybe String -> Config msg -> Config msg
-setValue value (Config config_) =
-    Config { config_ | value = value }
 
 
 {-| Radio button view function

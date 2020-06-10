@@ -13,8 +13,6 @@ module Material.TextArea exposing
     , setValid
     , setMinLength
     , setMaxLength
-    , setId
-    , setName
     , setAttributes
     , filled
     , outlined
@@ -84,8 +82,6 @@ module Material.TextArea exposing
 @docs setValid
 @docs setMinLength
 @docs setMaxLength
-@docs setId
-@docs setName
 @docs setAttributes
 
 
@@ -184,8 +180,6 @@ type Config msg
         , valid : Bool
         , minLength : Maybe Int
         , maxLength : Maybe Int
-        , id : Maybe String
-        , name : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , onInput : Maybe (String -> msg)
         , onChange : Maybe (String -> msg)
@@ -208,8 +202,6 @@ config =
         , valid = True
         , minLength = Nothing
         , maxLength = Nothing
-        , id = Nothing
-        , name = Nothing
         , additionalAttributes = []
         , onInput = Nothing
         , onChange = Nothing
@@ -317,20 +309,6 @@ area
 setOnChange : (String -> msg) -> Config msg -> Config msg
 setOnChange onChange (Config config_) =
     Config { config_ | onChange = Just onChange }
-
-
-{-| Specify a text area's id
--}
-setId : Maybe String -> Config msg -> Config msg
-setId id (Config config_) =
-    Config { config_ | id = id }
-
-
-{-| Specify a text area's name
--}
-setName : Maybe String -> Config msg -> Config msg
-setName name (Config config_) =
-    Config { config_ | name = name }
 
 
 {-| Filled text area view function
@@ -465,8 +443,6 @@ inputElt config_ =
             , changeHandler config_
             , minLengthAttr config_
             , maxLengthAttr config_
-            , idAttr config_
-            , nameAttr config_
             ]
         )
         []
@@ -499,16 +475,6 @@ ariaLabelAttr (Config { fullwidth, placeholder, label }) =
 disabledProp : Config msg -> Maybe (Html.Attribute msg)
 disabledProp (Config { disabled }) =
     Just (Html.Attributes.property "disabled" (Encode.bool disabled))
-
-
-idAttr : Config msg -> Maybe (Html.Attribute msg)
-idAttr (Config { id }) =
-    Maybe.map Html.Attributes.id id
-
-
-nameAttr : Config msg -> Maybe (Html.Attribute msg)
-nameAttr (Config { name }) =
-    Maybe.map Html.Attributes.name name
 
 
 labelElt : Config msg -> Html msg

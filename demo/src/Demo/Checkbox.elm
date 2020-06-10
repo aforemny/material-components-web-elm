@@ -3,7 +3,7 @@ module Demo.Checkbox exposing (Model, Msg(..), defaultModel, update, view)
 import Demo.CatalogPage exposing (CatalogPage)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (style, value)
 import Material.Checkbox as Checkbox
 import Material.Typography as Typography
 
@@ -87,6 +87,9 @@ checkbox index model attributes =
             |> Checkbox.setState (Just state)
             |> Checkbox.setOnChange (Changed index)
             |> Checkbox.setAttributes attributes
+            |> Checkbox.setId ( Just index )
+            |> Checkbox.setName ( Just index )
+            |> Checkbox.setValue ( Just index )
         )
 
 

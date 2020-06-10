@@ -69,6 +69,8 @@ heroTextFields model =
             [ TextField.filled
                 (TextField.config
                     |> TextField.setLabel (Just "Standard")
+                    |> TextField.setName (Just "Standard")
+                    |> TextField.setId (Just "Standard")
                 )
             ]
         , Html.div textFieldContainerHero
@@ -254,7 +256,11 @@ textareaTextField : Model -> Html msg
 textareaTextField model =
     Html.div textFieldContainer
         [ TextArea.outlined
-            (TextArea.config |> TextArea.setLabel (Just "Standard"))
+            (TextArea.config
+                |> TextArea.setLabel (Just "Standard")
+                |> TextArea.setId (Just "Standard")
+                |> TextArea.setName (Just "Standard")
+            )
         , demoHelperText
         ]
 

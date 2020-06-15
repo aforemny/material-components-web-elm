@@ -44,6 +44,7 @@ module Material.TextField exposing
   - [Text Field with Leading Icon](#text-field-with-leading-icon)
   - [Text Field with Trailing Icon](#text-field-with-trailing-icon)
   - [Text Field with Character Counter](#text-field-with-character-counter)
+  - [Focus a Text Field](#focus-a-text-field)
 
 
 # Resources
@@ -209,6 +210,17 @@ of `HelperText.helperLine`.
         (TextField.config |> TextField.setMaxLength (Just 18))
     , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]
+
+
+# Focus a Text Field
+
+You may programatically focus a text field by assigning an id attribute to it
+and use `Browser.Dom.focus`.
+
+    TextField.filled
+        (TextField.config
+            |> TextField.setAttributes [ Html.Attributes.id "my-text-field" ]
+        )
 
 -}
 

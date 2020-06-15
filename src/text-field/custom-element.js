@@ -6,6 +6,12 @@ import {
 
 class MdcTextField extends HTMLElement {
 
+  focus() {
+    if (this.textField_ && this.textField_.input_) {
+      this.textField_.input_.focus();
+    }
+  }
+
   get value() {
     if (!!this.textField_) {
       return this.textField_.value;

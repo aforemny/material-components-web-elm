@@ -22,6 +22,7 @@ tap.
   - [On Icon Toggle](#on-icon-toggle)
   - [Disabled Icon Toggle](#disabled-icon-toggle)
   - [Labeled Icon Toggle](#labeled-icon-toggle)
+  - [Focus an Icon Toggle](#focus-an-icon-toggle)
 
 
 # Resources
@@ -112,6 +113,21 @@ configuration option.
     IconToggle.iconToggle
         (IconToggle.config
             |> IconToggle.setLabel (Just "Add to favorites")
+        )
+        { offIcon = "favorite_border"
+        , onIcon = "favorite"
+        }
+
+
+# Focus an Icon Toggle
+
+You may programatically focus an icon toggle by assigning an id attribute to it
+and use `Browser.Dom.focus`.
+
+    IconToggle.iconToggle
+        (IconToggle.config
+            |> IconToggle.setAttributes
+                [ Html.Attributes.id "my-icon-toggle" ]
         )
         { offIcon = "favorite_border"
         , onIcon = "favorite"

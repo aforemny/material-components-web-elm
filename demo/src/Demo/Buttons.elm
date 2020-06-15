@@ -1,10 +1,12 @@
 module Demo.Buttons exposing (Model, Msg, defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
 import Material.Button as Button
 import Material.Typography as Typography
+import Task
 
 
 type alias Model =
@@ -17,12 +19,18 @@ defaultModel =
 
 
 type Msg
-    = NoOp
+    = Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    model
+    case msg of
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -46,6 +54,8 @@ view model =
         , outlinedButtons
         , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Button" ]
         , shapedButtons
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus Button" ]
+        , focusButton
         ]
     }
 
@@ -86,6 +96,28 @@ outlinedButtons =
 shapedButtons : Html msg
 shapedButtons =
     buttonsRow Button.unelevated [ style "border-radius" "18px" ]
+
+
+focusButton : Html Msg
+focusButton =
+    Html.div []
+        [ Button.raised
+            (Button.config
+                |> Button.setAttributes [ Html.Attributes.id "my-button" ]
+            )
+            "Button"
+        , text "\u{00A0}"
+        , Button.raised (Button.config |> Button.setOnClick (Focus "my-button")) "Focus"
+        , text "\u{00A0}"
+        , Button.raised
+            (Button.config
+                |> Button.setHref (Just "#")
+                |> Button.setAttributes [ Html.Attributes.id "my-link-button" ]
+            )
+            "Link button"
+        , text "\u{00A0}"
+        , Button.raised (Button.config |> Button.setOnClick (Focus "my-link-button")) "Focus"
+        ]
 
 
 buttonsRow : (Button.Config msg -> String -> Html msg) -> List (Html.Attribute msg) -> Html msg

@@ -26,6 +26,7 @@ action button that primarily contains an icon, and no text, refer to the
       - [Extended FAB with Leading Icon](#extended-fab-with-leading-icon)
       - [Extended FAB with Trailing Icon](#extended-fab-with-trailing-icon)
   - [Exited Extended FAB](#exited-extended-fab)
+  - [Focus an Extended FAB](#focus-an-extended-fab)
 
 
 # Resources
@@ -114,6 +115,19 @@ set its `setExited` configuration option to `True`.
     ExtendedFab.fab
         (ExtendedFab.config |> ExtendedFab.setExited True)
         "Favorites"
+
+
+# Focus an Extended FAB
+
+You may programatically focus an extended floating action button by assigning
+an id attribute to it and use `Browser.Dom.focus`.
+
+    ExtendedFab.fab
+        (ExtendedFab.config
+            |> ExtendedFab.setAttributes
+                [ Html.Attributes.id "my-fab" ]
+        )
+        "favorite_border"
 
 -}
 

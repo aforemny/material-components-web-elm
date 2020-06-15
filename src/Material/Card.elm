@@ -30,6 +30,7 @@ module Material.Card exposing
       - [Primary Action Block](#primary-action-block)
   - [Card Actions](#card-actions)
       - [Full Bleed Actions](#full-bleed-actions)
+  - [Focus a Card](#focus-a-card)
 
 
 # Resources
@@ -177,6 +178,23 @@ While a card's action buttons are usually left-aligned, a special case exists
 when there is only a single button as card action.
 
 @docs fullBleedActions
+
+
+# Focus a Card
+
+You may programatically focus a card by assigning an id attribute to it and use
+`Browser.Dom.focus`.
+
+Note that cards must have a primary action element to be focusable.
+
+    Card.card
+        (Card.config
+            |> Card.setAttributes
+                [ Html.Attributes.id "my-card" ]
+        )
+        { blocks = Card.primaryAction [] []
+        , actions = Nothing
+        }
 
 -}
 

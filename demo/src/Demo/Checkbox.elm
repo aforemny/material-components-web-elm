@@ -1,11 +1,14 @@
 module Demo.Checkbox exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
+import Material.Button as Button
 import Material.Checkbox as Checkbox
 import Material.Typography as Typography
+import Task
 
 
 type alias Model =
@@ -26,9 +29,11 @@ defaultModel =
 
 type Msg
     = Changed String
+    | Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Changed index ->
@@ -44,7 +49,13 @@ update msg model =
                         )
                         model.checkboxes
             in
-            { model | checkboxes = checkboxes }
+            ( { model | checkboxes = checkboxes }, Cmd.none )
+
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -64,6 +75,8 @@ view model =
         , checkbox "indeterminate-checkbox" model []
         , Html.h3 [ Typography.subtitle1 ] [ text "Checked" ]
         , checkbox "checked-checkbox" model []
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus Checkbox" ]
+        , focusCheckbox
         ]
     }
 
@@ -88,6 +101,19 @@ checkbox index model attributes =
             |> Checkbox.setOnChange (Changed index)
             |> Checkbox.setAttributes attributes
         )
+
+
+focusCheckbox : Html Msg
+focusCheckbox =
+    Html.div []
+        [ Checkbox.checkbox
+            (Checkbox.config
+                |> Checkbox.setAttributes [ Html.Attributes.id "my-checkbox" ]
+            )
+        , text "\u{00A0}"
+        , Button.raised (Button.config |> Button.setOnClick (Focus "my-checkbox"))
+            "Focus"
+        ]
 
 
 heroMargin : List (Html.Attribute msg)

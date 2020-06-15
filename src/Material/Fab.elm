@@ -23,6 +23,7 @@ action button](Material-Fab-Extended).
   - [Floating Action Button](#floating-action-button)
   - [Mini FAB](#mini-fab)
   - [Exited FAB](#exited-fab)
+  - [Focus a FAB](#focus-a-fab)
 
 
 # Resources
@@ -89,6 +90,19 @@ If you want the floating action button to transition off the screen, set its
 `setExited` configuration option to `True`.
 
     Fab.fab (Fab.config |> Fab.setExited True) "favorite"
+
+
+# Focus a FAB
+
+You may programatically focus a floating action button by assigning an id
+attribute to it and use `Browser.Dom.focus`.
+
+    Fab.fab
+        (Fab.config
+            |> Fab.setAttributes
+                [ Html.Attributes.id "my-fab" ]
+        )
+        "favorite_border"
 
 -}
 

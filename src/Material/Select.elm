@@ -30,6 +30,7 @@ about select options, refer to
   - [Disabled Option](#disabled-option)
   - [Select with helper text](#select-with-helper-text)
   - [Select with leading icon](#select-with-leading-icon)
+  - [Focus a Select](#focus-a-select)
 
 
 # Resources
@@ -126,6 +127,19 @@ TODO(select-with-helper-text)
 # Select with leading icon
 
 TODO(select-with-leading-icon)
+
+
+# Focus a Select
+
+You may programatically focus a select by assigning an id attribute to it and
+use `Browser.Dom.focus`.
+
+    Select.filled
+        (Select.config
+            |> Select.setAttributes
+                [ Html.Attributes.id "my-select" ]
+        )
+        []
 
 -}
 

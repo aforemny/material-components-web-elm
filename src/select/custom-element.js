@@ -6,6 +6,14 @@ import {
 
 class MdcSelect extends HTMLElement {
 
+  focus() {
+    this.select_.nativeControl_.focus();
+  }
+
+  blur() {
+    this.select_.nativeControl_.blur();
+  }
+
   get value() {
     if (!!this.select_) {
       return this.select_.value;

@@ -1,11 +1,14 @@
 module Demo.Fabs exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (text)
 import Html.Attributes exposing (style)
+import Material.Button as Button
 import Material.Fab as Fab
 import Material.Fab.Extended as ExtendedFab
 import Material.Typography as Typography
+import Task
 
 
 type alias Model =
@@ -18,12 +21,18 @@ defaultModel =
 
 
 type Msg
-    = NoOp
+    = Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    model
+    case msg of
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -75,6 +84,16 @@ view model =
                 "favorite_border"
             , ExtendedFab.fab (ExtendedFab.config |> ExtendedFab.setIcon (Just "add"))
                 "Create"
+            ]
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus FAB" ]
+        , Html.div [ style "display" "flex" ]
+            [ Fab.fab
+                (Fab.config |> Fab.setAttributes [ Html.Attributes.id "my-fab" ])
+                "favorite_border"
+            , text "\u{00A0}"
+            , Button.raised
+                (Button.config |> Button.setOnClick (Focus "my-fab"))
+                "Focus"
             ]
         ]
     }

@@ -34,6 +34,7 @@ module Material.TextArea exposing
   - [Required Text Area](#required-text-area)
   - [Valid Text Area](#valid-text-area)
   - [Text Area with Character Counter](#text-area-with-character-counter)
+  - [Focus a Text Area](#focus-a-text-area)
 
 
 # Resources
@@ -155,6 +156,18 @@ of `HelperText.helperLine`.
         (TextArea.config |> TextArea.setMaxLength (Just 18))
     , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]
+
+
+# Focus a Text Area
+
+You may programatically focus a text area by assigning an id attribute to it
+and use `Browser.Dom.focus`.
+
+    TextArea.filled
+        (TextArea.config
+            |> TextArea.setAttributes
+                [ Html.Attributes.id "my-text-area" ]
+        )
 
 -}
 

@@ -1,10 +1,14 @@
 module Demo.Slider exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
+import Html.Attributes
+import Material.Button as Button
 import Material.Slider as Slider
 import Material.Typography as Typography
+import Task
 
 
 type alias Model =
@@ -25,13 +29,21 @@ defaultModel =
 
 type Msg
     = Changed String Float
+    | Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Changed id value ->
-            { model | sliders = Dict.insert id value model.sliders }
+            ( { model | sliders = Dict.insert id value model.sliders }, Cmd.none )
+
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -51,6 +63,8 @@ view model =
         , discreteSlider model
         , Html.h3 [ Typography.subtitle1 ] [ text "Discrete with Tick Marks" ]
         , discreteSliderWithTickMarks model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus Slider" ]
+        , focusSlider model
         ]
     }
 
@@ -116,3 +130,23 @@ discreteSliderWithTickMarks model =
             |> Slider.setStep (Just 1)
             |> Slider.setDisplayMarkers True
         )
+
+
+focusSlider : Model -> Html Msg
+focusSlider model =
+    let
+        id =
+            "my-slider"
+    in
+    Html.div []
+        [ Slider.slider
+            (Slider.config
+                |> Slider.setValue (Dict.get id model.sliders)
+                |> Slider.setOnChange (Changed id)
+                |> Slider.setAttributes [ Html.Attributes.id id ]
+            )
+        , text "\u{00A0}"
+        , Button.raised
+            (Button.config |> Button.setOnClick (Focus id))
+            "Focus"
+        ]

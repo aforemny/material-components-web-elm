@@ -2,6 +2,18 @@ import { MDCFormField } from "./component";
 
 class MdcFormField extends HTMLElement {
 
+  focus() {
+    if (!!this.formField_.input) {
+      this.formField_.input.focus();
+    }
+  }
+
+  blur() {
+    if (!!this.formField_.input) {
+      this.formField_.input.blur();
+    }
+  }
+
   constructor() {
     super();
     this.formField_;

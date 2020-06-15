@@ -219,7 +219,8 @@ and use `Browser.Dom.focus`.
 
     TextField.filled
         (TextField.config
-            |> TextField.setAttributes [ Html.Attributes.id "my-text-field" ]
+            |> TextField.setAttributes
+                [ Html.Attributes.id "my-text-field" ]
         )
 
 -}

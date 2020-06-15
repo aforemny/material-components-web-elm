@@ -1,10 +1,14 @@
 module Demo.TabBar exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
+import Html.Attributes
+import Material.Button as Button
 import Material.Tab as Tab
 import Material.TabBar as TabBar
 import Material.Typography as Typography
+import Task
 
 
 type alias Model =
@@ -29,22 +33,30 @@ type Msg
     | SetActiveIconTab Int
     | SetActiveStackedTab Int
     | SetActiveScrollingTab Int
+    | Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SetActiveHeroTab index ->
-            { model | activeHeroTab = index }
+            ( { model | activeHeroTab = index }, Cmd.none )
 
         SetActiveIconTab index ->
-            { model | activeIconTab = index }
+            ( { model | activeIconTab = index }, Cmd.none )
 
         SetActiveStackedTab index ->
-            { model | activeStackedTab = index }
+            ( { model | activeStackedTab = index }, Cmd.none )
 
         SetActiveScrollingTab index ->
-            { model | activeScrollingTab = index }
+            ( { model | activeScrollingTab = index }, Cmd.none )
+
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -61,11 +73,12 @@ view model =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Tabs with icons next to labels" ]
         , tabsWithIcons model
         , Html.h3 [ Typography.subtitle1 ]
-            [ text "Tabs with icons above labels and indicators restricted to content"
-            ]
+            [ text "Tabs with icons above labels and indicators restricted to content" ]
         , tabsWithStackedIcons model
         , Html.h3 [ Typography.subtitle1 ] [ text "Scrolling tabs" ]
         , scrollingTabs model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus tabs" ]
+        , focusTabs model
         ]
     }
 
@@ -143,3 +156,36 @@ scrollingTabs model =
             )
             [ "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight" ]
         )
+
+
+focusTabs : Model -> Html Msg
+focusTabs model =
+    Html.div []
+        [ TabBar.tabBar
+            (TabBar.config
+                |> TabBar.setAttributes [ Html.Attributes.id "my-tabs" ]
+            )
+            [ Tab.tab
+                (Tab.config
+                    |> Tab.setActive (model.activeHeroTab == 0)
+                    |> Tab.setOnClick (SetActiveHeroTab 0)
+                )
+                { label = "Home", icon = Nothing }
+            , Tab.tab
+                (Tab.config
+                    |> Tab.setActive (model.activeHeroTab == 1)
+                    |> Tab.setOnClick (SetActiveHeroTab 1)
+                )
+                { label = "Merchandise", icon = Nothing }
+            , Tab.tab
+                (Tab.config
+                    |> Tab.setActive (model.activeHeroTab == 2)
+                    |> Tab.setOnClick (SetActiveHeroTab 2)
+                )
+                { label = "About Us", icon = Nothing }
+            ]
+        , text "\u{00A0}"
+        , Button.raised
+            (Button.config |> Button.setOnClick (Focus "my-tabs"))
+            "Focus"
+        ]

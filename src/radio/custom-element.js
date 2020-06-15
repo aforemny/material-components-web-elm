@@ -6,6 +6,14 @@ import {
 
 class MdcRadio extends HTMLElement {
 
+  focus() {
+    this.radio_.nativeControl_.focus();
+  }
+
+  blur() {
+    this.radio_.nativeControl_.blur();
+  }
+
   get checked() {
     return this.checked_;
   }

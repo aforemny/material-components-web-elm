@@ -29,6 +29,7 @@ item, refer to [Material.Tab](Material-Tab).
   - [Content-Spanning Tab Indicator](#content-spanning-tab-indicator)
   - [Tab Scroller](#tab-scroller)
       - [Tab Scroller Alignment](#tab-scroller-alignment)
+  - [Focus a Tab Bar](#focus-a-tab-bar)
 
 
 # Resources
@@ -129,6 +130,19 @@ content.
 
     TabBar.tabBar
         (TabBar.config |> TabBar.setAlign (Just TabBar.Center))
+        []
+
+
+# Focus a Tab Bar
+
+You may programatically focus a tab bar by assigning an id attribute to it and
+use `Browser.Dom.focus`.
+
+    TabBar.tabBar
+        (TabBar.config
+            |> TabBar.setAttributes
+                [ Html.Attributes.id "my-tabs" ]
+        )
         []
 
 -}

@@ -1,11 +1,15 @@
 module Demo.IconButton exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (text)
+import Html.Attributes
+import Material.Button as Button
 import Material.IconButton as IconButton
 import Material.IconToggle as IconToggle
 import Material.Typography as Typography
 import Set exposing (Set)
+import Task
 
 
 type alias Model =
@@ -19,20 +23,30 @@ defaultModel =
 
 type Msg
     = Toggle String
+    | Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Toggle id ->
-            { model
+            ( { model
                 | ons =
                     if Set.member id model.ons then
                         Set.remove id model.ons
 
                     else
                         Set.insert id model.ons
-            }
+              }
+            , Cmd.none
+            )
+
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -66,5 +80,33 @@ view model =
             { offIcon = "favorite_border"
             , onIcon = "favorite"
             }
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus Icon Button" ]
+        , Html.div []
+            [ IconButton.iconButton
+                (IconButton.config
+                    |> IconButton.setAttributes [ Html.Attributes.id "my-icon-button" ]
+                )
+                "wifi"
+            , text "\u{00A0}"
+            , Button.raised
+                (Button.config |> Button.setOnClick (Focus "my-icon-button"))
+                "Focus"
+            ]
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus Icon Toggle" ]
+        , Html.div []
+            [ IconToggle.iconToggle
+                (IconToggle.config
+                    |> IconToggle.setOn (Set.member "icon-button-toggle" model.ons)
+                    |> IconToggle.setOnChange (Toggle "icon-button-toggle")
+                    |> IconToggle.setAttributes [ Html.Attributes.id "my-icon-toggle" ]
+                )
+                { offIcon = "favorite_border"
+                , onIcon = "favorite"
+                }
+            , text "\u{00A0}"
+            , Button.raised
+                (Button.config |> Button.setOnClick (Focus "my-icon-toggle"))
+                "Focus"
+            ]
         ]
     }

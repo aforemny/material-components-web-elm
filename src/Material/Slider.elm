@@ -27,6 +27,7 @@ module Material.Slider exposing
   - [Disabled Slider](#disabled-slider)
   - [Discrete Slider](#discrete-slider)
       - [Track Markers](#track-markers)
+  - [Focus a Slider](#focus-a-slider)
 
 
 # Resources
@@ -122,6 +123,18 @@ Note that non-discrete sliders ignore this configuration option.
 
     Slider.slider
         (Slider.config |> Slider.setDisplayMarkers True)
+
+
+# Focus a Slider
+
+You may programatically focus a slider by assigning an id attribute to it and
+use `Browser.Dom.focus`.
+
+    Slider.slider
+        (Slider.config
+            |> Slider.setAttributes
+                [ Html.Attributes.id "my-slider" ]
+        )
 
 -}
 

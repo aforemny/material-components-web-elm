@@ -1,11 +1,15 @@
 module Demo.Switch exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
+import Html.Attributes
+import Material.Button as Button
 import Material.FormField as FormField
 import Material.Switch as Switch
 import Material.Typography as Typography
+import Task
 
 
 type alias Model =
@@ -19,18 +23,28 @@ defaultModel =
 
 type Msg
     = Toggle String
+    | Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Toggle id ->
-            { model
+            ( { model
                 | switches =
                     Dict.update id
                         (\state -> Just (not (Maybe.withDefault False state)))
                         model.switches
-            }
+              }
+            , Cmd.none
+            )
+
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 isChecked : String -> Model -> Bool
@@ -51,6 +65,8 @@ view model =
     , content =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Switch" ]
         , demoSwitch model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus Switch" ]
+        , focusSwitch model
         ]
     }
 
@@ -93,4 +109,35 @@ demoSwitch model =
                 |> Switch.setChecked (isChecked id model)
                 |> Switch.setOnChange (Toggle id)
             )
+        ]
+
+
+focusSwitch : Model -> Html Msg
+focusSwitch model =
+    let
+        id =
+            "my-switch"
+    in
+    Html.div []
+        [ FormField.formField
+            (FormField.config
+                |> FormField.setLabel (Just "off/on")
+                |> FormField.setFor (Just id)
+                |> FormField.setOnClick (Toggle id)
+                |> FormField.setAttributes [ Html.Attributes.id "my-form-field" ]
+            )
+            [ Switch.switch
+                (Switch.config
+                    |> Switch.setChecked (isChecked id model)
+                    |> Switch.setOnChange (Toggle id)
+                    |> Switch.setAttributes [ Html.Attributes.id id ]
+                )
+            ]
+        , text "\u{00A0}"
+        , Button.raised
+            (Button.config |> Button.setOnClick (Focus "my-switch"))
+            "Focus switch"
+        , Button.raised
+            (Button.config |> Button.setOnClick (Focus "my-form-field"))
+            "Focus form field"
         ]

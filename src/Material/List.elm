@@ -29,6 +29,7 @@ about the list items, refer to [Material.List.Item](Material-List-Item).
   - [Avatar List](#avatar-list)
   - [List Group](#list-group)
       - [List Group Divider](#list-group-divider)
+  - [Focus a List](#focus-a-list)
 
 
 # Resources
@@ -149,6 +150,20 @@ grouped using `group` and labeled by `subheader`.
         ]
 
 @docs group, subheader
+
+
+# Focus a List
+
+You may programatically focus a list by assigning an id attribute to it and use
+`Browser.Dom.focus`.
+
+    List.list
+        (List.config
+            |> List.setAttributes
+                [ Html.Attributes.id "my-list" ]
+        )
+        [ ListItem.listItem ListItem.config [ text "Line item" ]
+        ]
 
 -}
 

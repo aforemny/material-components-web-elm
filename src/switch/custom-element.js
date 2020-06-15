@@ -6,6 +6,14 @@ import {
 
 class MdcSwitch extends HTMLElement {
 
+  focus() {
+    this.switch_.nativeControl_.focus();
+  }
+
+  blur() {
+    this.switch_.nativeControl_.blur();
+  }
+
   get checked() {
     return this.checked_;
   }

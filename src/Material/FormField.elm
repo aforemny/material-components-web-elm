@@ -20,6 +20,7 @@ interacting with the label.
       - [Configuration Options](#configuration-options)
   - [Form Field](#form-field)
   - [Label Position](#label-position)
+  - [Focus a Form Field](#focus-a-form-field)
 
 
 # Resources
@@ -67,6 +68,18 @@ If you want to position the label after the form field's control, set its
     FormField.formField
         (FormField.config |> FormField.setAlignEnd True)
         [ Checkbox.checkbox Checkbox.config ]
+
+
+# Focus a Form Field
+
+You may programatically focus a formfield by assigning an id attribute to it
+and use `Browser.Dom.focus`.
+
+    FormField.formField
+        (FormField.config
+            |> FormField.setAttributes [ Html.Attributes.id "my-form-field" ]
+        )
+        []
 
 -}
 

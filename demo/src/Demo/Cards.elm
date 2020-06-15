@@ -1,5 +1,6 @@
 module Demo.Cards exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
@@ -8,6 +9,7 @@ import Material.Card as Card
 import Material.IconButton as IconButton
 import Material.Theme as Theme
 import Material.Typography as Typography
+import Task
 
 
 type alias Model =
@@ -20,12 +22,18 @@ defaultModel =
 
 
 type Msg
-    = NoOp
+    = Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    model
+    case msg of
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -42,6 +50,7 @@ view model =
         [ exampleCard1
         , exampleCard2
         , exampleCard3
+        , focusCard
         ]
     }
 
@@ -117,6 +126,31 @@ exampleCard3 =
                 ]
         , actions = Just demoActions
         }
+
+
+focusCard : Html Msg
+focusCard =
+    Html.div []
+        [ Card.card
+            (Card.config
+                |> Card.setAttributes
+                    [ Html.Attributes.id "my-card"
+                    , style "margin" "48px 0"
+                    , style "width" "350px"
+                    ]
+            )
+            { blocks =
+                Card.primaryAction []
+                    [ demoTitle
+                    , demoBody
+                    ]
+            , actions = Just demoActions
+            }
+        , text "\u{00A0}"
+        , Button.raised
+            (Button.config |> Button.setOnClick (Focus "my-card"))
+            "Focus"
+        ]
 
 
 demoMedia : Card.Block msg

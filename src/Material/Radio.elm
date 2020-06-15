@@ -20,6 +20,7 @@ all available options.
   - [Radio](#radio)
   - [Checked Radio](#checked-radio)
   - [Disabled Radio](#disabled-radio)
+  - [Focus a Radio](#focus-a-radio)
 
 
 # Resources
@@ -82,6 +83,18 @@ Disabled radio buttons cannot be interacted with and have no visual interaction
 effect.
 
     Radio.radio (Radio.config |> Radio.setDisabled True)
+
+
+# Focus a Radio
+
+You may programatically focus a radio button by assigning an id attribute to it
+and use `Browser.Dom.focus`.
+
+    Radio.radio
+        (Radio.config
+            |> Radio.setAttributes
+                [ Html.Attributes.id "my-radio" ]
+        )
 
 -}
 

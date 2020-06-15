@@ -25,6 +25,7 @@ module Material.Button exposing
   - [Disabled Button](#disabled-button)
   - [Dense Button](#disabled-button)
   - [Link Button](#link-button)
+  - [Focus a Button](#focus-a-button)
 
 
 # Resources
@@ -130,6 +131,19 @@ to specify a target.
         "Visit"
 
 Note that link buttons cannot be disabled.
+
+
+# Focus a Button
+
+You may programatically focus a button by assigning an id attribute to it and
+use `Browser.Dom.focus`.
+
+    Button.text
+        (Button.config
+            |> Button.setAttributes
+                [ Html.Attributes.id "my-button" ]
+        )
+        "Button"
 
 -}
 

@@ -6,6 +6,14 @@ import {
 
 class MdcCheckbox extends HTMLElement {
 
+  focus() {
+    this.checkbox_.nativeControl_.focus();
+  }
+
+  blur() {
+    this.checkbox_.nativeControl_.blur();
+  }
+
   get checked() {
     return this.checked_;
   }

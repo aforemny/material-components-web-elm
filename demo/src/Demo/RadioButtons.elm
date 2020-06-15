@@ -1,17 +1,19 @@
 module Demo.RadioButtons exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
+import Material.Button as Button
 import Material.FormField as FormField
 import Material.Radio as Radio
 import Material.Typography as Typography
+import Task
 
 
 type alias Model =
-    { radios : Dict String String
-    }
+    { radios : Dict String String }
 
 
 defaultModel : Model
@@ -26,13 +28,21 @@ defaultModel =
 
 type Msg
     = Set String String
+    | Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Set group index ->
-            { model | radios = Dict.insert group index model.radios }
+            ( { model | radios = Dict.insert group index model.radios }, Cmd.none )
+
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 isSelected : String -> String -> Model -> Bool
@@ -55,6 +65,8 @@ view model =
     , content =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Radio Buttons" ]
         , exampleRadioGroup model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus Radio Button" ]
+        , focusRadio
         ]
     }
 
@@ -99,4 +111,16 @@ exampleRadioGroup model =
     Html.div []
         [ radio model "example" "radio-buttons-example-radio-1" "Radio 1"
         , radio model "example" "radio-buttons-example-radio-2" "Radio 2"
+        ]
+
+
+focusRadio : Html Msg
+focusRadio =
+    Html.div []
+        [ Radio.radio
+            (Radio.config |> Radio.setAttributes [ Html.Attributes.id "my-radio" ])
+        , text "\u{00A0}"
+        , Button.raised
+            (Button.config |> Button.setOnClick (Focus "my-radio"))
+            "Focus"
         ]

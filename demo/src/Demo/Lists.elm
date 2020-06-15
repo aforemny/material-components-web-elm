@@ -1,8 +1,10 @@
 module Demo.Lists exposing (Model, Msg, defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
+import Material.Button as Button
 import Material.Checkbox as Checkbox
 import Material.Icon as Icon
 import Material.List as List
@@ -10,6 +12,7 @@ import Material.List.Item as ListItem
 import Material.Radio as Radio
 import Material.Typography as Typography
 import Set exposing (Set)
+import Task
 
 
 type alias Model =
@@ -34,29 +37,39 @@ type Msg
     | SetRadio String
     | SetActivated String
     | SetShapedActivated String
+    | Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ToggleCheckbox id ->
-            { model
+            ( { model
                 | checkboxes =
                     if Set.member id model.checkboxes then
                         Set.remove id model.checkboxes
 
                     else
                         Set.insert id model.checkboxes
-            }
+              }
+            , Cmd.none
+            )
 
         SetRadio id ->
-            { model | radio = Just id }
+            ( { model | radio = Just id }, Cmd.none )
 
         SetActivated id ->
-            { model | activated = id }
+            ( { model | activated = id }, Cmd.none )
 
         SetShapedActivated id ->
-            { model | shapedActivated = id }
+            ( { model | shapedActivated = id }, Cmd.none )
+
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -89,6 +102,8 @@ view model =
         , listWithTrailingCheckbox model
         , Html.h3 [ Typography.subtitle1 ] [ text "List with Trailing Radio Buttons" ]
         , listWithTrailingRadioButton model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus List" ]
+        , focusList
         ]
     }
 
@@ -340,3 +355,18 @@ listWithTrailingRadioButton model =
             , "Carrots"
             ]
         )
+
+
+focusList : Html Msg
+focusList =
+    Html.div []
+        [ List.list
+            (List.config
+                |> List.setAttributes (demoList ++ [ Html.Attributes.id "my-list" ])
+            )
+            (List.repeat 3 <| ListItem.listItem ListItem.config [ text "Line item" ])
+        , text "\u{00A0}"
+        , Button.raised
+            (Button.config |> Button.setOnClick (Focus "my-list"))
+            "Focus"
+        ]

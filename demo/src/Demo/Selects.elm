@@ -1,12 +1,15 @@
 module Demo.Selects exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
+import Material.Button as Button
 import Material.List as List
 import Material.Select as Select
 import Material.Select.Option as SelectOption exposing (SelectOption)
 import Material.Typography as Typography
+import Task
 
 
 type alias Model =
@@ -20,13 +23,21 @@ defaultModel =
 
 type Msg
     = SetValue String
+    | Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SetValue value ->
-            { model | value = value }
+            ( { model | value = value }, Cmd.none )
+
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -47,6 +58,8 @@ view model =
         , Html.div selectRow [ shapedFilledSelects model ]
         , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Outlined (TODO)" ]
         , Html.div selectRow [ shapedOutlinedSelects model ]
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus Select" ]
+        , focusSelect
         ]
     }
 
@@ -112,6 +125,21 @@ shapedOutlinedSelects model =
                 marginRight
         )
         items
+
+
+focusSelect : Html Msg
+focusSelect =
+    Html.div []
+        [ Select.filled
+            (Select.config
+                |> Select.setAttributes [ Html.Attributes.id "my-select" ]
+            )
+            items
+        , text "\u{00A0}"
+        , Button.raised
+            (Button.config |> Button.setOnClick (Focus "my-select"))
+            "Focus"
+        ]
 
 
 items : List (SelectOption msg)

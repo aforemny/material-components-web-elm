@@ -22,6 +22,7 @@ module Material.Checkbox exposing
   - [Checked Checkbox](#checked-Checkbox)
   - [Indeterminate Checkbox](#indeterminate-checkbox)
   - [Disabled Checkbox](#disabled-checkbox)
+  - [Focus a Checkbox](#focus-a-checkbox)
 
 
 # Resources
@@ -99,6 +100,18 @@ checkboxes cannot be interacted with and have no visual interaction effect.
 
     Checkbox.checkbox
         (Checkbox.config |> Checkbox.setDisabled True)
+
+
+# Focus a Checkbox
+
+You may programatically focus a checkbox by assigning an id attribute to it and
+use `Browser.Dom.focus`.
+
+    Checkbox.checkbox
+        (Checkbox.config
+            |> Checkbox.setAttributes
+                [ Html.Attributes.id "my-checkbox" ]
+        )
 
 -}
 

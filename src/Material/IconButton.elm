@@ -21,6 +21,7 @@ tap.
   - [Icon Button](#icon-button)
   - [Disabled Icon Button](#disabled-icon-button)
   - [Labeled Icon Button](#labeled-icon-button)
+  - [Focus an Icon Button](#focus-an-icon-button)
 
 
 # Resources
@@ -88,6 +89,19 @@ configuration option.
 # Variant: Custom Icon Button
 
 @docs custom
+
+
+# Focus an Icon Button
+
+You may programatically focus an icon button by assigning an id attribute to it
+and use `Browser.Dom.focus`.
+
+    IconButton.iconButton
+        (IconButton.config
+            |> IconButton.setAttributes
+                [ Html.Attributes.id "my-icon-button" ]
+        )
+        "wifi"
 
 -}
 

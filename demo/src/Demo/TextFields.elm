@@ -1,12 +1,15 @@
 module Demo.TextFields exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
+import Material.Button as Button
 import Material.HelperText as HelperText
 import Material.TextArea as TextArea
 import Material.TextField as TextField
 import Material.Typography as Typography
+import Task
 
 
 type alias Model =
@@ -19,14 +22,18 @@ defaultModel =
 
 
 type Msg
-    = NoOp
+    = Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NoOp ->
-            model
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -58,6 +65,8 @@ view model =
         , fullwidthTextField model
         , Html.h3 [ Typography.subtitle1 ] [ text "Full Width Textarea" ]
         , fullwidthTextareaTextField model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Focus Text Field" ]
+        , focusTextField
         ]
     }
 
@@ -282,6 +291,20 @@ fullwidthTextareaTextField model =
                 )
             , demoHelperText
             ]
+        ]
+
+
+focusTextField : Html Msg
+focusTextField =
+    Html.div []
+        [ TextField.filled
+            (TextField.config
+                |> TextField.setAttributes [ Html.Attributes.id "my-text-field" ]
+            )
+        , text "\u{00A0}"
+        , Button.raised
+            (Button.config |> Button.setOnClick (Focus "my-text-field"))
+            "Focus"
         ]
 
 

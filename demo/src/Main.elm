@@ -214,13 +214,19 @@ update msg model =
             ( { model | catalogDrawerOpen = False }, Cmd.none )
 
         ButtonsMsg msg_ ->
-            ( { model | buttons = Demo.Buttons.update msg_ model.buttons }, Cmd.none )
+            Demo.Buttons.update msg_ model.buttons
+                |> Tuple.mapFirst (\buttons -> { model | buttons = buttons })
+                |> Tuple.mapSecond (Cmd.map ButtonsMsg)
 
         CardsMsg msg_ ->
-            ( { model | cards = Demo.Cards.update msg_ model.cards }, Cmd.none )
+            Demo.Cards.update msg_ model.cards
+                |> Tuple.mapFirst (\cards -> { model | cards = cards })
+                |> Tuple.mapSecond (Cmd.map CardsMsg)
 
         CheckboxMsg msg_ ->
-            ( { model | checkbox = Demo.Checkbox.update msg_ model.checkbox }, Cmd.none )
+            Demo.Checkbox.update msg_ model.checkbox
+                |> Tuple.mapFirst (\checkbox -> { model | checkbox = checkbox })
+                |> Tuple.mapSecond (Cmd.map CheckboxMsg)
 
         ChipsMsg msg_ ->
             ( { model | chips = Demo.Chips.update msg_ model.chips }, Cmd.none )
@@ -257,12 +263,14 @@ update msg model =
             )
 
         FabsMsg msg_ ->
-            ( { model | fabs = Demo.Fabs.update msg_ model.fabs }, Cmd.none )
+            Demo.Fabs.update msg_ model.fabs
+                |> Tuple.mapFirst (\fabs -> { model | fabs = fabs })
+                |> Tuple.mapSecond (Cmd.map FabsMsg)
 
         IconButtonMsg msg_ ->
-            ( { model | iconButton = Demo.IconButton.update msg_ model.iconButton }
-            , Cmd.none
-            )
+            Demo.IconButton.update msg_ model.iconButton
+                |> Tuple.mapFirst (\iconButton -> { model | iconButton = iconButton })
+                |> Tuple.mapSecond (Cmd.map IconButtonMsg)
 
         ImageListMsg msg_ ->
             ( { model | imageList = Demo.ImageList.update msg_ model.imageList }
@@ -273,16 +281,22 @@ update msg model =
             ( { model | menus = Demo.Menus.update msg_ model.menus }, Cmd.none )
 
         RadioButtonsMsg msg_ ->
-            ( { model | radio = Demo.RadioButtons.update msg_ model.radio }, Cmd.none )
+            Demo.RadioButtons.update msg_ model.radio
+                |> Tuple.mapFirst (\radio -> { model | radio = radio })
+                |> Tuple.mapSecond (Cmd.map RadioButtonsMsg)
 
         RippleMsg msg_ ->
             ( { model | ripple = Demo.Ripple.update msg_ model.ripple }, Cmd.none )
 
         SelectMsg msg_ ->
-            ( { model | selects = Demo.Selects.update msg_ model.selects }, Cmd.none )
+            Demo.Selects.update msg_ model.selects
+                |> Tuple.mapFirst (\selects -> { model | selects = selects })
+                |> Tuple.mapSecond (Cmd.map SelectMsg)
 
         SliderMsg msg_ ->
-            ( { model | slider = Demo.Slider.update msg_ model.slider }, Cmd.none )
+            Demo.Slider.update msg_ model.slider
+                |> Tuple.mapFirst (\slider -> { model | slider = slider })
+                |> Tuple.mapSecond (Cmd.map SliderMsg)
 
         SnackbarMsg msg_ ->
             Demo.Snackbar.update msg_ model.snackbar
@@ -290,15 +304,19 @@ update msg model =
                 |> Tuple.mapSecond (Cmd.map SnackbarMsg)
 
         SwitchMsg msg_ ->
-            ( { model | switch = Demo.Switch.update msg_ model.switch }, Cmd.none )
+            Demo.Switch.update msg_ model.switch
+                |> Tuple.mapFirst (\switch -> { model | switch = switch })
+                |> Tuple.mapSecond (Cmd.map SwitchMsg)
 
         TextFieldMsg msg_ ->
-            ( { model | textfields = Demo.TextFields.update msg_ model.textfields }
-            , Cmd.none
-            )
+            Demo.TextFields.update msg_ model.textfields
+                |> Tuple.mapFirst (\textfields -> { model | textfields = textfields })
+                |> Tuple.mapSecond (Cmd.map TextFieldMsg)
 
         TabBarMsg msg_ ->
-            ( { model | tabbar = Demo.TabBar.update msg_ model.tabbar }, Cmd.none )
+            Demo.TabBar.update msg_ model.tabbar
+                |> Tuple.mapFirst (\tabbar -> { model | tabbar = tabbar })
+                |> Tuple.mapSecond (Cmd.map TabBarMsg)
 
         LayoutGridMsg msg_ ->
             ( { model | layoutGrid = Demo.LayoutGrid.update msg_ model.layoutGrid }
@@ -306,7 +324,9 @@ update msg model =
             )
 
         ListsMsg msg_ ->
-            ( { model | lists = Demo.Lists.update msg_ model.lists }, Cmd.none )
+            Demo.Lists.update msg_ model.lists
+                |> Tuple.mapFirst (\lists -> { model | lists = lists })
+                |> Tuple.mapSecond (Cmd.map ListsMsg)
 
         ThemeMsg msg_ ->
             ( { model | theme = Demo.Theme.update msg_ model.theme }, Cmd.none )

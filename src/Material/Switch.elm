@@ -20,6 +20,7 @@ preferred way to adjust settings on mobile.
   - [Switch](#switch)
   - [On Switch](#on-switch)
   - [Disabled Switch](#disabled-switch)
+  - [Focus a Switch](#focus-a-switch)
 
 
 # Resources
@@ -82,6 +83,18 @@ Disabled switches cannot be interacted with and have no visual interaction
 effect.
 
     Switch.switch (Switch.config |> Switch.setDisabled True)
+
+
+# Focus a Switch
+
+You may programatically focus a switch by assigning an id attribute to it and
+use `Browser.Dom.focus`.
+
+    Switch.switch
+        (Switch.config
+            |> Switch.setAttributes
+                [ Html.Attributes.id "my-switch" ]
+        )
 
 -}
 

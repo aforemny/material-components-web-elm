@@ -4,7 +4,7 @@ dist
 *.d.ts
 elm.js
 elm-stuff
-gh-pages
+public
 *.js.map
 node_modules
 src/*/component.js

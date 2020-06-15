@@ -10,7 +10,7 @@ const http = require("http");
 
   const root = process.argv[2];
   const urls = process.argv.slice(3);
-  const app = connect().use(serveStatic("./gh-pages"));
+  const app = connect().use(serveStatic("./public"));
   const server = http.createServer(app);
   await new Promise((resolve, reject) => server.listen(8080, () => resolve()));
 
@@ -45,7 +45,7 @@ find src -name "*.elm" \
   | sort \
   | uniq \
   | sed 's@.*#@http://localhost:8080/#@' \
-  | xargs node "$fetch" ./gh-pages
+  | xargs node "$fetch" ./public
 
 code="$?"
 

@@ -11,18 +11,18 @@ build-npm: node_modules src/**/component.ts src/**/custom-element.js
 
 
 build-pages: build-npm build-demo
-	mkdir -p gh-pages
-	rsync --delete -r demo/images gh-pages
-	cp demo/page.html gh-pages/index.html
-	cp demo/demo.js gh-pages
-	cp dist/material-components-web-elm.js gh-pages
-	cp dist/material-components-web-elm.js.map gh-pages
-	cp dist/material-components-web-elm.min.js gh-pages
-	cp dist/material-components-web-elm.min.js.map gh-pages
-	cp dist/material-components-web-elm.css gh-pages
-	cp dist/material-components-web-elm.css.map gh-pages
-	cp dist/material-components-web-elm.min.css gh-pages
-	cp dist/material-components-web-elm.min.css.map gh-pages
+	mkdir -p public
+	rsync --delete -r demo/images public
+	cp demo/page.html public/index.html
+	cp demo/demo.js public
+	cp dist/material-components-web-elm.js public
+	cp dist/material-components-web-elm.js.map public
+	cp dist/material-components-web-elm.min.js public
+	cp dist/material-components-web-elm.min.js.map public
+	cp dist/material-components-web-elm.css public
+	cp dist/material-components-web-elm.css.map public
+	cp dist/material-components-web-elm.min.css public
+	cp dist/material-components-web-elm.min.css.map public
 
 
 build-demo:
@@ -43,7 +43,7 @@ do-review: node_modules
 
 
 commit-pages: build-pages
-	(cd gh-pages && git add . && git commit -m 'Update' && git push)
+	(cd public && git add . && git commit -m 'Update' && git push)
 
 
 docs: node_modules

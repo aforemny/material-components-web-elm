@@ -182,6 +182,7 @@ when there is only a single button as card action.
 
 import Html exposing (Html)
 import Html.Attributes exposing (class, style)
+import Json.Encode as Encode
 import Material.Button as Button
 import Material.Button.Internal
 import Material.IconButton as IconButton
@@ -389,16 +390,23 @@ primaryAction : List (Html.Attribute msg) -> List (Block msg) -> List (Block msg
 primaryAction additionalAttributes blocks =
     [ Block <|
         Html.div
-            (List.filterMap identity [ primaryActionCs ]
+            ([ primaryActionCs
+             , tabIndexProp 0
+             ]
                 ++ additionalAttributes
             )
             (List.map (\(Block html) -> html) blocks)
     ]
 
 
-primaryActionCs : Maybe (Html.Attribute msg)
+primaryActionCs : Html.Attribute msg
 primaryActionCs =
-    Just (class "mdc-card__primary-action")
+    class "mdc-card__primary-action"
+
+
+tabIndexProp : Int -> Html.Attribute msg
+tabIndexProp tabIndex =
+    Html.Attributes.property "tabIndex" (Encode.int tabIndex)
 
 
 {-| Card actions type

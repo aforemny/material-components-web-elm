@@ -20,7 +20,6 @@ export default class MdcButton extends HTMLElement {
   }
 
   connectedCallback() {
-    this.style.display = "inline-flex";
     installClassNameChangeHook.call(this);
     this.ripple_ = new MDCRipple(this.querySelector(".mdc-button"));
   }

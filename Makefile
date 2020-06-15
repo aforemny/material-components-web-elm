@@ -42,6 +42,11 @@ do-review: node_modules
 	(cd demo && ../node_modules/.bin/elm-review)
 
 
+do-checks: node_modules
+	bash bin/check-links.sh
+	bash bin/test-docs.sh
+
+
 commit-pages: build-pages
 	(cd public && git add . && git commit -m 'Update' && git push)
 
@@ -50,7 +55,7 @@ docs: node_modules
 	elm-doc-preview
 
 
-release: distclean build-pages build-examples build-docs do-review
+release: distclean build-pages build-examples build-docs do-review do-checks
 
 
 node_modules:

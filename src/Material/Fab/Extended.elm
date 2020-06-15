@@ -120,6 +120,7 @@ set its `setExited` configuration option to `True`.
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
+import Json.Encode as Encode
 
 
 {-| Extended floating action button configuration
@@ -195,6 +196,7 @@ fab ((Config { additionalAttributes }) as config_) label =
             , extendedFabCs
             , exitedCs config_
             , clickHandler config_
+            , tabIndexProp 0
             ]
             ++ additionalAttributes
         )
@@ -204,6 +206,11 @@ fab ((Config { additionalAttributes }) as config_) label =
             , trailingIconElt config_
             ]
         )
+
+
+tabIndexProp : Int -> Maybe (Html.Attribute msg)
+tabIndexProp tabIndex =
+    Just (Html.Attributes.property "tabIndex" (Encode.int tabIndex))
 
 
 extendedFabCs : Maybe (Html.Attribute msg)

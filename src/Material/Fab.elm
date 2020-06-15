@@ -95,6 +95,7 @@ If you want the floating action button to transition off the screen, set its
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
+import Json.Encode as Encode
 
 
 {-| Floating action button configuration
@@ -158,10 +159,16 @@ fab ((Config { additionalAttributes }) as config_) iconName =
             , miniCs config_
             , exitedCs config_
             , clickHandler config_
+            , tabIndexProp 0
             ]
             ++ additionalAttributes
         )
         [ iconElt iconName ]
+
+
+tabIndexProp : Int -> Maybe (Html.Attribute msg)
+tabIndexProp tabIndex =
+    Just (Html.Attributes.property "tabIndex" (Encode.int tabIndex))
 
 
 rootCs : Maybe (Html.Attribute msg)

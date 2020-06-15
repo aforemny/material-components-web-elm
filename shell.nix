@@ -6,6 +6,7 @@ mkShell {
     elmPackages.elm
     (ghc.withPackages(pkgs: [ pkgs.pandoc ]))
     nodejs
+    python3
   ];
   shellHook = ''
     export PATH=./node_modules/.bin:$PATH

@@ -98,7 +98,6 @@ import Json.Decode as Decode
 import Json.Encode as Encode
 import Material.Checkbox exposing (setId)
 import Material.Checkbox exposing (setName)
-import String exposing (String)
 
 
 {-| Radio button configuration
@@ -242,6 +241,9 @@ nativeControlElt config_ =
         (List.filterMap identity
             [ nativeControlCs
             , radioTypeAttr
+            , idAttr config_
+            , nameAttr config_
+            , valueAttr config
             , checkedProp config_
             , changeHandler config_
             ]
@@ -262,6 +264,21 @@ radioTypeAttr =
 backgroundElt : Html msg
 backgroundElt =
     Html.div [ class "mdc-radio__background" ] [ outerCircleElt, innerCircleElt ]
+
+
+idAttr : Config msg -> Maybe (Html.Attribute msg)
+idAttr (Config { id }) =
+    Maybe.map Html.Attributes.id id
+
+
+nameAttr : Config msg -> Maybe (Html.Attribute msg)
+nameAttr (Config { name }) =
+    Maybe.map Html.Attributes.name name
+
+
+valueAttr : Config msg -> Maybe (Html.Attribute msg)
+valueAttr (Config { value }) =
+    Maybe.map Html.Attributes.value value
 
 
 outerCircleElt : Html msg

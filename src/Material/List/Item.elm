@@ -214,7 +214,7 @@ config =
         }
 
 
-{-| Specify whtehr a list item should be disabled
+{-| Specify whether a list item should be disabled
 
 Disabled list items cannot be interacted with and have not visual interaction
 effect.

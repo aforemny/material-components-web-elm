@@ -85,7 +85,7 @@ listItem label =
 heroMenu : Model -> Html msg
 heroMenu model =
     Html.div
-        [ class "mdc-menu mdc-menu-surface mdc-menu-surface--open"
+        [ class "mdc-menu-surface mdc-menu-surface--open"
         , style "position" "relative"
         , style "transform-origin" "left top 0px"
         , style "left" "0px"

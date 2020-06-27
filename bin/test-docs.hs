@@ -114,7 +114,7 @@ writePrelude h = do
   hPutStrLn h "import Material.Radio as Radio"
   hPutStrLn h "import Material.Ripple as Ripple"
   hPutStrLn h "import Material.Select as Select"
-  hPutStrLn h "import Material.Select.Option as SelectOption"
+  hPutStrLn h "import Material.Select.Item as SelectItem"
   hPutStrLn h "import Material.Slider as Slider"
   hPutStrLn h "import Material.Snackbar as Snackbar"
   hPutStrLn h "import Material.Switch as Switch"

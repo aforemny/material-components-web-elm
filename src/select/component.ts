@@ -26,7 +26,7 @@ import {CustomEventListener, SpecificEventListener} from '@material/base/types';
 import {MDCFloatingLabel, MDCFloatingLabelFactory} from '@material/floating-label/component';
 import {MDCLineRipple, MDCLineRippleFactory} from '@material/line-ripple/component';
 import * as menuSurfaceConstants from '@material/menu-surface/constants';
-import {MDCMenu, MDCMenuFactory} from '@material/menu/component';
+import {MDCMenu} from '../menu/component';
 import * as menuConstants from '@material/menu/constants';
 import {MDCMenuItemEvent} from '@material/menu/types';
 import {MDCNotchedOutline, MDCNotchedOutlineFactory} from '@material/notched-outline/component';
@@ -35,7 +35,7 @@ import {MDCRipple} from '@material/ripple/component';
 import {MDCRippleFoundation} from '@material/ripple/foundation';
 import {MDCSelectAdapter} from '@material/select/adapter';
 import {cssClasses, strings} from '@material/select/constants';
-import {MDCSelectFoundation} from '@material/select/foundation';
+import {MDCSelectFoundation} from './foundation';
 import {MDCSelectHelperText, MDCSelectHelperTextFactory} from '@material/select/helper-text/component';
 import {MDCSelectIcon, MDCSelectIconFactory} from '@material/select/icon/component';
 import {MDCSelectEventDetail, MDCSelectFoundationMap} from '@material/select/types';
@@ -50,12 +50,12 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> {
 
   private ripple_!: MDCRipple | null;
 
-  private menu_!: MDCMenu; // assigned in menuSetup_()
+  private menu_!: MDCMenu; // assigned in menuSetup()
 
   private selectAnchor_!: HTMLElement; // assigned in initialize()
   private selectedText_!: HTMLElement; // assigned in initialize()
 
-  private menuElement_!: Element; // assigned in menuSetup_()
+  private menuElement_!: Element; // assigned in menuSetup()
   private leadingIcon_?: MDCSelectIcon; // assigned in initialize()
   private helperText_!: MDCSelectHelperText | null; // assigned in initialize()
   private lineRipple_!: MDCLineRipple | null; // assigned in initialize()
@@ -67,6 +67,7 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> {
   private handleClick_!: SpecificEventListener<'click'>; // assigned in initialize()
   private handleKeydown_!: SpecificEventListener<'keydown'>; // assigned in initialize()
   private handleMenuOpened_!: EventListener; // assigned in initialize()
+  private handleMenuClose_!: EventListener; // assigned in initialize()
   private handleMenuClosed_!: EventListener; // assigned in initialize()
   private handleMenuItemAction_!: CustomEventListener<MDCMenuItemEvent>; // assigned in initialize()
 
@@ -74,7 +75,6 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> {
       labelFactory: MDCFloatingLabelFactory = (el) => new MDCFloatingLabel(el),
       lineRippleFactory: MDCLineRippleFactory = (el) => new MDCLineRipple(el),
       outlineFactory: MDCNotchedOutlineFactory = (el) => new MDCNotchedOutline(el),
-      menuFactory: MDCMenuFactory = (el) => new MDCMenu(el),
       iconFactory: MDCSelectIconFactory = (el) => new MDCSelectIcon(el),
       helperTextFactory: MDCSelectHelperTextFactory = (el) => new MDCSelectHelperText(el),
   ) {
@@ -94,8 +94,6 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> {
         this.helperText_ = helperTextFactory(helperTextElement);
       }
     }
-
-    this.menuSetup_(menuFactory);
 
     const labelElement = this.root_.querySelector(strings.LABEL_SELECTOR);
     this.label_ = labelElement ? labelFactory(labelElement) : null;
@@ -131,6 +129,7 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> {
     this.handleKeydown_ = (evt) => this.foundation_.handleKeydown(evt);
     this.handleMenuItemAction_ = (evt) => this.foundation_.handleMenuItemAction(evt.detail.index);
     this.handleMenuOpened_ = () => this.foundation_.handleMenuOpened();
+    this.handleMenuClose_ = () => this.handleMenuClose();
     this.handleMenuClosed_ = () => this.foundation_.handleMenuClosed();
 
     this.selectedText_.addEventListener('focus', this.handleFocus_);
@@ -139,13 +138,24 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> {
     this.selectedText_.addEventListener('click', this.handleClick_ as EventListener);
 
     this.selectedText_!.addEventListener('keydown', this.handleKeydown_);
+  }
+
+  /**
+   * Handles setup for the menu.
+   */
+  menuSetup(menuElement: HTMLElement) {
+    this.menuElement_ = menuElement;
+    this.menu_ = (this.menuElement_ as any).menu_;
+
+    this.menu_!.listen("MDCMenu:close", this.handleMenuClose_);
     this.menu_!.listen(menuSurfaceConstants.strings.CLOSED_EVENT, this.handleMenuClosed_);
     this.menu_!.listen(menuSurfaceConstants.strings.OPENED_EVENT, this.handleMenuOpened_);
     this.menu_!.listen(menuConstants.strings.SELECTED_EVENT, this.handleMenuItemAction_);
-    this.foundation_.init();
+    this.foundation_.initMenu();
+  }
 
-    // Sets disabled state in foundation
-    this.disabled = this.root_.classList.contains(cssClasses.DISABLED);
+  handleMenuClose() {
+    this.menu_.open = false;
   }
 
   destroy() {
@@ -155,6 +165,7 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> {
     this.selectedText_.removeEventListener('keydown', this.handleKeydown_);
     this.selectedText_.removeEventListener('click', this.handleClick_ as EventListener);
 
+    this.menu_.unlisten("MDCMenu:close", this.handleMenuClose_);
     this.menu_.unlisten(menuSurfaceConstants.strings.CLOSED_EVENT, this.handleMenuClosed_);
     this.menu_.unlisten(menuSurfaceConstants.strings.OPENED_EVENT, this.handleMenuOpened_);
     this.menu_.unlisten(menuConstants.strings.SELECTED_EVENT, this.handleMenuItemAction_);
@@ -174,14 +185,6 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> {
     }
 
     super.destroy();
-  }
-
-  get value(): string {
-    return this.foundation_.getValue();
-  }
-
-  set value(value: string) {
-    this.foundation_.setValue(value);
   }
 
   get selectedIndex(): number {
@@ -263,14 +266,6 @@ export class MDCSelect extends MDCComponent<MDCSelectFoundation> {
       ...this.getLabelAdapterMethods_(),
     };
     return new MDCSelectFoundation(adapter, this.getFoundationMap_());
-  }
-
-  /**
-   * Handles setup for the menu.
-   */
-  private menuSetup_(menuFactory: MDCMenuFactory) {
-    this.menuElement_ = this.root_.querySelector(strings.MENU_SELECTOR)!;
-    this.menu_ = menuFactory(this.menuElement_);
   }
 
   private createRipple_(): MDCRipple {

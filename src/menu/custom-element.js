@@ -42,6 +42,17 @@ class MdcMenu extends HTMLElement {
     this.menu_.quickOpen = this.quickOpen_;
   }
 
+  listSetup(listElement) {
+    this.menu_.listSetup(listElement);
+
+    if (this.classList.contains("mdc-select__menu")) {
+      const parentElement = this.parentElement;
+      if (parentElement.classList.contains("mdc-select")) {
+        parentElement.menuSetup(this);
+      }
+    }
+  }
+
   disconnectedCallback() {
     this.menu_.destroy();
     uninstallClassNameChangeHook.call(this);

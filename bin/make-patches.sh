@@ -1,4 +1,4 @@
-set -e
+set -ex
 
 find src -name component.ts | while read fn; do
   dir=$(dirname $fn)
@@ -16,12 +16,12 @@ find src -name component.ts | while read fn; do
     *)
       ;;
   esac
-  if test -d $dir/foundation.ts; then
-    cp material-foundations-web/packages/mdc-$foundation/foundation.ts $dir/foundation.ts.orig
+  if test -f $dir/foundation.ts; then
+    cp material-components-web/packages/mdc-$component/foundation.ts $dir/foundation.ts.orig
     diff -rupN $dir/foundation.ts.orig $dir/foundation.ts > $dir/foundation.patch || true
     rm $dir/foundation.ts.orig
   fi
-  if test -d $dir/component.ts; then
+  if test -f $dir/component.ts; then
     cp material-components-web/packages/mdc-$component/component.ts $dir/component.ts.orig
     diff -rupN $dir/component.ts.orig $dir/component.ts > $dir/component.patch || true
     rm $dir/component.ts.orig

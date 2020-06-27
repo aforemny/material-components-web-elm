@@ -98,6 +98,11 @@ class MdcList extends HTMLElement {
         firstListItem.setAttribute("tabindex", 0);
       }
     }
+
+    const parentElement = this.parentElement;
+    if (parentElement.classList.contains("mdc-menu")) {
+      parentElement.listSetup(this);
+    }
   }
 
   disconnectedCallback() {

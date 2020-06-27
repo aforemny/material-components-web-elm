@@ -41,7 +41,7 @@
             "Material.Radio",
             "Material.Ripple",
             "Material.Select",
-            "Material.Select.Option",
+            "Material.Select.Item",
             "Material.Slider",
             "Material.Snackbar",
             "Material.Switch",

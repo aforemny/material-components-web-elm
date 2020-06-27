@@ -33,7 +33,7 @@ import {MDCMenuSurfaceFoundation} from '@material/menu-surface/foundation';
 import {MDCMenuDistance} from '@material/menu-surface/types';
 import {MDCMenuAdapter} from '@material/menu/adapter';
 import {cssClasses, DefaultFocusState, strings} from '@material/menu/constants';
-import {MDCMenuFoundation} from '@material/menu/foundation';
+import {MDCMenuFoundation} from './foundation';
 import {MDCMenuItemComponentEventDetail} from '@material/menu/types';
 
 export type MDCMenuFactory = (el: Element, foundation?: MDCMenuFoundation) => MDCMenu;
@@ -46,7 +46,7 @@ export class MDCMenu extends MDCComponent<MDCMenuFoundation> {
   private menuSurfaceFactory_!: MDCMenuSurfaceFactory; // assigned in initialize()
 
   private menuSurface_!: MDCMenuSurface; // assigned in initialSyncWithDOM()
-  private list_!: MDCList | null; // assigned in initialSyncWithDOM()
+  private list_!: MDCList | null; // assigned in listSetup()
 
   private handleKeydown_!: SpecificEventListener<'keydown'>; // assigned in initialSyncWithDOM()
   private handleItemAction_!: CustomEventListener<MDCListActionEvent>; // assigned in initialSyncWithDOM()
@@ -58,9 +58,6 @@ export class MDCMenu extends MDCComponent<MDCMenuFoundation> {
 
   initialSyncWithDOM() {
     this.menuSurface_ = this.menuSurfaceFactory_(this.root_);
-    if (this.list_) {
-      this.list_.wrapFocus = true;
-    }
 
     this.handleKeydown_ = (evt) => this.foundation_.handleKeydown(evt);
     this.handleItemAction_ = (evt) => this.foundation_.handleItemAction(this.items[evt.detail.index]);
@@ -71,11 +68,12 @@ export class MDCMenu extends MDCComponent<MDCMenuFoundation> {
     this.listen(MDCListFoundation.strings.ACTION_EVENT, this.handleItemAction_);
   }
 
-  destroy() {
-    if (this.list_) {
-      this.list_.destroy();
-    }
+  listSetup(listElement: HTMLElement) {
+    this.list_ = (listElement as any).list_;
+    this.list_!.wrapFocus = true;
+  }
 
+  destroy() {
     this.menuSurface_.destroy();
     this.menuSurface_.unlisten(MDCMenuSurfaceFoundation.strings.OPENED_EVENT, this.handleMenuSurfaceOpened_);
     this.unlisten('keydown', this.handleKeydown_);

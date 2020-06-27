@@ -47,10 +47,10 @@ tryDefinition code tempFile h = do
 
 trySnippet code tempFile h = do
   writePrelude h
-  hPutStrLn h "type ActionButtonClicked = ActionButtonClicked"
   hPutStrLn h "type CardClicked = CardClicked"
+  hPutStrLn h "type ActionButtonClicked a = ActionButtonClicked a"
+  hPutStrLn h "type Dismissed a = Dismissed a"
   hPutStrLn h "type Clicked = Clicked"
-  hPutStrLn h "type Dismissed = Dismissed"
   hPutStrLn h "type FabClicked = FabClicked"
   hPutStrLn h ""
   hPutStrLn h "main = text \"\""
@@ -61,7 +61,7 @@ trySnippet code tempFile h = do
   compile tempFile
 
 
-compile file =
+compile file = do
     sh ("elm make --output /dev/null " ++ file ++ " 2>/dev/null")
 
 
@@ -80,6 +80,7 @@ noImports =
 writePrelude h = do
   hPutStrLn h "module Main exposing (main)"
   hPutStrLn h ""
+  hPutStrLn h "import Browser"
   hPutStrLn h "import Html.Attributes exposing (style, class)"
   hPutStrLn h "import Html.Events"
   hPutStrLn h "import Html exposing (Html, text)"

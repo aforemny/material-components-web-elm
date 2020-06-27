@@ -34,7 +34,7 @@ class MdcSnackbar extends HTMLElement {
 
   set messageId(messageId) {
     this.messageId_ = messageId;
-    if (!!this.snackbar_ && !!messageId) {
+    if (!!this.snackbar_ && messageId !== -1) {
       this.snackbar_.open();
     }
   }
@@ -43,7 +43,7 @@ class MdcSnackbar extends HTMLElement {
     super();
     this.closeOnEscape_ = false;
     this.timeoutMs_ = 5000;
-    this.messageId_ = 0;
+    this.messageId_ = -1;
     this.snackbar_;
   }
 
@@ -52,7 +52,7 @@ class MdcSnackbar extends HTMLElement {
     this.snackbar_ = new MDCSnackbar(this);
     this.snackbar_.closeOnEscape = this.closeOnEscape_;
     this.snackbar_.timeoutMs = this.timeoutMs_;
-    if (!!this.messageId_) {
+    if (this.messageId_ !== -1) {
       this.snackbar_.open();
     }
   }

@@ -21,56 +21,63 @@ type Msg
     = ShowBaseline
     | ShowLeading
     | ShowStacked
-    | SnackbarMsg (Snackbar.Msg Msg)
-    | Click
+    | SnackbarClosed Snackbar.MessageId
+    | Click Snackbar.MessageId
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        baselineMessage =
-            Snackbar.message
-                |> Snackbar.setLabel (Just "Can't send photo. Retry in 5 seconds.")
-                |> Snackbar.setActionButton (Just "Retry")
-                |> Snackbar.setOnActionButtonClick Click
-                |> Snackbar.setActionIcon (Just "close")
-                |> Snackbar.setOnActionIconClick Click
-
-        leadingMessage =
-            Snackbar.message
-                |> Snackbar.setLabel (Just "Your photo has been archived.")
-                |> Snackbar.setLeading True
-                |> Snackbar.setActionButton (Just "Undo")
-                |> Snackbar.setOnActionButtonClick Click
-                |> Snackbar.setActionIcon (Just "close")
-                |> Snackbar.setOnActionIconClick Click
-
-        stackedMessage =
-            Snackbar.message
-                |> Snackbar.setLabel
-                    (Just "This item already has the label \"travel\". You can add a new label.")
-                |> Snackbar.setStacked True
-                |> Snackbar.setActionButton (Just "Add a new label")
-                |> Snackbar.setOnActionButtonClick Click
-                |> Snackbar.setActionIcon (Just "close")
-                |> Snackbar.setOnActionIconClick Click
-    in
     case msg of
         ShowBaseline ->
-            ( model, Snackbar.addMessage SnackbarMsg baselineMessage )
+            ( { model | queue = Snackbar.addMessage baselineMessage model.queue }
+            , Cmd.none
+            )
 
         ShowLeading ->
-            ( model, Snackbar.addMessage SnackbarMsg leadingMessage )
+            ( { model | queue = Snackbar.addMessage leadingMessage model.queue }
+            , Cmd.none
+            )
 
         ShowStacked ->
-            ( model, Snackbar.addMessage SnackbarMsg stackedMessage )
+            ( { model | queue = Snackbar.addMessage stackedMessage model.queue }
+            , Cmd.none
+            )
 
-        SnackbarMsg snackbarMsg ->
-            Snackbar.update SnackbarMsg snackbarMsg model.queue
-                |> Tuple.mapFirst (\queue -> { model | queue = queue })
+        SnackbarClosed messageId ->
+            ( { model | queue = Snackbar.close messageId model.queue }, Cmd.none )
 
-        Click ->
+        Click messageId ->
             ( model, Cmd.none )
+
+
+baselineMessage : Snackbar.Message Msg
+baselineMessage =
+    Snackbar.message
+        |> Snackbar.setLabel (Just "Can't send photo. Retry in 5 seconds.")
+        |> Snackbar.setActionButton (Just "Retry")
+        |> Snackbar.setOnActionButtonClick Click
+        |> Snackbar.setActionIcon (Just "close")
+
+
+leadingMessage : Snackbar.Message Msg
+leadingMessage =
+    Snackbar.message
+        |> Snackbar.setLabel (Just "Your photo has been archived.")
+        |> Snackbar.setLeading True
+        |> Snackbar.setActionButton (Just "Undo")
+        |> Snackbar.setOnActionButtonClick Click
+        |> Snackbar.setActionIcon (Just "close")
+
+
+stackedMessage : Snackbar.Message Msg
+stackedMessage =
+    Snackbar.message
+        |> Snackbar.setLabel
+            (Just "This item already has the label \"travel\". You can add a new label.")
+        |> Snackbar.setStacked True
+        |> Snackbar.setActionButton (Just "Add a new label")
+        |> Snackbar.setOnActionButtonClick Click
+        |> Snackbar.setActionIcon (Just "close")
 
 
 view : Model -> CatalogPage Msg
@@ -104,7 +111,11 @@ view model =
                 |> Button.setAttributes buttonMargin
             )
             "Stacked"
-        , Snackbar.snackbar SnackbarMsg Snackbar.config model.queue
+        , Snackbar.snackbar
+            (Snackbar.config { onClosed = SnackbarClosed }
+                |> Snackbar.setCloseOnEscape True
+            )
+            model.queue
         ]
     }
 

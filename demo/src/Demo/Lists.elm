@@ -117,63 +117,74 @@ demoList =
 
 heroList : List (Html msg)
 heroList =
+    let
+        listItem =
+            ListItem.listItem ListItem.config [ text "Line item" ]
+    in
     [ List.list
-        (List.config
-            |> List.setAttributes (style "background" "#fff" :: demoList)
-        )
-        (List.repeat 3 <| ListItem.listItem ListItem.config [ text "Line item" ])
+        (List.config |> List.setAttributes (style "background" "#fff" :: demoList))
+        listItem
+        (List.repeat 2 listItem)
     ]
 
 
 singleLineList : Html msg
 singleLineList =
+    let
+        listItem =
+            ListItem.listItem ListItem.config [ text "Line item" ]
+    in
     List.list (List.config |> List.setAttributes demoList)
-        (List.repeat 3 <| ListItem.listItem ListItem.config [ text "Line item" ])
+        listItem
+        (List.repeat 2 listItem)
 
 
 twoLineList : Html msg
 twoLineList =
-    List.list
-        (List.config
-            |> List.setTwoLine True
-            |> List.setAttributes demoList
-        )
-        (List.repeat 3 <|
+    let
+        listItem =
             ListItem.listItem ListItem.config
                 [ ListItem.text []
                     { primary = [ text "Line item" ]
                     , secondary = [ text "Secondary text" ]
                     }
                 ]
+    in
+    List.list
+        (List.config
+            |> List.setTwoLine True
+            |> List.setAttributes demoList
         )
+        listItem
+        (List.repeat 2 listItem)
 
 
 leadingIconList : Html msg
 leadingIconList =
+    let
+        listItem icon =
+            ListItem.listItem ListItem.config
+                [ ListItem.graphic [] [ Icon.icon [] icon ]
+                , text "Line item"
+                ]
+    in
     List.list (List.config |> List.setAttributes demoList)
-        (List.map
-            (\icon ->
-                ListItem.listItem ListItem.config
-                    [ ListItem.graphic [] [ Icon.icon [] icon ]
-                    , text "Line item"
-                    ]
-            )
-            [ "wifi"
-            , "bluetooth"
-            , "data_usage"
-            ]
-        )
+        (listItem "wifi")
+        (List.map listItem [ "bluetooth", "data_usage" ])
 
 
 trailingIconList : Html msg
 trailingIconList =
-    List.list (List.config |> List.setAttributes demoList)
-        (List.repeat 3 <|
+    let
+        listItem =
             ListItem.listItem ListItem.config
                 [ text "Line item"
                 , ListItem.meta [] [ Icon.icon [] "info" ]
                 ]
-        )
+    in
+    List.list (List.config |> List.setAttributes demoList)
+        listItem
+        (List.repeat 2 listItem)
 
 
 activatedItemList : Model -> Html Msg
@@ -194,9 +205,9 @@ activatedItemList model =
                 [ ListItem.graphic [] [ Icon.icon [] icon ], text label ]
     in
     List.list (List.config |> List.setAttributes demoList)
+        (listItem ( "inbox", "Inbox" ))
         (List.map listItem
-            [ ( "inbox", "Inbox" )
-            , ( "star", "Star" )
+            [ ( "star", "Star" )
             , ( "send", "Sent" )
             , ( "drafts", "Drafts" )
             ]
@@ -222,9 +233,9 @@ shapedActivatedItemList model =
                 [ ListItem.graphic [] [ Icon.icon [] icon ], text label ]
     in
     List.list (List.config |> List.setAttributes demoList)
+        (listItem ( "inbox", "Inbox" ))
         (List.map listItem
-            [ ( "inbox", "Inbox" )
-            , ( "star", "Star" )
+            [ ( "star", "Star" )
             , ( "send", "Sent" )
             , ( "drafts", "Drafts" )
             ]
@@ -258,19 +269,13 @@ folderList =
             |> List.setTwoLine True
             |> List.setAttributes demoList
         )
+        (listItem
+            { primary = "Dog Photos", secondary = "9 Jan 2018" }
+        )
         (List.map listItem
-            [ { primary = "Dog Photos"
-              , secondary = "9 Jan 2018"
-              }
-            , { primary = "Cat Photos"
-              , secondary = "22 Dec 2017"
-              }
-            , { primary = "Potatoes"
-              , secondary = "30 Noc 2017"
-              }
-            , { primary = "Carrots"
-              , secondary = "17 Oct 2017"
-              }
+            [ { primary = "Cat Photos", secondary = "22 Dec 2017" }
+            , { primary = "Potatoes", secondary = "30 Noc 2017" }
+            , { primary = "Carrots", secondary = "17 Oct 2017" }
             ]
         )
 
@@ -314,9 +319,9 @@ listWithTrailingCheckbox model =
                     :: demoList
                 )
         )
+        (listItem "Dog Photos")
         (List.map listItem
-            [ "Dog Photos"
-            , "Cat Photos"
+            [ "Cat Photos"
             , "Potatoes"
             , "Carrots"
             ]
@@ -348,9 +353,9 @@ listWithTrailingRadioButton model =
                 ]
     in
     List.list (List.config |> List.setAttributes demoList)
+        (listItem "Dog Photos")
         (List.map listItem
-            [ "Dog Photos"
-            , "Cat Photos"
+            [ "Cat Photos"
             , "Potatoes"
             , "Carrots"
             ]
@@ -364,7 +369,8 @@ focusList =
             (List.config
                 |> List.setAttributes (demoList ++ [ Html.Attributes.id "my-list" ])
             )
-            (List.repeat 3 <| ListItem.listItem ListItem.config [ text "Line item" ])
+            (ListItem.listItem ListItem.config [ text "Line item" ])
+            (List.repeat 2 <| ListItem.listItem ListItem.config [ text "Line item" ])
         , text "\u{00A0}"
         , Button.raised
             (Button.config |> Button.setOnClick (Focus "my-list"))

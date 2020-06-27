@@ -70,11 +70,12 @@ drawerBody setSelectedIndex selectedIndex =
     , PermanentDrawer.content []
         [ List.group []
             [ List.list List.config
-                [ ListItem.listItem (listItemConfig 0)
+                (ListItem.listItem (listItemConfig 0)
                     [ ListItem.graphic [] [ Icon.icon [] "inbox" ]
                     , text "Inbox"
                     ]
-                , ListItem.listItem (listItemConfig 1)
+                )
+                [ ListItem.listItem (listItemConfig 1)
                     [ ListItem.graphic [] [ Icon.icon [] "star" ]
                     , text "Star"
                     ]
@@ -90,11 +91,12 @@ drawerBody setSelectedIndex selectedIndex =
             , ListDivider.group []
             , List.subheader [] [ text "Labels" ]
             , List.list List.config
-                [ ListItem.listItem (listItemConfig 4)
+                (ListItem.listItem (listItemConfig 4)
                     [ ListItem.graphic [] [ Icon.icon [] "bookmark" ]
                     , text "Family"
                     ]
-                , ListItem.listItem (listItemConfig 5)
+                )
+                [ ListItem.listItem (listItemConfig 5)
                     [ ListItem.graphic [] [ Icon.icon [] "bookmark" ]
                     , text "Friends"
                     ]

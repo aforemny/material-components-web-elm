@@ -55,10 +55,10 @@ view model =
                     |> Menu.setOnClose Close
                 )
                 [ List.list (List.config |> List.setWrapFocus True)
+                    (listItem "Passionfruit")
                     (List.concat
                         [ List.map listItem
-                            [ "Passionfruit"
-                            , "Orange"
+                            [ "Orange"
                             , "Guava"
                             , "Pitaya"
                             ]
@@ -93,7 +93,7 @@ heroMenu model =
         , style "z-index" "0"
         ]
         [ List.list List.config
-            [ ListItem.listItem ListItem.config [ text "A Menu Item" ]
-            , ListItem.listItem ListItem.config [ text "Another Menu Item" ]
+            (ListItem.listItem ListItem.config [ text "A Menu Item" ])
+            [ ListItem.listItem ListItem.config [ text "Another Menu Item" ]
             ]
         ]

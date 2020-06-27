@@ -115,9 +115,9 @@ simpleDialog model =
         { title = Just "Select an account"
         , content =
             [ List.list (List.config |> List.setAvatarList True)
+                (listItem ( "person", "user1@example.com" ))
                 (List.map listItem
-                    [ ( "person", "user1@example.com" )
-                    , ( "person", "user2@example.com" )
+                    [ ( "person", "user2@example.com" )
                     , ( "add", "Add account" )
                     ]
                 )
@@ -144,9 +144,9 @@ confirmationDialog model =
         { title = Just "Phone ringtone"
         , content =
             [ List.list (List.config |> List.setAvatarList True)
+                (listItem ( True, "Never Gonna Give You Up" ))
                 (List.map listItem
-                    [ ( True, "Never Gonna Give You Up" )
-                    , ( False, "Hot Cross Buns" )
+                    [ ( False, "Hot Cross Buns" )
                     , ( False, "None" )
                     ]
                 )

@@ -47,9 +47,10 @@ about the list items, refer to [Material.List.Item](Material-List-Item).
 
     main =
         List.list List.config
-            [ ListItem.listItem ListItem.config
+            (ListItem.listItem ListItem.config
                 [ text "Line item" ]
-            , ListItem.listItem ListItem.config
+            )
+            [ ListItem.listItem ListItem.config
                 [ text "Line item" ]
             ]
 
@@ -81,13 +82,14 @@ to `True`. In that case, list items should wrap their contents inside
 `ListItem.text`.
 
     List.list (List.config |> List.setTwoLine True)
-        [ ListItem.listItem ListItem.config
+        (ListItem.listItem ListItem.config
             [ ListItem.text []
                 { primary = [ text "First line" ]
                 , secondary = [ text "Second line" ]
                 }
             ]
-        ]
+        )
+        []
 
 
 # Non-interactive List
@@ -100,8 +102,8 @@ no visual interaction effect.
 
     List.list
         (List.config |> List.setNonInteractive True)
-        [ ListItem.listItem ListItem.config [ text "List item" ]
-        ]
+        (ListItem.listItem ListItem.config [ text "List item" ])
+        []
 
 
 ## Dense List
@@ -113,8 +115,8 @@ Dense lists feature smaller than normal margins.
 
     List.list
         (List.config |> List.setDense True)
-        [ ListItem.listItem ListItem.config [ text "List item" ]
-        ]
+        (ListItem.listItem ListItem.config [ text "List item" ])
+        []
 
 
 ## Avatar List
@@ -124,11 +126,12 @@ A list item's graphics may be configured to appear larger by setting its
 
     List.list
         (List.config |> List.setAvatarList True)
-        [ ListItem.listItem ListItem.config
+        (ListItem.listItem ListItem.config
             [ ListItem.graphic [] [ Html.img [] [] ]
             , text "List item"
             ]
-        ]
+        )
+        []
 
 
 ## List Group
@@ -139,14 +142,12 @@ grouped using `group` and labeled by `subheader`.
     List.group []
         [ List.subheader [] [ text "Folders" ]
         , List.list List.config
-            [ ListItem.listItem ListItem.config [ text "Folder" ]
-            , ListItem.listItem ListItem.config [ text "Folder" ]
-            ]
+            (ListItem.listItem ListItem.config [ text "Folder" ])
+            [ ListItem.listItem ListItem.config [ text "Folder" ] ]
         , List.subheader [] [ text "Files" ]
         , List.list List.config
-            [ ListItem.listItem ListItem.config [ text "File" ]
-            , ListItem.listItem ListItem.config [ text "File" ]
-            ]
+            (ListItem.listItem ListItem.config [ text "File" ])
+            [ ListItem.listItem ListItem.config [ text "File" ] ]
         ]
 
 @docs group, subheader
@@ -162,8 +163,7 @@ You may programatically focus a list by assigning an id attribute to it and use
             |> List.setAttributes
                 [ Html.Attributes.id "my-list" ]
         )
-        [ ListItem.listItem ListItem.config [ text "Line item" ]
-        ]
+        (ListItem.listItem ListItem.config [ text "Line item" ])
 
 -}
 
@@ -266,9 +266,18 @@ setAttributes additionalAttributes (Config config_) =
 
 
 {-| List view function
+
+The list view function takes its list items as two arguments. The first
+argument represents the first list item, and the second argument reresents the
+remaining list items. This way we guarantee lists to be non-empty.
+
 -}
-list : Config msg -> List (ListItem msg) -> Html msg
-list ((Config { additionalAttributes }) as config_) listItems =
+list : Config msg -> ListItem msg -> List (ListItem msg) -> Html msg
+list ((Config { additionalAttributes }) as config_) firstListItem remainingListItems =
+    let
+        listItems =
+            firstListItem :: remainingListItems
+    in
     Html.node "mdc-list"
         (List.filterMap identity
             [ rootCs

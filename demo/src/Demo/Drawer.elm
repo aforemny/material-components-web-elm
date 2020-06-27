@@ -78,9 +78,9 @@ heroDrawer =
             ]
         , PermanentDrawer.content []
             [ List.list List.config
+                (listItem ( True, "inbox", "Inbox" ))
                 (List.map listItem
-                    [ ( True, "inbox", "Inbox" )
-                    , ( False, "star", "Star" )
+                    [ ( False, "star", "Star" )
                     , ( False, "send", "Sent Mail" )
                     , ( False, "drafts", "Drafts" )
                     ]

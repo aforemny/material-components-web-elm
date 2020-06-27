@@ -57,9 +57,10 @@ positioning, wrap the button and the menu within an element that sets the
                 )
                 [ List.list
                     (List.config |> List.setWrapFocus True)
-                    [ ListItem.listItem ListItem.config
+                    (ListItem.listItem ListItem.config
                         [ text "Menu item" ]
-                    , ListItem.listItem ListItem.config
+                    )
+                    [ ListItem.listItem ListItem.config
                         [ text "Menu item" ]
                     ]
                 ]

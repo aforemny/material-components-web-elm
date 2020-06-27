@@ -74,8 +74,8 @@ view lift catalogPageConfig catalogPage =
                         ]
                 )
                 [ DismissibleDrawer.content []
-                    [ List.list List.config
-                        (List.map
+                    [ case
+                        List.map
                             (\{ url, label } ->
                                 ListItem.listItem
                                     (ListItem.config
@@ -91,7 +91,12 @@ view lift catalogPageConfig catalogPage =
                                     [ text label ]
                             )
                             catalogDrawerItems
-                        )
+                      of
+                        listItem :: listItems ->
+                            List.list List.config listItem listItems
+
+                        [] ->
+                            text ""
                     ]
                 ]
             , Html.map lift <|
@@ -119,7 +124,7 @@ view lift catalogPageConfig catalogPage =
 resourcesList : CatalogPageResources -> Html msg
 resourcesList { materialDesignGuidelines, documentation, sourceCode } =
     List.list List.config
-        [ ListItem.listItem
+        (ListItem.listItem
             (ListItem.config
                 |> ListItem.setHref materialDesignGuidelines
                 |> ListItem.setTarget (Just "_blank")
@@ -133,7 +138,8 @@ resourcesList { materialDesignGuidelines, documentation, sourceCode } =
                 ]
             , text "Material Design Guidelines"
             ]
-        , ListItem.listItem
+        )
+        [ ListItem.listItem
             (ListItem.config
                 |> ListItem.setHref documentation
                 |> ListItem.setTarget (Just "_blank")

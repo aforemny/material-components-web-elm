@@ -80,7 +80,6 @@ noImports =
 writePrelude h = do
   hPutStrLn h "module Main exposing (main)"
   hPutStrLn h ""
-  hPutStrLn h "import Browser"
   hPutStrLn h "import Html.Attributes exposing (style, class)"
   hPutStrLn h "import Html.Events"
   hPutStrLn h "import Html exposing (Html, text)"
@@ -126,4 +125,6 @@ writePrelude h = do
   hPutStrLn h "import Material.Theme as Theme"
   hPutStrLn h "import Material.TopAppBar as TopAppBar"
   hPutStrLn h "import Material.Typography as Typography"
+  hPutStrLn h ""
+  hPutStrLn h "import Testing.Browser as Browser"
   hPutStrLn h ""

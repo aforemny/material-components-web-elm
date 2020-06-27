@@ -2,11 +2,10 @@ module Material.Snackbar exposing
     ( Config, config
     , setCloseOnEscape
     , setAttributes
-    , snackbar, close
-    , Queue, initialQueue
+    , snackbar
+    , Queue, initialQueue, MessageId, close
     , addMessage
     , message, Message
-    , setLabel
     , setActionButton
     , setOnActionButtonClick
     , setActionIcon
@@ -14,7 +13,6 @@ module Material.Snackbar exposing
     , setLeading
     , setStacked
     , setTimeoutMs
-    , MessageId
     )
 
 {-| Snackbars provide brief messages about the application's processes at the
@@ -83,7 +81,7 @@ bottom of the screen.
 
 # Snackbar
 
-@docs snackbar, close
+@docs snackbar
 
 
 # Queue
@@ -114,7 +112,7 @@ Then from your application's update function, call `update` to handle
 
 Now you are ready to add messages from your application's update function.
 
-@docs Queue, initialQueue, close
+@docs Queue, initialQueue, MessageId, close
 
 
 ## Adding Messages
@@ -128,8 +126,7 @@ Now you are ready to add messages from your application's update function.
             SomethingHappened ->
                 let
                     message =
-                        Snackbar.message
-                            |> Snackbar.setLabel (Just "Something happened")
+                        Snackbar.message "Something happened"
 
                     newQueue =
                         Snackbar.addMessage message model.queue
@@ -148,15 +145,12 @@ Now you are ready to add messages from your application's update function.
 
 # Messages
 
-At the minimum, a message contains only a label. To specify the label, specify
-it using the `setLabel` configuration option.
+At the minimum, a message contains only a label.
 
-    Snackbar.message
-        |> Snackbar.setLabel (Just "Something happened")
+    Snackbar.message "Something happened"
 
 @docs message, Message
 
-@docs setLabel
 @docs setActionButton
 @docs setOnActionButtonClick
 @docs setActionIcon
@@ -172,8 +166,7 @@ Messages may contain an action button that the user can click. To display an
 action button, set the message's `setActionButton` configuration option to a
 string, and handle the event in `onActionButtonClick`.
 
-    Snackbar.message
-        |> Snackbar.setLabel (Just "Something happened")
+    Snackbar.message "Something happened"
         |> Snackbar.setActionButton (Just "Take action")
         |> Snackbar.setOnActionButtonClick ActionButtonClicked
 
@@ -184,8 +177,7 @@ Messages may contain an action icon that the user can click. To display an
 action icon, set the message's `setActionIcon` configuration option to a string
 representing a Material Icon, and handle the event in `onActionIconClick`.
 
-    Snackbar.message
-        |> Snackbar.setLabel (Just "Something happened")
+    Snackbar.message "Something happened"
         |> Snackbar.setActionIcon (Just "close")
         |> Snackbar.setOnActionIconClick Dismissed
 
@@ -196,8 +188,7 @@ Messages with a long label and action button should display the action button
 below the label. To archieve this, set the message's `setStacked` configuration
 option to `True`.
 
-    Snackbar.message
-        |> Snackbar.setLabel (Just "Something happened")
+    Snackbar.message "Something happened"
         |> Snackbar.setActionButton (Just "Take action")
         |> Snackbar.setStacked True
 
@@ -208,8 +199,7 @@ Messages are by default centered within the viewport. On larger screens, they
 can optionally be displyed on the _leading_ edge of the screen. To display a
 message as leading, set its `setLeading` configuration option to `True`.
 
-    Snackbar.message
-        |> Snackbar.setLabel (Just "Something happened")
+    Snackbar.message "Something happened"
         |> Snackbar.setLeading True
 
 
@@ -222,8 +212,7 @@ milliseconds.
 This value must be between 4 and 10 seconds, and it defaults to 5 seconds. You
 may specify an indefinite timeout by setting it to `Nothing`.
 
-    Snackbar.message
-        |> Snackbar.setLabel (Just "Something happened")
+    Snackbar.message "Something happened"
         |> Snackbar.setTimeoutMs (Just 4000)
 
 -}
@@ -233,7 +222,6 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Task
 
 
 {-| Queue of messages
@@ -245,6 +233,8 @@ type Queue msg
         }
 
 
+{-| Message identifier type
+-}
 type MessageId
     = MessageId Int
 
@@ -252,11 +242,6 @@ type MessageId
 inc : MessageId -> MessageId
 inc (MessageId messageId) =
     MessageId (messageId + 1)
-
-
-toInt : MessageId -> Int
-toInt (MessageId messageId) =
-    messageId
 
 
 {-| Initial empty queue
@@ -350,22 +335,22 @@ snackbar ((Config { additionalAttributes }) as config_) ((Queue { messages, next
         (List.filterMap identity
             [ rootCs
             , closeOnEscapeProp config_
-            , leadingCs message
-            , stackedCs message
+            , leadingCs currentMessage
+            , stackedCs currentMessage
             , messageIdProp currentMessageId
             , timeoutMsProp currentMessage
             , closedHandler currentMessageId config_
             ]
             ++ additionalAttributes
         )
-        [ surfaceElt currentMessageId (Maybe.withDefault message currentMessage) ]
+        [ surfaceElt currentMessageId (Maybe.withDefault (message "") currentMessage) ]
 
 
 {-| Snackbar message
 -}
 type Message msg
     = Message
-        { label : Maybe String
+        { label : String
         , actionButton : Maybe String
         , onActionButtonClick : Maybe (MessageId -> msg)
         , actionIcon : Maybe String
@@ -374,13 +359,6 @@ type Message msg
         , stacked : Bool
         , timeoutMs : Maybe Int
         }
-
-
-{-| Specify a message's label
--}
-setLabel : Maybe String -> Message msg -> Message msg
-setLabel label (Message message_) =
-    Message { message_ | label = label }
 
 
 {-| Specify a message's action button label
@@ -443,10 +421,10 @@ setTimeoutMs timeoutMs (Message message_) =
 
 {-| Default snackbar message (empty label)
 -}
-message : Message msg
-message =
+message : String -> Message msg
+message label =
     Message
-        { label = Nothing
+        { label = label
         , actionButton = Nothing
         , onActionButtonClick = Nothing
         , actionIcon = Nothing
@@ -467,22 +445,30 @@ closeOnEscapeProp (Config { closeOnEscape }) =
     Just (Html.Attributes.property "closeOnEscape" (Encode.bool closeOnEscape))
 
 
-leadingCs : Message msg -> Maybe (Html.Attribute msg)
-leadingCs (Message { leading }) =
-    if leading then
-        Just (class "mdc-snackbar--leading")
+leadingCs : Maybe (Message msg) -> Maybe (Html.Attribute msg)
+leadingCs message_ =
+    Maybe.andThen
+        (\(Message { leading }) ->
+            if leading then
+                Just (class "mdc-snackbar--leading")
 
-    else
-        Nothing
+            else
+                Nothing
+        )
+        message_
 
 
-stackedCs : Message msg -> Maybe (Html.Attribute msg)
-stackedCs (Message { stacked }) =
-    if stacked then
-        Just (class "mdc-snackbar--stacked")
+stackedCs : Maybe (Message msg) -> Maybe (Html.Attribute msg)
+stackedCs message_ =
+    Maybe.andThen
+        (\(Message { stacked }) ->
+            if stacked then
+                Just (class "mdc-snackbar--stacked")
 
-    else
-        Nothing
+            else
+                Nothing
+        )
+        message_
 
 
 messageIdProp : MessageId -> Maybe (Html.Attribute msg)
@@ -531,7 +517,7 @@ surfaceElt messageId message_ =
 labelElt : Message msg -> Html msg
 labelElt (Message { label }) =
     Html.div [ class "mdc-snackbar__label", ariaStatusRoleAttr, ariaPoliteLiveAttr ]
-        [ text (Maybe.withDefault "" label) ]
+        [ text label ]
 
 
 actionsElt : MessageId -> Message msg -> Html msg

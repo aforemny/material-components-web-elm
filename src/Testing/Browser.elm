@@ -2,7 +2,7 @@
 -- Material.Snackbar
 
 
-module Browser exposing (sandbox)
+module Testing.Browser exposing (sandbox)
 
 import Html exposing (Html)
 

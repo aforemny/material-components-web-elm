@@ -5,8 +5,9 @@ build-npm: node_modules src/**/component.ts src/**/custom-element.js
 	tsc --project ./tsconfig.json --module esnext --importHelpers
 	webpack --mode=production
 	cp node_modules/material-components-web/dist/material-components-web.css dist/material-components-web-elm.css
-	cp node_modules/material-components-web/dist/material-components-web.css.map dist/material-components-web-elm.css.map
 	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-web-elm.min.css
+	sed -i 's/sourceMappingURL=material-components-web\./sourceMappingURL=material-components-web-elm./' dist/*
+	cp node_modules/material-components-web/dist/material-components-web.css.map dist/material-components-web-elm.css.map
 	cp node_modules/material-components-web/dist/material-components-web.min.css.map dist/material-components-web-elm.min.css.map
 
 

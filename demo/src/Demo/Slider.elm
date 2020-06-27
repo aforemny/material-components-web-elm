@@ -78,7 +78,7 @@ heroSlider model =
     Slider.slider
         (Slider.config
             |> Slider.setValue (Dict.get id model.sliders)
-            |> Slider.setOnChange (Changed id)
+            |> Slider.setOnInput (Changed id)
         )
 
 
@@ -91,7 +91,7 @@ continuousSlider model =
     Slider.slider
         (Slider.config
             |> Slider.setValue (Dict.get id model.sliders)
-            |> Slider.setOnChange (Changed id)
+            |> Slider.setOnInput (Changed id)
             |> Slider.setMin (Just 0)
             |> Slider.setMax (Just 50)
         )
@@ -106,7 +106,7 @@ discreteSlider model =
     Slider.slider
         (Slider.config
             |> Slider.setValue (Dict.get id model.sliders)
-            |> Slider.setOnChange (Changed id)
+            |> Slider.setOnInput (Changed id)
             |> Slider.setDiscrete True
             |> Slider.setMin (Just 0)
             |> Slider.setMax (Just 50)
@@ -123,7 +123,7 @@ discreteSliderWithTickMarks model =
     Slider.slider
         (Slider.config
             |> Slider.setValue (Dict.get id model.sliders)
-            |> Slider.setOnChange (Changed id)
+            |> Slider.setOnInput (Changed id)
             |> Slider.setDiscrete True
             |> Slider.setMin (Just 0)
             |> Slider.setMax (Just 50)
@@ -142,7 +142,7 @@ focusSlider model =
         [ Slider.slider
             (Slider.config
                 |> Slider.setValue (Dict.get id model.sliders)
-                |> Slider.setOnChange (Changed id)
+                |> Slider.setOnInput (Changed id)
                 |> Slider.setAttributes [ Html.Attributes.id id ]
             )
         , text "\u{00A0}"

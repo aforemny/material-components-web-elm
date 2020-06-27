@@ -13,7 +13,7 @@ class MdcList extends HTMLElement {
     }
     if (0 <= selectedIndex && selectedIndex < this.list_.listElements.length) {
       this.list_.listElements[selectedIndex].focus();
-    } else {
+    } else if (this.list_.listElements.length > 0) {
       this.list_.listElements[0].focus();
     }
   }
@@ -42,9 +42,9 @@ class MdcList extends HTMLElement {
         this.list_.listElements[previousIndex].setAttribute("tabindex", "-1");
       }
 
-      if (selectedIndex.length > 0) {
+      if (selectedIndex.length > 0 && this.list_.listElements.length > selectedIndex[0]) {
         this.list_.listElements[selectedIndex[0]].setAttribute("tabindex", "0");
-      } else {
+      } else if (this.list_.listElements.length > 0) {
         this.list_.listElements[0].setAttribute("tabindex", "0");
       }
     }

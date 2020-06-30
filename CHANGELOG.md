@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.3](https://github.com/aforemny/material-components-web-elm/compare/3.0.2...3.0.3) (2020-06-30)
+
+
+### Features
+
+* Add support for Browser.Dom.focus ([fae5d07](https://github.com/aforemny/material-components-web-elm/commit/fae5d07cb1fde3dcc0e53091b67cf340add49346))
+* Make Text Field compatible with Browser.Dom.focus ([bd04282](https://github.com/aforemny/material-components-web-elm/commit/bd042829538ca6ccebf0a06d0ab75617674508e3))
+
+
+### Bug Fixes
+
+* (Empty) List throws when dynamically adding first item ([9f7142a](https://github.com/aforemny/material-components-web-elm/commit/9f7142a31a837d703b7df1ae1cfd2ae45f2f9cc0))
+* Fix source map locations in assets ([3d29b9e](https://github.com/aforemny/material-components-web-elm/commit/3d29b9eacd89d79b7fb6109cc0722e0754f5ca20))
+* Make card's primary action accessible to keyboard navigation ([d0a095a](https://github.com/aforemny/material-components-web-elm/commit/d0a095a11762d028ed3b69c6a9a048ce6e383539))
+* Make FABs accessible to keyboard navigation ([cf4e641](https://github.com/aforemny/material-components-web-elm/commit/cf4e64176eab2bc282ed902c5901dab4d7b488fc))
+* Remove inline-flex display from mdc-button element ([082f059](https://github.com/aforemny/material-components-web-elm/commit/082f0595e61d0bb91b1705640e58527f2a855e80))
+
 ### [3.0.2](https://github.com/aforemny/material-components-web-elm/compare/3.0.1...3.0.2) (2020-06-08)
 
 

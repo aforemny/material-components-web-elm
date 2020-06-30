@@ -8,9 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: cachix/install-nix-action@v6
-      - run: nix-shell --run "make node_modules"
-        env:
-          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz
       - run: nix-shell --run "make release"
         env:
           NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz

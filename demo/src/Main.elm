@@ -229,7 +229,9 @@ update msg model =
                 |> Tuple.mapSecond (Cmd.map CheckboxMsg)
 
         ChipsMsg msg_ ->
-            ( { model | chips = Demo.Chips.update msg_ model.chips }, Cmd.none )
+            Demo.Chips.update msg_ model.chips
+                |> Tuple.mapFirst (\chips -> { model | chips = chips })
+                |> Tuple.mapSecond (Cmd.map ChipsMsg)
 
         DialogMsg msg_ ->
             ( { model | dialog = Demo.Dialog.update msg_ model.dialog }, Cmd.none )

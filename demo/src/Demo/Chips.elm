@@ -1,10 +1,12 @@
 module Demo.Chips exposing (Model, Msg(..), defaultModel, update, view)
 
+import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
 import Html.Attributes exposing (style)
 import Html.Events
 import Json.Decode as Decode
+import Material.Button as Button
 import Material.Chip.Action as ActionChip
 import Material.Chip.Choice as ChoiceChip
 import Material.Chip.Filter as FilterChip
@@ -15,6 +17,7 @@ import Material.ChipSet.Filter as FilterChipSet
 import Material.ChipSet.Input as InputChipSet
 import Material.Typography as Typography
 import Set exposing (Set)
+import Task
 
 
 type alias Model =
@@ -24,6 +27,7 @@ type alias Model =
     , input : String
     , accessories : Set String
     , contacts : Set String
+    , focus : String
     }
 
 
@@ -35,6 +39,7 @@ defaultModel =
     , input = ""
     , accessories = Set.singleton "Tops"
     , contacts = Set.singleton "Alice"
+    , focus = "One"
     }
 
 
@@ -54,22 +59,25 @@ type Msg
     | InputChanged String
     | InputChipDeleted String
     | KeyPressed Int
+    | FocusChanged String
+    | Focus String
+    | Focused (Result Browser.Dom.Error ())
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ChipChanged chip ->
-            { model | chip = Just chip }
+            ( { model | chip = Just chip }, Cmd.none )
 
         SizeChanged size ->
-            { model | size = size }
+            ( { model | size = size }, Cmd.none )
 
         InputChanged newInput ->
-            { model | input = newInput }
+            ( { model | input = newInput }, Cmd.none )
 
         AccessoriesChanged accessory ->
-            { model
+            ( { model
                 | accessories =
                     (if Set.member accessory model.accessories then
                         Set.remove accessory
@@ -78,10 +86,12 @@ update msg model =
                         Set.insert accessory
                     )
                         model.accessories
-            }
+              }
+            , Cmd.none
+            )
 
         ContactChanged contact ->
-            { model
+            ( { model
                 | contacts =
                     (if Set.member contact model.contacts then
                         Set.remove contact
@@ -90,10 +100,14 @@ update msg model =
                         Set.insert contact
                     )
                         model.contacts
-            }
+              }
+            , Cmd.none
+            )
 
         InputChipDeleted inputChip ->
-            { model | inputChips = List.filter ((/=) inputChip) model.inputChips }
+            ( { model | inputChips = List.filter ((/=) inputChip) model.inputChips }
+            , Cmd.none
+            )
 
         KeyPressed keyCode ->
             let
@@ -107,7 +121,7 @@ update msg model =
                     String.trim model.input
             in
             if keyCode == enter && not (String.isEmpty trimmedInput) then
-                { model
+                ( { model
                     | input = ""
                     , inputChips =
                         if not (List.member trimmedInput model.inputChips) then
@@ -115,17 +129,30 @@ update msg model =
 
                         else
                             model.inputChips
-                }
+                  }
+                , Cmd.none
+                )
 
             else if keyCode == backspace && String.isEmpty model.input then
-                { model
+                ( { model
                     | inputChips =
                         List.take (List.length model.inputChips - 1)
                             model.inputChips
-                }
+                  }
+                , Cmd.none
+                )
 
             else
-                model
+                ( model, Cmd.none )
+
+        FocusChanged focus ->
+            ( { model | focus = focus }, Cmd.none )
+
+        Focus id ->
+            ( model, Task.attempt Focused (Browser.Dom.focus id) )
+
+        Focused _ ->
+            ( model, Cmd.none )
 
 
 view : Model -> CatalogPage Msg
@@ -152,6 +179,8 @@ view model =
         , shapedChips model
         , Html.h2 [ Typography.subtitle1 ] [ text "Input Chips" ]
         , inputChips model
+        , Html.h2 [ Typography.subtitle1 ] [ text "Focus Chips" ]
+        , focusChips model
         ]
     }
 
@@ -313,3 +342,24 @@ shapedChips model =
             , "Office chairs"
             ]
         )
+
+
+focusChips : Model -> Html Msg
+focusChips model =
+    Html.div []
+        [ ChoiceChipSet.chipSet
+            (ChoiceChipSet.config { toLabel = identity }
+                |> ChoiceChipSet.setSelected (Just model.focus)
+                |> ChoiceChipSet.setOnChange FocusChanged
+                |> ChoiceChipSet.setAttributes [ Html.Attributes.id "my-chips" ]
+            )
+            [ ChoiceChip.chip ChoiceChip.config "One"
+            , ChoiceChip.chip ChoiceChip.config "Two"
+            ]
+        , text "\u{00A0}"
+        , Button.raised
+            (Button.config
+                |> Button.setOnClick (Focus "my-chips")
+            )
+            "Focus"
+        ]

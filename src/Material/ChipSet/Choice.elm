@@ -2,6 +2,7 @@ module Material.ChipSet.Choice exposing
     ( Config, config
     , setSelected
     , setOnChange
+    , setAttributes
     , chipSet
     )
 
@@ -70,6 +71,7 @@ options.
 
 @docs setSelected
 @docs setOnChange
+@docs setAttributes
 
 
 # Choice Chip Set
@@ -121,6 +123,13 @@ setSelected selected (Config config_) =
 setOnChange : (a -> msg) -> Config a msg -> Config a msg
 setOnChange onChange (Config config_) =
     Config { config_ | onChange = Just onChange }
+
+
+{-| Specify additional attributes
+-}
+setAttributes : List (Html.Attribute msg) -> Config a msg -> Config a msg
+setAttributes additionalAttributes (Config config_) =
+    Config { config_ | additionalAttributes = additionalAttributes }
 
 
 {-| Choice chip set view function

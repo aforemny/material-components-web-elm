@@ -6,9 +6,11 @@ module Material.Select exposing
     , setDisabled
     , setRequired
     , setValid
+    , setLeadingIcon
     , setAttributes
     , filled
     , outlined
+    , Icon, icon
     )
 
 {-| Select provides a single-option select menus.
@@ -27,8 +29,8 @@ about select options, refer to [Material.Select.Item](Material-Select-Item).
   - [Disabled Select](#disabled-select)
   - [Required Select](#required-select)
   - [Disabled Option](#disabled-option)
-  - [Select with helper text](#select-with-helper-text)
-  - [Select with leading icon](#select-with-leading-icon)
+  - [Select with Helper Text](#select-with-helper-text)
+  - [Select with Leading Icon](#select-with-leading-icon)
   - [Focus a Select](#focus-a-select)
 
 
@@ -78,6 +80,7 @@ about select options, refer to [Material.Select.Item](Material-Select-Item).
 @docs setDisabled
 @docs setRequired
 @docs setValid
+@docs setLeadingIcon
 @docs setAttributes
 
 
@@ -155,31 +158,24 @@ TODO(select-with-helper-text)
 
 # Select with leading icon
 
-    import Select.Icon as SelectIcon
+To have a select display a leading icon, use its `setLeadingIcon` configuration
+option to specify a value of `Icon`.
 
-    main =
-        --Select.filled
-        --    (Select.config
-        --        |> Select.leadingIcon
-        --            (Just
-        --                (SelectIcon.icon
-        --                    (SelectIcon.config
-        --                        |> SelectIcon.setDisabled True
-        --                        |> SelectIcon.setOnClick Clicked
-        --                    )
-        --                    ""
-        --                )
-        --            )
-        --    )
-        --    (SelectItem.selectItem
-        --        (SelectItem.config { value = "" })
-        --        [ text "" ]
-        --    )
-        --    [ SelectItem.selectItem
-        --        (SelectItem.config { value = "Appel" })
-        --        [ text "Apple" ]
-        --    ]
-        text ""
+    Select.filled
+        (Select.config
+            |> Select.setLeadingIcon
+                (Just (Select.icon [] "favorite"))
+        )
+        (SelectItem.selectItem
+            (SelectItem.config { value = "" })
+            [ text "" ]
+        )
+        [ SelectItem.selectItem
+            (SelectItem.config { value = "Apple" })
+            [ text "Apple" ]
+        ]
+
+@docs Icon, icon
 
 
 # Focus a Select
@@ -197,7 +193,7 @@ use `Browser.Dom.focus`.
             [ text "" ]
         )
         [ SelectItem.selectItem
-            (SelectItem.config { value = "Appel" })
+            (SelectItem.config { value = "Apple" })
             [ text "Apple" ]
         ]
 
@@ -206,6 +202,7 @@ use `Browser.Dom.focus`.
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 import Json.Encode as Encode
+import Material.Icon as Icon
 import Material.List as List
 import Material.List.Item as ListItem exposing (ListItem)
 import Material.Menu as Menu
@@ -222,6 +219,7 @@ type Config a msg
         , required : Bool
         , valid : Bool
         , selected : Maybe a
+        , leadingIcon : Maybe (Icon msg)
         , additionalAttributes : List (Html.Attribute msg)
         , onChange : Maybe (a -> msg)
         }
@@ -237,6 +235,7 @@ config =
         , required = False
         , valid = True
         , selected = Nothing
+        , leadingIcon = Nothing
         , additionalAttributes = []
         , onChange = Nothing
         }
@@ -281,6 +280,13 @@ setValid valid (Config config_) =
     Config { config_ | valid = valid }
 
 
+{-| Specify a select's leading icon
+-}
+setLeadingIcon : Maybe (Icon msg) -> Config a msg -> Config a msg
+setLeadingIcon leadingIcon (Config config_) =
+    Config { config_ | leadingIcon = leadingIcon }
+
+
 {-| Specify additional attributes
 -}
 setAttributes : List (Html.Attribute msg) -> Config a msg -> Config a msg
@@ -301,7 +307,7 @@ type Variant
 
 
 select : Variant -> Config a msg -> SelectItem a msg -> List (SelectItem a msg) -> Html msg
-select variant ((Config { selected, additionalAttributes, onChange }) as config_) firstSelectItem remainingSelectItems =
+select variant ((Config { leadingIcon, selected, additionalAttributes, onChange }) as config_) firstSelectItem remainingSelectItems =
     let
         selectedIndex =
             List.indexedMap
@@ -320,6 +326,7 @@ select variant ((Config { selected, additionalAttributes, onChange }) as config_
         (List.filterMap identity
             [ rootCs
             , outlinedCs variant
+            , leadingIconCs config_
             , disabledProp config_
             , selectedIndexProp selectedIndex
             , validProp config_
@@ -329,7 +336,8 @@ select variant ((Config { selected, additionalAttributes, onChange }) as config_
         )
         [ anchorElt []
             (List.concat
-                [ [ dropdownIconElt
+                [ [ leadingIconElt config_
+                  , dropdownIconElt
                   , selectedTextElt
                   ]
                 , if variant == Outlined then
@@ -341,7 +349,7 @@ select variant ((Config { selected, additionalAttributes, onChange }) as config_
                     ]
                 ]
             )
-        , menuElt selected onChange firstSelectItem remainingSelectItems
+        , menuElt leadingIcon selected onChange firstSelectItem remainingSelectItems
         ]
 
 
@@ -359,6 +367,19 @@ outlined config_ firstSelectItem remainingSelectItems =
     select Outlined config_ firstSelectItem remainingSelectItems
 
 
+{-| Select leading icon type
+-}
+type Icon msg
+    = Icon (Html msg)
+
+
+{-| Select leading icon
+-}
+icon : List (Html.Attribute msg) -> String -> Icon msg
+icon additionalAttributes iconName =
+    Icon (Icon.icon (class "mdc-select__icon" :: additionalAttributes) iconName)
+
+
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-select")
@@ -371,6 +392,11 @@ outlinedCs variant =
 
     else
         Nothing
+
+
+leadingIconCs : Config a msg -> Maybe (Html.Attribute msg)
+leadingIconCs (Config { leadingIcon }) =
+    Maybe.map (\_ -> class "mdc-select--with-leading-icon") leadingIcon
 
 
 disabledProp : Config a msg -> Maybe (Html.Attribute msg)
@@ -401,6 +427,16 @@ anchorElt additionalAttributes nodes =
     Html.div (class "mdc-select__anchor" :: additionalAttributes) nodes
 
 
+leadingIconElt : Config a msg -> Html msg
+leadingIconElt (Config { leadingIcon }) =
+    case leadingIcon of
+        Just (Icon icon_) ->
+            icon_
+
+        Nothing ->
+            text ""
+
+
 dropdownIconElt : Html msg
 dropdownIconElt =
     Html.i [ class "mdc-select__dropdown-icon" ] []
@@ -428,8 +464,8 @@ notchedOutlineElt (Config { label }) =
         ]
 
 
-menuElt : Maybe a -> Maybe (a -> msg) -> SelectItem a msg -> List (SelectItem a msg) -> Html msg
-menuElt selected onChange firstSelectItem remainingSelectItems =
+menuElt : Maybe (Icon msg) -> Maybe a -> Maybe (a -> msg) -> SelectItem a msg -> List (SelectItem a msg) -> Html msg
+menuElt leadingIcon selected onChange firstSelectItem remainingSelectItems =
     Menu.menu
         (Menu.config
             |> Menu.setAttributes
@@ -438,14 +474,20 @@ menuElt selected onChange firstSelectItem remainingSelectItems =
                 ]
         )
         [ List.list (List.config |> List.setWrapFocus True)
-            (listItem selected onChange firstSelectItem)
-            (List.map (listItem selected onChange) remainingSelectItems)
+            (listItem leadingIcon selected onChange firstSelectItem)
+            (List.map (listItem leadingIcon selected onChange) remainingSelectItems)
         ]
 
 
-listItem : Maybe a -> Maybe (a -> msg) -> SelectItem a msg -> ListItem msg
-listItem selected onChange (SelectItem.SelectItem config_ nodes) =
-    ListItem.listItem (listItemConfig selected onChange config_) nodes
+listItem : Maybe (Icon msg) -> Maybe a -> Maybe (a -> msg) -> SelectItem a msg -> ListItem msg
+listItem leadingIcon selected onChange (SelectItem.SelectItem config_ nodes) =
+    ListItem.listItem (listItemConfig selected onChange config_)
+        (if leadingIcon /= Nothing then
+            ListItem.graphic [] [] :: nodes
+
+         else
+            nodes
+        )
 
 
 listItemConfig : Maybe a -> Maybe (a -> msg) -> SelectItem.Config a msg -> ListItem.Config msg

@@ -15,6 +15,8 @@ type alias Model =
     { hero : Maybe Fruit
     , filled : Maybe Fruit
     , outlined : Maybe Fruit
+    , filledWithIcon : Maybe Fruit
+    , outlinedWithIcon : Maybe Fruit
     , focused : Maybe Fruit
     }
 
@@ -24,6 +26,8 @@ defaultModel =
     { hero = Nothing
     , filled = Nothing
     , outlined = Nothing
+    , filledWithIcon = Nothing
+    , outlinedWithIcon = Nothing
     , focused = Nothing
     }
 
@@ -38,6 +42,8 @@ type Msg
     = HeroChanged (Maybe Fruit)
     | FilledChanged (Maybe Fruit)
     | OutlinedChanged (Maybe Fruit)
+    | FilledWithIconChanged (Maybe Fruit)
+    | OutlinedWithIconChanged (Maybe Fruit)
     | FocusedChanged (Maybe Fruit)
     | Focus String
     | Focused (Result Browser.Dom.Error ())
@@ -54,6 +60,12 @@ update msg model =
 
         OutlinedChanged outlined ->
             ( { model | outlined = outlined }, Cmd.none )
+
+        FilledWithIconChanged filledWithIcon ->
+            ( { model | filledWithIcon = filledWithIcon }, Cmd.none )
+
+        OutlinedWithIconChanged outlinedWithIcon ->
+            ( { model | outlinedWithIcon = outlinedWithIcon }, Cmd.none )
 
         FocusedChanged focused ->
             ( { model | focused = focused }, Cmd.none )
@@ -80,6 +92,10 @@ view model =
         , filledSelect model
         , Html.h3 [ Typography.subtitle1 ] [ text "Outlined" ]
         , outlinedSelect model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Filled with Icon" ]
+        , filledWithIconSelect model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Outlined with Icon" ]
+        , outlinedWithIconSelect model
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus Select" ]
         , focusSelect model
         ]
@@ -138,6 +154,32 @@ outlinedSelect model =
             |> Select.setLabel (Just "Fruit")
             |> Select.setSelected (Just model.outlined)
             |> Select.setOnChange OutlinedChanged
+        )
+        firstItem
+        remainingItems
+
+
+filledWithIconSelect : Model -> Html Msg
+filledWithIconSelect model =
+    Select.filled
+        (Select.config
+            |> Select.setLabel (Just "Fruit")
+            |> Select.setSelected (Just model.filledWithIcon)
+            |> Select.setLeadingIcon (Just (Select.icon [] "favorite"))
+            |> Select.setOnChange FilledWithIconChanged
+        )
+        firstItem
+        remainingItems
+
+
+outlinedWithIconSelect : Model -> Html Msg
+outlinedWithIconSelect model =
+    Select.outlined
+        (Select.config
+            |> Select.setLabel (Just "Fruit")
+            |> Select.setSelected (Just model.outlinedWithIcon)
+            |> Select.setLeadingIcon (Just (Select.icon [] "favorite"))
+            |> Select.setOnChange OutlinedWithIconChanged
         )
         firstItem
         remainingItems

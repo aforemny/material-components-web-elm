@@ -132,7 +132,7 @@ class MdcTextField extends HTMLElement {
     this.disabled_ = false;
     this.valid_ = true;
     this.required_ = false;
-    this.pattern_ = "";
+    this.pattern_ = null;
     this.minLength_ = -1;
     this.maxLength_ = -1;
     this.min_ = "";

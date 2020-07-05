@@ -680,7 +680,7 @@ patternProp : Config msg -> Maybe (Html.Attribute msg)
 patternProp (Config { pattern }) =
     Just
         (Html.Attributes.property "pattern"
-            (Encode.string (Maybe.withDefault "" pattern))
+            (Maybe.withDefault Encode.null (Maybe.map Encode.string pattern))
         )
 
 

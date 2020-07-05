@@ -3,7 +3,7 @@
     "name": "aforemny/material-components-web-elm",
     "summary": "Material Components for Elm",
     "license": "MIT",
-    "version": "3.0.3",
+    "version": "4.0.0",
     "exposed-modules": {
         "Material": [
             "Material.Button",

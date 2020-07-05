@@ -2,6 +2,210 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/aforemny/material-components-web-elm/compare/3.0.3...4.0.0) (2020-07-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* Native Select and Enhanced Select have been replaced by
+a unified Select component. The API changed as follows:
+
+Before:
+```elm
+import Material.Select as Select
+import Material.Select.Option as SelectOption
+
+Select.filled
+    (Select.config
+        |> Select.setLabel (Just "Fruit")
+        |> Select.setValue (Just "")
+        |> Select.setOnChange ValueChanged
+    )
+    [ SelectOption.selectOption
+        (SelectOption.config
+            |> SelectOption.setValue (Just "")
+        )
+        [ text "" ]
+    , SelectOption.selectOption
+        (SelectOption.config
+            |> SelectOption.setValue (Just "Apple")
+        )
+        [ text "Apple" ]
+    ]
+
+```
+
+After:
+```elm
+import Material.Select as Select
+import Material.Select.Item as SelectItem
+
+Select.filled
+    (Select.config
+        |> Select.setSelected (Just "")
+        |> Select.setOnChange ValueChanged
+    )
+    (SelectItem.selectItem
+        (SelectItem.config { value = "" })
+        [ text "" ]
+    )
+    [ SelectItem.selectItem
+        (SelectItem.config { value = "Apple" })
+        [ text "Apple" ]
+    ]
+```
+* Snackbar messages now require you to set a label.
+
+Before:
+```elm
+Snackbar.message
+    |> Snackbar.setLabel "Something happened"
+```
+
+After:
+```elm
+Snackbar.message "Something happened"
+```
+* Snackbar now offers a simpler interface.
+
+Before:
+```elm
+type Msg
+    = SnackbarMsg (Snackbar.Msg Msg)
+    | SomethingHappened
+
+update msg model =
+   case msg of
+       SnackbarMsg msg_ ->
+           let
+               ( newQueue, cmd) =
+                   Snackbar.update SnackbarMsg msg_ model.queue
+           in
+           ( { model | queue = newQueue }, cmd )
+
+       SomethingHappened ->
+           ( model, Snackbar.addMessage SnackbarMsg Snackbar.message )
+
+view model =
+    Snackbar.snackbar SnackbarMsg Snackbar.config model.queue
+```
+
+After:
+```elm
+type Msg
+    = SnackbarClosed Snackbar.MessageId
+    | SomethingHappened
+
+update msg model =
+   case msg of
+       SnackbarClosed messageId ->
+           { model | queue = Snackbar.close messageId model.queue }
+
+       SomethingHappened ->
+           { model | queue = Snackbar.addMessage Snackbar.message model.queue }
+
+view model =
+    Snackbar.snackbar (Snackbar.config { onClosed = SnackbarClosed }) model.queue
+```
+* `List.list` type signature changed.
+
+Before:
+```elm
+List.list List.config
+    [ ListItem.listItem ListItem.config [ text "List Item" ]
+    , ListItem.listItem ListItem.config [ text "List Item" ]
+    ]
+```
+
+After:
+```elm
+List.list List.config
+    (ListItem.listItem ListItem.config [ text "List Item" ])
+    [ ListItem.listItem ListItem.config [ text "List Item" ] ]
+```
+* `Material.Choice.set` was renamed to
+`Material.ChipSet.Choice.chipSet`. The same is true for filter and input
+chips.
+* Choice chip API changed.
+
+Before:
+
+```elm
+import Material.Chip.Choice as ChoiceChip
+
+ChoiceChip.set []
+    [ ChoiceChip.chip
+          (ChoiceChip.config
+              |> ChoiceChip.setSelected (Just True)
+              |> ChoiceChip.setOnClick (Clicked "Chip")
+          )
+          "Chip"
+    ]
+```
+
+After:
+
+```elm
+import Material.Chip.Choice as ChoiceChip
+improt Material.ChipSet.Choice as ChoiceChipSet
+
+ChoiceChipSet.chipSet
+    (ChoiceChipSet.config { toLabel = identity }
+        |> ChoiceChipSet.setSelected (Just "Chip")
+        |> ChoiceChipSet.setOnChange Clicked
+    )
+    [ ChoiceChip.chip ChoiceChip.config "Chip" ]
+```
+* Snackbar's `setTimeout` function now takes a `Maybe
+Int` instead of a `Int`.
+
+Before:
+
+```elm
+Snackbar.message
+    |> Snackbar.setTimeout 4000
+```
+
+After:
+
+```elm
+Snackbar.message
+    |> Snackbar.setTimeout (Just 4000)
+```
+* Removes `Slider.setOnChange`. Update your sliders to
+use `setOnInput` instead.
+
+Before:
+```elm
+Slider.slider (Slider.config |> Slider.setOnChange Changed)
+```
+
+After:
+```elm
+Slider.slider (Slider.config |> Slider.setOnInput Changed)
+```
+
+### Features
+
+* Add focus support to ChipSet ([da373a1](https://github.com/aforemny/material-components-web-elm/commit/da373a1daa443018c14ee3b99ba5810d6f647c51))
+* Add Select.setLeadingIcon ([d3aa83f](https://github.com/aforemny/material-components-web-elm/commit/d3aa83fced054b88d1e8ec1ed6f24e5b0c4d6c12))
+* Add support for incrased touch target size ([b281c23](https://github.com/aforemny/material-components-web-elm/commit/b281c233d9b13fe8e4cc3c0cd85c00abf68e7259))
+* Add support for persistent snackbar messages ([e6cbc50](https://github.com/aforemny/material-components-web-elm/commit/e6cbc50c1c97ac94ea2c3e929d529b2821f0d534))
+* List items are guaranteed to have at least one item ([6f7521f](https://github.com/aforemny/material-components-web-elm/commit/6f7521f173692c7615c42d627387faf963cd8604))
+* Refactor Select ([57e5a02](https://github.com/aforemny/material-components-web-elm/commit/57e5a022c913650d32d10e542ea85119c6d2e098))
+* Remove Snackbar.Msg ([05ac366](https://github.com/aforemny/material-components-web-elm/commit/05ac366143795b6d6d79250bc9cd39ffe675773c))
+* Remove Snackbar.setLabel ([e45553d](https://github.com/aforemny/material-components-web-elm/commit/e45553da8471277fa4405ede445c661a570d68b7))
+* Update to MDC Web 4.0.0 ([915cdbd](https://github.com/aforemny/material-components-web-elm/commit/915cdbd0e156e6ccfd0498a62bb9a3bff0df80cc))
+
+
+### Bug Fixes
+
+* Add Slider.setOnInput ([1470dfc](https://github.com/aforemny/material-components-web-elm/commit/1470dfcffb8174e19bef5bf565127ae9b7e6c742))
+* TextField's pattern property incorrectly defaulted to the empty pattern ([c2bab28](https://github.com/aforemny/material-components-web-elm/commit/c2bab283951291f4d9eada56bb23cf2524734a17))
+
+
+* Refactor chips ([2ff6a46](https://github.com/aforemny/material-components-web-elm/commit/2ff6a463b562436b13ac8a0cd614256607e8f38d))
+
 ## [3.0.3](https://github.com/aforemny/material-components-web-elm/compare/3.0.2...3.0.3) (2020-06-30)
 
 

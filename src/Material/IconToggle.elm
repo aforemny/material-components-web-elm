@@ -209,11 +209,29 @@ setOnChange onChange (Config config_) =
 {-| Icon toggle view function
 -}
 iconToggle : Config msg -> { onIcon : String, offIcon : String } -> Html msg
-iconToggle ((Config { additionalAttributes }) as config_) { onIcon, offIcon } =
+iconToggle config_ icons =
     Html.node "mdc-icon-button"
+        [ displayCs
+        , onProp config_
+        ]
+        [ iconToggleElt config_ icons ]
+ 
+
+displayCs : Html.Attribute msg
+displayCs =
+    Html.Attributes.style "display" "contents"
+
+
+onProp : Config msg -> Html.Attribute msg
+onProp (Config { on }) =
+    Html.Attributes.property "on" (Encode.bool on)
+
+
+iconToggleElt : Config msg -> { onIcon : String, offIcon : String } -> Html msg
+iconToggleElt ((Config { additionalAttributes }) as config_) { onIcon, offIcon } =
+    Html.button
         (List.filterMap identity
-            [ rootCs
-            , onProp config_
+            [ iconButtonCs
             , tabIndexProp
             , ariaHiddenAttr
             , ariaPressedAttr config_
@@ -228,14 +246,9 @@ iconToggle ((Config { additionalAttributes }) as config_) { onIcon, offIcon } =
         ]
 
 
-rootCs : Maybe (Html.Attribute msg)
-rootCs =
+iconButtonCs : Maybe (Html.Attribute msg)
+iconButtonCs =
     Just (class "mdc-icon-button")
-
-
-onProp : Config msg -> Maybe (Html.Attribute msg)
-onProp (Config { on }) =
-    Just (Html.Attributes.property "on" (Encode.bool on))
 
 
 materialIconsCs : Maybe (Html.Attribute msg)

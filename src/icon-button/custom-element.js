@@ -25,12 +25,22 @@ class MdcIconButton extends HTMLElement {
 
   connectedCallback() {
     installClassNameChangeHook.call(this);
-    this.iconButtonToggle_ = new MDCIconButtonToggle(this);
-    this.iconButtonToggle_.on = this.on_;
+    const iconButton = this.querySelector(".mdc-icon-button");
+
+    if (!!iconButton) {
+      installClassNameChangeHook.call(iconButton);
+      this.iconButtonToggle_ = new MDCIconButtonToggle(iconButton);
+      this.iconButtonToggle_.on = this.on_;
+    }
   }
 
   disconnectedCallback() {
     this.iconButtonToggle_.destroy();
+    const iconButton = this.querySelector(".mdc-icon-button");
+    if (!!iconButton) {
+      uninstallClassNameChangeHook.call(iconButton);
+    }
+
     uninstallClassNameChangeHook.call(this);
   }
 };

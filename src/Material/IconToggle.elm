@@ -227,20 +227,22 @@ setOnChange onChange (Config config_) =
 iconToggle : Config msg -> { onIcon : Icon, offIcon : Icon } -> Html msg
 iconToggle ((Config { additionalAttributes }) as config_) { onIcon, offIcon } =
     Html.node "mdc-icon-button"
-        (List.filterMap identity
-            [ rootCs
-            , onProp config_
-            , tabIndexProp
-            , ariaHiddenAttr
-            , ariaPressedAttr config_
-            , ariaLabelAttr config_
-            , changeHandler config_
-            , disabledAttr config_
+        [ onProp config_ ]
+        [ Html.button
+            (List.filterMap identity
+                [ iconButtonCs
+                , tabIndexProp
+                , ariaHiddenAttr
+                , ariaPressedAttr config_
+                , ariaLabelAttr config_
+                , changeHandler config_
+                , disabledAttr config_
+                ]
+                ++ additionalAttributes
+            )
+            [ iconElt "mdc-icon-button__icon mdc-icon-button__icon--on" onIcon
+            , iconElt "mdc-icon-button__icon" offIcon
             ]
-            ++ additionalAttributes
-        )
-        [ iconElt "mdc-icon-button__icon mdc-icon-button__icon--on" onIcon
-        , iconElt "mdc-icon-button__icon" offIcon
         ]
 
 
@@ -255,14 +257,14 @@ iconElt className icon_ =
                 node (Svg.Attributes.class className :: attributes) nodes
 
 
-rootCs : Maybe (Html.Attribute msg)
-rootCs =
+iconButtonCs : Maybe (Html.Attribute msg)
+iconButtonCs =
     Just (class "mdc-icon-button")
 
 
-onProp : Config msg -> Maybe (Html.Attribute msg)
+onProp : Config msg -> Html.Attribute msg
 onProp (Config { on }) =
-    Just (Html.Attributes.property "on" (Encode.bool on))
+    Html.Attributes.property "on" (Encode.bool on)
 
 
 tabIndexProp : Maybe (Html.Attribute msg)

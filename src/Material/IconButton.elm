@@ -154,7 +154,7 @@ Icon buttons support opening a menu.
 -}
 
 import Html exposing (Html, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style)
 import Html.Events
 import Material.IconButton.Internal exposing (Config(..), Icon(..), Menu(..))
 import Material.Menu as Menu
@@ -252,33 +252,43 @@ iconButton ((Config ({ additionalAttributes } as innerConfig)) as config_) icon_
                         [ node, Menu.menu menuConfig menuNodes ]
     in
     Html.node "mdc-icon-button"
-        (List.filterMap identity
-            [ rootCs
-            , tabIndexProp
-            , clickHandler config_
-            ]
-            ++ additionalAttributes
-        )
-        [ Html.map never <|
-            case icon_ of
-                Icon { node, attributes, nodes } ->
-                    node (class "mdc-icon-button__icon" :: attributes) nodes
+        [ tabIndexProp ]
+        [ Html.button
+            (List.filterMap identity
+                [ iconButtonCs
+                , clickHandler config_
+                ]
+                ++ additionalAttributes
+            )
+            [ Html.map never <|
+                case icon_ of
+                    Icon { node, attributes, nodes } ->
+                        node (class "mdc-icon-button__icon" :: attributes) nodes
 
-                SvgIcon { node, attributes, nodes } ->
-                    node (Svg.Attributes.class "mdc-icon-button__icon" :: attributes)
-                        nodes
+                    SvgIcon { node, attributes, nodes } ->
+                        node
+                            (Svg.Attributes.class "mdc-icon-button__icon"
+                                :: attributes
+                            )
+                            nodes
+            ]
         ]
         |> wrapMenu
 
 
-rootCs : Maybe (Html.Attribute msg)
-rootCs =
+iconButtonCs : Maybe (Html.Attribute msg)
+iconButtonCs =
     Just (class "mdc-icon-button")
 
 
-tabIndexProp : Maybe (Html.Attribute msg)
+disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr (Config { disabled }) =
+    Just (Html.Attributes.disabled disabled)
+
+
+tabIndexProp : Html.Attribute msg
 tabIndexProp =
-    Just (Html.Attributes.tabindex 0)
+    Html.Attributes.tabindex 0
 
 
 clickHandler : Config msg -> Maybe (Html.Attribute msg)

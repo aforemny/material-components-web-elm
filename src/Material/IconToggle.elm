@@ -211,14 +211,14 @@ setOnChange onChange (Config config_) =
 iconToggle : Config msg -> { onIcon : String, offIcon : String } -> Html msg
 iconToggle config_ icons =
     Html.node "mdc-icon-button"
-        [ displayCs
+        [ displayAttr
         , onProp config_
         ]
         [ iconToggleElt config_ icons ]
  
 
-displayCs : Html.Attribute msg
-displayCs =
+displayAttr : Html.Attribute msg
+displayAttr =
     Html.Attributes.style "display" "contents"
 
 

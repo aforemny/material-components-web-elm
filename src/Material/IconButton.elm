@@ -166,7 +166,7 @@ setOnClick onClick (Config config_) =
 iconButton : Config msg -> String -> Html msg
 iconButton config_ iconName =
     Html.node "mdc-icon-button"
-        [ displayCs ]
+        [ displayAttr ]
         [ iconButtonElt config_ [ text iconName ] ]
 
 
@@ -175,12 +175,12 @@ iconButton config_ iconName =
 custom : Config msg -> List (Html msg) -> Html msg
 custom config_ nodes =
     Html.node "mdc-icon-button"
-        [ displayCs ]
+        [ displayAttr ]
         [ iconButtonElt config_ nodes ]
 
 
-displayCs : Html.Attribute msg
-displayCs =
+displayAttr : Html.Attribute msg
+displayAttr =
     Html.Attributes.style "display" "contents"
 
 

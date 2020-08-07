@@ -21,7 +21,6 @@ module Material.TextField exposing
     , setAttributes
     , filled
     , outlined
-    , Icon, icon
     )
 
 {-| Text fields allow users to input, edit, and select text.
@@ -44,15 +43,16 @@ module Material.TextField exposing
   - [Text Field with Leading Icon](#text-field-with-leading-icon)
   - [Text Field with Trailing Icon](#text-field-with-trailing-icon)
   - [Text Field with Character Counter](#text-field-with-character-counter)
+  - [Text Field with Custom Icon](#text-field-with-custom-icon)
   - [Focus a Text Field](#focus-a-text-field)
 
 
 # Resources
 
   - [Demo: Text Fields](https://aforemny.github.io/material-components-web-elm/#text-field)
-  - [Material Design Guidelines: Menus](https://material.io/go/design-menus)
-  - [MDC Web: Menu](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu)
-  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu#sass-mixins)
+  - [Material Design Guidelines: Text Fields](https://material.io/components/text-fields/)
+  - [MDC Web: Textfield](https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield#sass-mixins)
 
 
 # Basic Usage
@@ -182,10 +182,8 @@ configuration option to specify a value of `Icon`.
     TextField.filled
         (TextField.config
             |> TextField.setLeadingIcon
-                (Just (TextField.icon [] "wifi"))
+                (Just (TextFieldIcon.icon "wifi"))
         )
-
-@docs Icon, icon
 
 
 # Text Field with Trailing Icon
@@ -196,7 +194,7 @@ configuration option to specify a value of `Icon`.
     TextField.filled
         (TextField.config
             |> TextField.setTrailingIcon
-                (Just (TextField.icon [] "clear"))
+                (Just (TextFieldIcon.icon "clear"))
         )
 
 
@@ -210,6 +208,14 @@ of `HelperText.helperLine`.
         (TextField.config |> TextField.setMaxLength (Just 18))
     , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]
+
+
+# Text Field with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+See [Material.TextField.Icon](Material-TextField-Icon) for more information.
 
 
 # Focus a Text Field
@@ -230,7 +236,8 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Icon as Icon
+import Material.TextField.Icon.Internal as TextFieldIcon
+import Svg.Attributes
 
 
 {-| Configuration of a text field
@@ -251,18 +258,12 @@ type Config msg
         , min : Maybe Int
         , max : Maybe Int
         , step : Maybe Int
-        , leadingIcon : Maybe (Icon msg)
-        , trailingIcon : Maybe (Icon msg)
+        , leadingIcon : Maybe (TextFieldIcon.Icon msg)
+        , trailingIcon : Maybe (TextFieldIcon.Icon msg)
         , additionalAttributes : List (Html.Attribute msg)
         , onInput : Maybe (String -> msg)
         , onChange : Maybe (String -> msg)
         }
-
-
-{-| Text field trailing or leading icon -
--}
-type Icon msg
-    = Icon (Html msg)
 
 
 {-| Default configuration of a text field
@@ -396,14 +397,14 @@ setStep step (Config config_) =
 
 {-| Specify a text field's leading icon
 -}
-setLeadingIcon : Maybe (Icon msg) -> Config msg -> Config msg
+setLeadingIcon : Maybe (TextFieldIcon.Icon msg) -> Config msg -> Config msg
 setLeadingIcon leadingIcon (Config config_) =
     Config { config_ | leadingIcon = leadingIcon }
 
 
 {-| Specify a text field's trailing icon
 -}
-setTrailingIcon : Maybe (Icon msg) -> Config msg -> Config msg
+setTrailingIcon : Maybe (TextFieldIcon.Icon msg) -> Config msg -> Config msg
 setTrailingIcon trailingIcon (Config config_) =
     Config { config_ | trailingIcon = trailingIcon }
 
@@ -494,13 +495,6 @@ textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
             , trailingIconElt config_
             ]
         )
-
-
-{-| A text field's icon, either leading or trailing
--}
-icon : List (Html.Attribute msg) -> String -> Icon msg
-icon additionalAttributes iconName =
-    Icon (Icon.icon (class "mdc-text-field__icon" :: additionalAttributes) iconName)
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -625,22 +619,87 @@ placeholderAttr (Config { placeholder }) =
 
 leadingIconElt : Config msg -> List (Html msg)
 leadingIconElt (Config { leadingIcon }) =
-    case leadingIcon of
-        Nothing ->
-            []
-
-        Just (Icon html) ->
-            [ html ]
+    [ iconElt "mdc-text-field__icon--leading" leadingIcon ]
 
 
 trailingIconElt : Config msg -> List (Html msg)
 trailingIconElt (Config { trailingIcon }) =
-    case trailingIcon of
-        Nothing ->
-            []
+    [ iconElt "mdc-text-field__icon--trailing" trailingIcon ]
 
-        Just (Icon html) ->
-            [ html ]
+
+iconElt : String -> Maybe (TextFieldIcon.Icon msg) -> Html msg
+iconElt modifierCs icon_ =
+    case icon_ of
+        Nothing ->
+            text ""
+
+        Just (TextFieldIcon.Icon { node, attributes, nodes, onInteraction, disabled }) ->
+            node
+                (class "mdc-text-field__icon"
+                    :: class modifierCs
+                    :: (case onInteraction of
+                            Just msg ->
+                                if not disabled then
+                                    Html.Attributes.tabindex 0
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: Html.Events.onClick msg
+                                        :: Html.Events.on "keydown"
+                                            (Html.Events.keyCode
+                                                |> Decode.andThen
+                                                    (\keyCode ->
+                                                        if keyCode == 13 then
+                                                            Decode.succeed msg
+
+                                                        else
+                                                            Decode.fail ""
+                                                    )
+                                            )
+                                        :: attributes
+
+                                else
+                                    Html.Attributes.tabindex -1
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: attributes
+
+                            Nothing ->
+                                attributes
+                       )
+                )
+                nodes
+
+        Just (TextFieldIcon.SvgIcon { node, attributes, nodes, onInteraction, disabled }) ->
+            node
+                (Svg.Attributes.class "mdc-text-field__icon"
+                    :: Svg.Attributes.class modifierCs
+                    :: (case onInteraction of
+                            Just msg ->
+                                if not disabled then
+                                    Html.Attributes.tabindex 0
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: Html.Events.onClick msg
+                                        :: Html.Events.on "keydown"
+                                            (Html.Events.keyCode
+                                                |> Decode.andThen
+                                                    (\keyCode ->
+                                                        if keyCode == 13 then
+                                                            Decode.succeed msg
+
+                                                        else
+                                                            Decode.fail ""
+                                                    )
+                                            )
+                                        :: attributes
+
+                                else
+                                    Html.Attributes.tabindex -1
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: attributes
+
+                            Nothing ->
+                                attributes
+                       )
+                )
+                nodes
 
 
 inputHandler : Config msg -> Maybe (Html.Attribute msg)

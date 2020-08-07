@@ -54,7 +54,7 @@ view lift catalogPageConfig catalogPage =
                             |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
                             |> IconButton.setOnClick toggleCatalogDrawer
                         )
-                        "menu"
+                        (IconButton.icon "menu")
                     , Html.span
                         [ TopAppBar.title
                         , style "text-transform" "uppercase"

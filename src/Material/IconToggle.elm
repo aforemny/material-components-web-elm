@@ -6,6 +6,9 @@ module Material.IconToggle exposing
     , setLabel
     , setAttributes
     , iconToggle
+    , Icon, icon
+    , customIcon
+    , svgIcon
     )
 
 {-| Icon toggles allow users to take actions and make choices with a single
@@ -22,6 +25,7 @@ tap.
   - [On Icon Toggle](#on-icon-toggle)
   - [Disabled Icon Toggle](#disabled-icon-toggle)
   - [Labeled Icon Toggle](#labeled-icon-toggle)
+  - [Icon Toggle with Custom Icon](#icon-toggle-with-custom-icon)
   - [Focus an Icon Toggle](#focus-an-icon-toggle)
 
 
@@ -46,8 +50,8 @@ tap.
                 |> IconToggle.setOn True
                 |> IconToggle.setOnChange Clicked
             )
-            { offIcon = "favorite_outlined"
-            , onIcon = "favorite"
+            { offIcon = IconToggle.icon "favorite_outlined"
+            , onIcon = IconToggle.icon "favorite"
             }
 
 
@@ -72,8 +76,8 @@ the icon when their state changes.
 
     IconToggle.iconToggle
         (IconToggle.config |> IconToggle.setOn True)
-        { offIcon = "favorite_border"
-        , onIcon = "favorite"
+        { offIcon = IconToggle.icon "favorite_border"
+        , onIcon = IconToggle.icon "favorite"
         }
 
 @docs iconToggle
@@ -86,8 +90,8 @@ To set an icon toggle to its on state, set its `setOn` configuration option to
 
     IconToggle.iconToggle
         (IconToggle.config |> IconToggle.setOn True)
-        { offIcon = "favorite_border"
-        , onIcon = "favorite"
+        { offIcon = IconToggle.icon "favorite_border"
+        , onIcon = IconToggle.icon "favorite"
         }
 
 
@@ -100,8 +104,8 @@ effect.
 
     IconToggle.iconToggle
         (IconToggle.config |> IconToggle.setDisabled True)
-        { offIcon = "favorite_border"
-        , onIcon = "favorite"
+        { offIcon = IconToggle.icon "favorite_border"
+        , onIcon = IconToggle.icon "favorite"
         }
 
 
@@ -114,9 +118,19 @@ configuration option.
         (IconToggle.config
             |> IconToggle.setLabel (Just "Add to favorites")
         )
-        { offIcon = "favorite_border"
-        , onIcon = "favorite"
+        { offIcon = IconToggle.icon "favorite_border"
+        , onIcon = IconToggle.icon "favorite"
         }
+
+
+# Icon Toggle with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+@docs Icon, icon
+@docs customIcon
+@docs svgIcon
 
 
 # Focus an Icon Toggle
@@ -129,8 +143,8 @@ and use `Browser.Dom.focus`.
             |> IconToggle.setAttributes
                 [ Html.Attributes.id "my-icon-toggle" ]
         )
-        { offIcon = "favorite_border"
-        , onIcon = "favorite"
+        { offIcon = IconToggle.icon "favorite_border"
+        , onIcon = IconToggle.icon "favorite"
         }
 
 -}
@@ -140,6 +154,8 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Svg exposing (Svg)
+import Svg.Attributes
 
 
 {-| Icon toggle configuration
@@ -208,7 +224,7 @@ setOnChange onChange (Config config_) =
 
 {-| Icon toggle view function
 -}
-iconToggle : Config msg -> { onIcon : String, offIcon : String } -> Html msg
+iconToggle : Config msg -> { onIcon : Icon, offIcon : Icon } -> Html msg
 iconToggle ((Config { additionalAttributes }) as config_) { onIcon, offIcon } =
     Html.node "mdc-icon-button"
         (List.filterMap identity
@@ -223,9 +239,20 @@ iconToggle ((Config { additionalAttributes }) as config_) { onIcon, offIcon } =
             ]
             ++ additionalAttributes
         )
-        [ Html.i (List.filterMap identity [ materialIconsCs, onIconCs ]) [ text onIcon ]
-        , Html.i (List.filterMap identity [ materialIconsCs, iconCs ]) [ text offIcon ]
+        [ iconElt "mdc-icon-button__icon mdc-icon-button__icon--on" onIcon
+        , iconElt "mdc-icon-button__icon" offIcon
         ]
+
+
+iconElt : String -> Icon -> Html msg
+iconElt className icon_ =
+    Html.map never <|
+        case icon_ of
+            Icon { node, attributes, nodes } ->
+                node (class className :: attributes) nodes
+
+            SvgIcon { node, attributes, nodes } ->
+                node (Svg.Attributes.class className :: attributes) nodes
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -236,21 +263,6 @@ rootCs =
 onProp : Config msg -> Maybe (Html.Attribute msg)
 onProp (Config { on }) =
     Just (Html.Attributes.property "on" (Encode.bool on))
-
-
-materialIconsCs : Maybe (Html.Attribute msg)
-materialIconsCs =
-    Just (class "material-icons")
-
-
-iconCs : Maybe (Html.Attribute msg)
-iconCs =
-    Just (class "mdc-icon-button__icon")
-
-
-onIconCs : Maybe (Html.Attribute msg)
-onIconCs =
-    Just (class "mdc-icon-button__icon mdc-icon-button__icon--on")
 
 
 tabIndexProp : Maybe (Html.Attribute msg)
@@ -290,3 +302,73 @@ changeHandler (Config { onChange }) =
 disabledAttr : Config msg -> Maybe (Html.Attribute msg)
 disabledAttr (Config { disabled }) =
     Just (Html.Attributes.disabled disabled)
+
+
+{-| Icon type
+-}
+type Icon
+    = Icon
+        { node : List (Html.Attribute Never) -> List (Html Never) -> Html Never
+        , attributes : List (Html.Attribute Never)
+        , nodes : List (Html Never)
+        }
+    | SvgIcon
+        { node : List (Svg.Attribute Never) -> List (Svg Never) -> Svg Never
+        , attributes : List (Svg.Attribute Never)
+        , nodes : List (Svg Never)
+        }
+
+
+{-| Material Icon
+
+    IconToggle.iconToggle IconToggle.config
+        { offIcon = IconToggle.icon "favorite"
+        , onIcon = IconToggle.icon "favorite_border"
+        }
+
+-}
+icon : String -> Icon
+icon iconName =
+    customIcon Html.i [ class "material-icons" ] [ text iconName ]
+
+
+{-| Custom icon
+
+    IconToggle.iconToggle IconToggle.config
+        { offIcon =
+            IconToggle.customIcon Html.i
+                [ class "fab fa-font-awesome-alt" ]
+                []
+        , onIcon =
+            IconToggle.customIcon Html.i
+                [ class "fab fa-font-awesome" ]
+                []
+        }
+
+-}
+customIcon :
+    (List (Html.Attribute Never) -> List (Html Never) -> Html Never)
+    -> List (Html.Attribute Never)
+    -> List (Html Never)
+    -> Icon
+customIcon node attributes nodes =
+    Icon { node = node, attributes = attributes, nodes = nodes }
+
+
+{-| SVG icon
+
+    IconToggle.iconToggle IconToggle.config
+        { offIcon =
+            IconToggle.svgIcon [ Svg.Attributes.viewBox "…" ]
+                [-- …
+                ]
+        , onIcon =
+            IconToggle.svgIcon [ Svg.Attributes.viewBox "…" ]
+                [-- …
+                ]
+        }
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon attributes nodes =
+    SvgIcon { node = Svg.svg, attributes = attributes, nodes = nodes }

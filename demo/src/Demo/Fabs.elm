@@ -2,12 +2,14 @@ module Demo.Fabs exposing (Model, Msg(..), defaultModel, update, view)
 
 import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
+import Demo.ElmLogo exposing (elmLogo)
 import Html exposing (text)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (class, style)
 import Material.Button as Button
 import Material.Fab as Fab
 import Material.Fab.Extended as ExtendedFab
 import Material.Typography as Typography
+import Svg.Attributes
 import Task
 
 
@@ -44,20 +46,23 @@ view model =
         , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Fab"
         , sourceCode = Just "https://github.com/material-components/material-components-web/blob/master/packages/mdc-fab/"
         }
-    , hero = [ Fab.fab Fab.config "favorite_border" ]
+    , hero = [ Fab.fab Fab.config (Fab.icon "favorite_border") ]
     , content =
         [ Html.h3 [ Typography.subtitle1 ] [ text "Standard Floating Action Button" ]
-        , Fab.fab Fab.config "favorite_border"
+        , Fab.fab Fab.config (Fab.icon "favorite_border")
         , Html.h3 [ Typography.subtitle1 ] [ text "Mini Floating Action Button" ]
-        , Fab.fab (Fab.config |> Fab.setMini True) "favorite_border"
+        , Fab.fab (Fab.config |> Fab.setMini True) (Fab.icon "favorite_border")
         , Html.h3 [ Typography.subtitle1 ] [ text "Extended FAB" ]
-        , ExtendedFab.fab (ExtendedFab.config |> ExtendedFab.setIcon (Just "add"))
+        , ExtendedFab.fab
+            (ExtendedFab.config
+                |> ExtendedFab.setIcon (Just (ExtendedFab.icon "add"))
+            )
             "Create"
         , Html.h3 [ Typography.subtitle1 ]
             [ text "Extended FAB (Text label followed by icon)" ]
         , ExtendedFab.fab
             (ExtendedFab.config
-                |> ExtendedFab.setIcon (Just "add")
+                |> ExtendedFab.setIcon (Just (ExtendedFab.icon "add"))
                 |> ExtendedFab.setTrailingIcon True
             )
             "Create"
@@ -72,7 +77,7 @@ view model =
                         , style "margin-right" "24px"
                         ]
                 )
-                "favorite_border"
+                (Fab.icon "favorite_border")
             , Fab.fab
                 (Fab.config
                     |> Fab.setMini True
@@ -81,15 +86,57 @@ view model =
                         , style "margin-right" "24px"
                         ]
                 )
-                "favorite_border"
-            , ExtendedFab.fab (ExtendedFab.config |> ExtendedFab.setIcon (Just "add"))
+                (Fab.icon "favorite_border")
+            , ExtendedFab.fab
+                (ExtendedFab.config
+                    |> ExtendedFab.setIcon (Just (ExtendedFab.icon "add"))
+                )
                 "Create"
             ]
+        , Html.h3 [ Typography.subtitle1 ] [ text "FAB with Custom Icon" ]
+        , Fab.fab Fab.config (Fab.icon "favorite_border")
+        , text "\u{00A0}"
+        , Fab.fab Fab.config (Fab.customIcon Html.i [ class "fab fa-font-awesome" ] [])
+        , text "\u{00A0}"
+        , Fab.fab Fab.config
+            (Fab.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ] elmLogo)
+        , Html.h3 [ Typography.subtitle1 ] [ text "Extended FAB with Custom Icon" ]
+        , ExtendedFab.fab
+            (ExtendedFab.config
+                |> ExtendedFab.setIcon
+                    (Just
+                        (ExtendedFab.icon "favorite_border")
+                    )
+            )
+            "Material Icons"
+        , text "\u{00A0}"
+        , ExtendedFab.fab
+            (ExtendedFab.config
+                |> ExtendedFab.setIcon
+                    (Just
+                        (ExtendedFab.customIcon Html.i
+                            [ class "fab fa-font-awesome" ]
+                            []
+                        )
+                    )
+            )
+            "Font Awesome"
+        , text "\u{00A0}"
+        , ExtendedFab.fab
+            (ExtendedFab.config
+                |> ExtendedFab.setIcon
+                    (Just
+                        (ExtendedFab.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ]
+                            elmLogo
+                        )
+                    )
+            )
+            "SVG"
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus FAB" ]
         , Html.div [ style "display" "flex" ]
             [ Fab.fab
                 (Fab.config |> Fab.setAttributes [ Html.Attributes.id "my-fab" ])
-                "favorite_border"
+                (Fab.icon "favorite_border")
             , text "\u{00A0}"
             , Button.raised
                 (Button.config |> Button.setOnClick (Focus "my-fab"))

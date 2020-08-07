@@ -49,7 +49,7 @@ view model =
                         (IconButton.config
                             |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
                         )
-                        "menu"
+                        (IconButton.icon "menu")
                     , Html.span [ TopAppBar.title ] [ text "Title" ]
                     ]
                 , TopAppBar.section
@@ -58,17 +58,17 @@ view model =
                         (IconButton.config
                             |> IconButton.setAttributes [ TopAppBar.actionItem ]
                         )
-                        "file_download"
+                        (IconButton.icon "file_download")
                     , IconButton.iconButton
                         (IconButton.config
                             |> IconButton.setAttributes [ TopAppBar.actionItem ]
                         )
-                        "print"
+                        (IconButton.icon "print")
                     , IconButton.iconButton
                         (IconButton.config
                             |> IconButton.setAttributes [ TopAppBar.actionItem ]
                         )
-                        "more_vert"
+                        (IconButton.icon "more_vert")
                     ]
                 ]
             ]

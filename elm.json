@@ -41,6 +41,7 @@
             "Material.Radio",
             "Material.Ripple",
             "Material.Select",
+            "Material.Select.Icon",
             "Material.Select.Item",
             "Material.Slider",
             "Material.Snackbar",
@@ -49,6 +50,7 @@
             "Material.TabBar",
             "Material.TextArea",
             "Material.TextField",
+            "Material.TextField.Icon",
             "Material.Theme",
             "Material.TopAppBar",
             "Material.Typography"

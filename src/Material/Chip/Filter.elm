@@ -5,6 +5,9 @@ module Material.Chip.Filter exposing
     , setSelected
     , setAttributes
     , chip, Chip
+    , Icon, icon
+    , customIcon
+    , svgIcon
     )
 
 {-| Chips are compact elements that allow users to enter information, select a
@@ -21,7 +24,8 @@ icon. If the chip already has a leading icon, the checkmark replaces it.
   - [Basic Usage](#basic-usage)
   - [Configuration](#configuration)
       - [Configuration Options](#configuration-options)
-  - [Filter Chips](#filter-chips)
+  - [Filter Chip](#filter-chip)
+  - [Filter Chip with Custom Icon](#filter-chip-with-custom-icon)
 
 
 # Resources
@@ -71,14 +75,26 @@ icon. If the chip already has a leading icon, the checkmark replaces it.
 @docs setAttributes
 
 
-# Filter Chips
+# Filter Chip
 
 @docs chip, Chip
 
+
+# Filter Chip with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+@docs Icon, icon
+@docs customIcon
+@docs svgIcon
+
 -}
 
-import Html
-import Material.Chip.Filter.Internal exposing (Chip(..), Config(..))
+import Html exposing (Html, text)
+import Html.Attributes exposing (class)
+import Material.Chip.Filter.Internal exposing (Chip(..), Config(..), Icon(..))
+import Svg exposing (Svg)
 
 
 {-| Configuration of a filter chip
@@ -108,9 +124,9 @@ setSelected selected (Config config_) =
 
 {-| Specify whether a chip displays an icon
 -}
-setIcon : Maybe String -> Config msg -> Config msg
-setIcon icon (Config config_) =
-    Config { config_ | icon = icon }
+setIcon : Maybe Icon -> Config msg -> Config msg
+setIcon icon_ (Config config_) =
+    Config { config_ | icon = icon_ }
 
 
 {-| Specify additional attributes
@@ -138,3 +154,64 @@ type alias Chip msg =
 chip : Config msg -> String -> Chip msg
 chip =
     Chip
+
+
+{-| Icon type
+-}
+type alias Icon =
+    Material.Chip.Filter.Internal.Icon
+
+
+{-| Material Icon
+
+    FilterChip.chip
+        (FilterChip.config
+            |> FilterChip.setIcon (FilterChip.icon "favorite")
+        )
+        "Add to favorites"
+
+-}
+icon : String -> Icon
+icon iconName =
+    customIcon Html.i [ class "material-icons" ] [ text iconName ]
+
+
+{-| Custom icon
+
+    FilterChip.chip
+        (FilterChip.config
+            |> FilterChip.setIcon
+                (FilterChip.customIcon Html.i
+                    [ class "fab fa-font-awesome" ]
+                    []
+                )
+        )
+        "Font awesome"
+
+-}
+customIcon :
+    (List (Html.Attribute Never) -> List (Html Never) -> Html Never)
+    -> List (Html.Attribute Never)
+    -> List (Html Never)
+    -> Icon
+customIcon node attributes nodes =
+    Icon { node = node, attributes = attributes, nodes = nodes }
+
+
+{-| SVG icon
+
+    FilterChp.chip
+        (ActonChip.config
+            > FilterChip.setIcon
+                (FilterChip.svgIcon
+                    [ Svg.Attributes.viewBox "…" ]
+                    [-- …
+                    ]
+                )
+        )
+        "Fon awesome"
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon attributes nodes =
+    SvgIcon { node = Svg.svg, attributes = attributes, nodes = nodes }

@@ -152,7 +152,8 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Tab.Internal as Tab exposing (Tab(..))
+import Material.Tab.Internal as Tab exposing (Icon(..), Tab(..))
+import Svg.Attributes
 
 
 {-| Configuration of a tab bar
@@ -344,13 +345,16 @@ tabContentElt ((Config { indicatorSpansContent }) as barConfig) config_ content 
 
 tabIconElt : Tab.Content -> Maybe (Html msg)
 tabIconElt { icon } =
-    Maybe.map
-        (\iconName ->
-            Html.span
-                [ class "mdc-tab__icon material-icons" ]
-                [ text iconName ]
-        )
-        icon
+    Maybe.map (Html.map never) <|
+        case icon of
+            Just (Icon { node, attributes, nodes }) ->
+                Just (node (class "mdc-tab__icon" :: attributes) nodes)
+
+            Just (SvgIcon { node, attributes, nodes }) ->
+                Just (node (Svg.Attributes.class "mdc-tab__icon" :: attributes) nodes)
+
+            Nothing ->
+                Nothing
 
 
 tabTextLabelElt : Tab.Content -> Maybe (Html msg)

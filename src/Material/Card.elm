@@ -67,7 +67,7 @@ module Material.Card exposing
                             [ Card.button Button.config "Visit" ]
                         , icons =
                             [ Card.icon IconButton.config
-                                "favorite"
+                                (IconButton.icon "favorite")
                             ]
                         }
             }
@@ -164,7 +164,9 @@ to the standard buttons and icons, but they do share the same configuration.
         { buttons =
             [ Card.button Button.config "View" ]
         , icons =
-            [ Card.icon IconButton.config "favorite" ]
+            [ Card.icon IconButton.config
+                (IconButton.icon "favorite")
+            ]
         }
 
 @docs Actions, actions
@@ -495,11 +497,12 @@ type Icon msg
 
 {-| Card action icon
 
-    Card.icon IconButton.config "favorite"
+    Card.icon IconButton.config
+        (IconButton.icon "favorite")
 
 -}
-icon : IconButton.Config msg -> String -> Icon msg
-icon (Material.IconButton.Internal.Config iconButtonConfig) iconName =
+icon : IconButton.Config msg -> IconButton.Icon -> Icon msg
+icon (Material.IconButton.Internal.Config iconButtonConfig) icon_ =
     Icon <|
         IconButton.iconButton
             (Material.IconButton.Internal.Config
@@ -510,4 +513,4 @@ icon (Material.IconButton.Internal.Config iconButtonConfig) iconName =
                             :: iconButtonConfig.additionalAttributes
                 }
             )
-            iconName
+            icon_

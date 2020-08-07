@@ -1,9 +1,12 @@
+MODE = production
+
+
 all: build-pages
 
 
 build-npm: node_modules src/**/component.ts src/**/custom-element.js
 	tsc --project ./tsconfig.json --module esnext --importHelpers
-	webpack --mode=production
+	webpack --mode=$(MODE)
 	cp node_modules/material-components-web/dist/material-components-web.css dist/material-components-web-elm.css
 	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-web-elm.min.css
 	sed -i 's/sourceMappingURL=material-components-web\./sourceMappingURL=material-components-web-elm./' dist/*
@@ -53,7 +56,7 @@ commit-pages: build-pages
 
 
 docs: node_modules
-	elm-doc-preview
+	elm-doc-preview --port 8001
 
 
 release: distclean build-pages build-examples build-docs do-review do-checks

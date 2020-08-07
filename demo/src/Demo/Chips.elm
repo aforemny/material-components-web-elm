@@ -2,8 +2,9 @@ module Demo.Chips exposing (Model, Msg(..), defaultModel, update, view)
 
 import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
+import Demo.ElmLogo exposing (elmLogo)
 import Html exposing (Html, text)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (class, style)
 import Html.Events
 import Json.Decode as Decode
 import Material.Button as Button
@@ -17,6 +18,7 @@ import Material.ChipSet.Filter as FilterChipSet
 import Material.ChipSet.Input as InputChipSet
 import Material.Typography as Typography
 import Set exposing (Set)
+import Svg.Attributes
 import Task
 
 
@@ -179,6 +181,8 @@ view model =
         , shapedChips model
         , Html.h2 [ Typography.subtitle1 ] [ text "Input Chips" ]
         , inputChips model
+        , Html.h2 [ Typography.subtitle1 ] [ text "Chips with Custom Icons" ]
+        , actionChipsWithCustomIcons model
         , Html.h2 [ Typography.subtitle1 ] [ text "Focus Chips" ]
         , focusChips model
         ]
@@ -289,7 +293,7 @@ filterChips2 model =
             FilterChip.chip
                 (FilterChip.config
                     |> FilterChip.setSelected (Set.member label model.contacts)
-                    |> FilterChip.setIcon (Just "face")
+                    |> FilterChip.setIcon (Just (FilterChip.icon "face"))
                     |> FilterChip.setOnChange (ContactChanged label)
                 )
                 label
@@ -307,10 +311,10 @@ filterChips2 model =
 actionChips : Model -> Html Msg
 actionChips model =
     let
-        chip ( icon, label ) =
+        chip ( iconName, label ) =
             ActionChip.chip
                 (ActionChip.config
-                    |> ActionChip.setIcon (Just icon)
+                    |> ActionChip.setIcon (Just (ActionChip.icon iconName))
                 )
                 label
     in
@@ -342,6 +346,35 @@ shapedChips model =
             , "Office chairs"
             ]
         )
+
+
+actionChipsWithCustomIcons : Model -> Html Msg
+actionChipsWithCustomIcons model =
+    ActionChipSet.chipSet []
+        [ ActionChip.chip
+            (ActionChip.config
+                |> ActionChip.setIcon (Just (ActionChip.icon "favorite"))
+            )
+            "Material Icons"
+        , ActionChip.chip
+            (ActionChip.config
+                |> ActionChip.setIcon
+                    (Just
+                        (ActionChip.customIcon Html.i [ class "fab fa-font-awesome" ] [])
+                    )
+            )
+            "Font Awesome"
+        , ActionChip.chip
+            (ActionChip.config
+                |> ActionChip.setIcon
+                    (Just
+                        (ActionChip.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ]
+                            elmLogo
+                        )
+                    )
+            )
+            "Font Awesome"
+        ]
 
 
 focusChips : Model -> Html Msg

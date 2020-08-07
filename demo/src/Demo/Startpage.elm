@@ -15,15 +15,14 @@ view =
         [ TopAppBar.regular TopAppBar.config
             [ TopAppBar.row []
                 [ TopAppBar.section [ TopAppBar.alignStart ]
-                    [ IconButton.custom
+                    [ IconButton.iconButton
                         (IconButton.config
                             |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
                         )
-                        [ Html.img
-                            [ Html.Attributes.src "images/ic_component_24px_white.svg"
-                            ]
+                        (IconButton.customIcon Html.img
+                            [ Html.Attributes.src "images/ic_component_24px_white.svg" ]
                             []
-                        ]
+                        )
                     , Html.span
                         [ TopAppBar.title
                         , style "text-transform" "uppercase"

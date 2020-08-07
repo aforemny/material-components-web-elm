@@ -13,6 +13,9 @@ module Material.Snackbar exposing
     , setLeading
     , setStacked
     , setTimeoutMs
+    , Icon, icon
+    , customIcon
+    , svgIcon
     )
 
 {-| Snackbars provide brief messages about the application's processes at the
@@ -29,6 +32,11 @@ bottom of the screen.
   - [Queue](#queue)
       - [Adding Messages](#adding-messages)
   - [Messages](#messages)
+      - [Message with Action Icon](#message-with-action-icon)
+      - [Stacked Messages](#stacked-messages)
+      - [Leading Messages](#leading-messages)
+      - [Custom Timeout](#custom-timeout)
+      - [Message with Custom Icon](#message-with-custom-icon)
 
 
 # Resources
@@ -160,7 +168,7 @@ At the minimum, a message contains only a label.
 @docs setTimeoutMs
 
 
-## Message with action button
+## Message with Action Button
 
 Messages may contain an action button that the user can click. To display an
 action button, set the message's `setActionButton` configuration option to a
@@ -171,18 +179,19 @@ string, and handle the event in `onActionButtonClick`.
         |> Snackbar.setOnActionButtonClick ActionButtonClicked
 
 
-## Message with action icon
+## Message with Action Icon
 
 Messages may contain an action icon that the user can click. To display an
 action icon, set the message's `setActionIcon` configuration option to a string
 representing a Material Icon, and handle the event in `onActionIconClick`.
 
     Snackbar.message "Something happened"
-        |> Snackbar.setActionIcon (Just "close")
+        |> Snackbar.setActionIcon
+            (Just (Snackbar.icon "close"))
         |> Snackbar.setOnActionIconClick Dismissed
 
 
-## Stacked messages
+## Stacked Messages
 
 Messages with a long label and action button should display the action button
 below the label. To archieve this, set the message's `setStacked` configuration
@@ -193,7 +202,7 @@ option to `True`.
         |> Snackbar.setStacked True
 
 
-## Leading messages
+## Leading Messages
 
 Messages are by default centered within the viewport. On larger screens, they
 can optionally be displyed on the _leading_ edge of the screen. To display a
@@ -203,7 +212,7 @@ message as leading, set its `setLeading` configuration option to `True`.
         |> Snackbar.setLeading True
 
 
-## Custom timeout
+## Custom Timeout
 
 To set a custom timeout for a message, set its `setTimeoutMs` configuration
 option to a floating point value, representing the on-screen time in
@@ -215,6 +224,16 @@ may specify an indefinite timeout by setting it to `Nothing`.
     Snackbar.message "Something happened"
         |> Snackbar.setTimeoutMs (Just 4000)
 
+
+## Message with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+@docs Icon, icon
+@docs customIcon
+@docs svgIcon
+
 -}
 
 import Html exposing (Html, text)
@@ -222,6 +241,7 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Svg exposing (Svg)
 
 
 {-| Queue of messages
@@ -353,7 +373,7 @@ type Message msg
         { label : String
         , actionButton : Maybe String
         , onActionButtonClick : Maybe (MessageId -> msg)
-        , actionIcon : Maybe String
+        , actionIcon : Maybe (Icon msg)
         , onActionIconClick : Maybe (MessageId -> msg)
         , leading : Bool
         , stacked : Bool
@@ -377,7 +397,7 @@ setOnActionButtonClick onActionButtonClick (Message message_) =
 
 {-| Specify a message's action icon
 -}
-setActionIcon : Maybe String -> Message msg -> Message msg
+setActionIcon : Maybe (Icon msg) -> Message msg -> Message msg
 setActionIcon actionIcon (Message message_) =
     Message { message_ | actionIcon = actionIcon }
 
@@ -557,24 +577,90 @@ actionButtonClickHandler messageId (Message { onActionButtonClick }) =
 
 actionIconElt : MessageId -> Message msg -> Maybe (Html msg)
 actionIconElt messageId ((Message { actionIcon }) as message_) =
-    Maybe.map
-        (\actionIconLabel ->
-            Html.i
-                (List.filterMap identity
-                    [ actionIconCs
-                    , actionIconClickHandler messageId message_
-                    ]
+    case actionIcon of
+        Just (Icon { node, attributes, nodes }) ->
+            Just
+                (node
+                    (List.filterMap identity
+                        [ Just (class "mdc-icon-button")
+                        , Just (class "mdc-snackbar__dismiss")
+                        , actionIconClickHandler messageId message_
+                        ]
+                        ++ attributes
+                    )
+                    nodes
                 )
-                [ text actionIconLabel ]
-        )
-        actionIcon
 
-
-actionIconCs : Maybe (Html.Attribute msg)
-actionIconCs =
-    Just (class "mdc-icon-button mdc-snackbar__dismiss material-icons")
+        _ ->
+            Nothing
 
 
 actionIconClickHandler : MessageId -> Message msg -> Maybe (Html.Attribute msg)
 actionIconClickHandler messageId (Message { onActionIconClick }) =
     Maybe.map (Html.Events.onClick << (|>) messageId) onActionIconClick
+
+
+{-| Icon type
+-}
+type Icon msg
+    = Icon
+        { node : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+        , attributes : List (Html.Attribute msg)
+        , nodes : List (Html msg)
+        }
+    | SvgIcon
+        { node : List (Svg.Attribute msg) -> List (Svg msg) -> Svg msg
+        , attributes : List (Svg.Attribute msg)
+        , nodes : List (Svg msg)
+        }
+
+
+{-| Material Icon
+
+    Snackbar.message "Something happened"
+        |> Snackbar.setActionIcon
+            (Just (Snackbar.icon "favorite"))
+
+-}
+icon : String -> Icon msg
+icon iconName =
+    customIcon Html.i [ class "material-icons" ] [ text iconName ]
+
+
+{-| Custom icon
+
+    Snackbar.message "Something happened"
+        |> Snackbar.setActionIcon
+            (Just
+                (Snackbar.customIcon Html.i
+                    [ class "fab fa-font-awesome" ]
+                    []
+                )
+            )
+
+-}
+customIcon :
+    (List (Html.Attribute msg) -> List (Html msg) -> Html msg)
+    -> List (Html.Attribute msg)
+    -> List (Html msg)
+    -> Icon msg
+customIcon node attributes nodes =
+    Icon { node = node, attributes = attributes, nodes = nodes }
+
+
+{-| SVG icon
+
+    Snackbar.message "Something happened"
+        |> Snackbar.setActionIcon
+            (Just
+                (Snackbar.svgIcon
+                    [ Svg.Attributes.viewBox "…" ]
+                    [-- …
+                    ]
+                )
+            )
+
+-}
+svgIcon : List (Svg.Attribute msg) -> List (Svg msg) -> Icon msg
+svgIcon attributes nodes =
+    SvgIcon { node = Svg.svg, attributes = attributes, nodes = nodes }

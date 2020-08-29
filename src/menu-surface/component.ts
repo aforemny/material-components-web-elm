@@ -95,6 +95,7 @@ export class MDCMenuSurface extends MDCComponent<MDCMenuSurfaceFoundation> {
   destroy() {
     this.unlisten('keydown', this.handleKeydown_);
     this.unlisten(strings.OPENED_EVENT, this.registerBodyClickListener_);
+    this.deregisterBodyClickListener_();
     this.unlisten(strings.CLOSED_EVENT, this.deregisterBodyClickListener_);
     super.destroy();
   }

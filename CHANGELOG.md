@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/aforemny/material-components-web-elm/compare/4.0.0...5.0.0) (2020-08-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* Generally, how icons are specified in this library changed. When before
+we just wrote the Material Icon's /icon name/ as a String, say,
+`"favorite"`, now we write `Button.icon "favorite"` for the Material
+Icon (for a button). There are functions `Button.customIcon` and
+`Button.svgIcon` to support custom icons.
+
+The following modules have been updated to support custom icons:
+
+- ActionChip
+- Button
+- ChoiceChip
+- Fab
+- Fab.Extended
+- FilterChip
+- IconButton
+- IconToggle
+- InputChip
+- Select
+- Snackbar
+- Tab
+- TextField
+
+### Features
+
+* Add support for custom icons. ([110f89e](https://github.com/aforemny/material-components-web-elm/commit/110f89e017022a9497b663076794c78ae3ac150b))
+
 ## [4.0.0](https://github.com/aforemny/material-components-web-elm/compare/3.0.3...4.0.0) (2020-07-05)
 
 

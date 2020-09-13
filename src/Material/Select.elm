@@ -509,13 +509,13 @@ lineRippleElt =
 
 notchedOutlineElt : Config a msg -> Html msg
 notchedOutlineElt (Config { label }) =
-    Html.div [ class "mdc-notched-outline" ]
-        [ Html.div [ class "mdc-notched-outline__leading" ] []
-        , Html.div [ class "mdc-notched-outline__notch" ]
+    Html.span [ class "mdc-notched-outline" ]
+        [ Html.span [ class "mdc-notched-outline__leading" ] []
+        , Html.span [ class "mdc-notched-outline__notch" ]
             [ Html.label [ class "mdc-floating-label" ]
                 [ text (Maybe.withDefault "" label) ]
             ]
-        , Html.div [ class "mdc-notched-outline__trailing" ] []
+        , Html.span [ class "mdc-notched-outline__trailing" ] []
         ]
 
 

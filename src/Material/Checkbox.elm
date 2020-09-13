@@ -258,6 +258,7 @@ checkbox ((Config { touch, additionalAttributes }) as config_) =
             )
             [ nativeControlElt config_
             , backgroundElt
+            , rippleElt
             ]
 
 
@@ -326,3 +327,8 @@ backgroundElt =
             ]
         , Html.div [ class "mdc-checkbox__mixedmark" ] []
         ]
+
+
+rippleElt : Html msg
+rippleElt =
+    Html.div [ class "mdc-checkbox__ripple" ] []

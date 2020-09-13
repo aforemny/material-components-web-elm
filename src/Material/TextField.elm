@@ -469,29 +469,19 @@ textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
             ]
             ++ additionalAttributes
         )
-        (List.concat
+        (if outlined_ then
             [ leadingIconElt config_
-            , if fullwidth then
-                if outlined_ then
-                    [ inputElt config_
-                    , notchedOutlineElt config_
-                    ]
+            , inputElt config_
+            , notchedOutlineElt config_
+            , trailingIconElt config_
+            ]
 
-                else
-                    [ inputElt config_
-                    , lineRippleElt
-                    ]
-
-              else if outlined_ then
-                [ inputElt config_
-                , notchedOutlineElt config_
-                ]
-
-              else
-                [ inputElt config_
-                , labelElt config_
-                , lineRippleElt
-                ]
+         else
+            [ rippleElt
+            , leadingIconElt config_
+            , inputElt config_
+            , labelElt config_
+            , lineRippleElt
             , trailingIconElt config_
             ]
         )
@@ -617,14 +607,19 @@ placeholderAttr (Config { placeholder }) =
     Maybe.map Html.Attributes.placeholder placeholder
 
 
-leadingIconElt : Config msg -> List (Html msg)
+rippleElt : Html msg
+rippleElt =
+    Html.span [ class "mdc-text-field__ripple" ] []
+
+
+leadingIconElt : Config msg -> Html msg
 leadingIconElt (Config { leadingIcon }) =
-    [ iconElt "mdc-text-field__icon--leading" leadingIcon ]
+    iconElt "mdc-text-field__icon--leading" leadingIcon
 
 
-trailingIconElt : Config msg -> List (Html msg)
+trailingIconElt : Config msg -> Html msg
 trailingIconElt (Config { trailingIcon }) =
-    [ iconElt "mdc-text-field__icon--trailing" trailingIcon ]
+    iconElt "mdc-text-field__icon--trailing" trailingIcon
 
 
 iconElt : String -> Maybe (TextFieldIcon.Icon msg) -> Html msg
@@ -763,7 +758,7 @@ disabledProp (Config { disabled }) =
 
 
 labelElt : Config msg -> Html msg
-labelElt (Config { label, value }) =
+labelElt (Config { label, value, fullwidth }) =
     let
         floatingLabelCs =
             "mdc-floating-label"
@@ -771,8 +766,8 @@ labelElt (Config { label, value }) =
         floatingLabelFloatAboveCs =
             "mdc-floating-label--float-above"
     in
-    case label of
-        Just str ->
+    case ( fullwidth, label ) of
+        ( False, Just str ) ->
             Html.div
                 [ if Maybe.withDefault "" value /= "" then
                     class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
@@ -784,7 +779,7 @@ labelElt (Config { label, value }) =
                 ]
                 [ text str ]
 
-        Nothing ->
+        _ ->
             text ""
 
 
@@ -799,12 +794,12 @@ noLabelCs (Config { label }) =
 
 lineRippleElt : Html msg
 lineRippleElt =
-    Html.div [ class "mdc-line-ripple" ] []
+    Html.span [ class "mdc-line-ripple" ] []
 
 
 notchedOutlineElt : Config msg -> Html msg
 notchedOutlineElt config_ =
-    Html.div [ class "mdc-notched-outline" ]
+    Html.span [ class "mdc-notched-outline" ]
         [ notchedOutlineLeadingElt
         , notchedOutlineNotchElt config_
         , notchedOutlineTrailingElt
@@ -813,14 +808,14 @@ notchedOutlineElt config_ =
 
 notchedOutlineLeadingElt : Html msg
 notchedOutlineLeadingElt =
-    Html.div [ class "mdc-notched-outline__leading" ] []
+    Html.span [ class "mdc-notched-outline__leading" ] []
 
 
 notchedOutlineTrailingElt : Html msg
 notchedOutlineTrailingElt =
-    Html.div [ class "mdc-notched-outline__trailing" ] []
+    Html.span [ class "mdc-notched-outline__trailing" ] []
 
 
 notchedOutlineNotchElt : Config msg -> Html msg
 notchedOutlineNotchElt config_ =
-    Html.div [ class "mdc-notched-outline__notch" ] [ labelElt config_ ]
+    Html.span [ class "mdc-notched-outline__notch" ] [ labelElt config_ ]

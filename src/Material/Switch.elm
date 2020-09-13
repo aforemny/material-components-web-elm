@@ -173,7 +173,9 @@ switch ((Config { additionalAttributes }) as config_) =
             ++ additionalAttributes
         )
         [ trackElt
-        , thumbUnderlayElt config_
+        , thumbUnderlayElt
+        , thumbElt
+        , nativeControlElt config_
         ]
 
 
@@ -217,14 +219,14 @@ trackElt =
     Html.div [ class "mdc-switch__track" ] []
 
 
-thumbUnderlayElt : Config msg -> Html msg
-thumbUnderlayElt config_ =
-    Html.div [ class "mdc-switch__thumb-underlay" ] [ thumbElt config_ ]
+thumbUnderlayElt : Html msg
+thumbUnderlayElt =
+    Html.div [ class "mdc-switch__thumb-underlay" ] []
 
 
-thumbElt : Config msg -> Html msg
-thumbElt config_ =
-    Html.div [ class "mdc-switch__thumb" ] [ nativeControlElt config_ ]
+thumbElt : Html msg
+thumbElt =
+    Html.div [ class "mdc-switch__thumb" ] []
 
 
 nativeControlElt : Config msg -> Html msg

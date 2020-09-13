@@ -356,18 +356,9 @@ textArea outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
             ]
             ++ additionalAttributes
         )
-        (List.concat
-            [ if fullwidth then
-                [ inputElt config_
-                , notchedOutlineElt config_
-                ]
-
-              else
-                [ inputElt config_
-                , notchedOutlineElt config_
-                ]
-            ]
-        )
+        [ inputElt config_
+        , notchedOutlineElt config_
+        ]
 
 
 rootCs : Maybe (Html.Attribute msg)

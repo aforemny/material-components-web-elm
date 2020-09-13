@@ -12,3 +12,4 @@ src/*/component.js
 src/*/foundation.js
 src/*/*.patch
 src/*/*.ts.orig
+src/*/util.js

@@ -3,6 +3,7 @@ module Material.Fab exposing
     , setOnClick
     , setMini
     , setExited
+    , setTouch
     , setAttributes
     , fab
     , Icon, icon
@@ -72,6 +73,7 @@ their page layout, for instance by setting a fixed position via CSS.
 @docs setOnClick
 @docs setMini
 @docs setExited
+@docs setTouch
 @docs setAttributes
 
 
@@ -120,6 +122,18 @@ attribute to it and use `Browser.Dom.focus`.
         )
         (Fab.icon "favorite_border")
 
+
+# Touch Support
+
+Touch support is enabled by default. To disable touch support set a FAB's
+`setTouch` configuration option to `False`.
+
+    Fab.fab
+        (Fab.config
+            |> Fab.setTouch False
+        )
+        (Fab.icon "favorite_border")
+
 -}
 
 import Html exposing (Html, text)
@@ -136,6 +150,7 @@ type Config msg
     = Config
         { mini : Bool
         , exited : Bool
+        , touch : Bool
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
         }
@@ -148,6 +163,7 @@ config =
     Config
         { mini = False
         , exited = False
+        , touch = True
         , onClick = Nothing
         , additionalAttributes = []
         }
@@ -181,23 +197,48 @@ setOnClick onClick (Config config_) =
     Config { config_ | onClick = Just onClick }
 
 
+{-| Specify whether touch support is enabled (enabled by default)
+
+Touch support is an accessibility guideline that states that touch targets
+should be at least 48 x 48 pixels in size. Use this configuration option to
+disable increased touch target size.
+
+**Note:** FABs with touch support will be wrapped in a HTML div element to
+prevent potentially overlapping touch targets on adjacent elements.
+
+-}
+setTouch : Bool -> Config msg -> Config msg
+setTouch touch (Config config_) =
+    Config { config_ | touch = touch }
+
+
 {-| Floating action button view function
 -}
 fab : Config msg -> Icon -> Html msg
-fab ((Config { additionalAttributes }) as config_) icon_ =
-    Html.node "mdc-fab"
-        (List.filterMap identity
-            [ rootCs
-            , miniCs config_
-            , exitedCs config_
-            , clickHandler config_
-            , tabIndexProp 0
+fab ((Config { additionalAttributes, touch }) as config_) icon_ =
+    let
+        wrapTouch node =
+            if touch then
+                Html.div [ class "mdc-touch-target-wrapper" ] [ node ]
+
+            else
+                node
+    in
+    wrapTouch <|
+        Html.node "mdc-fab"
+            (List.filterMap identity
+                [ rootCs
+                , miniCs config_
+                , touchCs config_
+                , exitedCs config_
+                , clickHandler config_
+                , tabIndexProp 0
+                ]
+                ++ additionalAttributes
+            )
+            [ rippleElt
+            , iconElt icon_
             ]
-            ++ additionalAttributes
-        )
-        [ rippleElt
-        , iconElt icon_
-        ]
 
 
 tabIndexProp : Int -> Maybe (Html.Attribute msg)
@@ -214,6 +255,15 @@ miniCs : Config msg -> Maybe (Html.Attribute msg)
 miniCs (Config { mini }) =
     if mini then
         Just (class "mdc-fab--mini")
+
+    else
+        Nothing
+
+
+touchCs : Config msg -> Maybe (Html.Attribute msg)
+touchCs (Config { touch }) =
+    if touch then
+        Just (class "mdc-fab--touch")
 
     else
         Nothing

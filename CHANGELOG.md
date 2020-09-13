@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/aforemny/material-components-web-elm/compare/5.0.0...5.1.0) (2020-09-13)
+
+
+### Features
+
+* Add HelperText.setValidation ([20b5d4f](https://github.com/aforemny/material-components-web-elm/commit/20b5d4fc41e2b02e9517c4cdc7905b5e82c60310))
+* Support MDC Web version 5.1.0 ([963e8e9](https://github.com/aforemny/material-components-web-elm/commit/963e8e9bc1d6ce7ef2c3c210aa3ba122902dcb08))
+
+
+### Bug Fixes
+
+* Refactor list selection ([25c0929](https://github.com/aforemny/material-components-web-elm/commit/25c09293326ee5c14cc3b0de2e81d2ecfeafe237))
+* Remove non-existent .mdc-chip-set--action class ([d482328](https://github.com/aforemny/material-components-web-elm/commit/d482328a24a838fd44be1a583fdb71d474fbc926))
+* Unregister body click handler when menu surface is destroyed ([83c997f](https://github.com/aforemny/material-components-web-elm/commit/83c997f34110eece64e3bf1e1a1cb37efa85aac6))
+
 ## [5.0.0](https://github.com/aforemny/material-components-web-elm/compare/4.0.0...5.0.0) (2020-08-30)
 
 

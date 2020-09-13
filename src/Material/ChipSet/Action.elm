@@ -60,18 +60,13 @@ import Svg.Attributes
 chipSet : List (Html.Attribute msg) -> List (Chip msg) -> Html msg
 chipSet additionalAttributes chips =
     Html.node "mdc-chip-set"
-        (chipSetCs :: chipSetActionCs :: gridRole :: additionalAttributes)
+        (chipSetCs :: gridRole :: additionalAttributes)
         (List.map chip chips)
 
 
 chipSetCs : Html.Attribute msg
 chipSetCs =
     class "mdc-chip-set"
-
-
-chipSetActionCs : Html.Attribute msg
-chipSetActionCs =
-    class "mdc-chip-set--action"
 
 
 gridRole : Html.Attribute msg

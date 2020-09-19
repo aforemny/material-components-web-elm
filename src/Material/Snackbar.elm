@@ -242,6 +242,7 @@ import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Svg exposing (Svg)
+import Svg.Attributes
 
 
 {-| Queue of messages
@@ -591,7 +592,20 @@ actionIconElt messageId ((Message { actionIcon }) as message_) =
                     nodes
                 )
 
-        _ ->
+        Just (SvgIcon { node, attributes, nodes }) ->
+            Just
+                (node
+                    (List.filterMap identity
+                        [ Just (Svg.Attributes.class "mdc-icon-button")
+                        , Just (Svg.Attributes.class "mdc-snackbar__dismiss")
+                        , actionIconClickHandler messageId message_
+                        ]
+                        ++ attributes
+                    )
+                    nodes
+                )
+
+        Nothing ->
             Nothing
 
 

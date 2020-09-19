@@ -591,7 +591,20 @@ actionIconElt messageId ((Message { actionIcon }) as message_) =
                     nodes
                 )
 
-        _ ->
+        Just (SvgIcon { node, attributes, nodes }) ->
+            Just
+                (node
+                    (List.filterMap identity
+                        [ Just (class "mdc-icon-button")
+                        , Just (class "mdc-snackbar__dismiss")
+                        , actionIconClickHandler messageId message_
+                        ]
+                        ++ attributes
+                    )
+                    nodes
+                )
+
+        Nothing ->
             Nothing
 
 

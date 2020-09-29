@@ -351,8 +351,8 @@ textArea outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
             , disabledProp config_
             , requiredProp config_
             , validProp config_
-            , minLengthAttr config_
-            , maxLengthAttr config_
+            , minLengthProp config_
+            , maxLengthProp config_
             ]
             ++ additionalAttributes
         )
@@ -401,6 +401,22 @@ requiredProp (Config { required }) =
 validProp : Config msg -> Maybe (Html.Attribute msg)
 validProp (Config { valid }) =
     Just (Html.Attributes.property "valid" (Encode.bool valid))
+
+
+minLengthProp : Config msg -> Maybe (Html.Attribute msg)
+minLengthProp (Config { minLength }) =
+    Just
+        (Html.Attributes.property "minLength"
+            (Encode.int (Maybe.withDefault -1 minLength))
+        )
+
+
+maxLengthProp : Config msg -> Maybe (Html.Attribute msg)
+maxLengthProp (Config { maxLength }) =
+    Just
+        (Html.Attributes.property "maxLength"
+            (Encode.int (Maybe.withDefault -1 maxLength))
+        )
 
 
 minLengthAttr : Config msg -> Maybe (Html.Attribute msg)

@@ -18,6 +18,8 @@ module Material.TextField exposing
     , setStep
     , setLeadingIcon
     , setTrailingIcon
+    , setPrefix
+    , setSuffix
     , setAttributes
     , filled
     , outlined
@@ -42,8 +44,10 @@ module Material.TextField exposing
   - [Valid Text Field](#valid-text-field)
   - [Text Field with Leading Icon](#text-field-with-leading-icon)
   - [Text Field with Trailing Icon](#text-field-with-trailing-icon)
-  - [Text Field with Character Counter](#text-field-with-character-counter)
   - [Text Field with Custom Icon](#text-field-with-custom-icon)
+  - [Text Field with Prefix](#text-field-with-prefix)
+  - [Text Field with Suffix](#text-field-with-suffix)
+  - [Text Field with Character Counter](#text-field-with-character-counter)
   - [Focus a Text Field](#focus-a-text-field)
 
 
@@ -96,6 +100,8 @@ module Material.TextField exposing
 @docs setStep
 @docs setLeadingIcon
 @docs setTrailingIcon
+@docs setPrefix
+@docs setSuffix
 @docs setAttributes
 
 
@@ -198,6 +204,36 @@ configuration option to specify a value of `Icon`.
         )
 
 
+# Text Field with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+See [Material.TextField.Icon](Material-TextField-Icon) for more information.
+
+
+# Text Field with Prefix
+
+To have a text field display a prefix text such as a currency symbol, set its
+`setPrefix` configuration option.
+
+    TextField.filled
+        (TextField.config
+            |> TextField.setPrefix (Just "$")
+        )
+
+
+# Text Field with Suffix
+
+To have a text field display a suffix text such as a unit of mass, set its
+`setSuffix` configuration option.
+
+    TextField.filled
+        (TextField.config
+            |> TextField.setSuffix (Just "kg")
+        )
+
+
 # Text Field with Character Counter
 
 To have a text field display a character counter, specify its `setMaxLength`
@@ -208,14 +244,6 @@ of `HelperText.helperLine`.
         (TextField.config |> TextField.setMaxLength (Just 18))
     , HelperText.helperLine [] [ HelperText.characterCounter [] ]
     ]
-
-
-# Text Field with Custom Icon
-
-This library natively supports [Material Icons](https://material.io/icons).
-However, you may also include SVG or custom icons such as FontAwesome.
-
-See [Material.TextField.Icon](Material-TextField-Icon) for more information.
 
 
 # Focus a Text Field
@@ -260,6 +288,8 @@ type Config msg
         , step : Maybe Int
         , leadingIcon : Maybe (TextFieldIcon.Icon msg)
         , trailingIcon : Maybe (TextFieldIcon.Icon msg)
+        , prefix : Maybe String
+        , suffix : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , onInput : Maybe (String -> msg)
         , onChange : Maybe (String -> msg)
@@ -287,6 +317,8 @@ config =
         , step = Nothing
         , leadingIcon = Nothing
         , trailingIcon = Nothing
+        , prefix = Nothing
+        , suffix = Nothing
         , additionalAttributes = []
         , onInput = Nothing
         , onChange = Nothing
@@ -409,6 +441,20 @@ setTrailingIcon trailingIcon (Config config_) =
     Config { config_ | trailingIcon = trailingIcon }
 
 
+{-| Specify a text field's prefix
+-}
+setPrefix : Maybe String -> Config msg -> Config msg
+setPrefix prefix (Config config_) =
+    Config { config_ | prefix = prefix }
+
+
+{-| Specify a text field's suffix
+-}
+setSuffix : Maybe String -> Config msg -> Config msg
+setSuffix suffix (Config config_) =
+    Config { config_ | suffix = suffix }
+
+
 {-| Specify additional attributes
 -}
 setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
@@ -474,7 +520,9 @@ textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
         )
         (if outlined_ then
             [ leadingIconElt config_
+            , prefixElt config_
             , inputElt config_
+            , suffixElt config_
             , notchedOutlineElt config_
             , trailingIconElt config_
             ]
@@ -482,7 +530,9 @@ textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
          else
             [ rippleElt
             , leadingIconElt config_
+            , prefixElt config_
             , inputElt config_
+            , suffixElt config_
             , labelElt config_
             , lineRippleElt
             , trailingIconElt config_
@@ -556,6 +606,16 @@ labelFloatingCs (Config { label, value, fullwidth }) =
 
     else
         Nothing
+
+
+prefixCs : Html.Attribute msg
+prefixCs =
+    class "mdc-text-field__affix mdc-text-field__affix--prefix"
+
+
+suffixCs : Html.Attribute msg
+suffixCs =
+    class "mdc-text-field__affix mdc-text-field__affix--suffix"
 
 
 requiredProp : Config msg -> Maybe (Html.Attribute msg)
@@ -727,6 +787,26 @@ iconElt modifierCs icon_ =
                        )
                 )
                 nodes
+
+
+prefixElt : Config msg -> Html msg
+prefixElt (Config { prefix }) =
+    case prefix of
+        Just prefixStr ->
+            Html.span [ prefixCs ] [ text prefixStr ]
+
+        Nothing ->
+            text ""
+
+
+suffixElt : Config msg -> Html msg
+suffixElt (Config { suffix }) =
+    case suffix of
+        Just suffixStr ->
+            Html.span [ suffixCs ] [ text suffixStr ]
+
+        Nothing ->
+            text ""
 
 
 inputHandler : Config msg -> Maybe (Html.Attribute msg)

@@ -62,6 +62,8 @@ view model =
         , outlinedTextFields model
         , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Outlined (TODO)" ]
         , shapedOutlinedTextFields model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Text Field with Affix" ]
+        , affixedFilledTextFields model
         , Html.h3 [ Typography.subtitle1 ] [ text "Text Field without Label" ]
         , textFieldsWithoutLabel model
         , Html.h3 [ Typography.subtitle1 ] [ text "Text Field with Character Counter" ]
@@ -231,6 +233,37 @@ shapedOutlinedTextFields model =
                                 |> TextFieldIcon.setOnInteraction Interacted
                             )
                         )
+                )
+            , demoHelperText
+            ]
+        ]
+
+
+affixedFilledTextFields : Model -> Html Msg
+affixedFilledTextFields model =
+    Html.div textFieldRow
+        [ Html.div textFieldContainer
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "Standard")
+                    |> TextField.setPrefix (Just "$")
+                )
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "Standard")
+                    |> TextField.setSuffix (Just "kg")
+                )
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "Standard")
+                    |> TextField.setPrefix (Just "$")
+                    |> TextField.setSuffix (Just ".00")
                 )
             , demoHelperText
             ]

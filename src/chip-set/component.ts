@@ -82,7 +82,6 @@ export class MDCChipSet extends MDCComponent<MDCChipSetFoundation> {
         this.foundation_.handleChipNavigation(evt.detail);
     this.listen(INTERACTION_EVENT, this.handleChipInteraction_);
     this.listen(SELECTION_EVENT, this.handleChipSelection_);
-    //this.listen(REMOVAL_EVENT, this.handleChipRemoval_);
     this.listen(NAVIGATION_EVENT, this.handleChipNavigation_);
   }
 

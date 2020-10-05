@@ -25,7 +25,7 @@ import {MDCComponent} from '@material/base/component';
 import {SpecificEventListener} from '@material/base/types';
 import {MDCMenuSurfaceAdapter} from '@material/menu-surface/adapter';
 import {Corner, cssClasses, strings} from '@material/menu-surface/constants';
-import {MDCMenuSurfaceFoundation} from '@material/menu-surface/foundation';
+import {MDCMenuSurfaceFoundation} from './foundation';
 import {MDCMenuDistance} from '@material/menu-surface/types';
 import * as util from '@material/menu-surface/util';
 
@@ -61,22 +61,15 @@ export class MDCMenuSurface extends MDCComponent<MDCMenuSurfaceFoundation> {
     this.handleKeydown_ = (evt) => this.handleKeydown(evt);
     this.handleBodyClick_ = (evt) => this.handleBodyClick(evt);
 
-    this.registerBodyClickListener_ = () => document.body.addEventListener('click', this.handleBodyClick_);
+    // capture so that no race between handleBodyClick and quickOpen when
+    // menusurface opened on button click which registers this listener
+    this.registerBodyClickListener_ = () => document.body.addEventListener(
+        'click', this.handleBodyClick_, {capture: true});
     this.deregisterBodyClickListener_ = () => document.body.removeEventListener('click', this.handleBodyClick_);
 
     this.listen('keydown', this.handleKeydown_);
     this.listen(strings.OPENED_EVENT, this.registerBodyClickListener_);
     this.listen(strings.CLOSED_EVENT, this.deregisterBodyClickListener_);
-  }
-
-  /** Handle keys that close the surface. */
-  handleKeydown(evt: KeyboardEvent) {
-    const {keyCode, key} = evt;
-
-    const isEscape = key === 'Escape' || keyCode === 27;
-    if (isEscape) {
-      this.emit("MDCMenu:close", {}, true);
-    }
   }
 
   /** Handle clicks and close if not within menu-surface element. */
@@ -85,7 +78,17 @@ export class MDCMenuSurface extends MDCComponent<MDCMenuSurfaceFoundation> {
     if (this.isElementInContainer(el)) {
       return;
     }
-    this.emit("MDCMenu:close", {}, true);
+    this.emit("MDCMenuSurface:close", {}, true);
+  }
+
+  /** Handle keys that close the surface. */
+  handleKeydown(evt: KeyboardEvent) {
+    const {keyCode, key} = evt;
+
+    const isEscape = key === 'Escape' || keyCode === 27;
+    if (isEscape) {
+      this.emit("MDCMenuSurface:close", {}, true);
+    }
   }
 
   isElementInContainer(el: Element) {

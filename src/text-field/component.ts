@@ -36,7 +36,7 @@ import {MDCTextFieldAdapter, MDCTextFieldInputAdapter, MDCTextFieldLabelAdapter,
 import {MDCTextFieldCharacterCounter, MDCTextFieldCharacterCounterFactory,} from '@material/textfield/character-counter/component';
 import {MDCTextFieldCharacterCounterFoundation} from '@material/textfield/character-counter/foundation';
 import {cssClasses, strings} from '@material/textfield/constants';
-import {MDCTextFieldFoundation} from '@material/textfield/foundation';
+import {MDCTextFieldFoundation} from './foundation';
 import {MDCTextFieldHelperText, MDCTextFieldHelperTextFactory,} from '@material/textfield/helper-text/component';
 import {MDCTextFieldHelperTextFoundation} from '@material/textfield/helper-text/foundation';
 import {MDCTextFieldIcon, MDCTextFieldIconFactory} from '@material/textfield/icon/component';
@@ -63,6 +63,8 @@ export class MDCTextField extends MDCComponent<MDCTextFieldFoundation> implement
   private lineRipple_!: MDCLineRipple | null; // assigned in initialize()
   private outline_!: MDCNotchedOutline | null; // assigned in initialize()
   private trailingIcon_!: MDCTextFieldIcon | null; // assigned in initialize()
+  private prefix_!: Element|null;                  // assigned in initialize()
+  private suffix_!: Element|null;                  // assigned in initialize()
 
   initialize(
       rippleFactory: MDCRippleFactory = (el, foundation) => new MDCRipple(el, foundation),
@@ -110,6 +112,10 @@ export class MDCTextField extends MDCComponent<MDCTextFieldFoundation> implement
     const trailingIconEl =
         this.root_.querySelector(strings.TRAILING_ICON_SELECTOR);
     this.trailingIcon_ = trailingIconEl ? iconFactory(trailingIconEl) : null;
+
+    // Prefix and Suffix
+    this.prefix_ = this.root_.querySelector(strings.PREFIX_SELECTOR);
+    this.suffix_ = this.root_.querySelector(strings.SUFFIX_SELECTOR);
 
     this.ripple = this.createRipple_(rippleFactory);
   }
@@ -313,6 +319,38 @@ export class MDCTextField extends MDCComponent<MDCTextFieldFoundation> implement
    */
   set useNativeValidation(useNativeValidation: boolean) {
     this.foundation_.setUseNativeValidation(useNativeValidation);
+  }
+
+  /**
+   * Gets the text content of the prefix, or null if it does not exist.
+   */
+  get prefixText(): string|null {
+    return this.prefix_ ? this.prefix_.textContent : null;
+  }
+
+  /**
+   * Sets the text content of the prefix, if it exists.
+   */
+  set prefixText(prefixText: string|null) {
+    if (this.prefix_) {
+      this.prefix_.textContent = prefixText;
+    }
+  }
+
+  /**
+   * Gets the text content of the suffix, or null if it does not exist.
+   */
+  get suffixText(): string|null {
+    return this.suffix_ ? this.suffix_.textContent : null;
+  }
+
+  /**
+   * Sets the text content of the suffix, if it exists.
+   */
+  set suffixText(suffixText: string|null) {
+    if (this.suffix_) {
+      this.suffix_.textContent = suffixText;
+    }
   }
 
   /**

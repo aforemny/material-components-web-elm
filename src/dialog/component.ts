@@ -26,7 +26,7 @@ import {SpecificEventListener} from '@material/base/types';
 import {FocusTrap} from 'focus-trap';
 import {matches} from '@material/dom/ponyfill';
 import {MDCDialogAdapter} from '@material/dialog/adapter';
-import {MDCDialogFoundation} from '@material/dialog/foundation';
+import {MDCDialogFoundation} from './foundation';
 import {MDCDialogCloseEventDetail} from '@material/dialog/types';
 import * as util from './util';
 import {MDCDialogFocusTrapFactory} from './util';

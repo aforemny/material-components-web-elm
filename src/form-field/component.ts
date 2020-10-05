@@ -24,7 +24,7 @@
 import {MDCComponent} from '@material/base/component';
 import {MDCRipple} from '@material/ripple/component';
 import {MDCFormFieldAdapter} from '@material/form-field/adapter';
-import {MDCFormFieldFoundation} from '@material/form-field/foundation';
+import {MDCFormFieldFoundation} from './foundation';
 
 export interface MDCFormFieldInput {
   readonly ripple: MDCRipple | undefined;

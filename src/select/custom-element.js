@@ -7,11 +7,11 @@ import {
 class MdcSelect extends HTMLElement {
 
   focus() {
-    this.select_.selectedText_.focus();
+    this.select_.selectAnchor.focus();
   }
 
   blur() {
-    this.select_.selectedText_.blur();
+    this.select_.selectAnchor.blur();
   }
 
   get selectedIndex() {

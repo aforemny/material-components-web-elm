@@ -171,7 +171,7 @@ surfaceElt : Content msg -> Html msg
 surfaceElt content =
     Html.div
         [ dialogSurfaceCs
-        , roleAttr
+        , alertDialogRoleAttr
         , ariaModalAttr
         ]
         (List.filterMap identity
@@ -187,8 +187,8 @@ dialogSurfaceCs =
     class "mdc-dialog__surface"
 
 
-roleAttr : Html.Attribute msg
-roleAttr =
+alertDialogRoleAttr : Html.Attribute msg
+alertDialogRoleAttr =
     Html.Attributes.attribute "role" "alertdialog"
 
 

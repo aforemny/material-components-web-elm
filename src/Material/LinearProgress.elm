@@ -162,8 +162,7 @@ linearProgress variant ((Config { additionalAttributes }) as config_) =
             ]
             ++ additionalAttributes
         )
-        [ bufferingDotsElt
-        , bufferElt
+        [ bufferElt
         , primaryBarElt
         , secondaryBarElt
         ]
@@ -265,14 +264,22 @@ closedProp (Config { closed }) =
     Just (Html.Attributes.property "closed" (Encode.bool closed))
 
 
-bufferingDotsElt : Html msg
-bufferingDotsElt =
-    Html.div [ class "mdc-linear-progress__buffering-dots" ] []
-
-
 bufferElt : Html msg
 bufferElt =
-    Html.div [ class "mdc-linear-progress__buffer" ] []
+    Html.div [ class "mdc-linear-progress__buffer" ]
+        [ bufferBarElt
+        , bufferDotsElt
+        ]
+
+
+bufferBarElt : Html msg
+bufferBarElt =
+    Html.div [ class "mdc-linear-progress__buffer-bar" ] []
+
+
+bufferDotsElt : Html msg
+bufferDotsElt =
+    Html.div [ class "mdc-linear-progress__buffer-dots" ] []
 
 
 primaryBarElt : Html msg

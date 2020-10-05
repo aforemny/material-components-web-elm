@@ -1,4 +1,4 @@
-for fn in src/*/{foundation,component,util}.ts; do
+for fn in src/*/{foundation,component,util}.patch; do
   file=$(basename $fn .patch)
   dir=$(dirname $fn)
   component=$(basename $dir)

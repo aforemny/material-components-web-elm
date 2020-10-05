@@ -27,8 +27,8 @@ import {default as createFocusTrap, FocusTrap} from 'focus-trap';
 import {MDCList} from '@material/list/component';
 import {MDCListFoundation} from '@material/list/foundation';
 import {MDCDrawerAdapter} from '@material/drawer/adapter';
-import {MDCDismissibleDrawerFoundation} from '@material/drawer/dismissible/foundation';
-import {MDCModalDrawerFoundation} from '@material/drawer/modal/foundation';
+import {MDCDismissibleDrawerFoundation} from './dismissible/foundation';
+import {MDCModalDrawerFoundation} from './modal/foundation';
 import * as util from './util';
 import {MDCDrawerFocusTrapFactory} from './util';
 

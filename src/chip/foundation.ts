@@ -204,6 +204,24 @@ export class MDCChipFoundation extends MDCFoundation<MDCChipAdapter> {
     }
   }
 
+  handleFocusIn(evt: FocusEvent) {
+    // Early exit if the event doesn't come from the primary action
+    if (!this.eventFromPrimaryAction_(evt)) {
+      return;
+    }
+
+    this.adapter_.addClass(cssClasses.PRIMARY_ACTION_FOCUSED);
+  }
+
+  handleFocusOut(evt: FocusEvent) {
+    // Early exit if the event doesn't come from the primary action
+    if (!this.eventFromPrimaryAction_(evt)) {
+      return;
+    }
+
+    this.adapter_.removeClass(cssClasses.PRIMARY_ACTION_FOCUSED);
+  }
+
   /**
    * Handles an interaction event on the trailing icon element. This is used to
    * prevent the ripple from activating on interaction with the trailing icon.
@@ -286,7 +304,11 @@ export class MDCChipFoundation extends MDCFoundation<MDCChipAdapter> {
 
   private getDirection_(key: string): Direction {
     const isRTL = this.adapter_.isRTL();
-    if (key === strings.ARROW_LEFT_KEY && !isRTL || key === strings.ARROW_RIGHT_KEY && isRTL) {
+    const isLeftKey =
+        key === strings.ARROW_LEFT_KEY || key === strings.IE_ARROW_LEFT_KEY;
+    const isRightKey =
+        key === strings.ARROW_RIGHT_KEY || key === strings.IE_ARROW_RIGHT_KEY;
+    if (!isRTL && isLeftKey || isRTL && isRightKey) {
       return Direction.LEFT;
     }
 
@@ -331,7 +353,9 @@ export class MDCChipFoundation extends MDCFoundation<MDCChipAdapter> {
 
   private shouldRemoveChip_(evt: KeyboardEvent): boolean {
     const isDeletable = this.adapter_.hasClass(cssClasses.DELETABLE);
-    return isDeletable && (evt.key === strings.BACKSPACE_KEY || evt.key === strings.DELETE_KEY);
+    return isDeletable &&
+        (evt.key === strings.BACKSPACE_KEY || evt.key === strings.DELETE_KEY ||
+         evt.key === strings.IE_DELETE_KEY);
   }
 
   private setSelected_(selected: boolean) {
@@ -350,6 +374,11 @@ export class MDCChipFoundation extends MDCFoundation<MDCChipAdapter> {
 
   private notifyIgnoredSelection_(selected: boolean) {
     this.adapter_.notifySelection(selected, true);
+  }
+
+  private eventFromPrimaryAction_(evt: Event) {
+    return this.adapter_.eventTargetHasClass(
+        evt.target, cssClasses.PRIMARY_ACTION);
   }
 }
 

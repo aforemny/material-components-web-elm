@@ -508,7 +508,7 @@ labelElt (Config { label, value }) =
     in
     case label of
         Just str ->
-            Html.div
+            Html.span
                 [ if Maybe.withDefault "" value /= "" then
                     class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
 

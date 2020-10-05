@@ -341,9 +341,10 @@ select variant ((Config { leadingIcon, selected, additionalAttributes, onChange 
         )
         [ anchorElt []
             (List.concat
-                [ [ leadingIconElt config_
-                  , dropdownIconElt
+                [ [ rippleElt
+                  , leadingIconElt config_
                   , selectedTextElt
+                  , dropdownIconElt
                   ]
                 , if variant == Outlined then
                     [ notchedOutlineElt config_ ]
@@ -412,6 +413,11 @@ selectedIndexProp selectedIndex =
 requiredProp : Config a msg -> Maybe (Html.Attribute msg)
 requiredProp (Config { required }) =
     Just (Html.Attributes.property "required" (Encode.bool required))
+
+
+rippleElt : Html msg
+rippleElt =
+    Html.span [ class "mdc-text-field__ripple" ] []
 
 
 anchorElt : List (Html.Attribute msg) -> List (Html msg) -> Html msg
@@ -561,4 +567,9 @@ listItemConfig selectedValue onChange (SelectItem.Config { value, disabled, addi
 
 selectedTextElt : Html msg
 selectedTextElt =
-    Html.div [ class "mdc-select__selected-text" ] []
+    Html.input
+        [ class "mdc-select__selected-text"
+        , Html.Attributes.disabled True
+        , Html.Attributes.readonly True
+        ]
+        []

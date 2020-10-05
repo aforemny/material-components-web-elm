@@ -36,8 +36,11 @@ type MoveEventMap = {
   readonly[K in DownEventType]: MoveEventType;
 };
 
-const DOWN_EVENTS: DownEventType[] = ['mousedown', 'pointerdown', 'touchstart'];
-const UP_EVENTS: UpEventType[] = ['mouseup', 'pointerup', 'touchend'];
+const hasPointer = !!window.PointerEvent;
+const DOWN_EVENTS: DownEventType[] =
+    hasPointer ? ['pointerdown'] : ['mousedown', 'touchstart'];
+const UP_EVENTS: UpEventType[] =
+    hasPointer ? ['pointerup'] : ['mouseup', 'touchend'];
 
 const MOVE_EVENT_MAP: MoveEventMap = {
   mousedown: 'mousemove',
@@ -496,9 +499,11 @@ export class MDCSliderFoundation extends MDCFoundation<MDCSliderAdapter> {
       translatePx = this.rect_.width - translatePx;
     }
 
-    const transformProp = getCorrectPropertyName(window, 'transform');
+    // Accessing `window` without a `typeof` check will throw on Node environments.
+    const hasWindow = typeof window !== 'undefined';
+    const transformProp = hasWindow ? getCorrectPropertyName(window, 'transform') : 'transform';
     const transitionendEvtName =
-        getCorrectEventName(window, 'transitionend') as EventType;
+        hasWindow ? getCorrectEventName(window, 'transitionend') as EventType : 'transitionend';
 
     if (this.inTransit_) {
       const onTransitionEnd = () => {

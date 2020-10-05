@@ -451,8 +451,11 @@ textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
         (List.filterMap identity
             [ rootCs
             , noLabelCs config_
+            , filledCs outlined_
             , outlinedCs outlined_
             , fullwidthCs config_
+            , labelFloatingCs config_
+            , foucClassNamesProp
             , disabledCs config_
             , withLeadingIconCs config_
             , withTrailingIconCs config_
@@ -490,6 +493,15 @@ textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-text-field")
+
+
+filledCs : Bool -> Maybe (Html.Attribute msg)
+filledCs outlined_ =
+    if not outlined_ then
+        Just (class "mdc-text-field--filled")
+
+    else
+        Nothing
 
 
 outlinedCs : Bool -> Maybe (Html.Attribute msg)
@@ -537,6 +549,15 @@ withTrailingIconCs (Config { trailingIcon }) =
         Nothing
 
 
+labelFloatingCs : Config msg -> Maybe (Html.Attribute msg)
+labelFloatingCs (Config { label, value, fullwidth }) =
+    if not fullwidth && label /= Nothing && Maybe.withDefault "" value /= "" then
+        Just (class "mdc-text-field--label-floating")
+
+    else
+        Nothing
+
+
 requiredProp : Config msg -> Maybe (Html.Attribute msg)
 requiredProp (Config { required }) =
     Just (Html.Attributes.property "required" (Encode.bool required))
@@ -560,6 +581,17 @@ maxLengthProp (Config { maxLength }) =
     Just
         (Html.Attributes.property "maxLength"
             (Encode.int (Maybe.withDefault -1 maxLength))
+        )
+
+
+foucClassNamesProp : Maybe (Html.Attribute msg)
+foucClassNamesProp =
+    Just
+        (Html.Attributes.property "foucClassNames"
+            (Encode.list Encode.string
+                [ "mdc-text-field--label-floating"
+                ]
+            )
         )
 
 
@@ -768,7 +800,7 @@ labelElt (Config { label, value, fullwidth }) =
     in
     case ( fullwidth, label ) of
         ( False, Just str ) ->
-            Html.div
+            Html.span
                 [ if Maybe.withDefault "" value /= "" then
                     class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
 

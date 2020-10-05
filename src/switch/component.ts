@@ -30,7 +30,7 @@ import {MDCRipple} from '@material/ripple/component';
 import {MDCRippleFoundation} from '@material/ripple/foundation';
 import {MDCRippleCapableSurface} from '@material/ripple/types';
 import {MDCSwitchAdapter} from '@material/switch/adapter';
-import {MDCSwitchFoundation} from '@material/switch/foundation';
+import {MDCSwitchFoundation} from './foundation';
 
 export class MDCSwitch extends MDCComponent<MDCSwitchFoundation> implements MDCRippleCapableSurface {
   static attachTo(root: HTMLElement) {

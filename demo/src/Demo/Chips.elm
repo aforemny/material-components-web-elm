@@ -196,8 +196,8 @@ heroChips model =
             |> ChoiceChipSet.setSelected model.chip
             |> ChoiceChipSet.setOnChange ChipChanged
         )
-        [ ChoiceChip.chip ChoiceChip.config "Chip One"
-        , ChoiceChip.chip ChoiceChip.config "Chip Two"
+        (ChoiceChip.chip ChoiceChip.config "Chip One")
+        [ ChoiceChip.chip ChoiceChip.config "Chip Two"
         , ChoiceChip.chip ChoiceChip.config "Chip Three"
         , ChoiceChip.chip ChoiceChip.config "Chip Four"
         ]
@@ -229,8 +229,8 @@ choiceChips model =
             |> ChoiceChipSet.setSelected (Just model.size)
             |> ChoiceChipSet.setOnChange SizeChanged
         )
-        [ ChoiceChip.chip ChoiceChip.config ExtraSmall
-        , ChoiceChip.chip ChoiceChip.config Small
+        (ChoiceChip.chip ChoiceChip.config ExtraSmall)
+        [ ChoiceChip.chip ChoiceChip.config Small
         , ChoiceChip.chip ChoiceChip.config Medium
         , ChoiceChip.chip ChoiceChip.config Large
         , ChoiceChip.chip ChoiceChip.config ExtraLarge
@@ -239,23 +239,28 @@ choiceChips model =
 
 inputChips : Model -> Html Msg
 inputChips model =
+    let
+        chip label =
+            ( label
+            , InputChip.chip
+                (InputChip.config
+                    |> InputChip.setOnDelete (InputChipDeleted label)
+                )
+                label
+            )
+    in
     Html.div
         [ style "position" "relative"
         , style "display" "flex"
         ]
-        [ InputChipSet.chipSet []
-            (List.map
-                (\label ->
-                    ( label
-                    , InputChip.chip
-                        (InputChip.config
-                            |> InputChip.setOnDelete (InputChipDeleted label)
-                        )
-                        label
-                    )
-                )
-                model.inputChips
-            )
+        [ case model.inputChips of
+            [] ->
+                text ""
+
+            firstInputChip :: otherInputChips ->
+                InputChipSet.chipSet []
+                    (chip firstInputChip)
+                    (List.map chip otherInputChips)
         , Html.input
             [ Html.Attributes.value model.input
             , Html.Events.onInput InputChanged
@@ -277,9 +282,9 @@ filterChips1 model =
                 accessory
     in
     FilterChipSet.chipSet []
+        (chip "Tops")
         (List.map chip
-            [ "Tops"
-            , "Bottoms"
+            [ "Bottoms"
             , "Shoes"
             , "Accessories"
             ]
@@ -299,9 +304,9 @@ filterChips2 model =
                 label
     in
     FilterChipSet.chipSet []
+        (chip "Alice")
         (List.map chip
-            [ "Alice"
-            , "Bob"
+            [ "Bob"
             , "Charlie"
             , "Danielle"
             ]
@@ -319,9 +324,9 @@ actionChips model =
                 label
     in
     ActionChipSet.chipSet []
+        (chip ( "event", "Add to calendar" ))
         (List.map chip
-            [ ( "event", "Add to calendar" )
-            , ( "bookmark", "Bookmark" )
+            [ ( "bookmark", "Bookmark" )
             , ( "alarm", "Set alarm" )
             , ( "directions", "Get directions" )
             ]
@@ -339,9 +344,9 @@ shapedChips model =
                 label
     in
     ActionChipSet.chipSet []
+        (chip "Bookcase")
         (List.map chip
-            [ "Bookcase"
-            , "TV Stand"
+            [ "TV Stand"
             , "Sofas"
             , "Office chairs"
             ]
@@ -351,12 +356,13 @@ shapedChips model =
 actionChipsWithCustomIcons : Model -> Html Msg
 actionChipsWithCustomIcons model =
     ActionChipSet.chipSet []
-        [ ActionChip.chip
+        (ActionChip.chip
             (ActionChip.config
                 |> ActionChip.setIcon (Just (ActionChip.icon "favorite"))
             )
             "Material Icons"
-        , ActionChip.chip
+        )
+        [ ActionChip.chip
             (ActionChip.config
                 |> ActionChip.setIcon
                     (Just
@@ -386,9 +392,8 @@ focusChips model =
                 |> ChoiceChipSet.setOnChange FocusChanged
                 |> ChoiceChipSet.setAttributes [ Html.Attributes.id "my-chips" ]
             )
-            [ ChoiceChip.chip ChoiceChip.config "One"
-            , ChoiceChip.chip ChoiceChip.config "Two"
-            ]
+            (ChoiceChip.chip ChoiceChip.config "One")
+            [ ChoiceChip.chip ChoiceChip.config "Two" ]
         , text "\u{00A0}"
         , Button.raised
             (Button.config

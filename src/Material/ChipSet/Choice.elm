@@ -135,11 +135,11 @@ setAttributes additionalAttributes (Config config_) =
 
 {-| Choice chip set view function
 -}
-chipSet : Config a msg -> List (Chip a msg) -> Html msg
-chipSet ((Config { selected, onChange, toLabel, additionalAttributes }) as config_) chips =
+chipSet : Config a msg -> Chip a msg -> List (Chip a msg) -> Html msg
+chipSet ((Config { selected, onChange, toLabel, additionalAttributes }) as config_) firstChip otherChips =
     Html.node "mdc-chip-set"
         (chipSetCs :: chipSetChoiceCs :: gridRole :: additionalAttributes)
-        (List.map (chip selected onChange toLabel) chips)
+        (List.map (chip selected onChange toLabel) (firstChip :: otherChips))
 
 
 chip : Maybe a -> Maybe (a -> msg) -> (a -> String) -> Chip a msg -> Html msg

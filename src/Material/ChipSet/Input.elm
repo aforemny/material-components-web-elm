@@ -55,11 +55,11 @@ import Svg.Attributes
 
 {-| Input chip set view function
 -}
-chipSet : List (Html.Attribute msg) -> List ( String, Chip msg ) -> Html msg
-chipSet additionalAttributes keyedChips =
+chipSet : List (Html.Attribute msg) -> ( String, Chip msg ) -> List ( String, Chip msg ) -> Html msg
+chipSet additionalAttributes firstChip otherChips =
     Html.Keyed.node "mdc-chip-set"
         (chipSetCs :: chipSetInputCs :: gridRole :: additionalAttributes)
-        (List.map (Tuple.mapSecond chip) keyedChips)
+        (List.map (Tuple.mapSecond chip) (firstChip :: otherChips))
 
 
 chip : Chip msg -> Html msg

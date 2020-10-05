@@ -20,6 +20,7 @@ module Material.TextField exposing
     , setTrailingIcon
     , setPrefix
     , setSuffix
+    , setEndAligned
     , setAttributes
     , filled
     , outlined
@@ -47,6 +48,7 @@ module Material.TextField exposing
   - [Text Field with Custom Icon](#text-field-with-custom-icon)
   - [Text Field with Prefix](#text-field-with-prefix)
   - [Text Field with Suffix](#text-field-with-suffix)
+  - [End Aligned Text Field](#end-aligned-text-field)
   - [Text Field with Character Counter](#text-field-with-character-counter)
   - [Focus a Text Field](#focus-a-text-field)
 
@@ -102,6 +104,7 @@ module Material.TextField exposing
 @docs setTrailingIcon
 @docs setPrefix
 @docs setSuffix
+@docs setEndAligned
 @docs setAttributes
 
 
@@ -234,6 +237,17 @@ To have a text field display a suffix text such as a unit of mass, set its
         )
 
 
+# End Aligned Text Field
+
+To have a text field end align its input, set its `setEndAligned` configuration
+option to `True`.
+
+    TextField.filled
+        (TextField.config
+            |> TextField.setEndAligned True
+        )
+
+
 # Text Field with Character Counter
 
 To have a text field display a character counter, specify its `setMaxLength`
@@ -290,6 +304,7 @@ type Config msg
         , trailingIcon : Maybe (TextFieldIcon.Icon msg)
         , prefix : Maybe String
         , suffix : Maybe String
+        , endAligned : Bool
         , additionalAttributes : List (Html.Attribute msg)
         , onInput : Maybe (String -> msg)
         , onChange : Maybe (String -> msg)
@@ -319,6 +334,7 @@ config =
         , trailingIcon = Nothing
         , prefix = Nothing
         , suffix = Nothing
+        , endAligned = False
         , additionalAttributes = []
         , onInput = Nothing
         , onChange = Nothing
@@ -455,6 +471,13 @@ setSuffix suffix (Config config_) =
     Config { config_ | suffix = suffix }
 
 
+{-| Specify a text field's input to end-aligned
+-}
+setEndAligned : Bool -> Config msg -> Config msg
+setEndAligned endAligned (Config config_) =
+    Config { config_ | endAligned = endAligned }
+
+
 {-| Specify additional attributes
 -}
 setAttributes : List (Html.Attribute msg) -> Config msg -> Config msg
@@ -505,6 +528,7 @@ textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
             , disabledCs config_
             , withLeadingIconCs config_
             , withTrailingIconCs config_
+            , endAlignedCs config_
             , valueProp config_
             , disabledProp config_
             , requiredProp config_
@@ -616,6 +640,15 @@ prefixCs =
 suffixCs : Html.Attribute msg
 suffixCs =
     class "mdc-text-field__affix mdc-text-field__affix--suffix"
+
+
+endAlignedCs : Config msg -> Maybe (Html.Attribute msg)
+endAlignedCs (Config { endAligned }) =
+    if endAligned then
+        Just (class "mdc-text-field--end-aligned")
+
+    else
+        Nothing
 
 
 requiredProp : Config msg -> Maybe (Html.Attribute msg)

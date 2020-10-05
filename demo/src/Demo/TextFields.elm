@@ -264,6 +264,7 @@ affixedFilledTextFields model =
                     |> TextField.setLabel (Just "Standard")
                     |> TextField.setPrefix (Just "$")
                     |> TextField.setSuffix (Just ".00")
+                    |> TextField.setEndAligned True
                 )
             , demoHelperText
             ]

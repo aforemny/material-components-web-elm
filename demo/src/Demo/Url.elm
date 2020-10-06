@@ -14,6 +14,7 @@ type Url
     | Card
     | Checkbox
     | Chips
+    | CircularProgress
     | Dialog
     | Drawer
     | DismissibleDrawer
@@ -65,6 +66,9 @@ toString url =
 
         Chips ->
             "#chips"
+
+        CircularProgress ->
+            "#circular-progress"
 
         Dialog ->
             "#dialog"
@@ -185,6 +189,9 @@ fromString url =
 
         "chips" ->
             Chips
+
+        "circular-progress" ->
+            CircularProgress
 
         "dialog" ->
             Dialog

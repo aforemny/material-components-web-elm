@@ -91,6 +91,7 @@ writePrelude h = do
   hPutStrLn h "import Material.Chip.Choice as ChoiceChip"
   hPutStrLn h "import Material.Chip.Filter as FilterChip"
   hPutStrLn h "import Material.Chip.Input as InputChip"
+  hPutStrLn h "import Material.CircularProgress as CircularProgress"
   hPutStrLn h "import Material.DataTable as DataTable"
   hPutStrLn h "import Material.Dialog as Dialog"
   hPutStrLn h "import Material.Drawer.Dismissible as DismissibleDrawer"

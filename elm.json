@@ -17,6 +17,7 @@
             "Material.ChipSet.Choice",
             "Material.ChipSet.Filter",
             "Material.ChipSet.Input",
+            "Material.CircularProgress",
             "Material.DataTable",
             "Material.Dialog",
             "Material.Drawer.Dismissible",

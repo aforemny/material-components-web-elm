@@ -4,6 +4,7 @@ import "./card/custom-element";
 import "./checkbox/custom-element";
 import "./chip/custom-element";
 import "./chip-set/custom-element";
+import "./circular-progress/custom-element";
 import "./data-table/custom-element";
 import "./dialog/custom-element";
 import "./drawer/custom-element";

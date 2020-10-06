@@ -8,6 +8,7 @@ import Demo.Cards
 import Demo.CatalogPage as CatalogPage
 import Demo.Checkbox
 import Demo.Chips
+import Demo.CircularProgress
 import Demo.DataTable
 import Demo.DenseTopAppBar
 import Demo.Dialog
@@ -58,6 +59,7 @@ type alias Model =
     , cards : Demo.Cards.Model
     , checkbox : Demo.Checkbox.Model
     , chips : Demo.Chips.Model
+    , circularProgress : Demo.CircularProgress.Model
     , denseTopAppBar : Demo.DenseTopAppBar.Model
     , dialog : Demo.Dialog.Model
     , dismissibleDrawer : Demo.DismissibleDrawer.Model
@@ -101,6 +103,7 @@ defaultModel key =
     , cards = Demo.Cards.defaultModel
     , checkbox = Demo.Checkbox.defaultModel
     , chips = Demo.Chips.defaultModel
+    , circularProgress = Demo.CircularProgress.defaultModel
     , denseTopAppBar = Demo.DenseTopAppBar.defaultModel
     , dialog = Demo.Dialog.defaultModel
     , dismissibleDrawer = Demo.DismissibleDrawer.defaultModel
@@ -145,6 +148,7 @@ type Msg
     | CardsMsg Demo.Cards.Msg
     | CheckboxMsg Demo.Checkbox.Msg
     | ChipsMsg Demo.Chips.Msg
+    | CircularProgressMsg Demo.CircularProgress.Msg
     | DialogMsg Demo.Dialog.Msg
     | DismissibleDrawerMsg Demo.DismissibleDrawer.Msg
     | DrawerMsg Demo.Drawer.Msg
@@ -232,6 +236,14 @@ update msg model =
             Demo.Chips.update msg_ model.chips
                 |> Tuple.mapFirst (\chips -> { model | chips = chips })
                 |> Tuple.mapSecond (Cmd.map ChipsMsg)
+
+        CircularProgressMsg msg_ ->
+            Demo.CircularProgress.update msg_ model.circularProgress
+                |> Tuple.mapFirst
+                    (\circularProgress ->
+                        { model | circularProgress = circularProgress }
+                    )
+                |> Tuple.mapSecond (Cmd.map CircularProgressMsg)
 
         DialogMsg msg_ ->
             ( { model | dialog = Demo.Dialog.update msg_ model.dialog }, Cmd.none )
@@ -435,6 +447,11 @@ body model =
 
         Demo.Url.Chips ->
             CatalogPage.view ChipsMsg catalogPageConfig (Demo.Chips.view model.chips)
+
+        Demo.Url.CircularProgress ->
+            CatalogPage.view CircularProgressMsg
+                catalogPageConfig
+                (Demo.CircularProgress.view model.circularProgress)
 
         Demo.Url.Dialog ->
             CatalogPage.view DialogMsg catalogPageConfig (Demo.Dialog.view model.dialog)

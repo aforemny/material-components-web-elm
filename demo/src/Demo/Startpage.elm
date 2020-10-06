@@ -80,6 +80,11 @@ imageListItems =
       , title = "Chips"
       , subtitle = "Chips"
       }
+    , { url = CircularProgress
+      , icon = "images/linear_progress_180px.svg"
+      , title = "Circular progress"
+      , subtitle = "Fills from 0% to 100%, represented by bars"
+      }
     , { url = DataTable
       , icon = "images/data_table_180px.svg"
       , title = "Data Table"

@@ -76,6 +76,8 @@ view model =
         , fullwidthTextField model
         , Html.h3 [ Typography.subtitle1 ] [ text "Full Width Textarea" ]
         , fullwidthTextareaTextField model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Textarea with Character Counter" ]
+        , textareaWithCharacterCounter model
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus Text Field" ]
         , focusTextField
         ]
@@ -435,6 +437,20 @@ fullwidthTextareaTextField model =
                     |> TextArea.setFullwidth True
                 )
             , demoHelperText
+            ]
+        ]
+
+
+textareaWithCharacterCounter : Model -> Html msg
+textareaWithCharacterCounter model =
+    Html.div textFieldRowFullwidth
+        [ Html.div textFieldContainer
+            [ TextArea.outlined
+                (TextArea.config
+                    |> TextArea.setMaxLength (Just 300)
+                    |> TextArea.setFullwidth True
+                )
+            , demoHelperTextWithCharacterCounter
             ]
         ]
 

@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/aforemny/material-components-web-elm/compare/5.1.0...6.0.0) (2020-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* The type signature of `chipSet` changed from
+
+```
+chipSet : List (Html.Attribute msg) -> List (Chip msg) -> Html msg
+```
+
+to
+
+```
+chipSet : List (Html.Attribute msg) -> Chip msg -> List (Chip msg) -> Html msg
+```
+
+### Features
+
+* **docs:** Add Text area with character counter demo ([a066421](https://github.com/aforemny/material-components-web-elm/commit/a066421331a51d07a1c2dc50ed375576755f9fc8))
+* Add component CircularProgress ([19717c2](https://github.com/aforemny/material-components-web-elm/commit/19717c2189dff1e33ae03ae7a97cea79d5f262de))
+* Add TextField.setEndAligned ([dd6d0bf](https://github.com/aforemny/material-components-web-elm/commit/dd6d0bf5cc244747e89c89f0a7f313428399b43e))
+* Add TextField.setPrefix, TextField.setSuffix ([96d6ca8](https://github.com/aforemny/material-components-web-elm/commit/96d6ca8cc17703071eb13f74002aa4dc876a990a))
+* Add Theme.error and Theme.onError to provide CSS error classes ([ff5b9c9](https://github.com/aforemny/material-components-web-elm/commit/ff5b9c95ed0503625393c3bfb13cbc2e9be0b0fb))
+* Disallow empty chip sets ([9c514dc](https://github.com/aforemny/material-components-web-elm/commit/9c514dcfc9183da3d49c1b0ae17d3d8f5ea4fd1c))
+* Update to MDC 6.0.0 ([a65b371](https://github.com/aforemny/material-components-web-elm/commit/a65b3710795018e8f632316e6a74c1509f24f786))
+
+
+### Bug Fixes
+
+* Character counters for TextAreas were throwing due to missing maxLength prop ([9902c0e](https://github.com/aforemny/material-components-web-elm/commit/9902c0e4b65e4f08ffb82012ce4d7a581da39d13))
+* SvgIcon was not handled by Snackbar ([d179f4a](https://github.com/aforemny/material-components-web-elm/commit/d179f4a44a3db030d69c7704ceb8b9ac01f9a567))
+
 ## [5.1.0](https://github.com/aforemny/material-components-web-elm/compare/5.0.0...5.1.0) (2020-09-13)
 
 

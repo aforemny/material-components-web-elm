@@ -15,6 +15,7 @@ type Config msg
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
         , touch : Bool
+        , menu : Maybe (Html msg)
         }
 
 

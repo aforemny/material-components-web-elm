@@ -4,6 +4,7 @@ module Material.IconButton exposing
     , setDisabled
     , setLabel
     , setAttributes
+    , setMenu
     , iconButton
     , Icon, icon
     , customIcon
@@ -59,6 +60,7 @@ tap.
 @docs setDisabled
 @docs setLabel
 @docs setAttributes
+@docs setMenu
 
 
 # Icon Button
@@ -136,6 +138,7 @@ config =
         , label = Nothing
         , additionalAttributes = []
         , onClick = Nothing
+        , menu = Nothing
         }
 
 
@@ -171,10 +174,29 @@ setOnClick onClick (Config config_) =
     Config { config_ | onClick = Just onClick }
 
 
+{-| Specify a menu to attach to the icon button
+
+The icon button is set as the menu's anchor, however opening the menu still requires the use of `Menu.setOpen`.
+
+-}
+setMenu : Maybe (Html msg) -> Config msg -> Config msg
+setMenu menu (Config config_) =
+    Config { config_ | menu = menu }
+
+
 {-| Icon button view function
 -}
 iconButton : Config msg -> Icon -> Html msg
-iconButton ((Config { additionalAttributes }) as config_) icon_ =
+iconButton ((Config { additionalAttributes, menu }) as config_) icon_ =
+    let
+        wrapMenu node =
+            case menu of
+                Nothing ->
+                    node
+
+                Just m ->
+                    Html.div [ class "mdc-menu-surface--anchor" ] [ node, m ]
+    in
     Html.node "mdc-icon-button"
         (List.filterMap identity
             [ rootCs
@@ -192,6 +214,7 @@ iconButton ((Config { additionalAttributes }) as config_) icon_ =
                     node (Svg.Attributes.class "mdc-icon-button__icon" :: attributes)
                         nodes
         ]
+        |> wrapMenu
 
 
 rootCs : Maybe (Html.Attribute msg)

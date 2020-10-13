@@ -7,6 +7,7 @@ module Material.Button exposing
     , setHref, setTarget
     , setTouch
     , setAttributes
+    , setMenu
     , text, outlined, raised, unelevated
     , Icon, icon
     , customIcon
@@ -69,6 +70,7 @@ module Material.Button exposing
 @docs setHref, setTarget
 @docs setTouch
 @docs setAttributes
+@docs setMenu
 
 
 # Button Variants
@@ -206,6 +208,7 @@ config =
         , additionalAttributes = []
         , onClick = Nothing
         , touch = True
+        , menu = Nothing
         }
 
 
@@ -283,6 +286,16 @@ setOnClick onClick (Config config_) =
     Config { config_ | onClick = Just onClick }
 
 
+{-| Specify a menu to attach to the button
+
+The button is set as the menu's anchor, however opening the menu still requires the use of `Menu.setOpen`.
+
+-}
+setMenu : Maybe (Html msg) -> Config msg -> Config msg
+setMenu menu (Config config_) =
+    Config { config_ | menu = menu }
+
+
 {-| Specify whether touch support is enabled (enabled by default)
 
 Touch support is an accessibility guideline that states that touch targets
@@ -306,7 +319,7 @@ type Variant
 
 
 button : Variant -> Config msg -> String -> Html msg
-button variant ((Config { additionalAttributes, touch, href }) as config_) label =
+button variant ((Config { additionalAttributes, touch, href, menu }) as config_) label =
     let
         wrapTouch node =
             if touch then
@@ -314,38 +327,46 @@ button variant ((Config { additionalAttributes, touch, href }) as config_) label
 
             else
                 node
-    in
-    wrapTouch <|
-        Html.node "mdc-button"
-            (List.filterMap identity [ disabledProp config_ ])
-            [ (if href /= Nothing then
-                Html.a
+        wrapMenu node =
+            case menu of
+                Nothing ->
+                    node
 
-               else
-                Html.button
-              )
-                (List.filterMap identity
-                    [ rootCs
-                    , variantCs variant
-                    , denseCs config_
-                    , touchCs config_
-                    , disabledAttr config_
-                    , tabIndexProp config_
-                    , hrefAttr config_
-                    , targetAttr config_
-                    , clickHandler config_
-                    ]
-                    ++ additionalAttributes
-                )
-                (List.filterMap identity
-                    [ rippleElt
-                    , leadingIconElt config_
-                    , labelElt label
-                    , trailingIconElt config_
-                    , touchElt config_
-                    ]
-                )
-            ]
+                Just m ->
+                    Html.div [ class "mdc-menu-surface--anchor" ] [ node, m ]
+    in
+    Html.node "mdc-button"
+        (List.filterMap identity [ disabledProp config_ ])
+        [ (if href /= Nothing then
+            Html.a
+
+            else
+            Html.button
+            )
+            (List.filterMap identity
+                [ rootCs
+                , variantCs variant
+                , denseCs config_
+                , touchCs config_
+                , disabledAttr config_
+                , tabIndexProp config_
+                , hrefAttr config_
+                , targetAttr config_
+                , clickHandler config_
+                ]
+                ++ additionalAttributes
+            )
+            (List.filterMap identity
+                [ rippleElt
+                , leadingIconElt config_
+                , labelElt label
+                , trailingIconElt config_
+                , touchElt config_
+                ]
+            )
+        ]
+            |> wrapTouch
+            |> wrapMenu
 
 
 {-| Text button variant (flush without outline)

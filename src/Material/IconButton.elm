@@ -175,22 +175,25 @@ setOnClick onClick (Config config_) =
 -}
 iconButton : Config msg -> Icon -> Html msg
 iconButton ((Config { additionalAttributes }) as config_) icon_ =
-    Html.node "mdc-icon-button"
-        (List.filterMap identity
-            [ rootCs
-            , tabIndexProp
-            , clickHandler config_
-            ]
-            ++ additionalAttributes
-        )
-        [ Html.map never <|
-            case icon_ of
-                Icon { node, attributes, nodes } ->
-                    node (class "mdc-icon-button__icon" :: attributes) nodes
+    Html.node "mdc-icon-button" []
+        [ Html.button
+            (List.filterMap identity
+                [ rootCs
+                , tabIndexProp
+                , clickHandler config_
+                , disabledAttr config_
+                ]
+                ++ additionalAttributes
+            )
+            [ Html.map never <|
+                case icon_ of
+                    Icon { node, attributes, nodes } ->
+                        node (class "mdc-icon-button__icon" :: attributes) nodes
 
-                SvgIcon { node, attributes, nodes } ->
-                    node (Svg.Attributes.class "mdc-icon-button__icon" :: attributes)
-                        nodes
+                    SvgIcon { node, attributes, nodes } ->
+                        node (Svg.Attributes.class "mdc-icon-button__icon" :: attributes)
+                            nodes
+            ]
         ]
 
 
@@ -207,6 +210,11 @@ tabIndexProp =
 clickHandler : Config msg -> Maybe (Html.Attribute msg)
 clickHandler (Config { onClick }) =
     Maybe.map Html.Events.onClick onClick
+
+
+disabledAttr : Config msg -> Maybe (Html.Attribute msg)
+disabledAttr (Config { disabled }) =
+    Just (Html.Attributes.disabled disabled)
 
 
 {-| Icon type

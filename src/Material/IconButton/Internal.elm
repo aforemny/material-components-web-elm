@@ -10,6 +10,7 @@ type Config msg
         , label : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
+        , menu : Maybe (Html msg)
         }
 
 

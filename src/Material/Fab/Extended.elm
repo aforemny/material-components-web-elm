@@ -5,6 +5,9 @@ module Material.Fab.Extended exposing
     , setExited
     , setAttributes
     , fab
+    , Icon, icon
+    , customIcon
+    , svgIcon
     )
 
 {-| A floating action button represents the primary action in an application.
@@ -26,6 +29,7 @@ action button that primarily contains an icon, and no text, refer to the
       - [Extended FAB with Leading Icon](#extended-fab-with-leading-icon)
       - [Extended FAB with Trailing Icon](#extended-fab-with-trailing-icon)
   - [Exited Extended FAB](#exited-extended-fab)
+  - [Extended FAB with Custom Icon](#extended-fab-with-custom-icon)
   - [Focus an Extended FAB](#focus-an-extended-fab)
 
 
@@ -92,7 +96,7 @@ the button's label, also set its `setTrailingIcon` configuration option to
 
     ExtendedFab.fab
         (ExtendedFab.config
-            |> ExtendedFab.setIcon (Just "favorite")
+            |> ExtendedFab.setIcon (Just (ExtendedFab.icon "favorite"))
         )
         "Favorites"
 
@@ -101,7 +105,7 @@ the button's label, also set its `setTrailingIcon` configuration option to
 
     ExtendedFab.fab
         (ExtendedFab.config
-            |> ExtendedFab.setIcon (Just "favorite")
+            |> ExtendedFab.setIcon (Just (ExtendedFab.icon "favorite"))
             |> ExtendedFab.setTrailingIcon True
         )
         "Favorites"
@@ -115,6 +119,16 @@ set its `setExited` configuration option to `True`.
     ExtendedFab.fab
         (ExtendedFab.config |> ExtendedFab.setExited True)
         "Favorites"
+
+
+### Extended FAB with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+@docs Icon, icon
+@docs customIcon
+@docs svgIcon
 
 
 # Focus an Extended FAB
@@ -135,13 +149,15 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Encode as Encode
+import Svg exposing (Svg)
+import Svg.Attributes
 
 
 {-| Extended floating action button configuration
 -}
 type Config msg
     = Config
-        { icon : Maybe String
+        { icon : Maybe Icon
         , trailingIcon : Bool
         , exited : Bool
         , onClick : Maybe msg
@@ -164,9 +180,9 @@ config =
 
 {-| Specify whether a floating action button displays an icon
 -}
-setIcon : Maybe String -> Config msg -> Config msg
-setIcon icon (Config config_) =
-    Config { config_ | icon = icon }
+setIcon : Maybe Icon -> Config msg -> Config msg
+setIcon icon_ (Config config_) =
+    Config { config_ | icon = icon_ }
 
 
 {-| Specify whether a floating action button's icon is a _trailing icon_
@@ -239,16 +255,12 @@ rippleElt =
 
 
 leadingIconElt : Config msg -> Maybe (Html msg)
-leadingIconElt (Config { icon, trailingIcon }) =
-    case ( icon, trailingIcon ) of
-        ( Just iconName, False ) ->
-            Just
-                (Html.span [ class "material-icons", class "mdc-fab__icon" ]
-                    [ text iconName ]
-                )
+leadingIconElt ((Config { trailingIcon }) as config_) =
+    if not trailingIcon then
+        iconElt config_
 
-        _ ->
-            Nothing
+    else
+        Nothing
 
 
 labelElt : String -> Maybe (Html msg)
@@ -257,16 +269,26 @@ labelElt label =
 
 
 trailingIconElt : Config msg -> Maybe (Html msg)
-trailingIconElt (Config { icon, trailingIcon }) =
-    case ( icon, trailingIcon ) of
-        ( Just iconName, True ) ->
-            Just
-                (Html.span [ class "material-icons", class "mdc-fab__icon" ]
-                    [ text iconName ]
-                )
+trailingIconElt ((Config { trailingIcon }) as config_) =
+    if trailingIcon then
+        iconElt config_
 
-        _ ->
-            Nothing
+    else
+        Nothing
+
+
+iconElt : Config msg -> Maybe (Html msg)
+iconElt (Config config_) =
+    Maybe.map (Html.map never) <|
+        case config_.icon of
+            Just (Icon { node, attributes, nodes }) ->
+                Just (node (class "mdc-fab__icon" :: attributes) nodes)
+
+            Just (SvgIcon { node, attributes, nodes }) ->
+                Just (node (Svg.Attributes.class "mdc-fab__icon" :: attributes) nodes)
+
+            Nothing ->
+                Nothing
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -286,3 +308,78 @@ exitedCs (Config { exited }) =
 clickHandler : Config msg -> Maybe (Html.Attribute msg)
 clickHandler (Config { onClick }) =
     Maybe.map Html.Events.onClick onClick
+
+
+{-| Icon type
+-}
+type Icon
+    = Icon
+        { node : List (Html.Attribute Never) -> List (Html Never) -> Html Never
+        , attributes : List (Html.Attribute Never)
+        , nodes : List (Html Never)
+        }
+    | SvgIcon
+        { node : List (Svg.Attribute Never) -> List (Svg Never) -> Svg Never
+        , attributes : List (Svg.Attribute Never)
+        , nodes : List (Svg Never)
+        }
+
+
+{-| Material Icon
+
+    ExtendedFab.fab
+        (Extended.Fab.config
+            |> ExtendedFab.setIcon
+                (Just (ExtendedFab.icon "favorite"))
+        )
+        "Material Icon"
+
+-}
+icon : String -> Icon
+icon iconName =
+    customIcon Html.i [ class "material-icons" ] [ text iconName ]
+
+
+{-| Custom icon
+
+    ExtendedFab.fab
+        (ExtendedFab.config
+            |> ExtendedFab.setIcon
+                (Just
+                    (Fab.customIcon Html.i
+                        [ class "fab fa-font-awesome" ]
+                        []
+                    )
+                )
+        )
+        "Font Awesome"
+
+-}
+customIcon :
+    (List (Html.Attribute Never) -> List (Html Never) -> Html Never)
+    -> List (Html.Attribute Never)
+    -> List (Html Never)
+    -> Icon
+customIcon node attributes nodes =
+    Icon { node = node, attributes = attributes, nodes = nodes }
+
+
+{-| SVG icon
+
+    ExtendedFab.fab
+        (ExtendedFab.config
+            |> ExtendedFab.setIcon
+                (Just
+                    (ExtendedFab.svgIcon
+                        [ Svg.Attributes.viewBox "…" ]
+                        [-- …
+                        ]
+                    )
+                )
+        )
+        "SVG"
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon attributes nodes =
+    SvgIcon { node = Svg.svg, attributes = attributes, nodes = nodes }

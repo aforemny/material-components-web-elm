@@ -219,12 +219,15 @@ trackElt =
 
 thumbUnderlayElt : Config msg -> Html msg
 thumbUnderlayElt config_ =
-    Html.div [ class "mdc-switch__thumb-underlay" ] [ thumbElt config_ ]
+    Html.div [ class "mdc-switch__thumb-underlay" ]
+        [ thumbElt
+        , nativeControlElt config_
+        ]
 
 
-thumbElt : Config msg -> Html msg
-thumbElt config_ =
-    Html.div [ class "mdc-switch__thumb" ] [ nativeControlElt config_ ]
+thumbElt : Html msg
+thumbElt =
+    Html.div [ class "mdc-switch__thumb" ] []
 
 
 nativeControlElt : Config msg -> Html msg

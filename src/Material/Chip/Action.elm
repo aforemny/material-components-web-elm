@@ -4,6 +4,9 @@ module Material.Chip.Action exposing
     , setIcon
     , setAttributes
     , chip, Chip
+    , Icon, icon
+    , customIcon
+    , svgIcon
     )
 
 {-| Action chips offer actions related to primary content. They should appear
@@ -19,7 +22,8 @@ appear persistently and consistently.
   - [Basic Usage](#basic-usage)
   - [Configuration](#configuration)
       - [Configuration Options](#configuration-options)
-  - [Action Chips](#action-chips)
+  - [Action Chip](#action-chip)
+  - [Action Chip with Custom Icon](#action-chip-with-custom-icon)
 
 
 # Resources
@@ -61,14 +65,26 @@ appear persistently and consistently.
 @docs setAttributes
 
 
-# Action Chips
+# Action Chip
 
 @docs chip, Chip
 
+
+# Action Chip with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+@docs Icon, icon
+@docs customIcon
+@docs svgIcon
+
 -}
 
-import Html
-import Material.Chip.Action.Internal exposing (Chip(..), Config(..))
+import Html exposing (Html, text)
+import Html.Attributes exposing (class)
+import Material.Chip.Action.Internal exposing (Chip(..), Config(..), Icon(..))
+import Svg exposing (Svg)
 
 
 {-| Configuration of an action chip
@@ -90,9 +106,9 @@ config =
 
 {-| Specify whether the chip displays an icon
 -}
-setIcon : Maybe String -> Config msg -> Config msg
-setIcon icon (Config config_) =
-    Config { config_ | icon = icon }
+setIcon : Maybe Icon -> Config msg -> Config msg
+setIcon icon_ (Config config_) =
+    Config { config_ | icon = icon_ }
 
 
 {-| Specify additional attributes
@@ -120,3 +136,64 @@ type alias Chip msg =
 chip : Config msg -> String -> Chip msg
 chip =
     Chip
+
+
+{-| Icon type
+-}
+type alias Icon =
+    Material.Chip.Action.Internal.Icon
+
+
+{-| Material Icon
+
+    ActionChip.chip
+        (ActionChip.config
+            |> ActionChip.setIcon (ActionChip.icon "favorite")
+        )
+        "Add to favorites"
+
+-}
+icon : String -> Icon
+icon iconName =
+    customIcon Html.i [ class "material-icons" ] [ text iconName ]
+
+
+{-| Custom icon
+
+    ActionChip.chip
+        (ActionChip.config
+            |> ActionChip.setIcon
+                (ActionChip.customIcon Html.i
+                    [ class "fab fa-font-awesome" ]
+                    []
+                )
+        )
+        "Font awesome"
+
+-}
+customIcon :
+    (List (Html.Attribute Never) -> List (Html Never) -> Html Never)
+    -> List (Html.Attribute Never)
+    -> List (Html Never)
+    -> Icon
+customIcon node attributes nodes =
+    Icon { node = node, attributes = attributes, nodes = nodes }
+
+
+{-| SVG icon
+
+    ActionChip.chip
+        (ActionChip.config
+            |> ActionChip.setIcon
+                (ActionChip.svgIcon
+                    [ Svg.Attributes.viewBox "…" ]
+                    [-- …
+                    ]
+                )
+        )
+        "Font awesome"
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon attributes nodes =
+    SvgIcon { node = Svg.svg, attributes = attributes, nodes = nodes }

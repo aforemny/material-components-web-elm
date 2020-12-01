@@ -35,7 +35,7 @@ view model =
                         (IconButton.config
                             |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
                         )
-                        "menu"
+                        (IconButton.icon "menu")
                     ]
                 , TopAppBar.section
                     [ TopAppBar.alignEnd ]
@@ -43,7 +43,7 @@ view model =
                         (IconButton.config
                             |> IconButton.setAttributes [ TopAppBar.actionItem ]
                         )
-                        "file_download"
+                        (IconButton.icon "file_download")
                     ]
                 ]
             ]

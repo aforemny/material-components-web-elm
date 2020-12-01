@@ -3,8 +3,12 @@ module Material.Fab exposing
     , setOnClick
     , setMini
     , setExited
+    , setTouch
     , setAttributes
     , fab
+    , Icon, icon
+    , customIcon
+    , svgIcon
     )
 
 {-| A floating action button represents the primary action in an application.
@@ -23,6 +27,7 @@ action button](Material-Fab-Extended).
   - [Floating Action Button](#floating-action-button)
   - [Mini FAB](#mini-fab)
   - [Exited FAB](#exited-fab)
+  - [FAB with Custom Icon](#fab-with-custom-icon)
   - [Focus a FAB](#focus-a-fab)
 
 
@@ -55,7 +60,7 @@ their page layout, for instance by setting a fixed position via CSS.
                     , style "right" "2rem"
                     ]
             )
-            "favorite"
+            (Fab.icon "favorite")
 
 
 # Configuration
@@ -68,6 +73,7 @@ their page layout, for instance by setting a fixed position via CSS.
 @docs setOnClick
 @docs setMini
 @docs setExited
+@docs setTouch
 @docs setAttributes
 
 
@@ -81,7 +87,8 @@ their page layout, for instance by setting a fixed position via CSS.
 If you want the floating action button to appear in smaller size, set its
 `setMini` configuration option to `True`.
 
-    Fab.fab (Fab.config |> Fab.setMini True) "favorite"
+    Fab.fab (Fab.config |> Fab.setMini True)
+        (Fab.icon "favorite")
 
 
 # Exited FAB
@@ -89,7 +96,18 @@ If you want the floating action button to appear in smaller size, set its
 If you want the floating action button to transition off the screen, set its
 `setExited` configuration option to `True`.
 
-    Fab.fab (Fab.config |> Fab.setExited True) "favorite"
+    Fab.fab (Fab.config |> Fab.setExited True)
+        (Fab.icon "favorite")
+
+
+# FAB with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+@docs Icon, icon
+@docs customIcon
+@docs svgIcon
 
 
 # Focus a FAB
@@ -102,7 +120,19 @@ attribute to it and use `Browser.Dom.focus`.
             |> Fab.setAttributes
                 [ Html.Attributes.id "my-fab" ]
         )
-        "favorite_border"
+        (Fab.icon "favorite_border")
+
+
+# Touch Support
+
+Touch support is enabled by default. To disable touch support set a FAB's
+`setTouch` configuration option to `False`.
+
+    Fab.fab
+        (Fab.config
+            |> Fab.setTouch False
+        )
+        (Fab.icon "favorite_border")
 
 -}
 
@@ -110,6 +140,8 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Encode as Encode
+import Svg exposing (Svg)
+import Svg.Attributes
 
 
 {-| Floating action button configuration
@@ -118,6 +150,7 @@ type Config msg
     = Config
         { mini : Bool
         , exited : Bool
+        , touch : Bool
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
         }
@@ -130,6 +163,7 @@ config =
     Config
         { mini = False
         , exited = False
+        , touch = True
         , onClick = Nothing
         , additionalAttributes = []
         }
@@ -163,23 +197,48 @@ setOnClick onClick (Config config_) =
     Config { config_ | onClick = Just onClick }
 
 
+{-| Specify whether touch support is enabled (enabled by default)
+
+Touch support is an accessibility guideline that states that touch targets
+should be at least 48 x 48 pixels in size. Use this configuration option to
+disable increased touch target size.
+
+**Note:** FABs with touch support will be wrapped in a HTML div element to
+prevent potentially overlapping touch targets on adjacent elements.
+
+-}
+setTouch : Bool -> Config msg -> Config msg
+setTouch touch (Config config_) =
+    Config { config_ | touch = touch }
+
+
 {-| Floating action button view function
 -}
-fab : Config msg -> String -> Html msg
-fab ((Config { additionalAttributes }) as config_) iconName =
-    Html.node "mdc-fab"
-        (List.filterMap identity
-            [ rootCs
-            , miniCs config_
-            , exitedCs config_
-            , clickHandler config_
-            , tabIndexProp 0
+fab : Config msg -> Icon -> Html msg
+fab ((Config { additionalAttributes, touch }) as config_) icon_ =
+    let
+        wrapTouch node =
+            if touch then
+                Html.div [ class "mdc-touch-target-wrapper" ] [ node ]
+
+            else
+                node
+    in
+    wrapTouch <|
+        Html.node "mdc-fab"
+            (List.filterMap identity
+                [ rootCs
+                , miniCs config_
+                , touchCs config_
+                , exitedCs config_
+                , clickHandler config_
+                , tabIndexProp 0
+                ]
+                ++ additionalAttributes
+            )
+            [ rippleElt
+            , iconElt icon_
             ]
-            ++ additionalAttributes
-        )
-        [ rippleElt
-        , iconElt iconName
-        ]
 
 
 tabIndexProp : Int -> Maybe (Html.Attribute msg)
@@ -201,6 +260,15 @@ miniCs (Config { mini }) =
         Nothing
 
 
+touchCs : Config msg -> Maybe (Html.Attribute msg)
+touchCs (Config { touch }) =
+    if touch then
+        Just (class "mdc-fab--touch")
+
+    else
+        Nothing
+
+
 exitedCs : Config msg -> Maybe (Html.Attribute msg)
 exitedCs (Config { exited }) =
     if exited then
@@ -215,11 +283,75 @@ rippleElt =
     Html.div [ class "mdc-fab__ripple" ] []
 
 
-iconElt : String -> Html msg
-iconElt iconName =
-    Html.span [ class "material-icons", class "mdc-fab__icon" ] [ text iconName ]
+iconElt : Icon -> Html msg
+iconElt icon_ =
+    case icon_ of
+        Icon { node, attributes, nodes } ->
+            Html.map never (node (class "mdc-fab__icon" :: attributes) nodes)
+
+        SvgIcon { node, attributes, nodes } ->
+            Html.map never
+                (node (Svg.Attributes.class "mdc-fab__icon" :: attributes) nodes)
 
 
 clickHandler : Config msg -> Maybe (Html.Attribute msg)
 clickHandler (Config { onClick }) =
     Maybe.map Html.Events.onClick onClick
+
+
+{-| Icon type
+-}
+type Icon
+    = Icon
+        { node : List (Html.Attribute Never) -> List (Html Never) -> Html Never
+        , attributes : List (Html.Attribute Never)
+        , nodes : List (Html Never)
+        }
+    | SvgIcon
+        { node : List (Svg.Attribute Never) -> List (Svg Never) -> Svg Never
+        , attributes : List (Svg.Attribute Never)
+        , nodes : List (Svg Never)
+        }
+
+
+{-| Material Icon
+
+    Fab.fab Fab.config (Fab.icon "favorite")
+
+-}
+icon : String -> Icon
+icon iconName =
+    customIcon Html.i [ class "material-icons" ] [ text iconName ]
+
+
+{-| Custom icon
+
+    Fab.fab Fab.config
+        (Fab.customIcon Html.i
+            [ class "fab fa-font-awesome" ]
+            []
+        )
+
+-}
+customIcon :
+    (List (Html.Attribute Never) -> List (Html Never) -> Html Never)
+    -> List (Html.Attribute Never)
+    -> List (Html Never)
+    -> Icon
+customIcon node attributes nodes =
+    Icon { node = node, attributes = attributes, nodes = nodes }
+
+
+{-| SVG icon
+
+    Fab.fab Fab.config
+        (Fab.svgIcon
+            [ Svg.Attributes.viewBox "…" ]
+            [-- …
+            ]
+        )
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon attributes nodes =
+    SvgIcon { node = Svg.svg, attributes = attributes, nodes = nodes }

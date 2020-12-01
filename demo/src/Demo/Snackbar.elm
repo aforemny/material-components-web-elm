@@ -55,7 +55,7 @@ baselineMessage =
     Snackbar.message "Can't send photo. Retry in 5 seconds."
         |> Snackbar.setActionButton (Just "Retry")
         |> Snackbar.setOnActionButtonClick Click
-        |> Snackbar.setActionIcon (Just "close")
+        |> Snackbar.setActionIcon (Just (Snackbar.icon "close"))
 
 
 leadingMessage : Snackbar.Message Msg
@@ -64,7 +64,7 @@ leadingMessage =
         |> Snackbar.setLeading True
         |> Snackbar.setActionButton (Just "Undo")
         |> Snackbar.setOnActionButtonClick Click
-        |> Snackbar.setActionIcon (Just "close")
+        |> Snackbar.setActionIcon (Just (Snackbar.icon "close"))
 
 
 stackedMessage : Snackbar.Message Msg
@@ -73,7 +73,7 @@ stackedMessage =
         |> Snackbar.setStacked True
         |> Snackbar.setActionButton (Just "Add a new label")
         |> Snackbar.setOnActionButtonClick Click
-        |> Snackbar.setActionIcon (Just "close")
+        |> Snackbar.setActionIcon (Just (Snackbar.icon "close"))
 
 
 view : Model -> CatalogPage Msg

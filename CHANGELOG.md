@@ -2,6 +2,85 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/aforemny/material-components-web-elm/compare/5.1.0...6.0.0) (2020-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* The type signature of `chipSet` changed from
+
+```
+chipSet : List (Html.Attribute msg) -> List (Chip msg) -> Html msg
+```
+
+to
+
+```
+chipSet : List (Html.Attribute msg) -> Chip msg -> List (Chip msg) -> Html msg
+```
+
+### Features
+
+* **docs:** Add Text area with character counter demo ([a066421](https://github.com/aforemny/material-components-web-elm/commit/a066421331a51d07a1c2dc50ed375576755f9fc8))
+* Add component CircularProgress ([19717c2](https://github.com/aforemny/material-components-web-elm/commit/19717c2189dff1e33ae03ae7a97cea79d5f262de))
+* Add TextField.setEndAligned ([dd6d0bf](https://github.com/aforemny/material-components-web-elm/commit/dd6d0bf5cc244747e89c89f0a7f313428399b43e))
+* Add TextField.setPrefix, TextField.setSuffix ([96d6ca8](https://github.com/aforemny/material-components-web-elm/commit/96d6ca8cc17703071eb13f74002aa4dc876a990a))
+* Add Theme.error and Theme.onError to provide CSS error classes ([ff5b9c9](https://github.com/aforemny/material-components-web-elm/commit/ff5b9c95ed0503625393c3bfb13cbc2e9be0b0fb))
+* Disallow empty chip sets ([9c514dc](https://github.com/aforemny/material-components-web-elm/commit/9c514dcfc9183da3d49c1b0ae17d3d8f5ea4fd1c))
+* Update to MDC 6.0.0 ([a65b371](https://github.com/aforemny/material-components-web-elm/commit/a65b3710795018e8f632316e6a74c1509f24f786))
+
+
+### Bug Fixes
+
+* Character counters for TextAreas were throwing due to missing maxLength prop ([9902c0e](https://github.com/aforemny/material-components-web-elm/commit/9902c0e4b65e4f08ffb82012ce4d7a581da39d13))
+* SvgIcon was not handled by Snackbar ([d179f4a](https://github.com/aforemny/material-components-web-elm/commit/d179f4a44a3db030d69c7704ceb8b9ac01f9a567))
+
+## [5.1.0](https://github.com/aforemny/material-components-web-elm/compare/5.0.0...5.1.0) (2020-09-13)
+
+
+### Features
+
+* Add HelperText.setValidation ([20b5d4f](https://github.com/aforemny/material-components-web-elm/commit/20b5d4fc41e2b02e9517c4cdc7905b5e82c60310))
+* Support MDC Web version 5.1.0 ([963e8e9](https://github.com/aforemny/material-components-web-elm/commit/963e8e9bc1d6ce7ef2c3c210aa3ba122902dcb08))
+
+
+### Bug Fixes
+
+* Refactor list selection ([25c0929](https://github.com/aforemny/material-components-web-elm/commit/25c09293326ee5c14cc3b0de2e81d2ecfeafe237))
+* Remove non-existent .mdc-chip-set--action class ([d482328](https://github.com/aforemny/material-components-web-elm/commit/d482328a24a838fd44be1a583fdb71d474fbc926))
+* Unregister body click handler when menu surface is destroyed ([83c997f](https://github.com/aforemny/material-components-web-elm/commit/83c997f34110eece64e3bf1e1a1cb37efa85aac6))
+
+## [5.0.0](https://github.com/aforemny/material-components-web-elm/compare/4.0.0...5.0.0) (2020-08-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* Generally, how icons are specified in this library changed. When before
+we just wrote the Material Icon's /icon name/ as a String, say,
+`"favorite"`, now we write `Button.icon "favorite"` for the Material
+Icon (for a button). There are functions `Button.customIcon` and
+`Button.svgIcon` to support custom icons.
+
+The following modules have been updated to support custom icons:
+
+- ActionChip
+- Button
+- ChoiceChip
+- Fab
+- Fab.Extended
+- FilterChip
+- IconButton
+- IconToggle
+- InputChip
+- Select
+- Snackbar
+- Tab
+- TextField
+
+### Features
+
+* Add support for custom icons. ([110f89e](https://github.com/aforemny/material-components-web-elm/commit/110f89e017022a9497b663076794c78ae3ac150b))
+
 ## [4.0.0](https://github.com/aforemny/material-components-web-elm/compare/3.0.3...4.0.0) (2020-07-05)
 
 

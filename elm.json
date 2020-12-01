@@ -3,7 +3,7 @@
     "name": "aforemny/material-components-web-elm",
     "summary": "Material Components for Elm",
     "license": "MIT",
-    "version": "4.0.0",
+    "version": "6.0.0",
     "exposed-modules": {
         "Material": [
             "Material.Button",
@@ -17,6 +17,7 @@
             "Material.ChipSet.Choice",
             "Material.ChipSet.Filter",
             "Material.ChipSet.Input",
+            "Material.CircularProgress",
             "Material.DataTable",
             "Material.Dialog",
             "Material.Drawer.Dismissible",
@@ -41,6 +42,7 @@
             "Material.Radio",
             "Material.Ripple",
             "Material.Select",
+            "Material.Select.Icon",
             "Material.Select.Item",
             "Material.Slider",
             "Material.Snackbar",
@@ -49,6 +51,7 @@
             "Material.TabBar",
             "Material.TextArea",
             "Material.TextField",
+            "Material.TextField.Icon",
             "Material.Theme",
             "Material.TopAppBar",
             "Material.Typography"

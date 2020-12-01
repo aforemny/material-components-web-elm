@@ -36,7 +36,7 @@ view model =
                         (IconButton.config
                             |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
                         )
-                        "menu"
+                        (IconButton.icon "menu")
                     , Html.span [ TopAppBar.title ] [ text "Short" ]
                     ]
                 , TopAppBar.section
@@ -45,7 +45,7 @@ view model =
                         (IconButton.config
                             |> IconButton.setAttributes [ TopAppBar.actionItem ]
                         )
-                        "file_download"
+                        (IconButton.icon "file_download")
                     ]
                 ]
             ]

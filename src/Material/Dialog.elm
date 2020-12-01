@@ -138,8 +138,6 @@ dialog ((Config { additionalAttributes }) as config_) content =
         (List.filterMap identity
             [ rootCs
             , openProp config_
-            , roleAttr
-            , ariaModalAttr
             , closeHandler config_
             ]
             ++ additionalAttributes
@@ -159,16 +157,6 @@ openProp (Config { open }) =
     Just (Html.Attributes.property "open" (Encode.bool open))
 
 
-roleAttr : Maybe (Html.Attribute msg)
-roleAttr =
-    Just (Html.Attributes.attribute "role" "alertdialog")
-
-
-ariaModalAttr : Maybe (Html.Attribute msg)
-ariaModalAttr =
-    Just (Html.Attributes.attribute "aria-modal" "true")
-
-
 closeHandler : Config msg -> Maybe (Html.Attribute msg)
 closeHandler (Config { onClose }) =
     Maybe.map (Html.Events.on "MDCDialog:close" << Decode.succeed) onClose
@@ -182,13 +170,31 @@ containerElt content =
 surfaceElt : Content msg -> Html msg
 surfaceElt content =
     Html.div
-        [ class "mdc-dialog__surface" ]
+        [ dialogSurfaceCs
+        , alertDialogRoleAttr
+        , ariaModalAttr
+        ]
         (List.filterMap identity
             [ titleElt content
             , contentElt content
             , actionsElt content
             ]
         )
+
+
+dialogSurfaceCs : Html.Attribute msg
+dialogSurfaceCs =
+    class "mdc-dialog__surface"
+
+
+alertDialogRoleAttr : Html.Attribute msg
+alertDialogRoleAttr =
+    Html.Attributes.attribute "role" "alertdialog"
+
+
+ariaModalAttr : Html.Attribute msg
+ariaModalAttr =
+    Html.Attributes.attribute "aria-modal" "true"
 
 
 titleElt : Content msg -> Maybe (Html msg)

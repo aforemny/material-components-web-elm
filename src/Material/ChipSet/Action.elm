@@ -51,26 +51,22 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
-import Material.Chip.Action.Internal as Chip exposing (Chip(..))
+import Material.Chip.Action.Internal as Chip exposing (Chip(..), Icon(..))
+import Svg.Attributes
 
 
 {-| Chip set view function
 -}
-chipSet : List (Html.Attribute msg) -> List (Chip msg) -> Html msg
-chipSet additionalAttributes chips =
+chipSet : List (Html.Attribute msg) -> Chip msg -> List (Chip msg) -> Html msg
+chipSet additionalAttributes firstChip otherChips =
     Html.node "mdc-chip-set"
-        (chipSetCs :: chipSetActionCs :: gridRole :: additionalAttributes)
-        (List.map chip chips)
+        (chipSetCs :: gridRole :: additionalAttributes)
+        (List.map chip (firstChip :: otherChips))
 
 
 chipSetCs : Html.Attribute msg
 chipSetCs =
     class "mdc-chip-set"
-
-
-chipSetActionCs : Html.Attribute msg
-chipSetActionCs =
-    class "mdc-chip-set--action"
 
 
 gridRole : Html.Attribute msg
@@ -146,12 +142,26 @@ rippleElt =
 
 leadingIconElt : Chip.Config msg -> Maybe (Html msg)
 leadingIconElt (Chip.Config { icon }) =
-    Maybe.map
-        (\iconName ->
-            Html.i [ class "material-icons mdc-chip__icon mdc-chip__icon--leading" ]
-                [ text iconName ]
-        )
-        icon
+    Maybe.map (Html.map never) <|
+        case icon of
+            Just (Icon { node, attributes, nodes }) ->
+                Just <|
+                    node
+                        (class "mdc-chip__icon mdc-chip__icon--leading"
+                            :: attributes
+                        )
+                        nodes
+
+            Just (SvgIcon { node, attributes, nodes }) ->
+                Just <|
+                    node
+                        (Svg.Attributes.class "mdc-chip__icon mdc-chip__icon--leading"
+                            :: attributes
+                        )
+                        nodes
+
+            Nothing ->
+                Nothing
 
 
 primaryActionElt : String -> Maybe (Html msg)

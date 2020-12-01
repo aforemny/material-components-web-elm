@@ -242,23 +242,7 @@ disabledProp (Config { disabled }) =
 
 changeHandler : Config msg -> Maybe (Html.Attribute msg)
 changeHandler (Config { checked, onChange }) =
-    -- Note: MDCList choses to send a change event to all checkboxes, thus we
-    -- have to check here if the state actually changed.
-    Maybe.map
-        (\msg ->
-            Html.Events.on "change"
-                (Decode.at [ "target", "checked" ] Decode.bool
-                    |> Decode.andThen
-                        (\checked_ ->
-                            if (checked_ && not checked) || (not checked_ && checked) then
-                                Decode.succeed msg
-
-                            else
-                                Decode.fail ""
-                        )
-                )
-        )
-        onChange
+    Maybe.map (\msg -> Html.Events.on "change" (Decode.succeed msg)) onChange
 
 
 nativeControlElt : Config msg -> Html msg

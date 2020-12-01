@@ -8,6 +8,9 @@ module Material.Button exposing
     , setTouch
     , setAttributes
     , text, outlined, raised, unelevated
+    , Icon, icon
+    , customIcon
+    , svgIcon
     )
 
 {-| Buttons allow users to take actions and make choices with a single tap.
@@ -26,6 +29,7 @@ module Material.Button exposing
   - [Disabled Button](#disabled-button)
   - [Dense Button](#disabled-button)
   - [Link Button](#link-button)
+  - [Button with Custom Icon](#button-with-custom-icon)
   - [Focus a Button](#focus-a-button)
   - [Touch Support](#touch-support)
 
@@ -78,16 +82,17 @@ button that is contained.
 
 # Button with Icons
 
-To add an icon to a button, use its `setIcon` configuration option to specify
-the name of a [Material Icon](https://material.io/icons). If you want the icon
-to be positioned after the button's label, also set the `setTrailingIcon`
-configuration option to `True`.
+To add an icon to a button, use its `setIcon` configuration option. If you
+want the icon to be positioned after the button's label, also set the
+`setTrailingIcon` configuration option to `True`.
 
 
 ## Button with Leading Icon
 
     Button.text
-        (Button.config |> Button.setIcon (Just "favorite"))
+        (Button.config
+            |> Button.setIcon (Just (Button.icon "favorite"))
+        )
         "Like"
 
 
@@ -95,7 +100,7 @@ configuration option to `True`.
 
     Button.text
         (Button.config
-            |> Button.setIcon (Just "favorite")
+            |> Button.setIcon (Just (Button.icon "favorite"))
             |> Button.setTrailingIcon True
         )
         "Like"
@@ -136,6 +141,16 @@ to specify a target.
 Note that link buttons cannot be disabled.
 
 
+## Button with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+@docs Icon, icon
+@docs customIcon
+@docs svgIcon
+
+
 # Focus a Button
 
 You may programatically focus a button by assigning an id attribute to it and
@@ -166,7 +181,9 @@ import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Encode as Encode
-import Material.Button.Internal exposing (Config(..))
+import Material.Button.Internal exposing (Config(..), Icon(..))
+import Svg exposing (Svg)
+import Svg.Attributes
 
 
 {-| Configuration of a button
@@ -194,9 +211,9 @@ config =
 
 {-| Specify whether the button features an icon
 -}
-setIcon : Maybe String -> Config msg -> Config msg
-setIcon icon (Config config_) =
-    Config { config_ | icon = icon }
+setIcon : Maybe Icon -> Config msg -> Config msg
+setIcon icon_ (Config config_) =
+    Config { config_ | icon = icon_ }
 
 
 {-| Specify whether a button's icon is a _trailing icon_.
@@ -437,16 +454,29 @@ touchCs (Config { touch }) =
 
 
 iconElt : Config msg -> Maybe (Html msg)
-iconElt (Config { icon }) =
-    Maybe.map
-        (\iconName ->
-            Html.i
-                [ class "mdc-button__icon material-icons"
-                , Html.Attributes.attribute "aria-hidden" "true"
-                ]
-                [ Html.text iconName ]
-        )
-        icon
+iconElt (Config config_) =
+    Maybe.map (Html.map never) <|
+        case config_.icon of
+            Just (Icon { node, attributes, nodes }) ->
+                Just <|
+                    node
+                        (class "mdc-button__icon"
+                            :: Html.Attributes.attribute "aria-hidden" "true"
+                            :: attributes
+                        )
+                        nodes
+
+            Just (SvgIcon { node, attributes, nodes }) ->
+                Just <|
+                    node
+                        (Svg.Attributes.class "mdc-button__icon"
+                            :: Html.Attributes.attribute "aria-hidden" "true"
+                            :: attributes
+                        )
+                        nodes
+
+            Nothing ->
+                Nothing
 
 
 rippleElt : Maybe (Html msg)
@@ -484,3 +514,68 @@ touchElt (Config { touch }) =
 labelElt : String -> Maybe (Html msg)
 labelElt label =
     Just (Html.span [ class "mdc-button__label" ] [ Html.text label ])
+
+
+{-| Icon type
+-}
+type alias Icon =
+    Material.Button.Internal.Icon
+
+
+{-| Material Icon
+
+    Button.raised
+        (Button.config
+            |> Button.setIcon (Just (Button.icon "favorite"))
+        )
+        "Material Icon"
+
+-}
+icon : String -> Icon
+icon iconName =
+    customIcon Html.i [ class "material-icons" ] [ Html.text iconName ]
+
+
+{-| Custom icon
+
+    Button.raised
+        (Button.config
+            |> Button.setIcon
+                (Just
+                    (Button.customIcon Html.i
+                        [ class "fab fa-font-awesome" ]
+                        []
+                    )
+                )
+        )
+        "Material Icon"
+
+-}
+customIcon :
+    (List (Html.Attribute Never) -> List (Html Never) -> Html Never)
+    -> List (Html.Attribute Never)
+    -> List (Html Never)
+    -> Icon
+customIcon node attributes nodes =
+    Icon { node = node, attributes = attributes, nodes = nodes }
+
+
+{-| SVG icon
+
+    Button.raised
+        (Button.config
+            |> Button.setIcon
+                (Just
+                    (Button.svgIcon
+                        [ Svg.Attributes.viewBox "…" ]
+                        [-- …
+                        ]
+                    )
+                )
+        )
+        "SVG Icon"
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon attributes nodes =
+    SvgIcon { node = Svg.svg, attributes = attributes, nodes = nodes }

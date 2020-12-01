@@ -201,8 +201,8 @@ demoActions =
             , Card.button Button.config "Bookmark"
             ]
         , icons =
-            [ Card.icon IconButton.config "favorite_border"
-            , Card.icon IconButton.config "share"
-            , Card.icon IconButton.config "more_vert"
+            [ Card.icon IconButton.config (IconButton.icon "favorite_border")
+            , Card.icon IconButton.config (IconButton.icon "share")
+            , Card.icon IconButton.config (IconButton.icon "more_vert")
             ]
         }

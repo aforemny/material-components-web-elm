@@ -2,10 +2,12 @@ module Demo.Buttons exposing (Model, Msg, defaultModel, update, view)
 
 import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
+import Demo.ElmLogo exposing (elmLogo)
 import Html exposing (Html, text)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (class, style)
 import Material.Button as Button
 import Material.Typography as Typography
+import Svg.Attributes
 import Task
 
 
@@ -56,6 +58,8 @@ view model =
         , shapedButtons
         , Html.h3 [ Typography.subtitle1 ] [ text "Link Button" ]
         , linkButtons
+        , Html.h3 [ Typography.subtitle1 ] [ text "Button with Custom Icon" ]
+        , customIconButtons
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus Button" ]
         , focusButton
         ]
@@ -107,6 +111,25 @@ linkButtons =
         []
 
 
+customIconButtons : Html msg
+customIconButtons =
+    let
+        config icon =
+            Button.config
+                |> Button.setAttributes [ rowMargin ]
+                |> Button.setIcon (Just icon)
+    in
+    Html.div []
+        [ Button.raised (config (Button.icon "favorite")) "Material Icon"
+        , Button.raised
+            (config (Button.customIcon Html.i [ class "fab fa-font-awesome" ] []))
+            "Font Awesome"
+        , Button.raised
+            (config (Button.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ] elmLogo))
+            "SVG"
+        ]
+
+
 focusButton : Html Msg
 focusButton =
     Html.div []
@@ -125,7 +148,8 @@ focusButton =
             )
             "Link button"
         , text "\u{00A0}"
-        , Button.raised (Button.config |> Button.setOnClick (Focus "my-link-button")) "Focus"
+        , Button.raised (Button.config |> Button.setOnClick (Focus "my-link-button"))
+            "Focus"
         ]
 
 
@@ -139,7 +163,7 @@ buttonsRow button additionalAttributes =
     Html.div []
         [ button config "Default"
         , button (config |> Button.setDense True) "Dense"
-        , button (config |> Button.setIcon (Just "favorite")) "Icon"
+        , button (config |> Button.setIcon (Just (Button.icon "favorite"))) "Icon"
         ]
 
 

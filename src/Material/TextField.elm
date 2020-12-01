@@ -18,10 +18,12 @@ module Material.TextField exposing
     , setStep
     , setLeadingIcon
     , setTrailingIcon
+    , setPrefix
+    , setSuffix
+    , setEndAligned
     , setAttributes
     , filled
     , outlined
-    , Icon, icon
     )
 
 {-| Text fields allow users to input, edit, and select text.
@@ -43,6 +45,10 @@ module Material.TextField exposing
   - [Valid Text Field](#valid-text-field)
   - [Text Field with Leading Icon](#text-field-with-leading-icon)
   - [Text Field with Trailing Icon](#text-field-with-trailing-icon)
+  - [Text Field with Custom Icon](#text-field-with-custom-icon)
+  - [Text Field with Prefix](#text-field-with-prefix)
+  - [Text Field with Suffix](#text-field-with-suffix)
+  - [End Aligned Text Field](#end-aligned-text-field)
   - [Text Field with Character Counter](#text-field-with-character-counter)
   - [Focus a Text Field](#focus-a-text-field)
 
@@ -50,9 +56,9 @@ module Material.TextField exposing
 # Resources
 
   - [Demo: Text Fields](https://aforemny.github.io/material-components-web-elm/#text-field)
-  - [Material Design Guidelines: Menus](https://material.io/go/design-menus)
-  - [MDC Web: Menu](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu)
-  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-menu#sass-mixins)
+  - [Material Design Guidelines: Text Fields](https://material.io/components/text-fields/)
+  - [MDC Web: Textfield](https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield)
+  - [Sass Mixins (MDC Web)](https://github.com/material-components/material-components-web/tree/master/packages/mdc-textfield#sass-mixins)
 
 
 # Basic Usage
@@ -96,6 +102,9 @@ module Material.TextField exposing
 @docs setStep
 @docs setLeadingIcon
 @docs setTrailingIcon
+@docs setPrefix
+@docs setSuffix
+@docs setEndAligned
 @docs setAttributes
 
 
@@ -182,10 +191,8 @@ configuration option to specify a value of `Icon`.
     TextField.filled
         (TextField.config
             |> TextField.setLeadingIcon
-                (Just (TextField.icon [] "wifi"))
+                (Just (TextFieldIcon.icon "wifi"))
         )
-
-@docs Icon, icon
 
 
 # Text Field with Trailing Icon
@@ -196,7 +203,48 @@ configuration option to specify a value of `Icon`.
     TextField.filled
         (TextField.config
             |> TextField.setTrailingIcon
-                (Just (TextField.icon [] "clear"))
+                (Just (TextFieldIcon.icon "clear"))
+        )
+
+
+# Text Field with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+See [Material.TextField.Icon](Material-TextField-Icon) for more information.
+
+
+# Text Field with Prefix
+
+To have a text field display a prefix text such as a currency symbol, set its
+`setPrefix` configuration option.
+
+    TextField.filled
+        (TextField.config
+            |> TextField.setPrefix (Just "$")
+        )
+
+
+# Text Field with Suffix
+
+To have a text field display a suffix text such as a unit of mass, set its
+`setSuffix` configuration option.
+
+    TextField.filled
+        (TextField.config
+            |> TextField.setSuffix (Just "kg")
+        )
+
+
+# End Aligned Text Field
+
+To have a text field end align its input, set its `setEndAligned` configuration
+option to `True`.
+
+    TextField.filled
+        (TextField.config
+            |> TextField.setEndAligned True
         )
 
 
@@ -230,7 +278,8 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Icon as Icon
+import Material.TextField.Icon.Internal as TextFieldIcon
+import Svg.Attributes
 
 
 {-| Configuration of a text field
@@ -251,18 +300,15 @@ type Config msg
         , min : Maybe Int
         , max : Maybe Int
         , step : Maybe Int
-        , leadingIcon : Maybe (Icon msg)
-        , trailingIcon : Maybe (Icon msg)
+        , leadingIcon : Maybe (TextFieldIcon.Icon msg)
+        , trailingIcon : Maybe (TextFieldIcon.Icon msg)
+        , prefix : Maybe String
+        , suffix : Maybe String
+        , endAligned : Bool
         , additionalAttributes : List (Html.Attribute msg)
         , onInput : Maybe (String -> msg)
         , onChange : Maybe (String -> msg)
         }
-
-
-{-| Text field trailing or leading icon -
--}
-type Icon msg
-    = Icon (Html msg)
 
 
 {-| Default configuration of a text field
@@ -286,6 +332,9 @@ config =
         , step = Nothing
         , leadingIcon = Nothing
         , trailingIcon = Nothing
+        , prefix = Nothing
+        , suffix = Nothing
+        , endAligned = False
         , additionalAttributes = []
         , onInput = Nothing
         , onChange = Nothing
@@ -396,16 +445,37 @@ setStep step (Config config_) =
 
 {-| Specify a text field's leading icon
 -}
-setLeadingIcon : Maybe (Icon msg) -> Config msg -> Config msg
+setLeadingIcon : Maybe (TextFieldIcon.Icon msg) -> Config msg -> Config msg
 setLeadingIcon leadingIcon (Config config_) =
     Config { config_ | leadingIcon = leadingIcon }
 
 
 {-| Specify a text field's trailing icon
 -}
-setTrailingIcon : Maybe (Icon msg) -> Config msg -> Config msg
+setTrailingIcon : Maybe (TextFieldIcon.Icon msg) -> Config msg -> Config msg
 setTrailingIcon trailingIcon (Config config_) =
     Config { config_ | trailingIcon = trailingIcon }
+
+
+{-| Specify a text field's prefix
+-}
+setPrefix : Maybe String -> Config msg -> Config msg
+setPrefix prefix (Config config_) =
+    Config { config_ | prefix = prefix }
+
+
+{-| Specify a text field's suffix
+-}
+setSuffix : Maybe String -> Config msg -> Config msg
+setSuffix suffix (Config config_) =
+    Config { config_ | suffix = suffix }
+
+
+{-| Specify a text field's input to end-aligned
+-}
+setEndAligned : Bool -> Config msg -> Config msg
+setEndAligned endAligned (Config config_) =
+    Config { config_ | endAligned = endAligned }
 
 
 {-| Specify additional attributes
@@ -450,11 +520,15 @@ textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
         (List.filterMap identity
             [ rootCs
             , noLabelCs config_
+            , filledCs outlined_
             , outlinedCs outlined_
             , fullwidthCs config_
+            , labelFloatingCs config_
+            , foucClassNamesProp
             , disabledCs config_
             , withLeadingIconCs config_
             , withTrailingIconCs config_
+            , endAlignedCs config_
             , valueProp config_
             , disabledProp config_
             , requiredProp config_
@@ -468,44 +542,40 @@ textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
             ]
             ++ additionalAttributes
         )
-        (List.concat
+        (if outlined_ then
             [ leadingIconElt config_
-            , if fullwidth then
-                if outlined_ then
-                    [ inputElt config_
-                    , notchedOutlineElt config_
-                    ]
+            , prefixElt config_
+            , inputElt config_
+            , suffixElt config_
+            , notchedOutlineElt config_
+            , trailingIconElt config_
+            ]
 
-                else
-                    [ inputElt config_
-                    , lineRippleElt
-                    ]
-
-              else if outlined_ then
-                [ inputElt config_
-                , notchedOutlineElt config_
-                ]
-
-              else
-                [ inputElt config_
-                , labelElt config_
-                , lineRippleElt
-                ]
+         else
+            [ rippleElt
+            , leadingIconElt config_
+            , prefixElt config_
+            , inputElt config_
+            , suffixElt config_
+            , labelElt config_
+            , lineRippleElt
             , trailingIconElt config_
             ]
         )
 
 
-{-| A text field's icon, either leading or trailing
--}
-icon : List (Html.Attribute msg) -> String -> Icon msg
-icon additionalAttributes iconName =
-    Icon (Icon.icon (class "mdc-text-field__icon" :: additionalAttributes) iconName)
-
-
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-text-field")
+
+
+filledCs : Bool -> Maybe (Html.Attribute msg)
+filledCs outlined_ =
+    if not outlined_ then
+        Just (class "mdc-text-field--filled")
+
+    else
+        Nothing
 
 
 outlinedCs : Bool -> Maybe (Html.Attribute msg)
@@ -553,6 +623,34 @@ withTrailingIconCs (Config { trailingIcon }) =
         Nothing
 
 
+labelFloatingCs : Config msg -> Maybe (Html.Attribute msg)
+labelFloatingCs (Config { label, value, fullwidth }) =
+    if not fullwidth && label /= Nothing && Maybe.withDefault "" value /= "" then
+        Just (class "mdc-text-field--label-floating")
+
+    else
+        Nothing
+
+
+prefixCs : Html.Attribute msg
+prefixCs =
+    class "mdc-text-field__affix mdc-text-field__affix--prefix"
+
+
+suffixCs : Html.Attribute msg
+suffixCs =
+    class "mdc-text-field__affix mdc-text-field__affix--suffix"
+
+
+endAlignedCs : Config msg -> Maybe (Html.Attribute msg)
+endAlignedCs (Config { endAligned }) =
+    if endAligned then
+        Just (class "mdc-text-field--end-aligned")
+
+    else
+        Nothing
+
+
 requiredProp : Config msg -> Maybe (Html.Attribute msg)
 requiredProp (Config { required }) =
     Just (Html.Attributes.property "required" (Encode.bool required))
@@ -576,6 +674,17 @@ maxLengthProp (Config { maxLength }) =
     Just
         (Html.Attributes.property "maxLength"
             (Encode.int (Maybe.withDefault -1 maxLength))
+        )
+
+
+foucClassNamesProp : Maybe (Html.Attribute msg)
+foucClassNamesProp =
+    Just
+        (Html.Attributes.property "foucClassNames"
+            (Encode.list Encode.string
+                [ "mdc-text-field--label-floating"
+                ]
+            )
         )
 
 
@@ -623,24 +732,114 @@ placeholderAttr (Config { placeholder }) =
     Maybe.map Html.Attributes.placeholder placeholder
 
 
-leadingIconElt : Config msg -> List (Html msg)
+rippleElt : Html msg
+rippleElt =
+    Html.span [ class "mdc-text-field__ripple" ] []
+
+
+leadingIconElt : Config msg -> Html msg
 leadingIconElt (Config { leadingIcon }) =
-    case leadingIcon of
-        Nothing ->
-            []
-
-        Just (Icon html) ->
-            [ html ]
+    iconElt "mdc-text-field__icon--leading" leadingIcon
 
 
-trailingIconElt : Config msg -> List (Html msg)
+trailingIconElt : Config msg -> Html msg
 trailingIconElt (Config { trailingIcon }) =
-    case trailingIcon of
-        Nothing ->
-            []
+    iconElt "mdc-text-field__icon--trailing" trailingIcon
 
-        Just (Icon html) ->
-            [ html ]
+
+iconElt : String -> Maybe (TextFieldIcon.Icon msg) -> Html msg
+iconElt modifierCs icon_ =
+    case icon_ of
+        Nothing ->
+            text ""
+
+        Just (TextFieldIcon.Icon { node, attributes, nodes, onInteraction, disabled }) ->
+            node
+                (class "mdc-text-field__icon"
+                    :: class modifierCs
+                    :: (case onInteraction of
+                            Just msg ->
+                                if not disabled then
+                                    Html.Attributes.tabindex 0
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: Html.Events.onClick msg
+                                        :: Html.Events.on "keydown"
+                                            (Html.Events.keyCode
+                                                |> Decode.andThen
+                                                    (\keyCode ->
+                                                        if keyCode == 13 then
+                                                            Decode.succeed msg
+
+                                                        else
+                                                            Decode.fail ""
+                                                    )
+                                            )
+                                        :: attributes
+
+                                else
+                                    Html.Attributes.tabindex -1
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: attributes
+
+                            Nothing ->
+                                attributes
+                       )
+                )
+                nodes
+
+        Just (TextFieldIcon.SvgIcon { node, attributes, nodes, onInteraction, disabled }) ->
+            node
+                (Svg.Attributes.class "mdc-text-field__icon"
+                    :: Svg.Attributes.class modifierCs
+                    :: (case onInteraction of
+                            Just msg ->
+                                if not disabled then
+                                    Html.Attributes.tabindex 0
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: Html.Events.onClick msg
+                                        :: Html.Events.on "keydown"
+                                            (Html.Events.keyCode
+                                                |> Decode.andThen
+                                                    (\keyCode ->
+                                                        if keyCode == 13 then
+                                                            Decode.succeed msg
+
+                                                        else
+                                                            Decode.fail ""
+                                                    )
+                                            )
+                                        :: attributes
+
+                                else
+                                    Html.Attributes.tabindex -1
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: attributes
+
+                            Nothing ->
+                                attributes
+                       )
+                )
+                nodes
+
+
+prefixElt : Config msg -> Html msg
+prefixElt (Config { prefix }) =
+    case prefix of
+        Just prefixStr ->
+            Html.span [ prefixCs ] [ text prefixStr ]
+
+        Nothing ->
+            text ""
+
+
+suffixElt : Config msg -> Html msg
+suffixElt (Config { suffix }) =
+    case suffix of
+        Just suffixStr ->
+            Html.span [ suffixCs ] [ text suffixStr ]
+
+        Nothing ->
+            text ""
 
 
 inputHandler : Config msg -> Maybe (Html.Attribute msg)
@@ -704,7 +903,7 @@ disabledProp (Config { disabled }) =
 
 
 labelElt : Config msg -> Html msg
-labelElt (Config { label, value }) =
+labelElt (Config { label, value, fullwidth }) =
     let
         floatingLabelCs =
             "mdc-floating-label"
@@ -712,9 +911,9 @@ labelElt (Config { label, value }) =
         floatingLabelFloatAboveCs =
             "mdc-floating-label--float-above"
     in
-    case label of
-        Just str ->
-            Html.div
+    case ( fullwidth, label ) of
+        ( False, Just str ) ->
+            Html.span
                 [ if Maybe.withDefault "" value /= "" then
                     class (floatingLabelCs ++ " " ++ floatingLabelFloatAboveCs)
 
@@ -725,7 +924,7 @@ labelElt (Config { label, value }) =
                 ]
                 [ text str ]
 
-        Nothing ->
+        _ ->
             text ""
 
 
@@ -740,12 +939,12 @@ noLabelCs (Config { label }) =
 
 lineRippleElt : Html msg
 lineRippleElt =
-    Html.div [ class "mdc-line-ripple" ] []
+    Html.span [ class "mdc-line-ripple" ] []
 
 
 notchedOutlineElt : Config msg -> Html msg
 notchedOutlineElt config_ =
-    Html.div [ class "mdc-notched-outline" ]
+    Html.span [ class "mdc-notched-outline" ]
         [ notchedOutlineLeadingElt
         , notchedOutlineNotchElt config_
         , notchedOutlineTrailingElt
@@ -754,14 +953,14 @@ notchedOutlineElt config_ =
 
 notchedOutlineLeadingElt : Html msg
 notchedOutlineLeadingElt =
-    Html.div [ class "mdc-notched-outline__leading" ] []
+    Html.span [ class "mdc-notched-outline__leading" ] []
 
 
 notchedOutlineTrailingElt : Html msg
 notchedOutlineTrailingElt =
-    Html.div [ class "mdc-notched-outline__trailing" ] []
+    Html.span [ class "mdc-notched-outline__trailing" ] []
 
 
 notchedOutlineNotchElt : Config msg -> Html msg
 notchedOutlineNotchElt config_ =
-    Html.div [ class "mdc-notched-outline__notch" ] [ labelElt config_ ]
+    Html.span [ class "mdc-notched-outline__notch" ] [ labelElt config_ ]

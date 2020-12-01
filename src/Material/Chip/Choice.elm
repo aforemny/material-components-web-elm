@@ -3,6 +3,9 @@ module Material.Chip.Choice exposing
     , setIcon
     , setAttributes
     , chip, Chip
+    , Icon, icon
+    , customIcon
+    , svgIcon
     )
 
 {-| Chips are compact elements that allow users to enter information, select a
@@ -18,7 +21,8 @@ options.
   - [Basic Usage](#basic-usage)
   - [Configuration](#configuration)
       - [Configuration Options](#configuration-options)
-  - [Choice Chips](#choice-chips)
+  - [Choice Chip](#choice-chip)
+  - [Choice Chip with Custom Icon](#choice-chip-with-custom-icon)
 
 
 # Resources
@@ -72,14 +76,26 @@ options.
 @docs setAttributes
 
 
-# Choice Chips
+# Choice Chip
 
 @docs chip, Chip
 
+
+# Choice Chip with Custom Icon
+
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+@docs Icon, icon
+@docs customIcon
+@docs svgIcon
+
 -}
 
-import Html
-import Material.Chip.Choice.Internal exposing (Chip(..), Config(..))
+import Html exposing (Html, text)
+import Html.Attributes exposing (class)
+import Material.Chip.Choice.Internal exposing (Chip(..), Config(..), Icon(..))
+import Svg exposing (Svg)
 
 
 {-| Configuration of a choice chip
@@ -100,9 +116,9 @@ config =
 
 {-| Specify whether the chip displays an icon
 -}
-setIcon : Maybe String -> Config msg -> Config msg
-setIcon icon (Config config_) =
-    Config { config_ | icon = icon }
+setIcon : Maybe Icon -> Config msg -> Config msg
+setIcon icon_ (Config config_) =
+    Config { config_ | icon = icon_ }
 
 
 {-| Specify additional attributes
@@ -123,3 +139,64 @@ type alias Chip a msg =
 chip : Config msg -> a -> Chip a msg
 chip =
     Chip
+
+
+{-| Icon type
+-}
+type alias Icon =
+    Material.Chip.Choice.Internal.Icon
+
+
+{-| Material Icon
+
+    ChoiceChip.chip
+        (ChoiceChip.config
+            |> ChoiceChip.setIcon (ChoiceChip.icon "favorite")
+        )
+        "Add to favorites"
+
+-}
+icon : String -> Icon
+icon iconName =
+    customIcon Html.i [ class "material-icons" ] [ text iconName ]
+
+
+{-| Custom icon
+
+    ChoiceChip.chip
+        (ChoiceChip.config
+            |> ChoiceChip.setIcon
+                (ChoiceChip.customIcon Html.i
+                    [ class "fab fa-font-awesome" ]
+                    []
+                )
+        )
+        "Font awesome"
+
+-}
+customIcon :
+    (List (Html.Attribute Never) -> List (Html Never) -> Html Never)
+    -> List (Html.Attribute Never)
+    -> List (Html Never)
+    -> Icon
+customIcon node attributes nodes =
+    Icon { node = node, attributes = attributes, nodes = nodes }
+
+
+{-| SVG icon
+
+    ChoiceChp.chip
+        (ActonChip.config
+            > ChoiceChip.setIcon
+                (ChoiceChip.svgIcon
+                    [ Svg.Attributes.viewBox "…" ]
+                    [-- …
+                    ]
+                )
+        )
+        "Fon awesome"
+
+-}
+svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon
+svgIcon attributes nodes =
+    SvgIcon { node = Svg.svg, attributes = attributes, nodes = nodes }

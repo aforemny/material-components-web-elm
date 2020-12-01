@@ -28,7 +28,7 @@ import {MDCRipple} from '@material/ripple/component';
 import {MDCRippleFoundation} from '@material/ripple/foundation';
 import {MDCRippleCapableSurface} from '@material/ripple/types';
 import {MDCRadioAdapter} from '@material/radio/adapter';
-import {MDCRadioFoundation} from '@material/radio/foundation';
+import {MDCRadioFoundation} from './foundation';
 
 export class MDCRadio extends MDCComponent<MDCRadioFoundation> implements MDCRippleCapableSurface {
   static attachTo(root: Element) {

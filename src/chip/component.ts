@@ -94,6 +94,10 @@ export class MDCChip extends MDCComponent<MDCChipFoundation> implements MDCRippl
   private handleTransitionEnd_!: SpecificEventListener<'transitionend'>; // assigned in initialSyncWithDOM()
   private handleTrailingIconInteraction_!: SpecificEventListener<InteractionType>; // assigned in initialSyncWithDOM()
   private handleKeydown_!: SpecificEventListener<'keydown'>; // assigned in initialSyncWithDOM()
+  private handleFocusIn_!:
+      SpecificEventListener<'focusin'>;  // assigned in initialSyncWIthDOM()
+  private handleFocusOut_!:
+      SpecificEventListener<'focusout'>;  // assigned in initialSyncWIthDOM()
 
   initialize(rippleFactory: MDCRippleFactory = (el, foundation) => new MDCRipple(el, foundation)) {
     this.leadingIcon_ = this.root_.querySelector(strings.LEADING_ICON_SELECTOR);
@@ -117,12 +121,20 @@ export class MDCChip extends MDCComponent<MDCChipFoundation> implements MDCRippl
     this.handleTrailingIconInteraction_ = (evt: MouseEvent | KeyboardEvent) =>
         this.foundation_.handleTrailingIconInteraction(evt);
     this.handleKeydown_ = (evt: KeyboardEvent) => this.foundation_.handleKeydown(evt);
+    this.handleFocusIn_ = (evt: FocusEvent) => {
+      this.foundation_.handleFocusIn(evt);
+    };
+    this.handleFocusOut_ = (evt: FocusEvent) => {
+      this.foundation_.handleFocusOut(evt);
+    };
 
     INTERACTION_EVENTS.forEach((evtType) => {
       this.listen(evtType, this.handleInteraction_);
     });
     this.listen('transitionend', this.handleTransitionEnd_);
     this.listen('keydown', this.handleKeydown_);
+    this.listen('focusin', this.handleFocusIn_);
+    this.listen('focusout', this.handleFocusOut_);
 
     if (this.trailingIcon_) {
       INTERACTION_EVENTS.forEach((evtType) => {
@@ -139,6 +151,8 @@ export class MDCChip extends MDCComponent<MDCChipFoundation> implements MDCRippl
     });
     this.unlisten('transitionend', this.handleTransitionEnd_);
     this.unlisten('keydown', this.handleKeydown_);
+    this.unlisten('focusin', this.handleFocusIn_);
+    this.unlisten('focusout', this.handleFocusOut_);
 
     if (this.trailingIcon_) {
       INTERACTION_EVENTS.forEach((evtType) => {
@@ -166,7 +180,8 @@ export class MDCChip extends MDCComponent<MDCChipFoundation> implements MDCRippl
           this.leadingIcon_.classList.add(className);
         }
       },
-      eventTargetHasClass: (target, className) => target ? (target as Element).classList.contains(className) : false,
+      eventTargetHasClass: (target, className) =>
+          target ? (target as Element).classList.contains(className) : false,
       focusPrimaryAction: () => {
         if (this.primaryAction_) {
           (this.primaryAction_ as HTMLElement).focus();
@@ -177,25 +192,39 @@ export class MDCChip extends MDCComponent<MDCChipFoundation> implements MDCRippl
           (this.trailingAction_ as HTMLElement).focus();
         }
       },
-      getCheckmarkBoundingClientRect: () => this.checkmark_ ? this.checkmark_.getBoundingClientRect() : null,
-      getComputedStyleValue: (propertyName) => window.getComputedStyle(this.root_).getPropertyValue(propertyName),
+      getAttribute: (attr) => this.root_.getAttribute(attr),
+      getCheckmarkBoundingClientRect: () =>
+          this.checkmark_ ? this.checkmark_.getBoundingClientRect() : null,
+      getComputedStyleValue: (propertyName) =>
+          window.getComputedStyle(this.root_).getPropertyValue(propertyName),
       getRootBoundingClientRect: () => this.root_.getBoundingClientRect(),
       hasClass: (className) => this.root_.classList.contains(className),
       hasLeadingIcon: () => !!this.leadingIcon_,
       hasTrailingAction: () => !!this.trailingAction_,
-      isRTL: () => window.getComputedStyle(this.root_).getPropertyValue('direction') === 'rtl',
+      isRTL: () =>
+          window.getComputedStyle(this.root_).getPropertyValue('direction') ===
+          'rtl',
       notifyInteraction: () => this.emit<MDCChipInteractionEventDetail>(
-          strings.INTERACTION_EVENT, {chipId: this.id}, true /* shouldBubble */),
-      notifyNavigation: (key, source) => this.emit<MDCChipNavigationEventDetail>(
-          strings.NAVIGATION_EVENT,  {chipId: this.id, key, source}, true /* shouldBubble */),
-      notifyRemoval: () => {
+          strings.INTERACTION_EVENT, {chipId: this.id},
+          true /* shouldBubble */),
+      notifyNavigation: (key, source) =>
+          this.emit<MDCChipNavigationEventDetail>(
+              strings.NAVIGATION_EVENT, {chipId: this.id, key, source},
+              true /* shouldBubble */),
+      notifyRemoval: (removedAnnouncement) => {
         this.emit<MDCChipRemovalEventDetail>(
-          strings.REMOVAL_EVENT, {chipId: this.id, root: this.root_}, true /* shouldBubble */);
+            strings.REMOVAL_EVENT, {chipId: this.id, removedAnnouncement},
+            true /* shouldBubble */);
       },
-      notifySelection: (selected, shouldIgnore) => this.emit<MDCChipSelectionEventDetail>(
-          strings.SELECTION_EVENT, {chipId: this.id, selected, shouldIgnore}, true /* shouldBubble */),
-      notifyTrailingIconInteraction: () => this.emit<MDCChipInteractionEventDetail>(
-          strings.TRAILING_ICON_INTERACTION_EVENT, {chipId: this.id}, true /* shouldBubble */),
+      notifySelection: (selected, shouldIgnore) =>
+          this.emit<MDCChipSelectionEventDetail>(
+              strings.SELECTION_EVENT,
+              {chipId: this.id, selected, shouldIgnore},
+              true /* shouldBubble */),
+      notifyTrailingIconInteraction: () =>
+          this.emit<MDCChipInteractionEventDetail>(
+              strings.TRAILING_ICON_INTERACTION_EVENT, {chipId: this.id},
+              true /* shouldBubble */),
       removeClass: (className) => this.root_.classList.remove(className),
       removeClassFromLeadingIcon: (className) => {
         if (this.leadingIcon_) {
@@ -207,7 +236,8 @@ export class MDCChip extends MDCComponent<MDCChipFoundation> implements MDCRippl
           this.primaryAction_.setAttribute(attr, value);
         }
       },
-      setStyleProperty: (propertyName, value) => this.root_.style.setProperty(propertyName, value),
+      setStyleProperty: (propertyName, value) =>
+          this.root_.style.setProperty(propertyName, value),
       setTrailingActionAttr: (attr, value) => {
         if (this.trailingAction_) {
           this.trailingAction_.setAttribute(attr, value);

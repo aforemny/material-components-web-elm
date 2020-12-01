@@ -29,8 +29,10 @@ import {MDCRippleAdapter} from '@material/ripple/adapter';
 import {MDCRipple} from '@material/ripple/component';
 import {MDCRippleFoundation} from '@material/ripple/foundation';
 import {MDCRippleCapableSurface} from '@material/ripple/types';
+
 import {MDCCheckboxAdapter} from '@material/checkbox/adapter';
-import {MDCCheckboxFoundation} from '@material/checkbox/foundation';
+import {strings} from '@material/checkbox/constants';
+import {MDCCheckboxFoundation} from './foundation';
 
 /**
  * This type is needed for compatibility with Closure Compiler.
@@ -88,6 +90,13 @@ export class MDCCheckbox extends MDCComponent<MDCCheckboxFoundation> implements 
   private readonly ripple_: MDCRipple = this.createRipple_();
   private handleAnimationEnd_!: EventListener; // assigned in initialSyncWithDOM()
 
+  initialize() {
+    const {DATA_INDETERMINATE_ATTR} = strings;
+    this.nativeControl_.indeterminate =
+        this.nativeControl_.getAttribute(DATA_INDETERMINATE_ATTR) === 'true';
+    this.nativeControl_.removeAttribute(DATA_INDETERMINATE_ATTR);
+  }
+
   initialSyncWithDOM() {
     this.handleAnimationEnd_ = () => this.foundation_.handleAnimationEnd();
     this.listen(getCorrectEventName(window, 'animationend'), this.handleAnimationEnd_);
@@ -111,10 +120,18 @@ export class MDCCheckbox extends MDCComponent<MDCCheckboxFoundation> implements 
       isAttachedToDOM: () => Boolean(this.root_.parentNode),
       isChecked: () => this.checked,
       isIndeterminate: () => this.indeterminate,
-      removeClass: (className) => this.root_.classList.remove(className),
-      removeNativeControlAttr: (attr) => this.nativeControl_.removeAttribute(attr),
-      setNativeControlAttr: (attr, value) => this.nativeControl_.setAttribute(attr, value),
-      setNativeControlDisabled: (disabled) => this.nativeControl_.disabled = disabled,
+      removeClass: (className) => {
+        this.root_.classList.remove(className);
+      },
+      removeNativeControlAttr: (attr) => {
+        this.nativeControl_.removeAttribute(attr);
+      },
+      setNativeControlAttr: (attr, value) => {
+        this.nativeControl_.setAttribute(attr, value);
+      },
+      setNativeControlDisabled: (disabled) => {
+        this.nativeControl_.disabled = disabled;
+      },
     };
     return new MDCCheckboxFoundation(adapter);
   }
@@ -176,7 +193,7 @@ export class MDCCheckbox extends MDCComponent<MDCCheckboxFoundation> implements 
   }
 
   private get nativeControl_(): HTMLInputElement {
-    const {NATIVE_CONTROL_SELECTOR} = MDCCheckboxFoundation.strings;
+    const {NATIVE_CONTROL_SELECTOR} = strings;
     const el = this.root_.querySelector<HTMLInputElement>(NATIVE_CONTROL_SELECTOR);
     if (!el) {
       throw new Error(`Checkbox component requires a ${NATIVE_CONTROL_SELECTOR} element`);

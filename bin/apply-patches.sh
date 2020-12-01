@@ -1,4 +1,5 @@
-find src -name component.patch | while read fn; do
+for fn in src/*/{foundation,component,util}.patch; do
+  file=$(basename $fn .patch)
   dir=$(dirname $fn)
   component=$(basename $dir)
   case $(basename $dir) in
@@ -8,9 +9,12 @@ find src -name component.patch | while read fn; do
     "chip")
       component="chips/chip"
       ;;
+    "chip-set")
+      component="chips/chip-set"
+      ;;
     *)
       ;;
   esac
-  cp material-components-web/packages/mdc-$component/component.ts $dir/component.ts
+  cp material-components-web/packages/mdc-$component/$file.ts $dir/$file.ts
   patch -p0 <$fn
 done

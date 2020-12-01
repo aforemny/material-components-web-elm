@@ -2,8 +2,9 @@ module Demo.Chips exposing (Model, Msg(..), defaultModel, update, view)
 
 import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
+import Demo.ElmLogo exposing (elmLogo)
 import Html exposing (Html, text)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (class, style)
 import Html.Events
 import Json.Decode as Decode
 import Material.Button as Button
@@ -17,6 +18,7 @@ import Material.ChipSet.Filter as FilterChipSet
 import Material.ChipSet.Input as InputChipSet
 import Material.Typography as Typography
 import Set exposing (Set)
+import Svg.Attributes
 import Task
 
 
@@ -179,6 +181,8 @@ view model =
         , shapedChips model
         , Html.h2 [ Typography.subtitle1 ] [ text "Input Chips" ]
         , inputChips model
+        , Html.h2 [ Typography.subtitle1 ] [ text "Chips with Custom Icons" ]
+        , actionChipsWithCustomIcons model
         , Html.h2 [ Typography.subtitle1 ] [ text "Focus Chips" ]
         , focusChips model
         ]
@@ -192,8 +196,8 @@ heroChips model =
             |> ChoiceChipSet.setSelected model.chip
             |> ChoiceChipSet.setOnChange ChipChanged
         )
-        [ ChoiceChip.chip ChoiceChip.config "Chip One"
-        , ChoiceChip.chip ChoiceChip.config "Chip Two"
+        (ChoiceChip.chip ChoiceChip.config "Chip One")
+        [ ChoiceChip.chip ChoiceChip.config "Chip Two"
         , ChoiceChip.chip ChoiceChip.config "Chip Three"
         , ChoiceChip.chip ChoiceChip.config "Chip Four"
         ]
@@ -225,8 +229,8 @@ choiceChips model =
             |> ChoiceChipSet.setSelected (Just model.size)
             |> ChoiceChipSet.setOnChange SizeChanged
         )
-        [ ChoiceChip.chip ChoiceChip.config ExtraSmall
-        , ChoiceChip.chip ChoiceChip.config Small
+        (ChoiceChip.chip ChoiceChip.config ExtraSmall)
+        [ ChoiceChip.chip ChoiceChip.config Small
         , ChoiceChip.chip ChoiceChip.config Medium
         , ChoiceChip.chip ChoiceChip.config Large
         , ChoiceChip.chip ChoiceChip.config ExtraLarge
@@ -235,23 +239,28 @@ choiceChips model =
 
 inputChips : Model -> Html Msg
 inputChips model =
+    let
+        chip label =
+            ( label
+            , InputChip.chip
+                (InputChip.config
+                    |> InputChip.setOnDelete (InputChipDeleted label)
+                )
+                label
+            )
+    in
     Html.div
         [ style "position" "relative"
         , style "display" "flex"
         ]
-        [ InputChipSet.chipSet []
-            (List.map
-                (\label ->
-                    ( label
-                    , InputChip.chip
-                        (InputChip.config
-                            |> InputChip.setOnDelete (InputChipDeleted label)
-                        )
-                        label
-                    )
-                )
-                model.inputChips
-            )
+        [ case model.inputChips of
+            [] ->
+                text ""
+
+            firstInputChip :: otherInputChips ->
+                InputChipSet.chipSet []
+                    (chip firstInputChip)
+                    (List.map chip otherInputChips)
         , Html.input
             [ Html.Attributes.value model.input
             , Html.Events.onInput InputChanged
@@ -273,9 +282,9 @@ filterChips1 model =
                 accessory
     in
     FilterChipSet.chipSet []
+        (chip "Tops")
         (List.map chip
-            [ "Tops"
-            , "Bottoms"
+            [ "Bottoms"
             , "Shoes"
             , "Accessories"
             ]
@@ -289,15 +298,15 @@ filterChips2 model =
             FilterChip.chip
                 (FilterChip.config
                     |> FilterChip.setSelected (Set.member label model.contacts)
-                    |> FilterChip.setIcon (Just "face")
+                    |> FilterChip.setIcon (Just (FilterChip.icon "face"))
                     |> FilterChip.setOnChange (ContactChanged label)
                 )
                 label
     in
     FilterChipSet.chipSet []
+        (chip "Alice")
         (List.map chip
-            [ "Alice"
-            , "Bob"
+            [ "Bob"
             , "Charlie"
             , "Danielle"
             ]
@@ -307,17 +316,17 @@ filterChips2 model =
 actionChips : Model -> Html Msg
 actionChips model =
     let
-        chip ( icon, label ) =
+        chip ( iconName, label ) =
             ActionChip.chip
                 (ActionChip.config
-                    |> ActionChip.setIcon (Just icon)
+                    |> ActionChip.setIcon (Just (ActionChip.icon iconName))
                 )
                 label
     in
     ActionChipSet.chipSet []
+        (chip ( "event", "Add to calendar" ))
         (List.map chip
-            [ ( "event", "Add to calendar" )
-            , ( "bookmark", "Bookmark" )
+            [ ( "bookmark", "Bookmark" )
             , ( "alarm", "Set alarm" )
             , ( "directions", "Get directions" )
             ]
@@ -335,13 +344,43 @@ shapedChips model =
                 label
     in
     ActionChipSet.chipSet []
+        (chip "Bookcase")
         (List.map chip
-            [ "Bookcase"
-            , "TV Stand"
+            [ "TV Stand"
             , "Sofas"
             , "Office chairs"
             ]
         )
+
+
+actionChipsWithCustomIcons : Model -> Html Msg
+actionChipsWithCustomIcons model =
+    ActionChipSet.chipSet []
+        (ActionChip.chip
+            (ActionChip.config
+                |> ActionChip.setIcon (Just (ActionChip.icon "favorite"))
+            )
+            "Material Icons"
+        )
+        [ ActionChip.chip
+            (ActionChip.config
+                |> ActionChip.setIcon
+                    (Just
+                        (ActionChip.customIcon Html.i [ class "fab fa-font-awesome" ] [])
+                    )
+            )
+            "Font Awesome"
+        , ActionChip.chip
+            (ActionChip.config
+                |> ActionChip.setIcon
+                    (Just
+                        (ActionChip.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ]
+                            elmLogo
+                        )
+                    )
+            )
+            "Font Awesome"
+        ]
 
 
 focusChips : Model -> Html Msg
@@ -353,9 +392,8 @@ focusChips model =
                 |> ChoiceChipSet.setOnChange FocusChanged
                 |> ChoiceChipSet.setAttributes [ Html.Attributes.id "my-chips" ]
             )
-            [ ChoiceChip.chip ChoiceChip.config "One"
-            , ChoiceChip.chip ChoiceChip.config "Two"
-            ]
+            (ChoiceChip.chip ChoiceChip.config "One")
+            [ ChoiceChip.chip ChoiceChip.config "Two" ]
         , text "\u{00A0}"
         , Button.raised
             (Button.config

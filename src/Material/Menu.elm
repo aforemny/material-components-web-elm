@@ -199,4 +199,4 @@ quickOpenProp (Config { quickOpen }) =
 
 closeHandler : Config msg -> Maybe (Html.Attribute msg)
 closeHandler (Config { onClose }) =
-    Maybe.map (Html.Events.on "MDCMenu:close" << Decode.succeed) onClose
+    Maybe.map (Html.Events.on "MDCMenuSurface:close" << Decode.succeed) onClose

@@ -28,7 +28,7 @@ import {MDCTab, MDCTabFactory} from '@material/tab/component';
 import {MDCTabFoundation} from '@material/tab/foundation';
 import {MDCTabInteractionEvent} from '@material/tab/types';
 import {MDCTabBarAdapter} from '@material/tab-bar/adapter';
-import {MDCTabBarFoundation} from '@material/tab-bar/foundation';
+import {MDCTabBarFoundation} from './foundation';
 import {MDCTabBarActivatedEventDetail} from '@material/tab-bar/types';
 
 const {strings} = MDCTabBarFoundation;

@@ -26,7 +26,7 @@ import {SpecificEventListener} from '@material/base/types';
 import {closest} from '@material/dom/ponyfill';
 import {MDCSnackbarAdapter} from '@material/snackbar/adapter';
 import {strings} from '@material/snackbar/constants';
-import {MDCSnackbarFoundation} from '@material/snackbar/foundation';
+import {MDCSnackbarFoundation} from './foundation';
 import {MDCSnackbarCloseEventDetail} from '@material/snackbar/types';
 
 const {

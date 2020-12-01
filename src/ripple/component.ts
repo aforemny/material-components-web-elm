@@ -25,7 +25,7 @@ import {MDCComponent} from '@material/base/component';
 import {applyPassive} from '@material/dom/events';
 import {matches} from '@material/dom/ponyfill';
 import {MDCRippleAdapter} from '@material/ripple/adapter';
-import {MDCRippleFoundation} from '@material/ripple/foundation';
+import {MDCRippleFoundation} from './foundation';
 import {MDCRippleAttachOpts, MDCRippleCapableSurface} from '@material/ripple/types';
 import * as util from '@material/ripple/util';
 

@@ -1,6 +1,6 @@
 module Material.Theme exposing
-    ( primary, secondary, background
-    , onPrimary, onSecondary, onSurface
+    ( primary, secondary, background, error
+    , onPrimary, onSecondary, onSurface, onError
     , primaryBg, secondaryBg, surface
     , textPrimaryOnBackground, textSecondaryOnBackground, textHintOnBackground
     , textDisabledOnBackground, textIconOnBackground
@@ -72,8 +72,8 @@ $mdc-theme-on-secondary: #442b2d;
 
 ## Text Colors
 
-@docs primary, secondary, background
-@docs onPrimary, onSecondary, onSurface
+@docs primary, secondary, background, error
+@docs onPrimary, onSecondary, onSurface, onError
 
 
 ## Background Colors
@@ -144,6 +144,13 @@ background =
     class "mdc-theme--background"
 
 
+{-| Sets the text color to the theme error color
+-}
+error : Html.Attribute msg
+error =
+    class "mdc-theme--error"
+
+
 {-| Sets the surface color to the theme surface color
 -}
 surface : Html.Attribute msg
@@ -182,6 +189,17 @@ color background.
 onSurface : Html.Attribute msg
 onSurface =
     class "mdc-theme--on-surface"
+
+
+{-| Sets the text color to the theme on-error color
+
+The theme's on-error color is a text color that works best on a error
+color background.
+
+-}
+onError : Html.Attribute msg
+onError =
+    class "mdc-theme--on-error"
 
 
 {-| Sets the background color to the theme primary color

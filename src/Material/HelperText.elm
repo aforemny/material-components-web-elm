@@ -1,6 +1,7 @@
 module Material.HelperText exposing
     ( Config, config
     , setPersistent
+    , setValidation
     , setAttributes
     , helperText
     , helperLine, characterCounter
@@ -53,6 +54,7 @@ be used. It should be visible either persistently or only on focus.
 ## Configuration Options
 
 @docs setPersistent
+@docs setValidation
 @docs setAttributes
 
 
@@ -96,6 +98,7 @@ import Html.Attributes exposing (class)
 type Config msg
     = Config
         { persistent : Bool
+        , validation : Bool
         , additionalAttributes : List (Html.Attribute msg)
         }
 
@@ -106,6 +109,7 @@ config : Config msg
 config =
     Config
         { persistent = False
+        , validation = True
         , additionalAttributes = []
         }
 
@@ -119,6 +123,16 @@ focus or not.
 setPersistent : Bool -> Config msg -> Config msg
 setPersistent persistent (Config config_) =
     Config { config_ | persistent = persistent }
+
+
+{-| Specify whether the helper text contains a validation message
+
+Validation messages are highlighted red if their input is invalid.
+
+-}
+setValidation : Bool -> Config msg -> Config msg
+setValidation validation (Config config_) =
+    Config { config_ | validation = validation }
 
 
 {-| Specify additional attributes
@@ -139,6 +153,7 @@ helperText ((Config { additionalAttributes }) as config_) string =
         (List.filterMap identity
             [ helperTextCs
             , persistentCs config_
+            , validationCs config_
             , ariaHiddenAttr
             ]
             ++ additionalAttributes
@@ -171,6 +186,15 @@ persistentCs : Config msg -> Maybe (Html.Attribute msg)
 persistentCs (Config config_) =
     if config_.persistent then
         Just (class "mdc-text-field-helper-text--persistent")
+
+    else
+        Nothing
+
+
+validationCs : Config msg -> Maybe (Html.Attribute msg)
+validationCs (Config config_) =
+    if config_.validation then
+        Just (class "mdc-text-field-helper-text--validation-msg")
 
     else
         Nothing

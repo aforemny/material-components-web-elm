@@ -10,7 +10,6 @@ module Material.Select exposing
     , setAttributes
     , filled
     , outlined
-    , Icon, icon
     )
 
 {-| Select provides a single-option select menus.
@@ -130,7 +129,7 @@ To mark a select as required, set its `setRequired` configuration option to
         []
 
 
-# Select with helper text
+# Select with Helper Text
 
 TODO(select-with-helper-text)
 
@@ -156,15 +155,20 @@ TODO(select-with-helper-text)
         text "TODO"
 
 
-# Select with leading icon
+# Select with Leading Icon
 
 To have a select display a leading icon, use its `setLeadingIcon` configuration
 option to specify a value of `Icon`.
 
+This library natively supports [Material Icons](https://material.io/icons).
+However, you may also include SVG or custom icons such as FontAwesome.
+
+See [Material.Select.Icon](Material-Select-Icon) for more information.
+
     Select.filled
         (Select.config
             |> Select.setLeadingIcon
-                (Just (Select.icon [] "favorite"))
+                (Just (SelectIcon.icon "favorite"))
         )
         (SelectItem.selectItem
             (SelectItem.config { value = "" })
@@ -174,8 +178,6 @@ option to specify a value of `Icon`.
             (SelectItem.config { value = "Apple" })
             [ text "Apple" ]
         ]
-
-@docs Icon, icon
 
 
 # Focus a Select
@@ -201,13 +203,16 @@ use `Browser.Dom.focus`.
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
+import Html.Events
+import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Icon as Icon
 import Material.List as List
 import Material.List.Item as ListItem exposing (ListItem)
 import Material.Menu as Menu
+import Material.Select.Icon.Internal as SelectIcon exposing (Icon(..))
 import Material.Select.Item exposing (SelectItem)
 import Material.Select.Item.Internal as SelectItem
+import Svg.Attributes
 
 
 {-| Configuration of a select
@@ -219,7 +224,7 @@ type Config a msg
         , required : Bool
         , valid : Bool
         , selected : Maybe a
-        , leadingIcon : Maybe (Icon msg)
+        , leadingIcon : Maybe (SelectIcon.Icon msg)
         , additionalAttributes : List (Html.Attribute msg)
         , onChange : Maybe (a -> msg)
         }
@@ -282,7 +287,7 @@ setValid valid (Config config_) =
 
 {-| Specify a select's leading icon
 -}
-setLeadingIcon : Maybe (Icon msg) -> Config a msg -> Config a msg
+setLeadingIcon : Maybe (SelectIcon.Icon msg) -> Config a msg -> Config a msg
 setLeadingIcon leadingIcon (Config config_) =
     Config { config_ | leadingIcon = leadingIcon }
 
@@ -336,9 +341,10 @@ select variant ((Config { leadingIcon, selected, additionalAttributes, onChange 
         )
         [ anchorElt []
             (List.concat
-                [ [ leadingIconElt config_
-                  , dropdownIconElt
+                [ [ rippleElt
+                  , leadingIconElt config_
                   , selectedTextElt
+                  , dropdownIconElt
                   ]
                 , if variant == Outlined then
                     [ notchedOutlineElt config_ ]
@@ -365,19 +371,6 @@ filled config_ firstSelectItem remainingSelectItems =
 outlined : Config a msg -> SelectItem a msg -> List (SelectItem a msg) -> Html msg
 outlined config_ firstSelectItem remainingSelectItems =
     select Outlined config_ firstSelectItem remainingSelectItems
-
-
-{-| Select leading icon type
--}
-type Icon msg
-    = Icon (Html msg)
-
-
-{-| Select leading icon
--}
-icon : List (Html.Attribute msg) -> String -> Icon msg
-icon additionalAttributes iconName =
-    Icon (Icon.icon (class "mdc-select__icon" :: additionalAttributes) iconName)
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -422,6 +415,11 @@ requiredProp (Config { required }) =
     Just (Html.Attributes.property "required" (Encode.bool required))
 
 
+rippleElt : Html msg
+rippleElt =
+    Html.span [ class "mdc-text-field__ripple" ] []
+
+
 anchorElt : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 anchorElt additionalAttributes nodes =
     Html.div (class "mdc-select__anchor" :: additionalAttributes) nodes
@@ -430,11 +428,74 @@ anchorElt additionalAttributes nodes =
 leadingIconElt : Config a msg -> Html msg
 leadingIconElt (Config { leadingIcon }) =
     case leadingIcon of
-        Just (Icon icon_) ->
-            icon_
-
         Nothing ->
             text ""
+
+        Just (SelectIcon.Icon { node, attributes, nodes, onInteraction, disabled }) ->
+            node
+                (class "mdc-select__icon"
+                    :: (case onInteraction of
+                            Just msg ->
+                                if not disabled then
+                                    Html.Attributes.tabindex 0
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: Html.Events.onClick msg
+                                        :: Html.Events.on "keydown"
+                                            (Html.Events.keyCode
+                                                |> Decode.andThen
+                                                    (\keyCode ->
+                                                        if keyCode == 13 then
+                                                            Decode.succeed msg
+
+                                                        else
+                                                            Decode.fail ""
+                                                    )
+                                            )
+                                        :: attributes
+
+                                else
+                                    Html.Attributes.tabindex -1
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: attributes
+
+                            Nothing ->
+                                attributes
+                       )
+                )
+                nodes
+
+        Just (SelectIcon.SvgIcon { node, attributes, nodes, onInteraction, disabled }) ->
+            node
+                (Svg.Attributes.class "mdc-select__icon"
+                    :: (case onInteraction of
+                            Just msg ->
+                                if not disabled then
+                                    Html.Attributes.tabindex 0
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: Html.Events.onClick msg
+                                        :: Html.Events.on "keydown"
+                                            (Html.Events.keyCode
+                                                |> Decode.andThen
+                                                    (\keyCode ->
+                                                        if keyCode == 13 then
+                                                            Decode.succeed msg
+
+                                                        else
+                                                            Decode.fail ""
+                                                    )
+                                            )
+                                        :: attributes
+
+                                else
+                                    Html.Attributes.tabindex -1
+                                        :: Html.Attributes.attribute "role" "button"
+                                        :: attributes
+
+                            Nothing ->
+                                attributes
+                       )
+                )
+                nodes
 
 
 dropdownIconElt : Html msg
@@ -454,13 +515,13 @@ lineRippleElt =
 
 notchedOutlineElt : Config a msg -> Html msg
 notchedOutlineElt (Config { label }) =
-    Html.div [ class "mdc-notched-outline" ]
-        [ Html.div [ class "mdc-notched-outline__leading" ] []
-        , Html.div [ class "mdc-notched-outline__notch" ]
+    Html.span [ class "mdc-notched-outline" ]
+        [ Html.span [ class "mdc-notched-outline__leading" ] []
+        , Html.span [ class "mdc-notched-outline__notch" ]
             [ Html.label [ class "mdc-floating-label" ]
                 [ text (Maybe.withDefault "" label) ]
             ]
-        , Html.div [ class "mdc-notched-outline__trailing" ] []
+        , Html.span [ class "mdc-notched-outline__trailing" ] []
         ]
 
 
@@ -506,4 +567,9 @@ listItemConfig selectedValue onChange (SelectItem.Config { value, disabled, addi
 
 selectedTextElt : Html msg
 selectedTextElt =
-    Html.div [ class "mdc-select__selected-text" ] []
+    Html.input
+        [ class "mdc-select__selected-text"
+        , Html.Attributes.disabled True
+        , Html.Attributes.readonly True
+        ]
+        []

@@ -2,12 +2,15 @@ module Demo.Selects exposing (Model, Msg(..), defaultModel, update, view)
 
 import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
+import Demo.ElmLogo exposing (elmLogo)
 import Html exposing (Html, text)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (class, style)
 import Material.Button as Button
 import Material.Select as Select
+import Material.Select.Icon as SelectIcon
 import Material.Select.Item as SelectItem exposing (SelectItem)
 import Material.Typography as Typography
+import Svg.Attributes
 import Task
 
 
@@ -47,6 +50,7 @@ type Msg
     | FocusedChanged (Maybe Fruit)
     | Focus String
     | Focused (Result Browser.Dom.Error ())
+    | Interacted
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -76,6 +80,9 @@ update msg model =
         Focused _ ->
             ( model, Cmd.none )
 
+        Interacted ->
+            ( model, Cmd.none )
+
 
 view : Model -> CatalogPage Msg
 view model =
@@ -96,6 +103,8 @@ view model =
         , filledWithIconSelect model
         , Html.h3 [ Typography.subtitle1 ] [ text "Outlined with Icon" ]
         , outlinedWithIconSelect model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Select with Custom Icon" ]
+        , filledWithCustomIcon model
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus Select" ]
         , focusSelect model
         ]
@@ -165,7 +174,7 @@ filledWithIconSelect model =
         (Select.config
             |> Select.setLabel (Just "Fruit")
             |> Select.setSelected (Just model.filledWithIcon)
-            |> Select.setLeadingIcon (Just (Select.icon [] "favorite"))
+            |> Select.setLeadingIcon (Just (SelectIcon.icon "favorite"))
             |> Select.setOnChange FilledWithIconChanged
         )
         firstItem
@@ -178,11 +187,59 @@ outlinedWithIconSelect model =
         (Select.config
             |> Select.setLabel (Just "Fruit")
             |> Select.setSelected (Just model.outlinedWithIcon)
-            |> Select.setLeadingIcon (Just (Select.icon [] "favorite"))
+            |> Select.setLeadingIcon (Just (SelectIcon.icon "favorite"))
             |> Select.setOnChange OutlinedWithIconChanged
         )
         firstItem
         remainingItems
+
+
+filledWithCustomIcon : Model -> Html Msg
+filledWithCustomIcon model =
+    Html.div []
+        [ Select.filled
+            (Select.config
+                |> Select.setLabel (Just "Material Icons")
+                |> Select.setLeadingIcon
+                    (Just
+                        (SelectIcon.icon "favorite"
+                            |> SelectIcon.setOnInteraction Interacted
+                        )
+                    )
+                |> Select.setAttributes [ style "margin-right" "24px" ]
+            )
+            firstItem
+            remainingItems
+        , Select.filled
+            (Select.config
+                |> Select.setLabel (Just "Font Awesome")
+                |> Select.setLeadingIcon
+                    (Just
+                        (SelectIcon.customIcon Html.i
+                            [ class "fab fa-font-awesome"
+                            , style "font-size" "24px"
+                            ]
+                            []
+                        )
+                    )
+                |> Select.setAttributes [ style "margin-right" "24px" ]
+            )
+            firstItem
+            remainingItems
+        , Select.filled
+            (Select.config
+                |> Select.setLabel (Just "Font Awesome")
+                |> Select.setLeadingIcon
+                    (Just
+                        (SelectIcon.svgIcon
+                            [ Svg.Attributes.viewBox "0 0 100 100" ]
+                            elmLogo
+                        )
+                    )
+            )
+            firstItem
+            remainingItems
+        ]
 
 
 focusSelect : Model -> Html Msg

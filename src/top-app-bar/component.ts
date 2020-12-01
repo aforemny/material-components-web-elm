@@ -26,7 +26,7 @@ import {SpecificEventListener} from '@material/base/types';
 import {MDCTopAppBarAdapter} from '@material/top-app-bar/adapter';
 import {cssClasses, strings} from '@material/top-app-bar/constants';
 import {MDCFixedTopAppBarFoundation} from '@material/top-app-bar/fixed/foundation';
-import {MDCTopAppBarBaseFoundation} from '@material/top-app-bar/foundation';
+import {MDCTopAppBarBaseFoundation} from './foundation';
 import {MDCShortTopAppBarFoundation} from '@material/top-app-bar/short/foundation';
 import {MDCTopAppBarFoundation} from '@material/top-app-bar/standard/foundation';
 

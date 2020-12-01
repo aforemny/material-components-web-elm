@@ -23,14 +23,14 @@
 
 import {MDCComponent} from '@material/base/component';
 import {SpecificEventListener} from '@material/base/types';
+import {default as createFocusTrap, FocusTrap} from 'focus-trap';
 import {MDCList} from '@material/list/component';
 import {MDCListFoundation} from '@material/list/foundation';
-import {default as createFocusTrap, FocusTrap} from 'focus-trap';
 import {MDCDrawerAdapter} from '@material/drawer/adapter';
-import {MDCDismissibleDrawerFoundation} from '@material/drawer/dismissible/foundation';
-import {MDCModalDrawerFoundation} from '@material/drawer/modal/foundation';
-import * as util from '@material/drawer/util';
-import {MDCDrawerFocusTrapFactory} from '@material/drawer/util';
+import {MDCDismissibleDrawerFoundation} from './dismissible/foundation';
+import {MDCModalDrawerFoundation} from './modal/foundation';
+import * as util from './util';
+import {MDCDrawerFocusTrapFactory} from './util';
 
 const {cssClasses, strings} = MDCDismissibleDrawerFoundation;
 
@@ -80,7 +80,7 @@ export class MDCDrawer extends MDCComponent<MDCDismissibleDrawerFoundation> {
   initialize(
       focusTrapFactory: MDCDrawerFocusTrapFactory = createFocusTrap as unknown as MDCDrawerFocusTrapFactory,
   ) {
-    /* TODO: list wrapFocus
+    /* TODO(drawer): list wrapFocus
     const listEl = this.root_.querySelector(`.${MDCListFoundation.cssClasses.ROOT}`);
     if (listEl) {
       listEl.wrapFocus = true;

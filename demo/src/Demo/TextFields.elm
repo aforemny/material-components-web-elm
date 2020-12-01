@@ -2,13 +2,16 @@ module Demo.TextFields exposing (Model, Msg(..), defaultModel, update, view)
 
 import Browser.Dom
 import Demo.CatalogPage exposing (CatalogPage)
+import Demo.ElmLogo exposing (elmLogo)
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 import Material.Button as Button
 import Material.HelperText as HelperText
 import Material.TextArea as TextArea
 import Material.TextField as TextField
+import Material.TextField.Icon as TextFieldIcon
 import Material.Typography as Typography
+import Svg.Attributes
 import Task
 
 
@@ -22,13 +25,17 @@ defaultModel =
 
 
 type Msg
-    = Focus String
+    = Interacted
+    | Focus String
     | Focused (Result Browser.Dom.Error ())
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        Interacted ->
+            ( model, Cmd.none )
+
         Focus id ->
             ( model, Task.attempt Focused (Browser.Dom.focus id) )
 
@@ -55,16 +62,22 @@ view model =
         , outlinedTextFields model
         , Html.h3 [ Typography.subtitle1 ] [ text "Shaped Outlined (TODO)" ]
         , shapedOutlinedTextFields model
-        , Html.h3 [ Typography.subtitle1 ] [ text "Text Fields without Label" ]
+        , Html.h3 [ Typography.subtitle1 ] [ text "Text Field with Affix" ]
+        , affixedFilledTextFields model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Text Field without Label" ]
         , textFieldsWithoutLabel model
-        , Html.h3 [ Typography.subtitle1 ] [ text "Text Fields with Character Counter" ]
+        , Html.h3 [ Typography.subtitle1 ] [ text "Text Field with Character Counter" ]
         , textFieldsWithCharacterCounter model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Text Field with Custom Icon" ]
+        , textFieldsWithCustomIcon model
         , Html.h3 [ Typography.subtitle1 ] [ text "Textarea" ]
         , textareaTextField model
         , Html.h3 [ Typography.subtitle1 ] [ text "Full Width" ]
         , fullwidthTextField model
         , Html.h3 [ Typography.subtitle1 ] [ text "Full Width Textarea" ]
         , fullwidthTextareaTextField model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Textarea with Character Counter" ]
+        , textareaWithCharacterCounter model
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus Text Field" ]
         , focusTextField
         ]
@@ -89,7 +102,7 @@ heroTextFields model =
         ]
 
 
-filledTextFields : Model -> Html msg
+filledTextFields : Model -> Html Msg
 filledTextFields model =
     Html.div textFieldRow
         [ Html.div textFieldContainer
@@ -103,7 +116,7 @@ filledTextFields model =
             [ TextField.filled
                 (TextField.config
                     |> TextField.setLabel (Just "Standard")
-                    |> TextField.setLeadingIcon (Just (TextField.icon [] "event"))
+                    |> TextField.setLeadingIcon (Just (TextFieldIcon.icon "event"))
                 )
             , demoHelperText
             ]
@@ -111,14 +124,19 @@ filledTextFields model =
             [ TextField.filled
                 (TextField.config
                     |> TextField.setLabel (Just "Standard")
-                    |> TextField.setTrailingIcon (Just (TextField.icon [] "delete"))
+                    |> TextField.setTrailingIcon
+                        (Just
+                            (TextFieldIcon.icon "delete"
+                                |> TextFieldIcon.setOnInteraction Interacted
+                            )
+                        )
                 )
             , demoHelperText
             ]
         ]
 
 
-shapedFilledTextFields : Model -> Html msg
+shapedFilledTextFields : Model -> Html Msg
 shapedFilledTextFields model =
     Html.div textFieldRow
         [ Html.div textFieldContainer
@@ -133,7 +151,7 @@ shapedFilledTextFields model =
             [ TextField.filled
                 (TextField.config
                     |> TextField.setLabel (Just "Standard")
-                    |> TextField.setLeadingIcon (Just (TextField.icon [] "event"))
+                    |> TextField.setLeadingIcon (Just (TextFieldIcon.icon "event"))
                     |> TextField.setAttributes [ style "border-radius" "16px 16px 0 0" ]
                 )
             , demoHelperText
@@ -142,7 +160,12 @@ shapedFilledTextFields model =
             [ TextField.filled
                 (TextField.config
                     |> TextField.setLabel (Just "Standard")
-                    |> TextField.setTrailingIcon (Just (TextField.icon [] "delete"))
+                    |> TextField.setTrailingIcon
+                        (Just
+                            (TextFieldIcon.icon "delete"
+                                |> TextFieldIcon.setOnInteraction Interacted
+                            )
+                        )
                     |> TextField.setAttributes [ style "border-radius" "16px 16px 0 0" ]
                 )
             , demoHelperText
@@ -150,7 +173,7 @@ shapedFilledTextFields model =
         ]
 
 
-outlinedTextFields : Model -> Html msg
+outlinedTextFields : Model -> Html Msg
 outlinedTextFields model =
     Html.div textFieldRow
         [ Html.div textFieldContainer
@@ -164,7 +187,7 @@ outlinedTextFields model =
             [ TextField.outlined
                 (TextField.config
                     |> TextField.setLabel (Just "Standard")
-                    |> TextField.setLeadingIcon (Just (TextField.icon [] "event"))
+                    |> TextField.setLeadingIcon (Just (TextFieldIcon.icon "event"))
                 )
             , demoHelperText
             ]
@@ -172,14 +195,19 @@ outlinedTextFields model =
             [ TextField.outlined
                 (TextField.config
                     |> TextField.setLabel (Just "Standard")
-                    |> TextField.setTrailingIcon (Just (TextField.icon [] "delete"))
+                    |> TextField.setTrailingIcon
+                        (Just
+                            (TextFieldIcon.icon "delete"
+                                |> TextFieldIcon.setOnInteraction Interacted
+                            )
+                        )
                 )
             , demoHelperText
             ]
         ]
 
 
-shapedOutlinedTextFields : Model -> Html msg
+shapedOutlinedTextFields : Model -> Html Msg
 shapedOutlinedTextFields model =
     Html.div textFieldRow
         [ Html.div textFieldContainer
@@ -193,7 +221,7 @@ shapedOutlinedTextFields model =
             [ TextField.outlined
                 (TextField.config
                     |> TextField.setLabel (Just "Standard")
-                    |> TextField.setLeadingIcon (Just (TextField.icon [] "event"))
+                    |> TextField.setLeadingIcon (Just (TextFieldIcon.icon "event"))
                 )
             , demoHelperText
             ]
@@ -201,14 +229,51 @@ shapedOutlinedTextFields model =
             [ TextField.outlined
                 (TextField.config
                     |> TextField.setLabel (Just "Standard")
-                    |> TextField.setTrailingIcon (Just (TextField.icon [] "delete"))
+                    |> TextField.setTrailingIcon
+                        (Just
+                            (TextFieldIcon.icon "delete"
+                                |> TextFieldIcon.setOnInteraction Interacted
+                            )
+                        )
                 )
             , demoHelperText
             ]
         ]
 
 
-textFieldsWithoutLabel : Model -> Html msg
+affixedFilledTextFields : Model -> Html Msg
+affixedFilledTextFields model =
+    Html.div textFieldRow
+        [ Html.div textFieldContainer
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "Standard")
+                    |> TextField.setPrefix (Just "$")
+                )
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "Standard")
+                    |> TextField.setSuffix (Just "kg")
+                )
+            , demoHelperText
+            ]
+        , Html.div textFieldContainer
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "Standard")
+                    |> TextField.setPrefix (Just "$")
+                    |> TextField.setSuffix (Just ".00")
+                    |> TextField.setEndAligned True
+                )
+            , demoHelperText
+            ]
+        ]
+
+
+textFieldsWithoutLabel : Model -> Html Msg
 textFieldsWithoutLabel model =
     Html.div textFieldRow
         [ Html.div textFieldContainer
@@ -218,21 +283,26 @@ textFieldsWithoutLabel model =
         , Html.div textFieldContainer
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setLeadingIcon (Just (TextField.icon [] "event"))
+                    |> TextField.setLeadingIcon (Just (TextFieldIcon.icon "event"))
                 )
             , demoHelperText
             ]
         , Html.div textFieldContainer
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setTrailingIcon (Just (TextField.icon [] "delete"))
+                    |> TextField.setTrailingIcon
+                        (Just
+                            (TextFieldIcon.icon "delete"
+                                |> TextFieldIcon.setOnInteraction Interacted
+                            )
+                        )
                 )
             , demoHelperText
             ]
         ]
 
 
-textFieldsWithCharacterCounter : Model -> Html msg
+textFieldsWithCharacterCounter : Model -> Html Msg
 textFieldsWithCharacterCounter model =
     Html.div textFieldRow
         [ Html.div textFieldContainer
@@ -243,7 +313,7 @@ textFieldsWithCharacterCounter model =
         , Html.div textFieldContainer
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setLeadingIcon (Just (TextField.icon [] "event"))
+                    |> TextField.setLeadingIcon (Just (TextFieldIcon.icon "event"))
                     |> TextField.setMaxLength (Just 18)
                 )
             , demoHelperTextWithCharacterCounter
@@ -251,10 +321,87 @@ textFieldsWithCharacterCounter model =
         , Html.div textFieldContainer
             [ TextField.outlined
                 (TextField.config
-                    |> TextField.setTrailingIcon (Just (TextField.icon [] "delete"))
+                    |> TextField.setTrailingIcon
+                        (Just
+                            (TextFieldIcon.icon "delete"
+                                |> TextFieldIcon.setOnInteraction Interacted
+                            )
+                        )
                     |> TextField.setMaxLength (Just 18)
                 )
             , demoHelperTextWithCharacterCounter
+            ]
+        ]
+
+
+textFieldsWithCustomIcon : Model -> Html Msg
+textFieldsWithCustomIcon model =
+    Html.div textFieldRow
+        [ Html.div textFieldContainer
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "Material Icons")
+                    |> TextField.setLeadingIcon
+                        (Just (TextFieldIcon.icon "favorite"))
+                    |> TextField.setTrailingIcon
+                        (Just
+                            (TextFieldIcon.icon "delete"
+                                |> TextFieldIcon.setOnInteraction Interacted
+                            )
+                        )
+                )
+            ]
+        , Html.div textFieldContainer
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "Font Awesome")
+                    |> TextField.setLeadingIcon
+                        (Just
+                            (TextFieldIcon.customIcon Html.i
+                                [ class "fab fa-font-awesome"
+                                , style "font-size" "24px"
+                                ]
+                                []
+                            )
+                        )
+                    |> TextField.setTrailingIcon
+                        (Just
+                            (TextFieldIcon.customIcon Html.i
+                                [ class "fab fa-font-awesome"
+                                , style "font-size" "24px"
+                                ]
+                                []
+                                |> TextFieldIcon.setOnInteraction Interacted
+                            )
+                        )
+                )
+            ]
+        , Html.div textFieldContainer
+            [ TextField.filled
+                (TextField.config
+                    |> TextField.setLabel (Just "SVG")
+                    |> TextField.setLeadingIcon
+                        (Just
+                            (TextFieldIcon.svgIcon
+                                [ Svg.Attributes.viewBox "0 0 100 100"
+                                , style "width" "24px"
+                                , style "height" "24px"
+                                ]
+                                elmLogo
+                            )
+                        )
+                    |> TextField.setTrailingIcon
+                        (Just
+                            (TextFieldIcon.svgIcon
+                                [ Svg.Attributes.viewBox "0 0 100 100"
+                                , style "width" "24px"
+                                , style "height" "24px"
+                                ]
+                                elmLogo
+                                |> TextFieldIcon.setOnInteraction Interacted
+                            )
+                        )
+                )
             ]
         ]
 
@@ -290,6 +437,20 @@ fullwidthTextareaTextField model =
                     |> TextArea.setFullwidth True
                 )
             , demoHelperText
+            ]
+        ]
+
+
+textareaWithCharacterCounter : Model -> Html msg
+textareaWithCharacterCounter model =
+    Html.div textFieldRowFullwidth
+        [ Html.div textFieldContainer
+            [ TextArea.outlined
+                (TextArea.config
+                    |> TextArea.setMaxLength (Just 300)
+                    |> TextArea.setFullwidth True
+                )
+            , demoHelperTextWithCharacterCounter
             ]
         ]
 

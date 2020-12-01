@@ -62,18 +62,18 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Material.Chip.Filter.Internal as Chip exposing (Chip(..))
+import Material.Chip.Filter.Internal as Chip exposing (Chip(..), Icon(..))
 import Svg
 import Svg.Attributes
 
 
 {-| Filter chip set view function
 -}
-chipSet : List (Html.Attribute msg) -> List (Chip msg) -> Html msg
-chipSet additionalAttributes chips =
+chipSet : List (Html.Attribute msg) -> Chip msg -> List (Chip msg) -> Html msg
+chipSet additionalAttributes firstChip otherChips =
     Html.node "mdc-chip-set"
         (chipSetCs :: chipSetFilterCs :: gridRole :: additionalAttributes)
-        (List.map chip chips)
+        (List.map chip (firstChip :: otherChips))
 
 
 chip : Chip msg -> Html msg
@@ -166,15 +166,26 @@ rippleElt =
 
 leadingIconElt : Chip.Config msg -> Maybe (Html msg)
 leadingIconElt (Chip.Config { icon, selected }) =
-    Maybe.map
-        (\iconName ->
-            Html.i
-                [ class "material-icons"
-                , class "mdc-chip__icon mdc-chip__icon--leading"
-                ]
-                [ text iconName ]
-        )
-        icon
+    Maybe.map (Html.map never) <|
+        case icon of
+            Just (Icon { node, attributes, nodes }) ->
+                Just <|
+                    node
+                        (class "mdc-chip__icon mdc-chip__icon--leading"
+                            :: attributes
+                        )
+                        nodes
+
+            Just (SvgIcon { node, attributes, nodes }) ->
+                Just <|
+                    node
+                        (Svg.Attributes.class "mdc-chip__icon mdc-chip__icon--leading"
+                            :: attributes
+                        )
+                        nodes
+
+            Nothing ->
+                Nothing
 
 
 checkmarkElt : Maybe (Html msg)

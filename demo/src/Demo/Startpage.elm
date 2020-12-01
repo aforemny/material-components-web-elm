@@ -15,15 +15,14 @@ view =
         [ TopAppBar.regular TopAppBar.config
             [ TopAppBar.row []
                 [ TopAppBar.section [ TopAppBar.alignStart ]
-                    [ IconButton.custom
+                    [ IconButton.iconButton
                         (IconButton.config
                             |> IconButton.setAttributes [ TopAppBar.navigationIcon ]
                         )
-                        [ Html.img
-                            [ Html.Attributes.src "images/ic_component_24px_white.svg"
-                            ]
+                        (IconButton.customIcon Html.img
+                            [ Html.Attributes.src "images/ic_component_24px_white.svg" ]
                             []
-                        ]
+                        )
                     , Html.span
                         [ TopAppBar.title
                         , style "text-transform" "uppercase"
@@ -80,6 +79,11 @@ imageListItems =
       , icon = "images/chips_180px.svg"
       , title = "Chips"
       , subtitle = "Chips"
+      }
+    , { url = CircularProgress
+      , icon = "images/linear_progress_180px.svg"
+      , title = "Circular progress"
+      , subtitle = "Fills from 0% to 100%, represented by bars"
       }
     , { url = DataTable
       , icon = "images/data_table_180px.svg"

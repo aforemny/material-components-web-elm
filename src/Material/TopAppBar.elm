@@ -57,7 +57,7 @@ navigation icon, and action items.
                             |> IconButton.setAttributes
                                 [ TopAppBar.navigationIcon ]
                         )
-                        "menu"
+                        (IconButton.icon "menu")
                     , Html.span [ TopAppBar.title ]
                         [ text "Title" ]
                     ]
@@ -101,7 +101,7 @@ bar's row. Do not forget to set the `actionItem` attribute on the icons.
                         |> IconButton.setAttributes
                             [ TopAppBar.navigationIcon ]
                     )
-                    "menu"
+                    (IconButton.icon "menu")
                 , Html.span [ TopAppBar.title ]
                     [ text "Title" ]
                 ]
@@ -111,13 +111,13 @@ bar's row. Do not forget to set the `actionItem` attribute on the icons.
                         |> IconButton.setAttributes
                             [ TopAppBar.actionItem ]
                     )
-                    "print"
+                    (IconButton.icon "print")
                 , IconButton.iconButton
                     (IconButton.config
                         |> IconButton.setAttributes
                             [ TopAppBar.actionItem ]
                     )
-                    "bookmark"
+                    (IconButton.icon "bookmark")
                 ]
             ]
         ]

@@ -22,7 +22,10 @@
  */
 
 import {MDCFoundation} from '@material/base/foundation';
+
 import {Direction, EventSource, jumpChipKeys, navigationKeys, strings as chipStrings} from '@material/chips/chip/constants';
+import {MDCChipInteractionEventDetail, MDCChipNavigationEventDetail, MDCChipRemovalEventDetail, MDCChipSelectionEventDetail} from '@material/chips/chip/types';
+
 import {MDCChipSetAdapter} from '@material/chips/chip-set/adapter';
 import {cssClasses, strings} from '@material/chips/chip-set/constants';
 
@@ -37,6 +40,7 @@ export class MDCChipSetFoundation extends MDCFoundation<MDCChipSetAdapter> {
 
   static get defaultAdapter(): MDCChipSetAdapter {
     return {
+      announceMessage: () => undefined,
       focusChipPrimaryActionAtIndex: () => undefined,
       focusChipTrailingActionAtIndex: () => undefined,
       getChipListCount: () => -1,
@@ -76,7 +80,7 @@ export class MDCChipSetFoundation extends MDCFoundation<MDCChipSetAdapter> {
   /**
    * Handles a chip interaction event
    */
-  handleChipInteraction(chipId: string) {
+  handleChipInteraction({chipId}: MDCChipInteractionEventDetail) {
     const index = this.adapter_.getIndexOfChipById(chipId);
     this.removeFocusFromChipsExcept_(index);
   }
@@ -84,7 +88,8 @@ export class MDCChipSetFoundation extends MDCFoundation<MDCChipSetAdapter> {
   /**
    * Handles a chip selection event, used to handle discrepancy when selection state is set directly on the Chip.
    */
-  handleChipSelection(chipId: string, selected: boolean, shouldIgnore: boolean) {
+  handleChipSelection({chipId, selected, shouldIgnore}:
+                          MDCChipSelectionEventDetail) {
     // Early exit if we should ignore the event
     if (shouldIgnore) {
       return;
@@ -101,7 +106,11 @@ export class MDCChipSetFoundation extends MDCFoundation<MDCChipSetAdapter> {
   /**
    * Handles the event when a chip is removed.
    */
-  handleChipRemoval(chipId: string) {
+  handleChipRemoval({chipId, removedAnnouncement}: MDCChipRemovalEventDetail) {
+    if (removedAnnouncement) {
+      this.adapter_.announceMessage(removedAnnouncement);
+    }
+
     const index = this.adapter_.getIndexOfChipById(chipId);
     this.deselectAndNotifyClients_(chipId);
     this.adapter_.removeChipAtIndex(index);
@@ -115,7 +124,7 @@ export class MDCChipSetFoundation extends MDCFoundation<MDCChipSetAdapter> {
   /**
    * Handles a chip navigation event.
    */
-  handleChipNavigation(chipId: string, key: string, source: EventSource) {
+  handleChipNavigation({chipId, key, source}: MDCChipNavigationEventDetail) {
     const maxIndex = this.adapter_.getChipListCount() - 1;
     let index = this.adapter_.getIndexOfChipById(chipId);
     // Early exit if the index is out of range or the key is unusable
@@ -124,9 +133,14 @@ export class MDCChipSetFoundation extends MDCFoundation<MDCChipSetAdapter> {
     }
 
     const isRTL = this.adapter_.isRTL();
-    const shouldIncrement = key === chipStrings.ARROW_RIGHT_KEY && !isRTL
-        || key === chipStrings.ARROW_LEFT_KEY && isRTL
-        || key === chipStrings.ARROW_DOWN_KEY;
+    const isLeftKey = key === chipStrings.ARROW_LEFT_KEY ||
+        key === chipStrings.IE_ARROW_LEFT_KEY;
+    const isRightKey = key === chipStrings.ARROW_RIGHT_KEY ||
+        key === chipStrings.IE_ARROW_RIGHT_KEY;
+    const isDownKey = key === chipStrings.ARROW_DOWN_KEY ||
+        key === chipStrings.IE_ARROW_DOWN_KEY;
+    const shouldIncrement =
+        !isRTL && isRightKey || isRTL && isLeftKey || isDownKey;
     const isHome = key === chipStrings.HOME_KEY;
     const isEnd = key === chipStrings.END_KEY;
     if (shouldIncrement) {
@@ -170,7 +184,11 @@ export class MDCChipSetFoundation extends MDCFoundation<MDCChipSetAdapter> {
 
   private getDirection_(key: string): Direction {
     const isRTL = this.adapter_.isRTL();
-    if (key === chipStrings.ARROW_LEFT_KEY && !isRTL || key === chipStrings.ARROW_RIGHT_KEY && isRTL) {
+    const isLeftKey = key === chipStrings.ARROW_LEFT_KEY ||
+        key === chipStrings.IE_ARROW_LEFT_KEY;
+    const isRightKey = key === chipStrings.ARROW_RIGHT_KEY ||
+        key === chipStrings.IE_ARROW_RIGHT_KEY;
+    if (!isRTL && isLeftKey || isRTL && isRightKey) {
       return Direction.LEFT;
     }
 

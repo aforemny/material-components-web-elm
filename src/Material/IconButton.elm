@@ -2,6 +2,7 @@ module Material.IconButton exposing
     ( Config, config
     , setOnClick
     , setDisabled
+    , setHref, setTarget
     , setLabel
     , setAttributes
     , setMenu
@@ -60,6 +61,7 @@ tap.
 
 @docs setOnClick
 @docs setDisabled
+@docs setHref, setTarget
 @docs setLabel
 @docs setAttributes
 @docs setMenu
@@ -174,6 +176,8 @@ config : Config msg
 config =
     Config
         { disabled = False
+        , href = Nothing
+        , target = Nothing
         , label = Nothing
         , additionalAttributes = []
         , onClick = Nothing
@@ -190,6 +194,28 @@ effect.
 setDisabled : Bool -> Config msg -> Config msg
 setDisabled disabled (Config config_) =
     Config { config_ | disabled = disabled }
+
+
+{-| Specify whether a button is a _link button_.
+
+Link buttons behave like normal HTML5 anchor tags. Note that link buttons
+cannot be disabled and ignore that configuration option.
+
+-}
+setHref : Maybe String -> Config msg -> Config msg
+setHref href (Config config_) =
+    Config { config_ | href = href }
+
+
+{-| Specify the target for a link button.
+
+Note that this configuration option will be ignored by buttons that do not also
+set `setHref`.
+
+-}
+setTarget : Maybe String -> Config msg -> Config msg
+setTarget target (Config config_) =
+    Config { config_ | target = target }
 
 
 {-| Specify an icon button's HTML5 arial-label attribute
@@ -240,7 +266,7 @@ menu config_ nodes =
 {-| Icon button view function
 -}
 iconButton : Config msg -> Icon -> Html msg
-iconButton ((Config ({ additionalAttributes } as innerConfig)) as config_) icon_ =
+iconButton ((Config ({ additionalAttributes, href, disabled } as innerConfig)) as config_) icon_ =
     let
         wrapMenu node =
             case innerConfig.menu of
@@ -253,9 +279,16 @@ iconButton ((Config ({ additionalAttributes } as innerConfig)) as config_) icon_
     in
     Html.node "mdc-icon-button"
         [ tabIndexProp ]
-        [ Html.button
+        [ (if href /= Nothing && not disabled then
+            Html.a
+
+           else
+            Html.button
+          )
             (List.filterMap identity
                 [ iconButtonCs
+                , hrefAttr config_
+                , targetAttr config_
                 , clickHandler config_
                 ]
                 ++ additionalAttributes
@@ -289,6 +322,20 @@ disabledAttr (Config { disabled }) =
 tabIndexProp : Html.Attribute msg
 tabIndexProp =
     Html.Attributes.tabindex 0
+
+
+hrefAttr : Config msg -> Maybe (Html.Attribute msg)
+hrefAttr (Config { href }) =
+    Maybe.map Html.Attributes.href href
+
+
+targetAttr : Config msg -> Maybe (Html.Attribute msg)
+targetAttr (Config { href, target }) =
+    if href /= Nothing then
+        Maybe.map Html.Attributes.target target
+
+    else
+        Nothing
 
 
 clickHandler : Config msg -> Maybe (Html.Attribute msg)

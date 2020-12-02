@@ -7,6 +7,8 @@ import Svg exposing (Svg)
 type Config msg
     = Config
         { disabled : Bool
+        , href : Maybe String
+        , target : Maybe String
         , label : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg

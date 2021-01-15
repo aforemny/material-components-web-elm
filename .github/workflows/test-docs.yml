@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: cachix/install-nix-action@v6
+      - uses: cachix/install-nix-action@v12
       - run: nix-shell --run "sh bin/test-docs.sh"
         env:
-          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/20.03.tar.gz
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/20.09.tar.gz

@@ -12,6 +12,7 @@ module Material.Button exposing
     , Icon, icon
     , customIcon
     , svgIcon
+    , Menu, menu
     )
 
 {-| Buttons allow users to take actions and make choices with a single tap.
@@ -32,6 +33,7 @@ module Material.Button exposing
   - [Link Button](#link-button)
   - [Button with Custom Icon](#button-with-custom-icon)
   - [Focus a Button](#focus-a-button)
+  - [Button with Menu](#button-with-menu)
   - [Touch Support](#touch-support)
 
 
@@ -166,6 +168,42 @@ use `Browser.Dom.focus`.
         "Button"
 
 
+# Button with Menu
+
+Buttons support opening a menu.
+
+    Button.text
+        (Button.config
+            |> Button.setOnClick (OpenChanged True)
+            |> Button.setMenu
+                (Just <|
+                    Button.menu
+                        (Menu.config
+                            |> Menu.setOpen True
+                            |> Menu.setOnClose (OpenChanged False)
+                        )
+                        [ List.list
+                            (List.config |> List.setWrapFocus True)
+                            (ListItem.listItem
+                                (ListItem.config
+                                    |> ListItem.setOnClick (OpenChanged False)
+                                )
+                                [ text "Orange" ]
+                            )
+                            [ ListItem.listItem
+                                (ListItem.config
+                                    |> ListItem.setOnClick (OpenChanged False)
+                                )
+                                [ text "Guava" ]
+                            ]
+                        ]
+                )
+        )
+        "Open menu"
+
+@docs Menu, menu
+
+
 # Touch Support
 
 Touch support is enabled by default. To disable touch support set a button's
@@ -183,7 +221,8 @@ import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Html.Events
 import Json.Encode as Encode
-import Material.Button.Internal exposing (Config(..), Icon(..))
+import Material.Button.Internal exposing (Config(..), Icon(..), Menu(..))
+import Material.Menu as Menu
 import Svg exposing (Svg)
 import Svg.Attributes
 
@@ -288,12 +327,26 @@ setOnClick onClick (Config config_) =
 
 {-| Specify a menu to attach to the button
 
-The button is set as the menu's anchor, however opening the menu still requires the use of `Menu.setOpen`.
+The button is set as the menu's anchor, however opening the menu still requires
+the use of `Menu.setOpen`.
 
 -}
-setMenu : Maybe (Html msg) -> Config msg -> Config msg
-setMenu menu (Config config_) =
-    Config { config_ | menu = menu }
+setMenu : Maybe (Menu msg) -> Config msg -> Config msg
+setMenu menu_ (Config config_) =
+    Config { config_ | menu = menu_ }
+
+
+{-| Menu type
+-}
+type alias Menu msg =
+    Material.Button.Internal.Menu msg
+
+
+{-| Construct a [menu](Material-Menu) to be used with a button.
+-}
+menu : Menu.Config msg -> List (Html msg) -> Menu msg
+menu config_ nodes =
+    Menu config_ nodes
 
 
 {-| Specify whether touch support is enabled (enabled by default)
@@ -319,7 +372,7 @@ type Variant
 
 
 button : Variant -> Config msg -> String -> Html msg
-button variant ((Config { additionalAttributes, touch, href, menu }) as config_) label =
+button variant ((Config ({ additionalAttributes, touch, href } as innerConfig)) as config_) label =
     let
         wrapTouch node =
             if touch then
@@ -327,22 +380,24 @@ button variant ((Config { additionalAttributes, touch, href, menu }) as config_)
 
             else
                 node
+
         wrapMenu node =
-            case menu of
+            case innerConfig.menu of
                 Nothing ->
                     node
 
-                Just m ->
-                    Html.div [ class "mdc-menu-surface--anchor" ] [ node, m ]
+                Just (Menu menuConfig menuNodes) ->
+                    Html.div [ class "mdc-menu-surface--anchor" ]
+                        [ node, Menu.menu menuConfig menuNodes ]
     in
     Html.node "mdc-button"
         (List.filterMap identity [ disabledProp config_ ])
         [ (if href /= Nothing then
             Html.a
 
-            else
+           else
             Html.button
-            )
+          )
             (List.filterMap identity
                 [ rootCs
                 , variantCs variant
@@ -365,8 +420,8 @@ button variant ((Config { additionalAttributes, touch, href, menu }) as config_)
                 ]
             )
         ]
-            |> wrapTouch
-            |> wrapMenu
+        |> wrapTouch
+        |> wrapMenu
 
 
 {-| Text button variant (flush without outline)

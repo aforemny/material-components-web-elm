@@ -9,6 +9,7 @@ module Material.IconButton exposing
     , Icon, icon
     , customIcon
     , svgIcon
+    , Menu, menu
     )
 
 {-| Icon buttons allow users to take actions and make choices with a single
@@ -26,6 +27,7 @@ tap.
   - [Labeled Icon Button](#labeled-icon-button)
   - [Icon Button with Custom Icon](#icon-button-with-custom-icon)
   - [Focus an Icon Button](#focus-an-icon-button)
+  - [Icon Button with Menu](#icon-button-with-menu)
 
 
 # Resources
@@ -113,12 +115,49 @@ and use `Browser.Dom.focus`.
         )
         (IconButton.icon "wifi")
 
+
+# Icon Button with Menu
+
+Icon buttons support opening a menu.
+
+    IconButton.iconButton
+        (IconButton.config
+            |> IconButton.setOnClick (OpenChanged True)
+            |> IconButton.setMenu
+                (Just <|
+                    IconButton.menu
+                        (Menu.config
+                            |> Menu.setOpen True
+                            |> Menu.setOnClose (OpenChanged False)
+                        )
+                        [ List.list
+                            (List.config |> List.setWrapFocus True)
+                            (ListItem.listItem
+                                (ListItem.config
+                                    |> ListItem.setOnClick (OpenChanged False)
+                                )
+                                [ text "Orange" ]
+                            )
+                            [ ListItem.listItem
+                                (ListItem.config
+                                    |> ListItem.setOnClick (OpenChanged False)
+                                )
+                                [ text "Guava" ]
+                            ]
+                        ]
+                )
+        )
+        (IconButton.icon "menu_vert")
+
+@docs Menu, menu
+
 -}
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
-import Material.IconButton.Internal exposing (Config(..), Icon(..))
+import Material.IconButton.Internal exposing (Config(..), Icon(..), Menu(..))
+import Material.Menu as Menu
 import Svg
 import Svg.Attributes
 
@@ -176,26 +215,41 @@ setOnClick onClick (Config config_) =
 
 {-| Specify a menu to attach to the icon button
 
-The icon button is set as the menu's anchor, however opening the menu still requires the use of `Menu.setOpen`.
+The icon button is set as the menu's anchor, however opening the menu still
+requires the use of `Menu.setOpen`.
 
 -}
-setMenu : Maybe (Html msg) -> Config msg -> Config msg
-setMenu menu (Config config_) =
-    Config { config_ | menu = menu }
+setMenu : Maybe (Menu msg) -> Config msg -> Config msg
+setMenu menu_ (Config config_) =
+    Config { config_ | menu = menu_ }
+
+
+{-| Menu type
+-}
+type alias Menu msg =
+    Material.IconButton.Internal.Menu msg
+
+
+{-| Construct a [menu](Material-Menu) to be used with an icon button.
+-}
+menu : Menu.Config msg -> List (Html msg) -> Menu msg
+menu config_ nodes =
+    Menu config_ nodes
 
 
 {-| Icon button view function
 -}
 iconButton : Config msg -> Icon -> Html msg
-iconButton ((Config { additionalAttributes, menu }) as config_) icon_ =
+iconButton ((Config ({ additionalAttributes } as innerConfig)) as config_) icon_ =
     let
         wrapMenu node =
-            case menu of
+            case innerConfig.menu of
                 Nothing ->
                     node
 
-                Just m ->
-                    Html.div [ class "mdc-menu-surface--anchor" ] [ node, m ]
+                Just (Menu menuConfig menuNodes) ->
+                    Html.div [ Menu.surfaceAnchor ]
+                        [ node, Menu.menu menuConfig menuNodes ]
     in
     Html.node "mdc-icon-button"
         (List.filterMap identity

@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 import Control.Exception
@@ -6,6 +7,7 @@ import System.IO
 import System.IO.Temp
 import System.Process
 import Text.Pandoc.JSON
+import qualified Data.Text as T
 
 
 main = toJSONFilter testDocs
@@ -19,9 +21,10 @@ instance Exception CodeException
 
 testDocs (CodeBlock meta@(_, ["scss"], _) code) = pure (CodeBlock meta code)
 
-testDocs (CodeBlock meta code) = do
-  CodeBlock meta <$> try [trySnippet, tryFull, tryDefinition]
+testDocs (CodeBlock meta code') =
+    CodeBlock meta . T.pack <$> try [trySnippet, tryFull, tryDefinition]
   where
+    code = T.unpack code'
     try (f:fs) = catch (compile f) (\(_::IOError) -> continue fs)
     continue [] = throw (CodeException code)
     continue fs = try fs
@@ -52,6 +55,7 @@ trySnippet code tempFile h = do
   hPutStrLn h "type Dismissed a = Dismissed a"
   hPutStrLn h "type Clicked = Clicked"
   hPutStrLn h "type FabClicked = FabClicked"
+  hPutStrLn h "type OpenChanged a = OpenChanged a"
   hPutStrLn h ""
   hPutStrLn h "main = text \"\""
   hPutStrLn h ""

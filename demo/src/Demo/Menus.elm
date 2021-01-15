@@ -4,6 +4,7 @@ import Demo.CatalogPage exposing (CatalogPage)
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, style)
 import Material.Button as Button
+import Material.IconButton as IconButton
 import Material.List as List
 import Material.List.Divider as ListDivider
 import Material.List.Item as ListItem exposing (ListItem)
@@ -12,27 +13,35 @@ import Material.Typography as Typography
 
 
 type alias Model =
-    { open : Bool }
+    { open1 : Bool
+    , open2 : Bool
+    }
 
 
 defaultModel : Model
 defaultModel =
-    { open = False }
+    { open1 = False
+    , open2 = False
+    }
 
 
 type Msg
     = Open
     | Close
+    | OpenChanged Bool
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
         Open ->
-            { model | open = True }
+            { model | open1 = True }
 
         Close ->
-            { model | open = False }
+            { model | open1 = False }
+
+        OpenChanged open2 ->
+            { model | open2 = open2 }
 
 
 view : Model -> CatalogPage Msg
@@ -46,40 +55,75 @@ view model =
         }
     , hero = [ heroMenu model ]
     , content =
-        [ Html.h3 [ Typography.subtitle1 ] [ text "Anchored menu" ]
-        , Html.div [ Menu.surfaceAnchor ]
-            [ Button.text (Button.config |> Button.setOnClick Open) "Open menu"
-            , Menu.menu
-                (Menu.config
-                    |> Menu.setOpen model.open
-                    |> Menu.setOnClose Close
-                )
-                [ List.list (List.config |> List.setWrapFocus True)
-                    (listItem "Passionfruit")
-                    (List.concat
-                        [ List.map listItem
-                            [ "Orange"
-                            , "Guava"
-                            , "Pitaya"
-                            ]
-                        , [ ListDivider.listItem ListDivider.config ]
-                        , List.map listItem
-                            [ "Pineapple"
-                            , "Mango"
-                            , "Papaya"
-                            , "Lychee"
-                            ]
-                        ]
-                    )
-                ]
-            ]
+        [ Html.h3 [ Typography.subtitle1 ] [ text "Button Menu" ]
+        , buttonExample model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Icon Button Menu" ]
+        , iconButtonExample model
         ]
     }
 
 
-listItem : String -> ListItem Msg
-listItem label =
-    ListItem.listItem (ListItem.config |> ListItem.setOnClick Close) [ text label ]
+buttonExample : Model -> Html Msg
+buttonExample model =
+    Button.text
+        (Button.config
+            |> Button.setOnClick Open
+            |> Button.setMenu
+                (Just <|
+                    Button.menu
+                        (Menu.config
+                            |> Menu.setOpen model.open1
+                            |> Menu.setOnClose Close
+                        )
+                        (menuItems { onClick = Close })
+                )
+        )
+        "Open menu"
+
+
+iconButtonExample : Model -> Html Msg
+iconButtonExample model =
+    IconButton.iconButton
+        (IconButton.config
+            |> IconButton.setOnClick (OpenChanged True)
+            |> IconButton.setMenu
+                (Just <|
+                    IconButton.menu
+                        (Menu.config
+                            |> Menu.setOpen model.open2
+                            |> Menu.setOnClose (OpenChanged False)
+                        )
+                        (menuItems { onClick = OpenChanged False })
+                )
+        )
+        (IconButton.icon "menu_vert")
+
+
+menuItems : { onClick : msg } -> List (Html msg)
+menuItems onClick =
+    [ List.list (List.config |> List.setWrapFocus True)
+        (listItem onClick "Passionfruit")
+        (List.concat
+            [ List.map (listItem onClick)
+                [ "Orange"
+                , "Guava"
+                , "Pitaya"
+                ]
+            , [ ListDivider.listItem ListDivider.config ]
+            , List.map (listItem onClick)
+                [ "Pineapple"
+                , "Mango"
+                , "Papaya"
+                , "Lychee"
+                ]
+            ]
+        )
+    ]
+
+
+listItem : { onClick : msg } -> String -> ListItem msg
+listItem { onClick } label =
+    ListItem.listItem (ListItem.config |> ListItem.setOnClick onClick) [ text label ]
 
 
 heroMenu : Model -> Html msg

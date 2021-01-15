@@ -1,6 +1,7 @@
-module Material.Button.Internal exposing (Config(..), Icon(..))
+module Material.Button.Internal exposing (Config(..), Icon(..), Menu(..))
 
 import Html exposing (Html)
+import Material.Menu as Menu
 import Svg exposing (Svg)
 
 
@@ -15,7 +16,7 @@ type Config msg
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
         , touch : Bool
-        , menu : Maybe (Html msg)
+        , menu : Maybe (Menu msg)
         }
 
 
@@ -30,3 +31,7 @@ type Icon
         , attributes : List (Svg.Attribute Never)
         , nodes : List (Svg Never)
         }
+
+
+type Menu msg
+    = Menu (Menu.Config msg) (List (Html msg))

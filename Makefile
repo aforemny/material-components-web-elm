@@ -4,14 +4,15 @@ MODE = production
 all: build-pages
 
 
-build-npm: node_modules src/**/component.ts src/**/custom-element.js
-	tsc --project ./tsconfig.json --module esnext --importHelpers
-	webpack --mode=$(MODE)
-	cp node_modules/material-components-web/dist/material-components-web.css dist/material-components-web-elm.css
-	cp node_modules/material-components-web/dist/material-components-web.min.css dist/material-components-web-elm.min.css
-	sed -i 's/sourceMappingURL=material-components-web\./sourceMappingURL=material-components-web-elm./' dist/*
-	cp node_modules/material-components-web/dist/material-components-web.css.map dist/material-components-web-elm.css.map
-	cp node_modules/material-components-web/dist/material-components-web.min.css.map dist/material-components-web-elm.min.css.map
+build-npm: node_modules
+	mkdir -p dist
+	cp material-components-web/build/material-components-web-elm.css dist/
+	cp material-components-web/build/material-components-web-elm.min.css dist/
+	cp material-components-web/build/material-components-web-elm.css.map dist/
+	cp material-components-web/build/material-components-web-elm.min.css.map dist/
+	cp material-components-web/build/material-components-web-elm.js dist/
+	cp material-components-web/build/material-components-web-elm.min.js dist/
+	cp material-components-web/build/material-components-web-elm.js.map dist/
 
 
 build-pages: build-npm build-demo
@@ -22,7 +23,6 @@ build-pages: build-npm build-demo
 	cp dist/material-components-web-elm.js public
 	cp dist/material-components-web-elm.js.map public
 	cp dist/material-components-web-elm.min.js public
-	cp dist/material-components-web-elm.min.js.map public
 	cp dist/material-components-web-elm.css public
 	cp dist/material-components-web-elm.css.map public
 	cp dist/material-components-web-elm.min.css public
@@ -72,7 +72,7 @@ clean:
 	find src -name "*.js.map" | xargs rm -f
 	find src -name "*.patch" | xargs rm -f
 	find src -name "*.ts.orig" | xargs rm -f
-	rm -rf dist
+	rm -rf dist public
 	rm -f docs.json
 	(cd demo && make clean)
 	(cd examples/simple-counter && make clean)

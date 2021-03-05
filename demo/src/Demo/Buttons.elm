@@ -40,9 +40,12 @@ view model =
     { title = "Button"
     , prelude = "Buttons communicate an action a user can take. They are typically placed throughout your UI, in places like dialogs, forms, cards, and toolbars."
     , resources =
-        { materialDesignGuidelines = Just "https://material.io/go/design-buttons"
-        , documentation = Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Button"
-        , sourceCode = Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-button"
+        { materialDesignGuidelines =
+            Just "https://material.io/go/design-buttons"
+        , documentation =
+            Just "https://package.elm-lang.org/packages/aforemny/material-components-web-elm/latest/Material-Button"
+        , sourceCode =
+            Just "https://github.com/material-components/material-components-web/tree/master/packages/mdc-button"
         }
     , hero = heroButtons
     , content =
@@ -107,7 +110,9 @@ shapedButtons =
 linkButtons : Html msg
 linkButtons =
     buttonsRow
-        (\config label -> Button.text (config |> Button.setHref (Just "#")) label)
+        (\config label ->
+            Button.text (config |> Button.setHref (Just "#buttons")) label
+        )
         []
 
 
@@ -125,7 +130,9 @@ customIconButtons =
             (config (Button.customIcon Html.i [ class "fab fa-font-awesome" ] []))
             "Font Awesome"
         , Button.raised
-            (config (Button.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ] elmLogo))
+            (config
+                (Button.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ] elmLogo)
+            )
             "SVG"
         ]
 
@@ -139,11 +146,12 @@ focusButton =
             )
             "Button"
         , text "\u{00A0}"
-        , Button.raised (Button.config |> Button.setOnClick (Focus "my-button")) "Focus"
+        , Button.raised (Button.config |> Button.setOnClick (Focus "my-button"))
+            "Focus"
         , text "\u{00A0}"
         , Button.raised
             (Button.config
-                |> Button.setHref (Just "#")
+                |> Button.setHref (Just "#buttons")
                 |> Button.setAttributes [ Html.Attributes.id "my-link-button" ]
             )
             "Link button"
@@ -153,7 +161,10 @@ focusButton =
         ]
 
 
-buttonsRow : (Button.Config msg -> String -> Html msg) -> List (Html.Attribute msg) -> Html msg
+buttonsRow :
+    (Button.Config msg -> String -> Html msg)
+    -> List (Html.Attribute msg)
+    -> Html msg
 buttonsRow button additionalAttributes =
     let
         config =
@@ -164,6 +175,7 @@ buttonsRow button additionalAttributes =
         [ button config "Default"
         , button (config |> Button.setDense True) "Dense"
         , button (config |> Button.setIcon (Just (Button.icon "favorite"))) "Icon"
+        , button (config |> Button.setDisabled True) "Disabled"
         ]
 
 

@@ -4,6 +4,7 @@ mkShell {
   buildInputs = [
     chromium
     elmPackages.elm
+    elmPackages.elm-format
     (ghc.withPackages(pkgs: [ pkgs.pandoc ]))
     nodejs
     python3

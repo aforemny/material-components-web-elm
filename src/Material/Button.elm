@@ -142,8 +142,6 @@ to specify a target.
         )
         "Visit"
 
-Note that link buttons cannot be disabled.
-
 
 ## Button with Custom Icon
 
@@ -291,8 +289,7 @@ setDense dense (Config config_) =
 
 {-| Specify whether a button is a _link button_.
 
-Link buttons behave like normal HTML5 anchor tags. Note that link buttons
-cannot be disabled and ignore that configuration option.
+Link buttons behave like normal HTML5 anchor tags
 
 -}
 setHref : Maybe String -> Config msg -> Config msg
@@ -372,7 +369,7 @@ type Variant
 
 
 button : Variant -> Config msg -> String -> Html msg
-button variant ((Config ({ additionalAttributes, touch, href } as innerConfig)) as config_) label =
+button variant ((Config ({ additionalAttributes, touch, href, disabled } as innerConfig)) as config_) label =
     let
         wrapTouch node =
             if touch then
@@ -391,8 +388,8 @@ button variant ((Config ({ additionalAttributes, touch, href } as innerConfig)) 
                         [ node, Menu.menu menuConfig menuNodes ]
     in
     Html.node "mdc-button"
-        (List.filterMap identity [ disabledProp config_ ])
-        [ (if href /= Nothing then
+        []
+        [ (if href /= Nothing && not disabled then
             Html.a
 
            else
@@ -455,11 +452,6 @@ unelevated config_ label =
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-button")
-
-
-disabledProp : Config msg -> Maybe (Html.Attribute msg)
-disabledProp (Config { disabled }) =
-    Just (Html.Attributes.property "disabled" (Encode.bool disabled))
 
 
 disabledAttr : Config msg -> Maybe (Html.Attribute msg)

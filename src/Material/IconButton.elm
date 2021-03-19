@@ -156,7 +156,7 @@ Icon buttons support opening a menu.
 -}
 
 import Html exposing (Html, text)
-import Html.Attributes exposing (class, style)
+import Html.Attributes exposing (class)
 import Html.Events
 import Material.IconButton.Internal exposing (Config(..), Icon(..), Menu(..))
 import Material.Menu as Menu
@@ -289,6 +289,7 @@ iconButton ((Config ({ additionalAttributes, href, disabled } as innerConfig)) a
                 [ iconButtonCs
                 , hrefAttr config_
                 , targetAttr config_
+                , disabledAttr config_
                 , clickHandler config_
                 ]
                 ++ additionalAttributes

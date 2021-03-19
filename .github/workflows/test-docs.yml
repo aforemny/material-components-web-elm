@@ -6,7 +6,9 @@ jobs:
     name: Test documentation code examples
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          submodules : true
       - uses: cachix/install-nix-action@v12
       - run: nix-shell --run "sh bin/test-docs.sh"
         env:

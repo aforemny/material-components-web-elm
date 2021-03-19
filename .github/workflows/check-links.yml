@@ -6,7 +6,9 @@ jobs:
     name: Check links
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          submodules : true
       - uses: cachix/install-nix-action@v12
       - run: nix-shell --run "make build-pages"
         env:

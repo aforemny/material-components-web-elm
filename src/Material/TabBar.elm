@@ -266,7 +266,7 @@ activeTabIndexProp tabs =
 
 viewTab : Config msg -> Tab msg -> Html msg
 viewTab ((Config { indicatorSpansContent }) as barConfig) ((Tab ((Tab.Config { additionalAttributes, content }) as tabConfig)) as tab) =
-    Html.button
+    Html.node "mdc-tab"
         (List.filterMap identity
             [ tabCs
             , tabRoleAttr

@@ -131,6 +131,11 @@ setOnClick onClick (Config config_) =
 
 
 {-| Specify whether the tab is active
+
+If no tab within a tab bar is specified as active, the first tab will be
+active. If more than one tab within a tab bar is specified as active, only the
+first one will be considered active.
+
 -}
 setActive : Bool -> Config msg -> Config msg
 setActive active (Config config_) =

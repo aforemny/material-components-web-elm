@@ -228,9 +228,18 @@ setAttributes additionalAttributes (Config config_) =
 
 
 {-| Tab bar view function
+
+The tab bar view function takes its tabs as two arguments. The first argument
+represents the first tab, and the second argument reresents the remaining tabs.
+This way we guarantee lists to be non-empty.
+
 -}
-tabBar : Config msg -> List (Tab msg) -> Html msg
-tabBar ((Config { additionalAttributes, align }) as config_) tabs =
+tabBar : Config msg -> Tab msg -> List (Tab msg) -> Html msg
+tabBar ((Config { additionalAttributes, align }) as config_) tab_ tabs_ =
+    let
+        tabs =
+            enforceActive tab_ tabs_
+    in
     Html.node "mdc-tab-bar"
         (List.filterMap identity
             [ rootCs
@@ -240,6 +249,44 @@ tabBar ((Config { additionalAttributes, align }) as config_) tabs =
             ++ additionalAttributes
         )
         [ tabScroller config_ align tabs ]
+
+
+enforceActive : Tab msg -> List (Tab msg) -> List (Tab msg)
+enforceActive ((Tab (Tab.Config config_)) as firstTab) otherTabs =
+    if not (anyActive (firstTab :: otherTabs)) then
+        setActive True firstTab :: otherTabs
+
+    else
+        enforceActiveHelper (firstTab :: otherTabs)
+
+
+enforceActiveHelper : List (Tab msg) -> List (Tab msg)
+enforceActiveHelper tabs =
+    case tabs of
+        [] ->
+            []
+
+        ((Tab (Tab.Config { active })) as tab) :: remainingTabs ->
+            if not active then
+                tab :: enforceActiveHelper remainingTabs
+
+            else
+                tab :: List.map (setActive False) remainingTabs
+
+
+anyActive : List (Tab msg) -> Bool
+anyActive tabs =
+    case tabs of
+        [] ->
+            False
+
+        (Tab (Tab.Config { active })) :: remainingTabs ->
+            active || anyActive remainingTabs
+
+
+setActive : Bool -> Tab msg -> Tab msg
+setActive active (Tab (Tab.Config config_)) =
+    Tab (Tab.Config { config_ | active = active })
 
 
 rootCs : Maybe (Html.Attribute msg)

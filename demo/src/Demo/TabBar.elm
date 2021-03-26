@@ -96,13 +96,14 @@ view model =
 heroTabs : Model -> String -> Html Msg
 heroTabs model index =
     TabBar.tabBar TabBar.config
-        [ Tab.tab
+        (Tab.tab
             (Tab.config
                 |> Tab.setActive (model.activeHeroTab == 0)
                 |> Tab.setOnClick (SetActiveHeroTab 0)
             )
             { label = "Home", icon = Nothing }
-        , Tab.tab
+        )
+        [ Tab.tab
             (Tab.config
                 |> Tab.setActive (model.activeHeroTab == 1)
                 |> Tab.setOnClick (SetActiveHeroTab 1)
@@ -126,9 +127,13 @@ tabsWithIcons model =
                 |> Tab.setOnClick (SetActiveCustomIconTab index)
     in
     TabBar.tabBar TabBar.config
-        [ Tab.tab (config 0) { label = "Recents", icon = Just (Tab.icon "access_time") }
-        , Tab.tab (config 1) { label = "Nearby", icon = Just (Tab.icon "near_me") }
-        , Tab.tab (config 2) { label = "Favorites", icon = Just (Tab.icon "favorite") }
+        (Tab.tab (config 0)
+            { label = "Recents", icon = Just (Tab.icon "access_time") }
+        )
+        [ Tab.tab (config 1)
+            { label = "Nearby", icon = Just (Tab.icon "near_me") }
+        , Tab.tab (config 2)
+            { label = "Favorites", icon = Just (Tab.icon "favorite") }
         ]
 
 
@@ -145,9 +150,13 @@ tabsWithStackedIcons model =
             |> TabBar.setStacked True
             |> TabBar.setIndicatorSpansContent True
         )
-        [ Tab.tab (config 0) { label = "Recents", icon = Just (Tab.icon "access_time") }
-        , Tab.tab (config 1) { label = "Nearby", icon = Just (Tab.icon "near_me") }
-        , Tab.tab (config 2) { label = "Favorites", icon = Just (Tab.icon "favorite") }
+        (Tab.tab (config 0)
+            { label = "Recents", icon = Just (Tab.icon "access_time") }
+        )
+        [ Tab.tab (config 1)
+            { label = "Nearby", icon = Just (Tab.icon "near_me") }
+        , Tab.tab (config 2)
+            { label = "Favorites", icon = Just (Tab.icon "favorite") }
         ]
 
 
@@ -160,11 +169,13 @@ scrollingTabs model =
                 |> Tab.setOnClick (SetActiveScrollingTab index)
     in
     TabBar.tabBar TabBar.config
+        (Tab.tab (config 0) { label = "Tab One", icon = Nothing })
         (List.indexedMap
             (\index label ->
-                Tab.tab (config index) { label = "Tab " ++ label, icon = Nothing }
+                Tab.tab (config (1 + index))
+                    { label = "Tab " ++ label, icon = Nothing }
             )
-            [ "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight" ]
+            [ "Two", "Three", "Four", "Five", "Six", "Seven", "Eight" ]
         )
 
 
@@ -177,17 +188,20 @@ tabsWithCustomIcons model =
                 |> Tab.setOnClick (SetActiveIconTab index)
     in
     TabBar.tabBar TabBar.config
-        [ Tab.tab (config 0)
+        (Tab.tab (config 0)
             { label = "Material Design"
             , icon = Just (Tab.icon "access_time")
             }
-        , Tab.tab (config 1)
+        )
+        [ Tab.tab (config 1)
             { label = "Font Awesome"
-            , icon = Just (Tab.customIcon Html.i [ class "fab fa-font-awesome" ] [])
+            , icon =
+                Just (Tab.customIcon Html.i [ class "fab fa-font-awesome" ] [])
             }
         , Tab.tab (config 2)
             { label = "SVG"
-            , icon = Just (Tab.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ] elmLogo)
+            , icon =
+                Just (Tab.svgIcon [ Svg.Attributes.viewBox "0 0 100 100" ] elmLogo)
             }
         ]
 
@@ -199,13 +213,14 @@ focusTabs model =
             (TabBar.config
                 |> TabBar.setAttributes [ Html.Attributes.id "my-tabs" ]
             )
-            [ Tab.tab
+            (Tab.tab
                 (Tab.config
                     |> Tab.setActive (model.activeHeroTab == 0)
                     |> Tab.setOnClick (SetActiveHeroTab 0)
                 )
                 { label = "Home", icon = Nothing }
-            , Tab.tab
+            )
+            [ Tab.tab
                 (Tab.config
                     |> Tab.setActive (model.activeHeroTab == 1)
                     |> Tab.setOnClick (SetActiveHeroTab 1)

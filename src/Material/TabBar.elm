@@ -56,13 +56,14 @@ item, refer to [Material.Tab](Material-Tab).
 
     main =
         TabBar.tabBar TabBar.config
-            [ Tab.tab
+            (Tab.tab
                 (Tab.config
                     |> Tab.setActive True
                     |> Tab.setOnClick (TabClicked 0)
                 )
                 { label = "Tab 1", icon = Nothing }
-            , Tab.tab
+            )
+            [ Tab.tab
                 (Tab.config |> Tab.setOnClick (TabClicked 1))
                 { label = "Tab 2", icon = Nothing }
             ]
@@ -95,7 +96,9 @@ option to `True`.
 
 Tabs within a stacked tab bar should specify both a label and an icon.
 
-    TabBar.tabBar (TabBar.config |> TabBar.setStacked True) []
+    TabBar.tabBar (TabBar.config |> TabBar.setStacked True)
+        (Tab.tab Tab.config { label = "Tab", icon = Nothing })
+        []
 
 
 # Minimum Width Tabs
@@ -103,7 +106,9 @@ Tabs within a stacked tab bar should specify both a label and an icon.
 Tabs by defauls span a minimum width. If you want tabs to be as narrow as
 possible, set the tab bar's `setMinWidth` configuration option to `True`.
 
-    TabBar.tabBar (TabBar.config |> TabBar.setMinWidth True) []
+    TabBar.tabBar (TabBar.config |> TabBar.setMinWidth True)
+        (Tab.tab Tab.config { label = "Tab", icon = Nothing })
+        []
 
 
 # Content-Spanning Tab Indicator
@@ -114,6 +119,7 @@ indicators to only span their tab's content, set the tab bar's
 
     TabBar.tabBar
         (TabBar.config |> TabBar.setIndicatorSpansContent True)
+        (Tab.tab Tab.config { label = "Tab", icon = Nothing })
         []
 
 
@@ -130,6 +136,7 @@ content.
 
     TabBar.tabBar
         (TabBar.config |> TabBar.setAlign (Just TabBar.Center))
+        (Tab.tab Tab.config { label = "Tab", icon = Nothing })
         []
 
 
@@ -143,6 +150,7 @@ use `Browser.Dom.focus`.
             |> TabBar.setAttributes
                 [ Html.Attributes.id "my-tabs" ]
         )
+        (Tab.tab Tab.config { label = "Tab", icon = Nothing })
         []
 
 -}

@@ -52,13 +52,14 @@ the tab bar container, refer to [Material.TabBar](Material-TabBar).
 
     main =
         TabBar.tabBar TabBar.config
-            [ Tab.tab
+            (Tab.tab
                 (Tab.config
                     |> Tab.setActive True
                     |> Tab.setOnClick (TabClicked 0)
                 )
                 { label = "Tab 1", icon = Nothing }
-            , Tab.tab
+            )
+            [ Tab.tab
                 (Tab.config |> Tab.setOnClick (TabClicked 1))
                 { label = "Tab 2", icon = Nothing }
             ]
@@ -87,6 +88,7 @@ the tab bar container, refer to [Material.TabBar](Material-TabBar).
 To mark a tab as active, set its `setActive` configuration option to `True`.
 
     Tab.tab (Tab.config |> Tab.setActive True)
+        { label = "Tab", icon = Nothing }
 
 
 # Tab with Custom Icon

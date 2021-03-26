@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/aforemny/material-components-web-elm/compare/6.0.0...7.0.0) (2021-03-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* The signature of `TabBar.tabBar` has changed. It now takes the first tab
+as an extra argument to guarantee that the list of tabs passed to it is
+non-empty.
+
+Before:
+```elm
+TabBar.tabBar TabBar.config
+    [ Tab.tab Tab.config { … }
+    , Tab.tab Tab.config { … }
+    ]
+```
+
+After:
+```elm
+TabBar.tabBar TabBar.config
+    (Tab.tab Tab.config { … })
+    [ Tab.tab Tab.config { … } ]
+```
+
+### Features
+
+* Add Button.setMenu and IconButton.setMenu ([43ae4f1](https://github.com/aforemny/material-components-web-elm/commit/43ae4f1a09bd3c01d5c4750545034266f6c76bc7))
+* Add setHref and setTarget to IconButton ([e6969cb](https://github.com/aforemny/material-components-web-elm/commit/e6969cb36693a7729a5fa833527fb8ac19818878))
+* Link buttons can be disabled ([dd513f6](https://github.com/aforemny/material-components-web-elm/commit/dd513f6a66f70d424a9c4f7eb2bf3736c084096e))
+
+
+### Bug Fixes
+
+* Guarantee that precisely one tab within a tab bar is active ([540113c](https://github.com/aforemny/material-components-web-elm/commit/540113cc00a3a2f2e3ed2be513c0b6e20a246560))
+* IconButtons and IconToggles cannot be disabled ([66d0967](https://github.com/aforemny/material-components-web-elm/commit/66d0967669770c4a74a48f92fcc802ba26b2a0f8))
+* Support dynamic tabs ([9878e53](https://github.com/aforemny/material-components-web-elm/commit/9878e539a88f5cf322889d6762cb333bf67ef749))
+
 ## [6.0.0](https://github.com/aforemny/material-components-web-elm/compare/5.1.0...6.0.0) (2020-10-08)
 
 

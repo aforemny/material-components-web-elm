@@ -1,6 +1,5 @@
 module Material.LinearProgress exposing
     ( Config, config
-    , setReverse
     , setClosed
     , setAttributes
     , indeterminate
@@ -22,7 +21,7 @@ determinate or indeterminate activities.
   - [Determinate Linear Progress](#determinate-linear-progress)
   - [Buffered Linear Progress](#buffered-linear-progress)
   - [Closed Linear Progress](#closed-linear-progress)
-  - [Reversed Linear Progress](#reversed-linear-progress)
+  - [RTL Localization](#rtl-localization)
 
 
 # Resources
@@ -48,7 +47,6 @@ determinate or indeterminate activities.
 
 ## Configuration Options
 
-@docs setReverse
 @docs setClosed
 @docs setAttributes
 
@@ -83,13 +81,13 @@ configuration option to `True`.
         (LinearProgress.config |> LinearProgress.setClosed True)
 
 
-# Reverse Linear Progress
+# RTL Localization
 
-If you want to reverse the direction of the linear progress indicator, set its
-`setReverse` configuration option to `True`.
+The linear progress indicator follows the direction that text flows, as
+indicated by (the nearest anchestor's) `rtl` attribute.
 
-    LinearProgress.indeterminate
-        (LinearProgress.config |> LinearProgress.setReverse True)
+To override that value, you may specify `Html.Attributes.dir "rtl"` (or `"ltr")
+in`setAttributes\`.
 
 -}
 
@@ -102,8 +100,7 @@ import Json.Encode as Encode
 -}
 type Config msg
     = Config
-        { reverse : Bool
-        , closed : Bool
+        { closed : Bool
         , additionalAttributes : List (Html.Attribute msg)
         }
 
@@ -119,8 +116,7 @@ type Variant
 config : Config msg
 config =
     Config
-        { reverse = False
-        , closed = False
+        { closed = False
         , additionalAttributes = []
         }
 
@@ -130,13 +126,6 @@ config =
 setClosed : Bool -> Config msg -> Config msg
 setClosed closed (Config config_) =
     Config { config_ | closed = closed }
-
-
-{-| Specify whether the direction of a linear progress indicator should be reversed
--}
-setReverse : Bool -> Config msg -> Config msg
-setReverse reverse (Config config_) =
-    Config { config_ | reverse = reverse }
 
 
 {-| Specify additional attributes
@@ -157,7 +146,6 @@ linearProgress variant ((Config { additionalAttributes }) as config_) =
             , determinateProp variant
             , progressProp variant
             , bufferProp variant
-            , reverseProp config_
             , closedProp config_
             ]
             ++ additionalAttributes
@@ -255,11 +243,6 @@ bufferProp variant =
                 )
             )
         )
-
-
-reverseProp : Config msg -> Maybe (Html.Attribute msg)
-reverseProp (Config { reverse }) =
-    Just (Html.Attributes.property "reverse" (Encode.bool reverse))
 
 
 closedProp : Config msg -> Maybe (Html.Attribute msg)

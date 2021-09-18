@@ -128,6 +128,7 @@ type Config msg
         , additionalAttributes : List (Html.Attribute msg)
         , onClose : Maybe msg
         , scrimCloses : Bool
+        , escapeCloses : Bool
         }
 
 
@@ -141,6 +142,7 @@ config =
         , additionalAttributes = []
         , onClose = Nothing
         , scrimCloses = True
+        , escapeCloses = True
         }
 
 

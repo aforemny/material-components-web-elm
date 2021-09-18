@@ -16,6 +16,7 @@ type Dialog
     | ConfirmationDialog
     | ScrollableDialog
     | SimpleDialog
+    | FullscreenDialog
 
 
 type alias Model =
@@ -69,10 +70,14 @@ view model =
             (Button.config |> Button.setOnClick (Show ScrollableDialog))
             "Scrollable"
         , text " "
+        , Button.text
+            (Button.config |> Button.setOnClick (Show FullscreenDialog))
+            "Fullscreen"
         , alertDialog model
         , simpleDialog model
         , confirmationDialog model
         , scrollableDialog model
+        , fullscreenDialog model
         ]
     }
 
@@ -235,6 +240,30 @@ also."""
             [ Button.text (Button.config |> Button.setOnClick Close) "Decline"
             , Button.text (Button.config |> Button.setOnClick Close) "Continue"
             ]
+        }
+
+
+fullscreenDialog : Model -> Html Msg
+fullscreenDialog model =
+    Dialog.fullscreen
+        (Dialog.config
+            |> Dialog.setOpen (model.open == Just FullscreenDialog)
+            |> Dialog.setOnClose Close
+        )
+        { title = "Full-Screen Dialog Title"
+        , content =
+            [ text """
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque metus
+dapibus, maximus massa pulvinar, commodo nunc. Quisque vitae luctus lectus, ut
+tempus ipsum. Sed suscipit gravida scelerisque. Aenean vulputate elementum est,
+quis consectetur orci consectetur ac. Quisque accumsan vel nisi id dapibus.
+Suspendisse nec urna eu massa ornare rutrum. Vivamus at nisi sit amet nulla
+pretium volutpat sit amet in justo. Donec mi metus, interdum ac tincidunt at,
+vehicula vitae nisl. Morbi fermentum dapibus massa, nec lobortis massa
+vestibulum eu."""
+            ]
+        , actions =
+            [ Button.text (Button.config |> Button.setOnClick Close) "OK" ]
         }
 
 

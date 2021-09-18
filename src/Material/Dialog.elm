@@ -2,6 +2,7 @@ module Material.Dialog exposing
     ( Config, config
     , setOnClose
     , setOpen
+    , setScrimCloses
     , setAttributes
     , alert
     , simple
@@ -75,6 +76,7 @@ require decisions, or involve multiple tasks.
 
 @docs setOnClose
 @docs setOpen
+@docs setScrimCloses
 @docs setAttributes
 
 
@@ -125,6 +127,7 @@ type Config msg
         , fullscreen : Bool
         , additionalAttributes : List (Html.Attribute msg)
         , onClose : Maybe msg
+        , scrimCloses : Bool
         }
 
 
@@ -137,6 +140,7 @@ config =
         , fullscreen = False
         , additionalAttributes = []
         , onClose = Nothing
+        , scrimCloses = True
         }
 
 
@@ -145,6 +149,17 @@ config =
 setOpen : Bool -> Config msg -> Config msg
 setOpen open (Config config_) =
     Config { config_ | open = open }
+
+
+{-| Specify whether click the dialog's scrim should close the dialog
+
+If set to `True`, clicking on the dialog's scrim results in the dialog's
+`setOnClose` mege. Defaults to `True`.
+
+-}
+setScrimCloses : Bool -> Config msg -> Config msg
+setScrimCloses scrimCloses (Config config_) =
+    Config { config_ | scrimCloses = scrimCloses }
 
 
 {-| Specify additional attributes
@@ -249,6 +264,7 @@ generic ((Config { additionalAttributes }) as config_) content =
             [ rootCs
             , fullscreenCs config_
             , openProp config_
+            , scrimClickActionProp config_
             , closeHandler config_
             ]
             ++ additionalAttributes
@@ -275,6 +291,21 @@ fullscreenCs (Config config_) =
 openProp : Config msg -> Maybe (Html.Attribute msg)
 openProp (Config { open }) =
     Just (Html.Attributes.property "open" (Encode.bool open))
+
+
+scrimClickActionProp : Config msg -> Maybe (Html.Attribute msg)
+scrimClickActionProp (Config { scrimCloses }) =
+    Just
+        (Html.Attributes.property "scrimClickAction"
+            (Encode.string
+                (if scrimCloses then
+                    "close"
+
+                 else
+                    ""
+                )
+            )
+        )
 
 
 closeHandler : Config msg -> Maybe (Html.Attribute msg)

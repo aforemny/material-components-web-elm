@@ -7,6 +7,7 @@ module Material.Dialog exposing
     , simple
     , confirmation
     , fullscreen
+    , defaultAction
     )
 
 {-| Dialogs inform users about a task and can contain critical information,
@@ -23,6 +24,7 @@ require decisions, or involve multiple tasks.
   - [Simple Dialog](#simple-dialog)
   - [Confirmation Dialog](#confirmation-dialog)
   - [Fullscreen Dialog](#fullscreen-dialog)
+  - [Default Action](#default-action)
 
 
 # Resources
@@ -53,7 +55,10 @@ require decisions, or involve multiple tasks.
                     (Button.config |> Button.setOnClick Closed)
                     "Cancel"
                 , Button.text
-                    (Button.config |> Button.setOnClick Closed)
+                    (Button.config
+                        |> Button.setOnClick Closed
+                        |> Button.setAttributes [ Dialog.defaultAction ]
+                    )
                     "Discard"
                 ]
             }
@@ -89,6 +94,11 @@ require decisions, or involve multiple tasks.
 # Fullscreen Dialog
 
 @docs fullscreen
+
+
+# Default Action
+
+@docs defaultAction
 
 -}
 
@@ -197,6 +207,14 @@ fullscreen :
 fullscreen (Config config_) { title, content, actions } =
     generic (Config { config_ | fullscreen = True })
         { title = Just title, content = content, actions = actions }
+
+
+{-| A button that is marked with this attribute is automatically activated by
+the containing dialog on pressing the `Enter` key.
+-}
+defaultAction : Html.Attribute msg
+defaultAction =
+    Html.Attributes.attribute "data-mdc-dialog-button-default" ""
 
 
 type alias Content msg =

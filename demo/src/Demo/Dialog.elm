@@ -299,6 +299,7 @@ fullscreenDialog model =
                     [ [ Select.outlined
                             (Select.config
                                 |> Select.setSelected (Just "")
+                                |> Select.setAttributes [ Dialog.initialFocus ]
                             )
                             (SelectItem.selectItem
                                 (SelectItem.config { value = "" })

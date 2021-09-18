@@ -6,6 +6,7 @@ module Material.Dialog exposing
     , alert
     , simple
     , confirmation
+    , fullscreen
     )
 
 {-| Dialogs inform users about a task and can contain critical information,
@@ -21,6 +22,7 @@ require decisions, or involve multiple tasks.
   - [Alert Dialog](#alert-dialog)
   - [Simple Dialog](#simple-dialog)
   - [Confirmation Dialog](#confirmation-dialog)
+  - [Fullscreen Dialog](#fullscreen-dialog)
 
 
 # Resources
@@ -83,13 +85,19 @@ require decisions, or involve multiple tasks.
 
 @docs confirmation
 
+
+# Fullscreen Dialog
+
+@docs fullscreen
+
 -}
 
 import Html exposing (Html, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Material.IconButton as IconButton
 
 
 {-| Configuration of a dialog
@@ -97,6 +105,7 @@ import Json.Encode as Encode
 type Config msg
     = Config
         { open : Bool
+        , fullscreen : Bool
         , additionalAttributes : List (Html.Attribute msg)
         , onClose : Maybe msg
         }
@@ -108,6 +117,7 @@ config : Config msg
 config =
     Config
         { open = False
+        , fullscreen = False
         , additionalAttributes = []
         , onClose = Nothing
         }
@@ -174,6 +184,21 @@ confirmation config_ { title, content, actions } =
     generic config_ { title = Just title, content = content, actions = actions }
 
 
+{-| Fullscreen view function
+-}
+fullscreen :
+    Config msg
+    ->
+        { title : String
+        , content : List (Html msg)
+        , actions : List (Html msg)
+        }
+    -> Html msg
+fullscreen (Config config_) { title, content, actions } =
+    generic (Config { config_ | fullscreen = True })
+        { title = Just title, content = content, actions = actions }
+
+
 type alias Content msg =
     { title : Maybe String
     , content : List (Html msg)
@@ -189,12 +214,13 @@ generic ((Config { additionalAttributes }) as config_) content =
     Html.node "mdc-dialog"
         (List.filterMap identity
             [ rootCs
+            , fullscreenCs config_
             , openProp config_
             , closeHandler config_
             ]
             ++ additionalAttributes
         )
-        [ containerElt content
+        [ containerElt config_ content
         , scrimElt
         ]
 
@@ -202,6 +228,15 @@ generic ((Config { additionalAttributes }) as config_) content =
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-dialog")
+
+
+fullscreenCs : Config msg -> Maybe (Html.Attribute msg)
+fullscreenCs (Config config_) =
+    if config_.fullscreen then
+        Just (class "mdc-dialog--fullscreen")
+
+    else
+        Nothing
 
 
 openProp : Config msg -> Maybe (Html.Attribute msg)
@@ -214,20 +249,24 @@ closeHandler (Config { onClose }) =
     Maybe.map (Html.Events.on "MDCDialog:close" << Decode.succeed) onClose
 
 
-containerElt : Content msg -> Html msg
-containerElt content =
-    Html.div [ class "mdc-dialog__container" ] [ surfaceElt content ]
+containerElt : Config msg -> Content msg -> Html msg
+containerElt config_ content =
+    Html.div [ class "mdc-dialog__container" ] [ surfaceElt config_ content ]
 
 
-surfaceElt : Content msg -> Html msg
-surfaceElt content =
+surfaceElt : Config msg -> Content msg -> Html msg
+surfaceElt ((Config config_) as config__) content =
     Html.div
         [ dialogSurfaceCs
         , alertDialogRoleAttr
         , ariaModalAttr
         ]
         (List.filterMap identity
-            [ titleElt content
+            [ if config_.fullscreen then
+                headerElt config__ content
+
+              else
+                titleElt content
             , contentElt content
             , actionsElt content
             ]
@@ -247,6 +286,33 @@ alertDialogRoleAttr =
 ariaModalAttr : Html.Attribute msg
 ariaModalAttr =
     Html.Attributes.attribute "aria-modal" "true"
+
+
+headerElt : Config msg -> Content msg -> Maybe (Html msg)
+headerElt (Config { onClose }) content =
+    Just <|
+        Html.div [ class "mdc-dialog__header" ]
+            (List.filterMap identity
+                [ titleElt content
+                , Just <|
+                    Html.div
+                        [ class "mdc-dialog__close"
+                        , style "position" "relative"
+                        ]
+                        [ IconButton.iconButton
+                            (IconButton.config
+                                |> (case onClose of
+                                        Just onClose_ ->
+                                            IconButton.setOnClick onClose_
+
+                                        Nothing ->
+                                            identity
+                                   )
+                            )
+                            (IconButton.icon "close")
+                        ]
+                ]
+            )
 
 
 titleElt : Content msg -> Maybe (Html msg)

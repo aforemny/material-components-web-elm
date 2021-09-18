@@ -9,6 +9,9 @@ import Material.Icon as Icon
 import Material.List as List
 import Material.List.Item as ListItem
 import Material.Radio as Radio
+import Material.Select as Select
+import Material.Select.Item as SelectItem
+import Material.TextField as TextField
 
 
 type Dialog
@@ -249,21 +252,110 @@ fullscreenDialog model =
         (Dialog.config
             |> Dialog.setOpen (model.open == Just FullscreenDialog)
             |> Dialog.setOnClose Close
+            |> Dialog.setAttributes [ class "fullscreen-dialog" ]
         )
-        { title = "Full-Screen Dialog Title"
+        { title = "Create New Event"
         , content =
-            [ text """
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque metus
-dapibus, maximus massa pulvinar, commodo nunc. Quisque vitae luctus lectus, ut
-tempus ipsum. Sed suscipit gravida scelerisque. Aenean vulputate elementum est,
-quis consectetur orci consectetur ac. Quisque accumsan vel nisi id dapibus.
-Suspendisse nec urna eu massa ornare rutrum. Vivamus at nisi sit amet nulla
-pretium volutpat sit amet in justo. Donec mi metus, interdum ac tincidunt at,
-vehicula vitae nisl. Morbi fermentum dapibus massa, nec lobortis massa
-vestibulum eu."""
-            ]
+            Html.node "style"
+                [ Html.Attributes.type_ "text/css" ]
+                [ text """
+.fullscreen-dialog .mdc-dialog__surface {
+  width: 560px; }
+.fullscreen-dialog .mdc-dialog__content {
+  flex-flow; colum;
+  align-items: stretch; }
+.fullscreen-dialog .mdc-select__anchor {
+  width: 100%; }
+.fullscreen-dialog .mdc-dialog__content > * {
+  margin-bottom: 20px; }
+.fullscreen-dialog .mdc-dialog__content > *:last-child {
+  margin-bottom: 0; }
+.fullscreen-dialog .mdc-dialog__content > div {
+  display: flex;
+  flex-flow: row nowrap; }
+.fullscreen-dialog .mdc-dialog__content > div > :nth-child(1) {
+  flex: 2 1 0; }
+.fullscreen-dialog .mdc-dialog__content > div > :nth-child(2) {
+  flex: 1 1 0;
+  margin-left: 20px;}
+}
+""" ]
+                :: List.map (Html.div [])
+                    [ [ Select.outlined
+                            (Select.config
+                                |> Select.setSelected (Just "")
+                            )
+                            (SelectItem.selectItem
+                                (SelectItem.config { value = "" })
+                                [ text "heyfromelizabeth@gmail.com" ]
+                            )
+                            []
+                      ]
+                    , [ TextField.outlined
+                            (TextField.config
+                                |> TextField.setLabel (Just "Event Name")
+                                |> TextField.setValue (Just "Liam's B-day Party")
+                            )
+                      ]
+                    , [ TextField.outlined
+                            (TextField.config
+                                |> TextField.setLabel (Just "Location")
+                                |> TextField.setValue
+                                    (Just "123 Main Street, San Francisco, CA 94107")
+                            )
+                      ]
+                    , [ Select.outlined
+                            (Select.config
+                                |> Select.setLabel (Just "From")
+                                |> Select.setSelected (Just "")
+                            )
+                            (SelectItem.selectItem (SelectItem.config { value = "" })
+                                [ text "Mon, March 26" ]
+                            )
+                            []
+                      , Select.outlined
+                            (Select.config
+                                |> Select.setSelected (Just "")
+                            )
+                            (SelectItem.selectItem (SelectItem.config { value = "" })
+                                [ text "" ]
+                            )
+                            []
+                      ]
+                    , [ Select.outlined
+                            (Select.config
+                                |> Select.setLabel (Just "To")
+                                |> Select.setSelected (Just "")
+                            )
+                            (SelectItem.selectItem (SelectItem.config { value = "" })
+                                [ text "" ]
+                            )
+                            []
+                      , Select.outlined
+                            (Select.config
+                                |> Select.setSelected (Just "")
+                            )
+                            (SelectItem.selectItem (SelectItem.config { value = "" })
+                                [ text "" ]
+                            )
+                            []
+                      ]
+                    , [ Select.outlined
+                            (Select.config
+                                |> Select.setLabel (Just "Timezone")
+                                |> Select.setSelected (Just "")
+                            )
+                            (SelectItem.selectItem
+                                (SelectItem.config { value = "" })
+                                [ text "Pacific Standard Time" ]
+                            )
+                            []
+                      ]
+                    ]
         , actions =
-            [ Button.text (Button.config |> Button.setOnClick Close) "OK" ]
+            [ Button.text (Button.config |> Button.setOnClick Close) "Cancel"
+            , Button.text (Button.config |> Button.setOnClick Close) "Save"
+            ]
         }
 
 

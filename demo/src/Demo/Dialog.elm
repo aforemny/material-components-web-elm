@@ -94,7 +94,12 @@ alertDialog model =
         )
         { content = [ text "Discard draft?" ]
         , actions =
-            [ Button.text (Button.config |> Button.setOnClick Close) "Cancel"
+            [ Button.text
+                (Button.config
+                    |> Button.setOnClick Close
+                    |> Button.setAttributes [ Dialog.defaultAction ]
+                )
+                "Cancel"
             , Button.text (Button.config |> Button.setOnClick Close) "Discard"
             ]
         }
@@ -158,7 +163,12 @@ confirmationDialog model =
                 )
             ]
         , actions =
-            [ Button.text (Button.config |> Button.setOnClick Close) "Cancel"
+            [ Button.text
+                (Button.config
+                    |> Button.setOnClick Close
+                    |> Button.setAttributes [ Dialog.defaultAction ]
+                )
+                "Cancel"
             , Button.text (Button.config |> Button.setOnClick Close) "OK"
             ]
         }
@@ -241,7 +251,12 @@ also."""
             ]
         , actions =
             [ Button.text (Button.config |> Button.setOnClick Close) "Decline"
-            , Button.text (Button.config |> Button.setOnClick Close) "Continue"
+            , Button.text
+                (Button.config
+                    |> Button.setOnClick Close
+                    |> Button.setAttributes [ Dialog.defaultAction ]
+                )
+                "Continue"
             ]
         }
 
@@ -353,8 +368,14 @@ fullscreenDialog model =
                       ]
                     ]
         , actions =
-            [ Button.text (Button.config |> Button.setOnClick Close) "Cancel"
-            , Button.text (Button.config |> Button.setOnClick Close) "Save"
+            [ Button.text (Button.config |> Button.setOnClick Close)
+                "Cancel"
+            , Button.text
+                (Button.config
+                    |> Button.setOnClick Close
+                    |> Button.setAttributes [ Dialog.defaultAction ]
+                )
+                "Save"
             ]
         }
 

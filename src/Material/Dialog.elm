@@ -3,7 +3,9 @@ module Material.Dialog exposing
     , setOnClose
     , setOpen
     , setAttributes
-    , dialog, Content
+    , alert
+    , simple
+    , confirmation
     )
 
 {-| Dialogs inform users about a task and can contain critical information,
@@ -16,7 +18,9 @@ require decisions, or involve multiple tasks.
   - [Basic Usage](#basic-usage)
   - [Configuration](#configuration)
       - [Configuration Options](#configuration-options)
-  - [Dialog](#dialog)
+  - [Alert Dialog](#alert-dialog)
+  - [Simple Dialog](#simple-dialog)
+  - [Confirmation Dialog](#confirmation-dialog)
 
 
 # Resources
@@ -36,7 +40,7 @@ require decisions, or involve multiple tasks.
         = Closed
 
     main =
-        Dialog.dialog
+        Dialog.alert
             (Dialog.config
                 |> Dialog.setOpen True
                 |> Dialog.setOnClose Closed
@@ -66,17 +70,28 @@ require decisions, or involve multiple tasks.
 @docs setAttributes
 
 
-# Dialog
+# Alert Dialog
 
-@docs dialog, Content
+@docs alert
+
+
+# Simple Dialog
+
+@docs simple
+
+
+# Confirmation Dialog
+
+@docs confirmation
 
 -}
 
 import Html exposing (Html, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Material.IconButton as IconButton
 
 
 {-| Configuration of a dialog
@@ -121,8 +136,46 @@ setOnClose onClose (Config config_) =
     Config { config_ | onClose = Just onClose }
 
 
-{-| Dialog content
+{-| Alert dialog view function
 -}
+alert :
+    Config msg
+    ->
+        { content : List (Html msg)
+        , actions : List (Html msg)
+        }
+    -> Html msg
+alert config_ { content, actions } =
+    generic config_ { title = Nothing, content = content, actions = actions }
+
+
+{-| Simple dialog view function
+-}
+simple :
+    Config msg
+    ->
+        { title : String
+        , content : List (Html msg)
+        }
+    -> Html msg
+simple ((Config { additionalAttributes }) as config_) { title, content } =
+    generic config_ { title = Just title, content = content, actions = [] }
+
+
+{-| Confirmation dialog view function
+-}
+confirmation :
+    Config msg
+    ->
+        { title : String
+        , content : List (Html msg)
+        , actions : List (Html msg)
+        }
+    -> Html msg
+confirmation config_ { title, content, actions } =
+    generic config_ { title = Just title, content = content, actions = actions }
+
+
 type alias Content msg =
     { title : Maybe String
     , content : List (Html msg)
@@ -130,10 +183,11 @@ type alias Content msg =
     }
 
 
-{-| Dialog view function
--}
-dialog : Config msg -> Content msg -> Html msg
-dialog ((Config { additionalAttributes }) as config_) content =
+generic :
+    Config msg
+    -> Content msg
+    -> Html msg
+generic ((Config { additionalAttributes }) as config_) content =
     Html.node "mdc-dialog"
         (List.filterMap identity
             [ rootCs

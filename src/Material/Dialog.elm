@@ -8,6 +8,7 @@ module Material.Dialog exposing
     , confirmation
     , fullscreen
     , defaultAction
+    , initialFocus
     )
 
 {-| Dialogs inform users about a task and can contain critical information,
@@ -25,6 +26,7 @@ require decisions, or involve multiple tasks.
   - [Confirmation Dialog](#confirmation-dialog)
   - [Fullscreen Dialog](#fullscreen-dialog)
   - [Default Action](#default-action)
+  - [Initial Focus](#initial-focus)
 
 
 # Resources
@@ -100,6 +102,11 @@ require decisions, or involve multiple tasks.
 # Default Action
 
 @docs defaultAction
+
+
+# Initial Focus
+
+@docs initialFocus
 
 -}
 
@@ -216,6 +223,14 @@ the containing dialog on pressing the `Enter` key.
 defaultAction : Html.Attribute msg
 defaultAction =
     Html.Attributes.attribute "data-mdc-dialog-button-default" ""
+
+
+{-| An element that is marked with this attribute is automatically focus on
+opening the containing dialog.
+-}
+initialFocus : Html.Attribute msg
+initialFocus =
+    Html.Attributes.attribute "data-mdc-dialog-initial-focus" ""
 
 
 type alias Content msg =

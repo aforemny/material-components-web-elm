@@ -5,7 +5,7 @@ module Material.List exposing
     , setTwoLine
     , setAttributes
     , setWrapFocus
-    , setNonInteractive
+    , setInteractive
     , setRipples
     , list
     , group, subheader
@@ -69,7 +69,7 @@ about the list items, refer to [Material.List.Item](Material-List-Item).
 @docs setTwoLine
 @docs setAttributes
 @docs setWrapFocus
-@docs setNonInteractive
+@docs setInteractive
 @docs setRipples
 
 
@@ -108,14 +108,14 @@ option to `False`.
 
 # Non-interactive List
 
-Lists may be non-interactive by its setting `setNonInteractive` configuration
-option to `True`.
+Lists may be non-interactive by its setting `setInteractive` configuration
+option to `False`.
 
 Non-interactive lists do not feature keyboard interaction and list items have
 no visual interaction effect.
 
     List.list
-        (List.config |> List.setNonInteractive True)
+        (List.config |> List.setInteractive False)
         (ListItem.listItem ListItem.config [ text "List item" ])
         []
 
@@ -194,7 +194,7 @@ import Material.List.Item.Internal as ListItem
 -}
 type Config msg
     = Config
-        { nonInteractive : Bool
+        { interactive : Bool
         , dense : Bool
         , avatarList : Bool
         , twoLine : Bool
@@ -210,7 +210,7 @@ type Config msg
 config : Config msg
 config =
     Config
-        { nonInteractive = False
+        { interactive = True
         , dense = False
         , avatarList = False
         , twoLine = False
@@ -227,9 +227,9 @@ Non-interactive lists do not feature keyboard interaction and list items have
 no visual interaction effect.
 
 -}
-setNonInteractive : Bool -> Config msg -> Config msg
-setNonInteractive nonInteractive (Config config_) =
-    Config { config_ | nonInteractive = nonInteractive }
+setInteractive : Bool -> Config msg -> Config msg
+setInteractive interactive (Config config_) =
+    Config { config_ | interactive = interactive }
 
 
 {-| Specify whether a list items should have a ripple effect
@@ -299,7 +299,7 @@ remaining list items. This way we guarantee lists to be non-empty.
 
 -}
 list : Config msg -> ListItem msg -> List (ListItem msg) -> Html msg
-list ((Config { ripples, nonInteractive, additionalAttributes }) as config_) firstListItem remainingListItems =
+list ((Config { ripples, interactive, additionalAttributes }) as config_) firstListItem remainingListItems =
     let
         listItems =
             firstListItem :: remainingListItems
@@ -313,6 +313,7 @@ list ((Config { ripples, nonInteractive, additionalAttributes }) as config_) fir
             , wrapFocusProp config_
             , clickHandler listItems
             , selectedIndexProp listItems
+            , interactiveProp config_
             ]
             ++ additionalAttributes
         )
@@ -322,9 +323,7 @@ list ((Config { ripples, nonInteractive, additionalAttributes }) as config_) fir
                     ListItem.ListItem node (ListItem.Config config__) ->
                         node
                             (ListItem.Config
-                                { config__
-                                    | ripples = ripples && not nonInteractive
-                                }
+                                { config__ | ripples = ripples && interactive }
                             )
 
                     ListItem.ListItemDivider node ->
@@ -442,6 +441,11 @@ selectedIndexProp listItems =
                 |> List.filterMap identity
     in
     Just (Html.Attributes.property "selectedIndex" (Encode.list Encode.int selectedIndex))
+
+
+interactiveProp : Config msg -> Maybe (Html.Attribute msg)
+interactiveProp (Config { interactive }) =
+    Just (Html.Attributes.property "interactive" (Encode.bool interactive))
 
 
 {-| List group view function

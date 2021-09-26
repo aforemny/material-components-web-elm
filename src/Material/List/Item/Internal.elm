@@ -15,7 +15,7 @@ type Config msg
         , target : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
-        , node : Html msg
+        , ripples : Bool
         }
 
 
@@ -25,6 +25,6 @@ type Selection
 
 
 type ListItem msg
-    = ListItem (Config msg)
+    = ListItem (Config msg -> Html msg) (Config msg)
     | ListItemDivider (Html msg)
     | ListGroupSubheader (Html msg)

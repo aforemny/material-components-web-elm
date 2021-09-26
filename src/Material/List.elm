@@ -1,11 +1,12 @@
 module Material.List exposing
     ( Config, config
-    , setNonInteractive
     , setDense
     , setAvatarList
     , setTwoLine
     , setAttributes
     , setWrapFocus
+    , setNonInteractive
+    , setRipples
     , list
     , group, subheader
     )
@@ -24,6 +25,7 @@ about the list items, refer to [Material.List.Item](Material-List-Item).
       - [Configuration Options](#configuration-options)
   - [List](#list)
   - [Two-Line List](#two-line-list)
+  - [Non-ripple List](#non-ripple-list)
   - [Non-interactive List](#non-interactive-list)
   - [Dense List](#dense-list)
   - [Avatar List](#avatar-list)
@@ -62,12 +64,13 @@ about the list items, refer to [Material.List.Item](Material-List-Item).
 
 ## Configuration Options
 
-@docs setNonInteractive
 @docs setDense
 @docs setAvatarList
 @docs setTwoLine
 @docs setAttributes
 @docs setWrapFocus
+@docs setNonInteractive
+@docs setRipples
 
 
 # List
@@ -89,6 +92,17 @@ to `True`. In that case, list items should wrap their contents inside
                 }
             ]
         )
+        []
+
+
+# Non-ripple List
+
+Lists may be non-rippling by its setting `setRipples` configuration
+option to `False`.
+
+    List.list
+        (List.config |> List.setRipples False)
+        (ListItem.listItem ListItem.config [ text "List item" ])
         []
 
 
@@ -186,6 +200,7 @@ type Config msg
         , twoLine : Bool
         , vertical : Bool
         , wrapFocus : Bool
+        , ripples : Bool
         , additionalAttributes : List (Html.Attribute msg)
         }
 
@@ -201,6 +216,7 @@ config =
         , twoLine = False
         , vertical = False
         , wrapFocus = False
+        , ripples = True
         , additionalAttributes = []
         }
 
@@ -214,6 +230,16 @@ no visual interaction effect.
 setNonInteractive : Bool -> Config msg -> Config msg
 setNonInteractive nonInteractive (Config config_) =
     Config { config_ | nonInteractive = nonInteractive }
+
+
+{-| Specify whether a list items should have a ripple effect
+
+By default list items have a ripple effect. To make list items not have a ripple effect, set this option to `False`.
+
+-}
+setRipples : Bool -> Config msg -> Config msg
+setRipples ripples (Config config_) =
+    Config { config_ | ripples = ripples }
 
 
 {-| Specify whether a list should be _dense_
@@ -273,7 +299,7 @@ remaining list items. This way we guarantee lists to be non-empty.
 
 -}
 list : Config msg -> ListItem msg -> List (ListItem msg) -> Html msg
-list ((Config { additionalAttributes }) as config_) firstListItem remainingListItems =
+list ((Config { ripples, nonInteractive, additionalAttributes }) as config_) firstListItem remainingListItems =
     let
         listItems =
             firstListItem :: remainingListItems
@@ -281,7 +307,6 @@ list ((Config { additionalAttributes }) as config_) firstListItem remainingListI
     Html.node "mdc-list"
         (List.filterMap identity
             [ rootCs
-            , nonInteractiveCs config_
             , denseCs config_
             , avatarListCs config_
             , twoLineCs config_
@@ -294,8 +319,13 @@ list ((Config { additionalAttributes }) as config_) firstListItem remainingListI
         (List.map
             (\listItem_ ->
                 case listItem_ of
-                    ListItem.ListItem (ListItem.Config { node }) ->
+                    ListItem.ListItem node (ListItem.Config config__) ->
                         node
+                            (ListItem.Config
+                                { config__
+                                    | ripples = ripples && not nonInteractive
+                                }
+                            )
 
                     ListItem.ListItemDivider node ->
                         node
@@ -310,15 +340,6 @@ list ((Config { additionalAttributes }) as config_) firstListItem remainingListI
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-deprecated-list")
-
-
-nonInteractiveCs : Config msg -> Maybe (Html.Attribute msg)
-nonInteractiveCs (Config { nonInteractive }) =
-    if nonInteractive then
-        Just (class "mdc-deprecated-list--non-interactive")
-
-    else
-        Nothing
 
 
 denseCs : Config msg -> Maybe (Html.Attribute msg)
@@ -353,7 +374,7 @@ clickHandler listItems =
     let
         getOnClick listItem_ =
             case listItem_ of
-                ListItem.ListItem (ListItem.Config { onClick }) ->
+                ListItem.ListItem _ (ListItem.Config { onClick }) ->
                     Just onClick
 
                 ListItem.ListItemDivider _ ->
@@ -393,7 +414,7 @@ selectedIndexProp listItems =
                 |> List.filter
                     (\listItem_ ->
                         case listItem_ of
-                            ListItem.ListItem _ ->
+                            ListItem.ListItem _ _ ->
                                 True
 
                             ListItem.ListItemDivider _ ->
@@ -405,7 +426,7 @@ selectedIndexProp listItems =
                 |> List.indexedMap
                     (\index listItem_ ->
                         case listItem_ of
-                            ListItem.ListItem (ListItem.Config { selection }) ->
+                            ListItem.ListItem _ (ListItem.Config { selection }) ->
                                 if selection /= Nothing then
                                     Just index
 

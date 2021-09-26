@@ -102,6 +102,10 @@ view model =
         , listWithTrailingCheckbox model
         , Html.h3 [ Typography.subtitle1 ] [ text "List with Trailing Radio Buttons" ]
         , listWithTrailingRadioButton model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Non-Ripple List" ]
+        , nonRippleList
+        , Html.h3 [ Typography.subtitle1 ] [ text "Non-Interactive List" ]
+        , nonInteractiveList
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus List" ]
         , focusList
         ]
@@ -375,4 +379,30 @@ focusList =
         , Button.raised
             (Button.config |> Button.setOnClick (Focus "my-list"))
             "Focus"
+        ]
+
+
+nonRippleList : Html Msg
+nonRippleList =
+    Html.div []
+        [ List.list
+            (List.config
+                |> List.setRipples False
+                |> List.setAttributes demoList
+            )
+            (ListItem.listItem ListItem.config [ text "Line item" ])
+            (List.repeat 2 <| ListItem.listItem ListItem.config [ text "Line item" ])
+        ]
+
+
+nonInteractiveList : Html Msg
+nonInteractiveList =
+    Html.div []
+        [ List.list
+            (List.config
+                |> List.setNonInteractive True
+                |> List.setAttributes demoList
+            )
+            (ListItem.listItem ListItem.config [ text "Line item" ])
+            (List.repeat 2 <| ListItem.listItem ListItem.config [ text "Line item" ])
         ]

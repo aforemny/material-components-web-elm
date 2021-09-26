@@ -125,22 +125,14 @@ heroSelect model =
 
 firstItem : SelectItem (Maybe a) msg
 firstItem =
-    SelectItem.selectItem
-        (SelectItem.config { value = Nothing })
-        [ text "" ]
+    SelectItem.selectItem (SelectItem.config { value = Nothing }) ""
 
 
 remainingItems : List (SelectItem (Maybe Fruit) msg)
 remainingItems =
-    [ SelectItem.selectItem
-        (SelectItem.config { value = Just Apple })
-        [ text "Apple" ]
-    , SelectItem.selectItem
-        (SelectItem.config { value = Just Orange })
-        [ text "Orange" ]
-    , SelectItem.selectItem
-        (SelectItem.config { value = Just Banana })
-        [ text "Banana" ]
+    [ SelectItem.selectItem (SelectItem.config { value = Just Apple }) "Apple"
+    , SelectItem.selectItem (SelectItem.config { value = Just Orange }) "Orange"
+    , SelectItem.selectItem (SelectItem.config { value = Just Banana }) "Banana"
     ]
 
 

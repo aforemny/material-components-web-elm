@@ -58,11 +58,11 @@ about select options, refer to [Material.Select.Item](Material-Select-Item).
             )
             (SelectItem.selectItem
                 (SelectItem.config { value = "" })
-                [ text "" ]
+                ""
             )
             [ SelectItem.selectItem
                 (SelectItem.config { value = "Apple" })
-                [ text "Apple" ]
+                "Apple"
             ]
 
 
@@ -96,11 +96,11 @@ Instead of a filled select, you may choose a select with a outline by using the
     Select.outlined Select.config
         (SelectItem.selectItem
             (SelectItem.config { value = "" })
-            [ text "" ]
+            ""
         )
         [ SelectItem.selectItem
             (SelectItem.config { value = "Apple" })
-            [ text "Apple" ]
+            "Apple"
         ]
 
 @docs outlined
@@ -112,7 +112,7 @@ To disable a select, set its `setDisabled` configuration option to `True`.
 
     Select.filled (Select.config |> Select.setDisabled True)
         (SelectItem.selectItem (SelectItem.config { value = "" })
-            [ text "" ]
+            ""
         )
         []
 
@@ -124,7 +124,7 @@ To mark a select as required, set its `setRequired` configuration option to
 
     Select.filled (Select.config |> Select.setRequired True)
         (SelectItem.selectItem (SelectItem.config { value = "" })
-            [ text "" ]
+            ""
         )
         []
 
@@ -139,11 +139,11 @@ TODO(select-with-helper-text)
         --    [ Select.filled Select.config
         --        (SelectItem.item
         --            (SelectItem.config { value = "" })
-        --            [ text "" ]
+        --            ""
         --        )
         --        [ SelectItem.item
         --            (SelectItem.config { value = "Apple" })
-        --            [ text "" ]
+        --            ""
         --        ]
         --    , SelectHelperText.helperText
         --        (SelectHelperText.config
@@ -166,17 +166,17 @@ However, you may also include SVG or custom icons such as FontAwesome.
 See [Material.Select.Icon](Material-Select-Icon) for more information.
 
     Select.filled
-    (Select.config
-    |> Select.setLeadingIcon
-    (Just (SelectIcon.icon "favorite"))
-    )
-    (SelectItem.selectItem
-    (SelectItem.config { value = "" })
-    [ text "" ]
-    )
-    [ SelectItem.selectItem
-    (SelectItem.config { value = "Apple" })
-            [ text "Apple" ]
+        (Select.config
+            |> Select.setLeadingIcon
+                (Just (SelectIcon.icon "favorite"))
+        )
+        (SelectItem.selectItem
+            (SelectItem.config { value = "" })
+            ""
+        )
+        [ SelectItem.selectItem
+            (SelectItem.config { value = "Apple" })
+            "Apple"
         ]
 
 
@@ -192,11 +192,11 @@ use `Browser.Dom.focus`.
         )
         (SelectItem.selectItem
             (SelectItem.config { value = "" })
-            [ text "" ]
+            ""
         )
         [ SelectItem.selectItem
             (SelectItem.config { value = "Apple" })
-            [ text "Apple" ]
+            "Apple"
         ]
 
 -}
@@ -635,13 +635,19 @@ listItem :
     -> Maybe (a -> msg)
     -> SelectItem a msg
     -> ListItem msg
-listItem leadingIcon selected onChange (SelectItem.SelectItem config_ nodes) =
+listItem leadingIcon selected onChange (SelectItem.SelectItem config_ label) =
     ListItem.listItem (listItemConfig selected onChange config_)
-        (if leadingIcon /= Nothing then
-            ListItem.graphic [] [] :: nodes
+        (List.concat
+            [ if leadingIcon /= Nothing then
+                [ ListItem.graphic [] [] ]
 
-         else
-            nodes
+              else
+                []
+            , [ -- XXX improve list api
+                Html.div [ class "mdc-deprecated-list-item__text" ]
+                    [ text label ]
+              ]
+            ]
         )
 
 

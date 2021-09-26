@@ -1,6 +1,6 @@
 module Material.Select.Item.Internal exposing (Config(..), SelectItem(..))
 
-import Html exposing (Html)
+import Html
 
 
 type Config a msg
@@ -12,4 +12,4 @@ type Config a msg
 
 
 type SelectItem a msg
-    = SelectItem (Config a msg) (List (Html msg))
+    = SelectItem (Config a msg) String

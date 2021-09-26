@@ -55,17 +55,11 @@ positioning, wrap the button and the menu within an element that sets the
                     |> Menu.setOpen True
                     |> Menu.setOnClose MenuClosed
                 )
-                [ List.list
-                    (List.config
-                        |> List.setRipples False
-                        |> List.setWrapFocus True
-                    )
-                    (ListItem.listItem ListItem.config
-                        [ text "Menu item" ]
-                    )
-                    [ ListItem.listItem ListItem.config
-                        [ text "Menu item" ]
-                    ]
+                (ListItem.listItem ListItem.config
+                    [ text "Menu item" ]
+                )
+                [ ListItem.listItem ListItem.config
+                    [ text "Menu item" ]
                 ]
             ]
 
@@ -93,7 +87,9 @@ positioning, wrap the button and the menu within an element that sets the
 A menu may not show a transition when opening by setting its `setQuickOpen`
 configuration option to `True`.
 
-    Menu.menu (Menu.config |> Menu.setQuickOpen True) []
+    Menu.menu (Menu.config |> Menu.setQuickOpen True)
+        (ListItem.listItem ListItem.config [ text "Menu item" ])
+        []
 
 -}
 
@@ -102,6 +98,8 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Material.List as List
+import Material.List.Item exposing (ListItem)
 
 
 {-| Configuration of a menu
@@ -160,8 +158,8 @@ setAttributes additionalAttributes (Config config_) =
 
 {-| Menu view function
 -}
-menu : Config msg -> List (Html msg) -> Html msg
-menu ((Config { additionalAttributes }) as config_) nodes =
+menu : Config msg -> ListItem msg -> List (ListItem msg) -> Html msg
+menu ((Config { additionalAttributes }) as config_) firstListItem remainingListItems =
     Html.node "mdc-menu"
         (List.filterMap identity
             [ rootCs
@@ -171,7 +169,14 @@ menu ((Config { additionalAttributes }) as config_) nodes =
             ]
             ++ additionalAttributes
         )
-        nodes
+        [ List.list
+            (List.config
+                |> List.setRipples False
+                |> List.setWrapFocus True
+            )
+            firstListItem
+            remainingListItems
+        ]
 
 
 {-| Menu surface anchor attribute

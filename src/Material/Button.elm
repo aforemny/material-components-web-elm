@@ -180,20 +180,17 @@ Buttons support opening a menu.
                             |> Menu.setOpen True
                             |> Menu.setOnClose (OpenChanged False)
                         )
-                        [ List.list
-                            (List.config |> List.setWrapFocus True)
-                            (ListItem.listItem
-                                (ListItem.config
-                                    |> ListItem.setOnClick (OpenChanged False)
-                                )
-                                [ text "Orange" ]
+                        (ListItem.listItem
+                            (ListItem.config
+                                |> ListItem.setOnClick (OpenChanged False)
                             )
-                            [ ListItem.listItem
-                                (ListItem.config
-                                    |> ListItem.setOnClick (OpenChanged False)
-                                )
-                                [ text "Guava" ]
-                            ]
+                            [ text "Orange" ]
+                        )
+                        [ ListItem.listItem
+                            (ListItem.config
+                                |> ListItem.setOnClick (OpenChanged False)
+                            )
+                            [ text "Guava" ]
                         ]
                 )
         )
@@ -220,6 +217,7 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Encode as Encode
 import Material.Button.Internal exposing (Config(..), Icon(..), Menu(..))
+import Material.List.Item exposing (ListItem)
 import Material.Menu as Menu
 import Svg exposing (Svg)
 import Svg.Attributes
@@ -341,9 +339,9 @@ type alias Menu msg =
 
 {-| Construct a [menu](Material-Menu) to be used with a button.
 -}
-menu : Menu.Config msg -> List (Html msg) -> Menu msg
-menu config_ nodes =
-    Menu config_ nodes
+menu : Menu.Config msg -> ListItem msg -> List (ListItem msg) -> Menu msg
+menu config_ firstListItem remainingListItems =
+    Menu config_ firstListItem remainingListItems
 
 
 {-| Specify whether touch support is enabled (enabled by default)
@@ -383,9 +381,11 @@ button variant ((Config ({ additionalAttributes, touch, href, disabled } as inne
                 Nothing ->
                     node
 
-                Just (Menu menuConfig menuNodes) ->
+                Just (Menu menuConfig firstListItem remainingListItems) ->
                     Html.div [ class "mdc-menu-surface--anchor" ]
-                        [ node, Menu.menu menuConfig menuNodes ]
+                        [ node
+                        , Menu.menu menuConfig firstListItem remainingListItems
+                        ]
     in
     Html.node "mdc-button"
         []

@@ -82,7 +82,8 @@ buttonExample model =
                             |> Menu.setOpen (Set.member id model.opened)
                             |> Menu.setOnClose (Closed id)
                         )
-                        (menuItems { onClick = Closed id })
+                        (firstMenuItem { onClick = Closed id })
+                        (remainingMenuItems { onClick = Closed id })
                 )
         )
         "Open menu"
@@ -104,7 +105,8 @@ iconButtonExample model =
                             |> Menu.setOpen (Set.member id model.opened)
                             |> Menu.setOnClose (Closed id)
                         )
-                        (menuItems { onClick = Closed id })
+                        (firstMenuItem { onClick = Closed id })
+                        (remainingMenuItems { onClick = Closed id })
                 )
         )
         (IconButton.icon "menu_vert")
@@ -167,7 +169,10 @@ iconButtonWithinCardExample model =
                                                     (Set.member id model.opened)
                                                 |> Menu.setOnClose (Closed id)
                                             )
-                                            (menuItems { onClick = Closed id })
+                                            (firstMenuItem { onClick = Closed id })
+                                            (remainingMenuItems
+                                                { onClick = Closed id }
+                                            )
                                     )
                             )
                             (IconButton.icon "more_vert")
@@ -176,30 +181,27 @@ iconButtonWithinCardExample model =
         }
 
 
-menuItems : { onClick : msg } -> List (Html msg)
-menuItems onClick =
-    [ List.list
-        (List.config
-            |> List.setRipples False
-            |> List.setWrapFocus True
-        )
-        (listItem onClick "Passionfruit")
-        (List.concat
-            [ List.map (listItem onClick)
-                [ "Orange"
-                , "Guava"
-                , "Pitaya"
-                ]
-            , [ ListDivider.listItem ListDivider.config ]
-            , List.map (listItem onClick)
-                [ "Pineapple"
-                , "Mango"
-                , "Papaya"
-                , "Lychee"
-                ]
+firstMenuItem : { onClick : msg } -> ListItem msg
+firstMenuItem onClick =
+    listItem onClick "Passionfruit"
+
+
+remainingMenuItems : { onClick : msg } -> List (ListItem msg)
+remainingMenuItems onClick =
+    List.concat
+        [ List.map (listItem onClick)
+            [ "Orange"
+            , "Guava"
+            , "Pitaya"
             ]
-        )
-    ]
+        , [ ListDivider.listItem ListDivider.config ]
+        , List.map (listItem onClick)
+            [ "Pineapple"
+            , "Mango"
+            , "Papaya"
+            , "Lychee"
+            ]
+        ]
 
 
 listItem : { onClick : msg } -> String -> ListItem msg

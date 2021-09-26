@@ -1,6 +1,7 @@
 module Material.Button.Internal exposing (Config(..), Icon(..), Menu(..))
 
 import Html exposing (Html)
+import Material.List.Item exposing (ListItem)
 import Material.Menu as Menu
 import Svg exposing (Svg)
 
@@ -34,4 +35,4 @@ type Icon
 
 
 type Menu msg
-    = Menu (Menu.Config msg) (List (Html msg))
+    = Menu (Menu.Config msg) (ListItem msg) (List (ListItem msg))

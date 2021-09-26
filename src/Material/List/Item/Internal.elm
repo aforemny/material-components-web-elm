@@ -16,6 +16,7 @@ type Config msg
         , additionalAttributes : List (Html.Attribute msg)
         , onClick : Maybe msg
         , ripples : Bool
+        , interactive : Bool
         }
 
 

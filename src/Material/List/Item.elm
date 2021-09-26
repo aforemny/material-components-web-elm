@@ -212,6 +212,7 @@ config =
         , additionalAttributes = []
         , onClick = Nothing
         , ripples = False
+        , interactive = False
         }
 
 
@@ -320,11 +321,23 @@ listItem config_ nodes =
 listItemView : Config msg -> List (Html msg) -> Html msg
 listItemView ((Config { additionalAttributes, href }) as config_) nodes =
     (\attributes nodes_ ->
-        if href /= Nothing then
-            Html.node "mdc-list-item" [] [ Html.a attributes nodes_ ]
+        Html.node "mdc-list-item"
+            ([ ripplesProp config_
+             , interactiveProp config_
+             ]
+                ++ (if href /= Nothing then
+                        []
 
-        else
-            Html.node "mdc-list-item" attributes nodes_
+                    else
+                        attributes
+                   )
+            )
+            (if href /= Nothing then
+                [ Html.a attributes nodes_ ]
+
+             else
+                nodes_
+            )
     )
         (List.filterMap identity
             [ listItemCs
@@ -334,7 +347,6 @@ listItemView ((Config { additionalAttributes, href }) as config_) nodes =
             , selectedCs config_
             , activatedCs config_
             , ariaSelectedAttr config_
-            , ripplesProp config_
             ]
             ++ additionalAttributes
         )
@@ -382,9 +394,14 @@ ariaSelectedAttr (Config { selection }) =
         Nothing
 
 
-ripplesProp : Config msg -> Maybe (Html.Attribute msg)
+ripplesProp : Config msg -> Html.Attribute msg
 ripplesProp (Config { ripples }) =
-    Just (Html.Attributes.property "ripples" (Encode.bool ripples))
+    Html.Attributes.property "ripples" (Encode.bool ripples)
+
+
+interactiveProp : Config msg -> Html.Attribute msg
+interactiveProp (Config { interactive }) =
+    Html.Attributes.property "interactive" (Encode.bool interactive)
 
 
 hrefAttr : Config msg -> Maybe (Html.Attribute msg)

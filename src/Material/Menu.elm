@@ -56,7 +56,10 @@ positioning, wrap the button and the menu within an element that sets the
                     |> Menu.setOnClose MenuClosed
                 )
                 [ List.list
-                    (List.config |> List.setWrapFocus True)
+                    (List.config
+                        |> List.setRipples False
+                        |> List.setWrapFocus True
+                    )
                     (ListItem.listItem ListItem.config
                         [ text "Menu item" ]
                     )

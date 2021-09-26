@@ -625,7 +625,11 @@ menuElt leadingIcon selected onChange firstSelectItem remainingSelectItems =
                 , style "width" "100%"
                 ]
         )
-        [ List.list (List.config |> List.setWrapFocus True)
+        [ List.list
+            (List.config
+                |> List.setRipples False
+                |> List.setWrapFocus True
+            )
             (listItem leadingIcon selected onChange firstSelectItem)
             (List.map (listItem leadingIcon selected onChange) remainingSelectItems)
         ]

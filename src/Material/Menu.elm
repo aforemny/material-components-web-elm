@@ -102,6 +102,8 @@ import Html.Attributes exposing (class)
 import Html.Events
 import Json.Decode as Decode
 import Json.Encode as Encode
+import Material.List as List
+import Material.List.Item exposing (ListItem)
 
 
 {-| Configuration of a menu
@@ -160,8 +162,8 @@ setAttributes additionalAttributes (Config config_) =
 
 {-| Menu view function
 -}
-menu : Config msg -> List (Html msg) -> Html msg
-menu ((Config { additionalAttributes }) as config_) nodes =
+menu : Config msg -> ListItem msg -> List (ListItem msg) -> Html msg
+menu ((Config { additionalAttributes }) as config_) firstListItem remainingListItems =
     Html.node "mdc-menu"
         (List.filterMap identity
             [ rootCs
@@ -171,7 +173,14 @@ menu ((Config { additionalAttributes }) as config_) nodes =
             ]
             ++ additionalAttributes
         )
-        nodes
+        [ List.list
+            (List.config
+                |> List.setRipples False
+                |> List.setWrapFocus True
+            )
+            firstListItem
+            remainingListItems
+        ]
 
 
 {-| Menu surface anchor attribute

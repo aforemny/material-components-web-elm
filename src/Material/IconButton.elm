@@ -159,6 +159,7 @@ import Html exposing (Html, text)
 import Html.Attributes exposing (class)
 import Html.Events
 import Material.IconButton.Internal exposing (Config(..), Icon(..), Menu(..))
+import Material.List.Item exposing (ListItem)
 import Material.Menu as Menu
 import Svg
 import Svg.Attributes
@@ -258,9 +259,9 @@ type alias Menu msg =
 
 {-| Construct a [menu](Material-Menu) to be used with an icon button.
 -}
-menu : Menu.Config msg -> List (Html msg) -> Menu msg
-menu config_ nodes =
-    Menu config_ nodes
+menu : Menu.Config msg -> ListItem msg -> List (ListItem msg) -> Menu msg
+menu config_ firstListItem remainingListItems =
+    Menu config_ firstListItem remainingListItems
 
 
 {-| Icon button view function
@@ -273,9 +274,11 @@ iconButton ((Config ({ additionalAttributes, href, disabled } as innerConfig)) a
                 Nothing ->
                     node
 
-                Just (Menu menuConfig menuNodes) ->
+                Just (Menu menuConfig firstListItem remainingListItems) ->
                     Html.div [ Menu.surfaceAnchor ]
-                        [ node, Menu.menu menuConfig menuNodes ]
+                        [ node
+                        , Menu.menu menuConfig firstListItem remainingListItems
+                        ]
     in
     Html.node "mdc-icon-button"
         []

@@ -12,4 +12,4 @@ type Config a msg
 
 
 type SelectItem a msg
-    = SelectItem (Config a msg) (List (Html msg))
+    = SelectItem (Config a msg) String

@@ -303,7 +303,7 @@ fullscreenDialog model =
                             )
                             (SelectItem.selectItem
                                 (SelectItem.config { value = "" })
-                                [ text "heyfromelizabeth@gmail.com" ]
+                                "heyfromelizabeth@gmail.com"
                             )
                             []
                       ]
@@ -326,7 +326,7 @@ fullscreenDialog model =
                                 |> Select.setSelected (Just "")
                             )
                             (SelectItem.selectItem (SelectItem.config { value = "" })
-                                [ text "Mon, March 26" ]
+                                "Mon, March 26"
                             )
                             []
                       , Select.outlined
@@ -334,7 +334,7 @@ fullscreenDialog model =
                                 |> Select.setSelected (Just "")
                             )
                             (SelectItem.selectItem (SelectItem.config { value = "" })
-                                [ text "" ]
+                                ""
                             )
                             []
                       ]
@@ -344,7 +344,7 @@ fullscreenDialog model =
                                 |> Select.setSelected (Just "")
                             )
                             (SelectItem.selectItem (SelectItem.config { value = "" })
-                                [ text "" ]
+                                ""
                             )
                             []
                       , Select.outlined
@@ -352,7 +352,7 @@ fullscreenDialog model =
                                 |> Select.setSelected (Just "")
                             )
                             (SelectItem.selectItem (SelectItem.config { value = "" })
-                                [ text "" ]
+                                ""
                             )
                             []
                       ]
@@ -363,7 +363,7 @@ fullscreenDialog model =
                             )
                             (SelectItem.selectItem
                                 (SelectItem.config { value = "" })
-                                [ text "Pacific Standard Time" ]
+                                "Pacific Standard Time"
                             )
                             []
                       ]

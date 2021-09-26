@@ -635,13 +635,19 @@ listItem :
     -> Maybe (a -> msg)
     -> SelectItem a msg
     -> ListItem msg
-listItem leadingIcon selected onChange (SelectItem.SelectItem config_ nodes) =
+listItem leadingIcon selected onChange (SelectItem.SelectItem config_ label) =
     ListItem.listItem (listItemConfig selected onChange config_)
-        (if leadingIcon /= Nothing then
-            ListItem.graphic [] [] :: nodes
+        (List.concat
+            [ if leadingIcon /= Nothing then
+                [ ListItem.graphic [] [] ]
 
-         else
-            nodes
+              else
+                []
+            , [ -- XXX improve list api
+                Html.div [ class "mdc-deprecated-list-item__text" ]
+                    [ text label ]
+              ]
+            ]
         )
 
 

@@ -79,7 +79,7 @@ to `True`.
         (SelectItem.config { value = "Apple" }
             |> SelectItem.setDisabled True
         )
-        [ text "Apple" ]
+        "Apple"
 
 -}
 
@@ -130,6 +130,6 @@ type alias SelectItem a msg =
 
 {-| Select item constructor
 -}
-selectItem : Config a msg -> List (Html msg) -> SelectItem a msg
+selectItem : Config a msg -> String -> SelectItem a msg
 selectItem =
     SelectItem

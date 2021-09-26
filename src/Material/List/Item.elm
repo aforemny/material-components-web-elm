@@ -190,6 +190,7 @@ Note that link list items cannot be disabled.
 
 import Html exposing (Html)
 import Html.Attributes exposing (class)
+import Json.Encode as Encode
 import Material.List.Item.Internal exposing (Config(..), ListItem(..), Selection(..))
 
 
@@ -210,7 +211,7 @@ config =
         , target = Nothing
         , additionalAttributes = []
         , onClick = Nothing
-        , node = Html.text ""
+        , ripples = False
         }
 
 
@@ -312,8 +313,8 @@ type alias ListItem msg =
 {-| List item constructor
 -}
 listItem : Config msg -> List (Html msg) -> ListItem msg
-listItem (Config ({ additionalAttributes, href } as config_)) nodes =
-    ListItem (Config { config_ | node = listItemView (Config config_) nodes })
+listItem config_ nodes =
+    ListItem (\config__ -> listItemView config__ nodes) config_
 
 
 listItemView : Config msg -> List (Html msg) -> Html msg
@@ -333,6 +334,7 @@ listItemView ((Config { additionalAttributes, href }) as config_) nodes =
             , selectedCs config_
             , activatedCs config_
             , ariaSelectedAttr config_
+            , ripplesProp config_
             ]
             ++ additionalAttributes
         )
@@ -378,6 +380,11 @@ ariaSelectedAttr (Config { selection }) =
 
     else
         Nothing
+
+
+ripplesProp : Config msg -> Maybe (Html.Attribute msg)
+ripplesProp (Config { ripples }) =
+    Just (Html.Attributes.property "ripples" (Encode.bool ripples))
 
 
 hrefAttr : Config msg -> Maybe (Html.Attribute msg)

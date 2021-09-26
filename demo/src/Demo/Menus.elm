@@ -178,7 +178,11 @@ iconButtonWithinCardExample model =
 
 menuItems : { onClick : msg } -> List (Html msg)
 menuItems onClick =
-    [ List.list (List.config |> List.setWrapFocus True)
+    [ List.list
+        (List.config
+            |> List.setRipples False
+            |> List.setWrapFocus True
+        )
         (listItem onClick "Passionfruit")
         (List.concat
             [ List.map (listItem onClick)
@@ -214,7 +218,11 @@ heroMenu model =
         , style "top" "0px"
         , style "z-index" "0"
         ]
-        [ List.list List.config
+        [ List.list
+            (List.config
+                |> List.setRipples False
+                |> List.setWrapFocus True
+            )
             (ListItem.listItem ListItem.config [ text "A Menu Item" ])
             [ ListItem.listItem ListItem.config [ text "Another Menu Item" ]
             ]

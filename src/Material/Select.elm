@@ -335,6 +335,7 @@ select variant config_ firstSelectItem remainingSelectItems =
     Html.node "mdc-select"
         (List.filterMap identity
             [ rootCs
+            , noLabelCs config_
             , filledCs variant
             , outlinedCs variant
             , leadingIconCs config_
@@ -348,9 +349,10 @@ select variant config_ firstSelectItem remainingSelectItems =
         [ anchorElt []
             (List.concat
                 [ if variant == Filled then
-                    [ rippleElt
-                    , floatingLabelElt config_
-                    ]
+                    List.filterMap identity
+                        [ rippleElt
+                        , floatingLabelElt config_
+                        ]
 
                   else
                     [ notchedOutlineElt config_ ]
@@ -386,6 +388,15 @@ outlined config_ firstSelectItem remainingSelectItems =
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-select")
+
+
+noLabelCs : Config a msg -> Maybe (Html.Attribute msg)
+noLabelCs (Config { label }) =
+    if label == Nothing then
+        Just (class "mdc-select--no-label")
+
+    else
+        Nothing
 
 
 filledCs : Variant -> Maybe (Html.Attribute msg)
@@ -434,9 +445,9 @@ requiredProp (Config { required }) =
     Just (Html.Attributes.property "required" (Encode.bool required))
 
 
-rippleElt : Html msg
+rippleElt : Maybe (Html msg)
 rippleElt =
-    Html.span [ class "mdc-select__ripple" ] []
+    Just (Html.span [ class "mdc-select__ripple" ] [])
 
 
 anchorElt : List (Html.Attribute msg) -> List (Html msg) -> Html msg
@@ -588,9 +599,13 @@ focusableAttr value =
         )
 
 
-floatingLabelElt : Config a msg -> Html msg
+floatingLabelElt : Config a msg -> Maybe (Html msg)
 floatingLabelElt (Config { label }) =
-    Html.div [ class "mdc-floating-label" ] [ text (Maybe.withDefault "" label) ]
+    Maybe.map
+        (\label_ ->
+            Html.div [ class "mdc-floating-label" ] [ text label_ ]
+        )
+        label
 
 
 lineRippleElt : Html msg
@@ -599,13 +614,13 @@ lineRippleElt =
 
 
 notchedOutlineElt : Config a msg -> Html msg
-notchedOutlineElt (Config { label }) =
+notchedOutlineElt config_ =
     Html.span [ class "mdc-notched-outline" ]
         [ Html.span [ class "mdc-notched-outline__leading" ] []
         , Html.span [ class "mdc-notched-outline__notch" ]
-            [ Html.label [ class "mdc-floating-label" ]
-                [ text (Maybe.withDefault "" label) ]
-            ]
+            (List.filterMap identity
+                [ floatingLabelElt config_ ]
+            )
         , Html.span [ class "mdc-notched-outline__trailing" ] []
         ]
 

@@ -79,11 +79,11 @@ to `True`.
         (SelectItem.config { value = "Apple" }
             |> SelectItem.setDisabled True
         )
-        [ text "Apple" ]
+        "Apple"
 
 -}
 
-import Html exposing (Html)
+import Html
 import Material.Select.Item.Internal exposing (Config(..), SelectItem(..))
 
 
@@ -130,6 +130,6 @@ type alias SelectItem a msg =
 
 {-| Select item constructor
 -}
-selectItem : Config a msg -> List (Html msg) -> SelectItem a msg
+selectItem : Config a msg -> String -> SelectItem a msg
 selectItem =
     SelectItem

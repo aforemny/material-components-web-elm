@@ -144,17 +144,15 @@ accent =
 ripple : Bool -> Config msg -> Html msg
 ripple isUnbounded ((Config { additionalAttributes }) as config_) =
     Html.node "mdc-ripple"
-        (List.filterMap identity
+        ((List.filterMap identity
             [ unboundedProp isUnbounded
             , unboundedData isUnbounded
             , colorCs config_
-            , rippleSurface
-            , Just (style "position" "absolute")
-            , Just (style "top" "0")
-            , Just (style "left" "0")
-            , Just (style "right" "0")
-            , Just (style "bottom" "0")
+            , rippleSurfaceCs
+            , pointerCss isUnbounded
             ]
+            ++ positionCss
+         )
             ++ additionalAttributes
         )
         []
@@ -174,9 +172,28 @@ unbounded =
     ripple True
 
 
-rippleSurface : Maybe (Html.Attribute msg)
-rippleSurface =
+rippleSurfaceCs : Maybe (Html.Attribute msg)
+rippleSurfaceCs =
     Just (class "mdc-ripple-surface")
+
+
+positionCss : List (Html.Attribute msg)
+positionCss =
+    [ style "position" "absolute"
+    , style "top" "0"
+    , style "left" "0"
+    , style "right" "0"
+    , style "bottom" "0"
+    ]
+
+
+pointerCss : Bool -> Maybe (Html.Attribute msg)
+pointerCss isUnbounded =
+    if isUnbounded then
+        Just (style "cursor" "pointer")
+
+    else
+        Nothing
 
 
 colorCs : Config msg -> Maybe (Html.Attribute msg)

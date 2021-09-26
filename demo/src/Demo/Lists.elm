@@ -400,7 +400,7 @@ nonInteractiveList =
     Html.div []
         [ List.list
             (List.config
-                |> List.setNonInteractive True
+                |> List.setInteractive False
                 |> List.setAttributes demoList
             )
             (ListItem.listItem ListItem.config [ text "Line item" ])

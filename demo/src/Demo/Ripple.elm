@@ -85,6 +85,8 @@ demoIcon =
     , style "width" "24px"
     , style "height" "24px"
     , style "padding" "12px"
+    , style "cursor" "pointer"
     , style "border-radius" "50%"
     , style "position" "relative"
+    , Html.Attributes.tabindex 0
     ]

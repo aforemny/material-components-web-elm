@@ -166,16 +166,16 @@ However, you may also include SVG or custom icons such as FontAwesome.
 See [Material.Select.Icon](Material-Select-Icon) for more information.
 
     Select.filled
-        (Select.config
-            |> Select.setLeadingIcon
-                (Just (SelectIcon.icon "favorite"))
-        )
-        (SelectItem.selectItem
-            (SelectItem.config { value = "" })
-            [ text "" ]
-        )
-        [ SelectItem.selectItem
-            (SelectItem.config { value = "Apple" })
+    (Select.config
+    |> Select.setLeadingIcon
+    (Just (SelectIcon.icon "favorite"))
+    )
+    (SelectItem.selectItem
+    (SelectItem.config { value = "" })
+    [ text "" ]
+    )
+    [ SelectItem.selectItem
+    (SelectItem.config { value = "Apple" })
             [ text "Apple" ]
         ]
 
@@ -212,7 +212,9 @@ import Material.Menu as Menu
 import Material.Select.Icon.Internal as SelectIcon exposing (Icon(..))
 import Material.Select.Item exposing (SelectItem)
 import Material.Select.Item.Internal as SelectItem
+import Svg
 import Svg.Attributes
+import VirtualDom
 
 
 {-| Configuration of a select
@@ -312,8 +314,11 @@ type Variant
 
 
 select : Variant -> Config a msg -> SelectItem a msg -> List (SelectItem a msg) -> Html msg
-select variant ((Config { leadingIcon, selected, additionalAttributes, onChange }) as config_) firstSelectItem remainingSelectItems =
+select variant config_ firstSelectItem remainingSelectItems =
     let
+        (Config { leadingIcon, selected, additionalAttributes, onChange }) =
+            config_
+
         selectedIndex =
             List.indexedMap
                 (\index (SelectItem.SelectItem (SelectItem.Config { value }) _) ->
@@ -330,6 +335,7 @@ select variant ((Config { leadingIcon, selected, additionalAttributes, onChange 
     Html.node "mdc-select"
         (List.filterMap identity
             [ rootCs
+            , filledCs variant
             , outlinedCs variant
             , leadingIconCs config_
             , disabledProp config_
@@ -341,18 +347,22 @@ select variant ((Config { leadingIcon, selected, additionalAttributes, onChange 
         )
         [ anchorElt []
             (List.concat
-                [ [ rippleElt
-                  , leadingIconElt config_
-                  , selectedTextElt
-                  , dropdownIconElt
-                  ]
-                , if variant == Outlined then
-                    [ notchedOutlineElt config_ ]
+                [ if variant == Filled then
+                    [ rippleElt
+                    , floatingLabelElt config_
+                    ]
 
                   else
-                    [ floatingLabelElt config_
-                    , lineRippleElt
-                    ]
+                    [ notchedOutlineElt config_ ]
+                , [ leadingIconElt config_
+                  , selectedTextContainerElt
+                  , dropdownIconElt
+                  ]
+                , if variant == Filled then
+                    [ lineRippleElt ]
+
+                  else
+                    []
                 ]
             )
         , menuElt leadingIcon selected onChange firstSelectItem remainingSelectItems
@@ -376,6 +386,15 @@ outlined config_ firstSelectItem remainingSelectItems =
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
     Just (class "mdc-select")
+
+
+filledCs : Variant -> Maybe (Html.Attribute msg)
+filledCs variant =
+    if variant == Filled then
+        Just (class "mdc-select--filled")
+
+    else
+        Nothing
 
 
 outlinedCs : Variant -> Maybe (Html.Attribute msg)
@@ -417,12 +436,46 @@ requiredProp (Config { required }) =
 
 rippleElt : Html msg
 rippleElt =
-    Html.span [ class "mdc-text-field__ripple" ] []
+    Html.span [ class "mdc-select__ripple" ] []
 
 
 anchorElt : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 anchorElt additionalAttributes nodes =
-    Html.div (class "mdc-select__anchor" :: additionalAttributes) nodes
+    Html.div
+        ([ anchorCs
+         , buttonRole
+         , ariaHaspopupAttr "listbox"
+         , ariaExpanded False
+         ]
+            ++ additionalAttributes
+        )
+        nodes
+
+
+anchorCs : Html.Attribute msg
+anchorCs =
+    class "mdc-select__anchor"
+
+
+buttonRole : Html.Attribute msg
+buttonRole =
+    Html.Attributes.attribute "role" "button"
+
+
+ariaHaspopupAttr : String -> Html.Attribute msg
+ariaHaspopupAttr value =
+    Html.Attributes.attribute "aria-haspopup" value
+
+
+ariaExpanded : Bool -> Html.Attribute msg
+ariaExpanded value =
+    Html.Attributes.attribute "aria-expanded"
+        (if value then
+            "true"
+
+         else
+            "false"
+        )
 
 
 leadingIconElt : Config a msg -> Html msg
@@ -500,7 +553,39 @@ leadingIconElt (Config { leadingIcon }) =
 
 dropdownIconElt : Html msg
 dropdownIconElt =
-    Html.i [ class "mdc-select__dropdown-icon" ] []
+    Html.i [ class "mdc-select__dropdown-icon" ]
+        [ Svg.svg
+            [ Svg.Attributes.class "mdc-select__dropdown-icon-graphic"
+            , Svg.Attributes.viewBox "7 10 10 5"
+            , focusableAttr False
+            ]
+            [ Svg.polygon
+                [ Svg.Attributes.class "mdc-select__dropdown-icon-inactive"
+                , Svg.Attributes.stroke "none"
+                , Svg.Attributes.fillRule "evenodd"
+                , Svg.Attributes.points "7 10 12 15 17 10"
+                ]
+                []
+            , Svg.polygon
+                [ Svg.Attributes.class "mdc-select__dropdown-icon-active"
+                , Svg.Attributes.stroke "none"
+                , Svg.Attributes.fillRule "evenodd"
+                , Svg.Attributes.points "7 15 12 10 17 15"
+                ]
+                []
+            ]
+        ]
+
+
+focusableAttr : Bool -> Svg.Attribute msg
+focusableAttr value =
+    VirtualDom.attribute "focusable"
+        (if value then
+            "true"
+
+         else
+            "false"
+        )
 
 
 floatingLabelElt : Config a msg -> Html msg
@@ -525,7 +610,13 @@ notchedOutlineElt (Config { label }) =
         ]
 
 
-menuElt : Maybe (Icon msg) -> Maybe a -> Maybe (a -> msg) -> SelectItem a msg -> List (SelectItem a msg) -> Html msg
+menuElt :
+    Maybe (Icon msg)
+    -> Maybe a
+    -> Maybe (a -> msg)
+    -> SelectItem a msg
+    -> List (SelectItem a msg)
+    -> Html msg
 menuElt leadingIcon selected onChange firstSelectItem remainingSelectItems =
     Menu.menu
         (Menu.config
@@ -540,7 +631,12 @@ menuElt leadingIcon selected onChange firstSelectItem remainingSelectItems =
         ]
 
 
-listItem : Maybe (Icon msg) -> Maybe a -> Maybe (a -> msg) -> SelectItem a msg -> ListItem msg
+listItem :
+    Maybe (Icon msg)
+    -> Maybe a
+    -> Maybe (a -> msg)
+    -> SelectItem a msg
+    -> ListItem msg
 listItem leadingIcon selected onChange (SelectItem.SelectItem config_ nodes) =
     ListItem.listItem (listItemConfig selected onChange config_)
         (if leadingIcon /= Nothing then
@@ -551,11 +647,26 @@ listItem leadingIcon selected onChange (SelectItem.SelectItem config_ nodes) =
         )
 
 
-listItemConfig : Maybe a -> Maybe (a -> msg) -> SelectItem.Config a msg -> ListItem.Config msg
-listItemConfig selectedValue onChange (SelectItem.Config { value, disabled, additionalAttributes }) =
+listItemConfig :
+    Maybe a
+    -> Maybe (a -> msg)
+    -> SelectItem.Config a msg
+    -> ListItem.Config msg
+listItemConfig selectedValue onChange config_ =
+    let
+        (SelectItem.Config { value, disabled, additionalAttributes }) =
+            config_
+    in
     ListItem.config
         |> ListItem.setDisabled disabled
         |> ListItem.setAttributes additionalAttributes
+        |> ListItem.setSelected
+            (if selectedValue == Just value then
+                Just ListItem.activated
+
+             else
+                Nothing
+            )
         |> (case onChange of
                 Just onChange_ ->
                     ListItem.setOnClick (onChange_ value)
@@ -565,11 +676,11 @@ listItemConfig selectedValue onChange (SelectItem.Config { value, disabled, addi
            )
 
 
+selectedTextContainerElt : Html msg
+selectedTextContainerElt =
+    Html.span [ class "mdc-select__selected-text-container" ] [ selectedTextElt ]
+
+
 selectedTextElt : Html msg
 selectedTextElt =
-    Html.input
-        [ class "mdc-select__selected-text"
-        , Html.Attributes.disabled True
-        , Html.Attributes.readonly True
-        ]
-        []
+    Html.span [ class "mdc-select__selected-text" ] []

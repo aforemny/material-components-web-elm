@@ -278,7 +278,7 @@ iconButton ((Config ({ additionalAttributes, href, disabled } as innerConfig)) a
                         [ node, Menu.menu menuConfig menuNodes ]
     in
     Html.node "mdc-icon-button"
-        [ tabIndexProp ]
+        []
         [ (if href /= Nothing && not disabled then
             Html.a
 
@@ -318,11 +318,6 @@ iconButtonCs =
 disabledAttr : Config msg -> Maybe (Html.Attribute msg)
 disabledAttr (Config { disabled }) =
     Just (Html.Attributes.disabled disabled)
-
-
-tabIndexProp : Html.Attribute msg
-tabIndexProp =
-    Html.Attributes.tabindex 0
 
 
 hrefAttr : Config msg -> Maybe (Html.Attribute msg)

@@ -71,7 +71,7 @@ module Material.CircularProgress exposing
 -}
 
 import Html exposing (Html)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style)
 import Json.Encode as Encode
 import Svg exposing (Svg)
 import Svg.Attributes
@@ -180,7 +180,6 @@ circularProgress progress ((Config { additionalAttributes }) as config_) =
         (List.filterMap identity
             [ rootCs
             , indeterminateCs progress
-            , sizeCs config_
             , progressbarRole
             , ariaLabelAttr config_
             , ariaValueMinAttr
@@ -190,6 +189,7 @@ circularProgress progress ((Config { additionalAttributes }) as config_) =
             , progressProp progress
             , closedProp config_
             ]
+            ++ sizeCs config_
             ++ additionalAttributes
         )
         [ determinateContainerElt
@@ -218,20 +218,26 @@ determinate config_ progress =
     circularProgress (Just progress) config_
 
 
-sizeCs : Config msg -> Maybe (Html.Attribute msg)
+sizeCs : Config msg -> List (Html.Attribute msg)
 sizeCs (Config { size }) =
-    Just
-        << class
-    <|
-        case size of
-            Large ->
-                "mdc-circular-progress--large"
+    let
+        px =
+            String.fromInt
+                (case size of
+                    Large ->
+                        48
 
-            Medium ->
-                "mdc-circular-progress--medium"
+                    Medium ->
+                        36
 
-            Small ->
-                "mdc-circular-progress--small"
+                    Small ->
+                        24
+                )
+                ++ "px"
+    in
+    [ style "width" px
+    , style "height" px
+    ]
 
 
 rootCs : Maybe (Html.Attribute msg)
@@ -257,6 +263,11 @@ circleCs progress =
          else
             "mdc-circular-progress__indeterminate-circle"
         )
+
+
+trackCs : Svg.Attribute msg
+trackCs =
+    Svg.Attributes.class "mdc-circular-progress__determinate-track"
 
 
 progressbarRole : Maybe (Html.Attribute msg)
@@ -342,6 +353,38 @@ strokeDashoffsetAttr progress (Config { size }) =
                 27.489
 
 
+strokeWidth : Config msg -> Svg.Attribute msg
+strokeWidth (Config { size }) =
+    Svg.Attributes.strokeWidth
+        << String.fromFloat
+    <|
+        case size of
+            Large ->
+                4
+
+            Medium ->
+                3
+
+            Small ->
+                2.5
+
+
+strokeWidthGap : Config msg -> Svg.Attribute msg
+strokeWidthGap (Config { size }) =
+    Svg.Attributes.strokeWidth
+        << String.fromFloat
+    <|
+        case size of
+            Large ->
+                3.2
+
+            Medium ->
+                2.4
+
+            Small ->
+                2
+
+
 determinateContainerElt : Maybe { progress : Float } -> Config msg -> Html msg
 determinateContainerElt progress config_ =
     Html.div [ class "mdc-circular-progress__determinate-container" ]
@@ -352,21 +395,102 @@ determinateCircleGraphicElt : Maybe { progress : Float } -> Config msg -> Html m
 determinateCircleGraphicElt progress config_ =
     Svg.svg
         [ Svg.Attributes.class "mdc-circular-progress__determinate-circle-graphic"
-        , Svg.Attributes.viewBox "0 0 48 48"
+        , viewBoxAttr config
         ]
-        [ circleElt progress config_ ]
+        [ trackElt config_
+        , circleElt strokeWidth (Just circleCs) progress config_
+        ]
 
 
-circleElt : Maybe { progress : Float } -> Config msg -> Svg msg
-circleElt progress config_ =
+viewBoxAttr : Config msg -> Svg.Attribute msg
+viewBoxAttr (Config { size }) =
+    Svg.Attributes.viewBox
+        (case size of
+            Large ->
+                "0 0 48 48"
+
+            Medium ->
+                "0 0 32 32"
+
+            Small ->
+                "0 0 24 24"
+        )
+
+
+trackElt : Config msg -> Svg msg
+trackElt config_ =
     Svg.circle
-        [ circleCs progress
-        , Svg.Attributes.cx "24"
-        , Svg.Attributes.cy "24"
-        , Svg.Attributes.r "18"
-        , strokeDasharrayAttr config_
-        , strokeDashoffsetAttr progress config_
+        [ trackCs
+        , cxAttr config_
+        , cyAttr config_
+        , rAttr config_
+        , strokeWidth config_
         ]
+        []
+
+
+cxAttr : Config msg -> Svg.Attribute msg
+cxAttr (Config { size }) =
+    Svg.Attributes.cx
+        (case size of
+            Large ->
+                "24"
+
+            Medium ->
+                "16"
+
+            Small ->
+                "12"
+        )
+
+
+cyAttr : Config msg -> Svg.Attribute msg
+cyAttr (Config { size }) =
+    Svg.Attributes.cy
+        (case size of
+            Large ->
+                "24"
+
+            Medium ->
+                "16"
+
+            Small ->
+                "12"
+        )
+
+
+rAttr : Config msg -> Svg.Attribute msg
+rAttr (Config { size }) =
+    Svg.Attributes.r
+        (case size of
+            Large ->
+                "18"
+
+            Medium ->
+                "12.5"
+
+            Small ->
+                "8.75"
+        )
+
+
+circleElt :
+    (Config msg -> Svg.Attribute msg)
+    -> Maybe (Maybe { progress : Float } -> Svg.Attribute msg)
+    -> Maybe { progress : Float }
+    -> Config msg
+    -> Svg msg
+circleElt strokeWidth_ circleCs_ progress config_ =
+    Svg.circle
+        ([ cxAttr config_
+         , cyAttr config_
+         , rAttr config_
+         , strokeDasharrayAttr config_
+         , strokeDashoffsetAttr progress config_
+         , strokeWidth_ config_
+         ]
+            ++ List.filterMap identity [ Maybe.map ((|>) progress) circleCs_ ]
+        )
         []
 
 
@@ -394,22 +518,25 @@ spinnerLayerElt config_ additionalAttributes =
             [ class "mdc-circular-progress__circle-clipper"
             , class "mdc-circular-progress__circle-left"
             ]
-            [ indeterminateCircleGraphicElt config_ ]
+            [ indeterminateCircleGraphicElt strokeWidth config_ ]
         , Html.div
             [ class "mdc-circular-progress__gap-patch" ]
-            [ indeterminateCircleGraphicElt config_ ]
+            [ indeterminateCircleGraphicElt strokeWidthGap config_ ]
         , Html.div
             [ class "mdc-circular-progress__circle-clipper"
             , class "mdc-circular-progress__circle-right"
             ]
-            [ indeterminateCircleGraphicElt config_ ]
+            [ indeterminateCircleGraphicElt strokeWidth config_ ]
         ]
 
 
-indeterminateCircleGraphicElt : Config msg -> Html msg
-indeterminateCircleGraphicElt config_ =
+indeterminateCircleGraphicElt :
+    (Config msg -> Svg.Attribute msg)
+    -> Config msg
+    -> Html msg
+indeterminateCircleGraphicElt strokeWidth_ config_ =
     Svg.svg
         [ Svg.Attributes.class "mdc-circular-progress__indeterminate-circle-graphic"
-        , Svg.Attributes.viewBox "0 0 48 48"
+        , viewBoxAttr config_
         ]
-        [ circleElt Nothing config_ ]
+        [ circleElt strokeWidth_ Nothing Nothing config_ ]

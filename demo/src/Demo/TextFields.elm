@@ -421,7 +421,7 @@ fullwidthTextField model =
         [ TextField.filled
             (TextField.config
                 |> TextField.setPlaceholder (Just "Standard")
-                |> TextField.setFullwidth True
+                |> TextField.setAttributes [ style "width" "100%" ]
             )
         , demoHelperText
         ]
@@ -434,7 +434,7 @@ fullwidthTextareaTextField model =
             [ TextArea.outlined
                 (TextArea.config
                     |> TextArea.setLabel (Just "Standard")
-                    |> TextArea.setFullwidth True
+                    |> TextArea.setAttributes [ style "width" "100%" ]
                 )
             , demoHelperText
             ]
@@ -448,7 +448,6 @@ textareaWithCharacterCounter model =
             [ TextArea.outlined
                 (TextArea.config
                     |> TextArea.setMaxLength (Just 300)
-                    |> TextArea.setFullwidth True
                 )
             , demoHelperTextWithCharacterCounter
             ]

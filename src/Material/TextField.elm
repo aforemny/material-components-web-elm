@@ -3,7 +3,6 @@ module Material.TextField exposing
     , setOnInput
     , setOnChange
     , setLabel
-    , setFullwidth
     , setValue
     , setPlaceholder
     , setDisabled
@@ -87,7 +86,6 @@ module Material.TextField exposing
 @docs setOnInput
 @docs setOnChange
 @docs setLabel
-@docs setFullwidth
 @docs setValue
 @docs setPlaceholder
 @docs setDisabled
@@ -125,25 +123,7 @@ Text fields may have a visible outlined around them by using their
 
     TextField.outlined TextField.config
 
-Note that `setFullwidth` does not have any effect on an outlined text field.
-
 @docs outlined
-
-
-# Full Width Text Field
-
-To make a text field span all of its available width, set its `setFullwidth`
-configuration option to `True`.
-
-    TextField.filled
-        (TextField.config |> TextField.setFullwidth True)
-
-Full width text fields do not support a label and will ignore the `setLabel`
-configuration option. You may use `setPlaceholder` or provide an extraneous
-label for a full width text field.
-
-Outlined text fields do not support `setFullwidth` and wll ignore this
-configuration option.
 
 
 # Disabled Text Field
@@ -346,13 +326,6 @@ config =
 setLabel : Maybe String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = label }
-
-
-{-| Specify a text field to be fullwidth
--}
-setFullwidth : Bool -> Config msg -> Config msg
-setFullwidth fullwidth (Config config_) =
-    Config { config_ | fullwidth = fullwidth }
 
 
 {-| Specify a text field's value

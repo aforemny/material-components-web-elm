@@ -3,7 +3,6 @@ module Material.TextArea exposing
     , setOnInput
     , setOnChange
     , setLabel
-    , setFullwidth
     , setValue
     , setPlaceholder
     , setRows
@@ -73,7 +72,6 @@ module Material.TextArea exposing
 @docs setOnInput
 @docs setOnChange
 @docs setLabel
-@docs setFullwidth
 @docs setValue
 @docs setPlaceholder
 @docs setRows
@@ -100,25 +98,7 @@ variant.
 
     TextArea.outlined TextArea.config
 
-Note that `setFullwidth` does not have any effect on an outlined text area.
-
 @docs outlined
-
-
-# Full Width Text Area
-
-To make a text area span all of its available width, set its `setFullwidth`
-configuration option to `True`.
-
-    TextArea.filled
-        (TextArea.config |> TextArea.setFullwidth True)
-
-Full width text areas do not support labels and will ignore the `setLabel`
-configuration option. You may use `setPlaceholder` or provide an extraneous
-label for a full width text area.
-
-Outlined text areas do not support `setFullwidth` and will ignore this
-configuration option.
 
 
 # Disabled Text Area
@@ -226,13 +206,6 @@ config =
 setLabel : Maybe String -> Config msg -> Config msg
 setLabel label (Config config_) =
     Config { config_ | label = label }
-
-
-{-| Specify a text area to be fullwidth
--}
-setFullwidth : Bool -> Config msg -> Config msg
-setFullwidth fullwidth (Config config_) =
-    Config { config_ | fullwidth = fullwidth }
 
 
 {-| Specify a text area's value

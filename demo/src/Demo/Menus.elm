@@ -12,44 +12,37 @@ import Material.List.Item as ListItem exposing (ListItem)
 import Material.Menu as Menu
 import Material.Theme as Theme
 import Material.Typography as Typography
+import Set exposing (Set)
 
 
 type alias Model =
-    { open1 : Bool
-    , open2 : Bool
-    , open3 : Bool
+    { opened : Set String
     }
 
 
 defaultModel : Model
 defaultModel =
-    { open1 = False
-    , open2 = False
-    , open3 = False
+    { opened = Set.empty
     }
 
 
 type Msg
-    = Open
-    | Close
-    | OpenChanged Bool
-    | Open3Changed Bool
+    = Opened String
+    | Closed String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Open ->
-            { model | open1 = True }
+        Opened id ->
+            { model
+                | opened = Set.insert id model.opened
+            }
 
-        Close ->
-            { model | open1 = False }
-
-        OpenChanged open2 ->
-            { model | open2 = open2 }
-
-        Open3Changed open3 ->
-            { model | open3 = open3 }
+        Closed id ->
+            { model
+                | opened = Set.remove id model.opened
+            }
 
 
 view : Model -> CatalogPage Msg
@@ -75,17 +68,21 @@ view model =
 
 buttonExample : Model -> Html Msg
 buttonExample model =
+    let
+        id =
+            "button"
+    in
     Button.text
         (Button.config
-            |> Button.setOnClick Open
+            |> Button.setOnClick (Opened id)
             |> Button.setMenu
                 (Just <|
                     Button.menu
                         (Menu.config
-                            |> Menu.setOpen model.open1
-                            |> Menu.setOnClose Close
+                            |> Menu.setOpen (Set.member id model.opened)
+                            |> Menu.setOnClose (Closed id)
                         )
-                        (menuItems { onClick = Close })
+                        (menuItems { onClick = Closed id })
                 )
         )
         "Open menu"
@@ -93,17 +90,21 @@ buttonExample model =
 
 iconButtonExample : Model -> Html Msg
 iconButtonExample model =
+    let
+        id =
+            "icon-button"
+    in
     IconButton.iconButton
         (IconButton.config
-            |> IconButton.setOnClick (OpenChanged True)
+            |> IconButton.setOnClick (Opened id)
             |> IconButton.setMenu
                 (Just <|
                     IconButton.menu
                         (Menu.config
-                            |> Menu.setOpen model.open2
-                            |> Menu.setOnClose (OpenChanged False)
+                            |> Menu.setOpen (Set.member id model.opened)
+                            |> Menu.setOnClose (Closed id)
                         )
-                        (menuItems { onClick = OpenChanged False })
+                        (menuItems { onClick = Closed id })
                 )
         )
         (IconButton.icon "menu_vert")
@@ -111,6 +112,10 @@ iconButtonExample model =
 
 iconButtonWithinCardExample : Model -> Html Msg
 iconButtonWithinCardExample model =
+    let
+        id =
+            "card"
+    in
     Card.card (Card.config |> Card.setAttributes [ style "width" "350px" ])
         { blocks =
             Card.primaryAction []
@@ -136,10 +141,7 @@ iconButtonWithinCardExample model =
                         , style "padding" "0 1rem 0.5rem 1rem"
                         ]
                         [ text
-                            """
-                Visit ten places on our planet that are undergoing the biggest
-                changes today.
-                """
+                            "Visit ten places on our planet that are undergoing the biggest changes today."
                         ]
                 ]
         , actions =
@@ -156,20 +158,16 @@ iconButtonWithinCardExample model =
                             (IconButton.icon "share")
                         , Card.icon
                             (IconButton.config
-                                |> IconButton.setOnClick (OpenChanged True)
+                                |> IconButton.setOnClick (Opened id)
                                 |> IconButton.setMenu
                                     (Just <|
                                         IconButton.menu
                                             (Menu.config
-                                                |> Menu.setOpen model.open3
-                                                |> Menu.setOnClose
-                                                    (OpenChanged False)
+                                                |> Menu.setOpen
+                                                    (Set.member id model.opened)
+                                                |> Menu.setOnClose (Closed id)
                                             )
-                                            (menuItems
-                                                { onClick =
-                                                    OpenChanged False
-                                                }
-                                            )
+                                            (menuItems { onClick = Closed id })
                                     )
                             )
                             (IconButton.icon "more_vert")
@@ -202,7 +200,8 @@ menuItems onClick =
 
 listItem : { onClick : msg } -> String -> ListItem msg
 listItem { onClick } label =
-    ListItem.listItem (ListItem.config |> ListItem.setOnClick onClick) [ text label ]
+    ListItem.listItem (ListItem.config |> ListItem.setOnClick onClick)
+        [ text label ]
 
 
 heroMenu : Model -> Html msg

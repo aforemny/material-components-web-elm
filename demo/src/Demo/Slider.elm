@@ -61,8 +61,8 @@ view model =
         , continuousSlider model
         , Html.h3 [ Typography.subtitle1 ] [ text "Discrete" ]
         , discreteSlider model
-        , Html.h3 [ Typography.subtitle1 ] [ text "Discrete with Tick Marks" ]
-        , discreteSliderWithTickMarks model
+        , Html.h3 [ Typography.subtitle1 ] [ text "Discrete with Markers" ]
+        , discreteSliderWithMarkers model
         , Html.h3 [ Typography.subtitle1 ] [ text "Focus Slider" ]
         , focusSlider model
         ]
@@ -77,7 +77,7 @@ heroSlider model =
     in
     Slider.slider
         (Slider.config
-            |> Slider.setValue (Dict.get id model.sliders)
+            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
             |> Slider.setOnInput (Changed id)
         )
 
@@ -90,10 +90,10 @@ continuousSlider model =
     in
     Slider.slider
         (Slider.config
-            |> Slider.setValue (Dict.get id model.sliders)
+            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
             |> Slider.setOnInput (Changed id)
-            |> Slider.setMin (Just 0)
-            |> Slider.setMax (Just 50)
+            |> Slider.setMin 0
+            |> Slider.setMax 50
         )
 
 
@@ -105,29 +105,29 @@ discreteSlider model =
     in
     Slider.slider
         (Slider.config
-            |> Slider.setValue (Dict.get id model.sliders)
+            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
             |> Slider.setOnInput (Changed id)
             |> Slider.setDiscrete True
-            |> Slider.setMin (Just 0)
-            |> Slider.setMax (Just 50)
-            |> Slider.setStep (Just 1)
+            |> Slider.setMin 0
+            |> Slider.setMax 50
+            |> Slider.setStep 1
         )
 
 
-discreteSliderWithTickMarks : Model -> Html Msg
-discreteSliderWithTickMarks model =
+discreteSliderWithMarkers : Model -> Html Msg
+discreteSliderWithMarkers model =
     let
         id =
-            "discrete-slider-with-tick-marks"
+            "discrete-slider-with-markers"
     in
     Slider.slider
         (Slider.config
-            |> Slider.setValue (Dict.get id model.sliders)
+            |> Slider.setValue (Maybe.withDefault 0 (Dict.get id model.sliders))
             |> Slider.setOnInput (Changed id)
             |> Slider.setDiscrete True
-            |> Slider.setMin (Just 0)
-            |> Slider.setMax (Just 50)
-            |> Slider.setStep (Just 1)
+            |> Slider.setMin 0
+            |> Slider.setMax 50
+            |> Slider.setStep 10
             |> Slider.setDisplayMarkers True
         )
 
@@ -141,7 +141,8 @@ focusSlider model =
     Html.div []
         [ Slider.slider
             (Slider.config
-                |> Slider.setValue (Dict.get id model.sliders)
+                |> Slider.setValue
+                    (Maybe.withDefault 0 (Dict.get id model.sliders))
                 |> Slider.setOnInput (Changed id)
                 |> Slider.setAttributes [ Html.Attributes.id id ]
             )

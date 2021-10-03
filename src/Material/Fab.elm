@@ -236,9 +236,16 @@ fab ((Config { additionalAttributes, touch }) as config_) icon_ =
                 ]
                 ++ additionalAttributes
             )
-            [ rippleElt
-            , iconElt icon_
-            ]
+            ([ rippleElt
+             , iconElt icon_
+             ]
+                ++ (if touch then
+                        [ touchElt ]
+
+                    else
+                        []
+                   )
+            )
 
 
 tabIndexProp : Int -> Maybe (Html.Attribute msg)
@@ -292,6 +299,11 @@ iconElt icon_ =
         SvgIcon { node, attributes, nodes } ->
             Html.map never
                 (node (Svg.Attributes.class "mdc-fab__icon" :: attributes) nodes)
+
+
+touchElt : Html msg
+touchElt =
+    Html.div [ class "mdc-fab__touch" ] []
 
 
 clickHandler : Config msg -> Maybe (Html.Attribute msg)

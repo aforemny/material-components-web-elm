@@ -253,10 +253,35 @@ tabBar ((Config { additionalAttributes, align }) as config_) tab_ tabs_ =
             [ rootCs
             , tablistRoleAttr
             , activeTabIndexProp tabs
+            , activatedHandler tabs
             ]
             ++ additionalAttributes
         )
         [ tabScroller config_ align tabs ]
+
+
+activatedHandler : List (Tab msg) -> Maybe (Html.Attribute msg)
+activatedHandler tabs =
+    Just
+        (Html.Events.on "MDCTabBar:activated"
+            (Decode.at [ "detail", "index" ] Decode.int
+                |> Decode.andThen
+                    (\activatedIndex ->
+                        case
+                            tabs
+                                |> List.drop activatedIndex
+                                |> List.head
+                                |> Maybe.andThen
+                                    (\(Tab.Tab (Tab.Config { onClick })) -> onClick)
+                        of
+                            Just msg ->
+                                Decode.succeed msg
+
+                            Nothing ->
+                                Decode.fail ""
+                    )
+            )
+        )
 
 
 enforceActive : Tab msg -> List (Tab msg) -> List (Tab msg)
@@ -316,18 +341,18 @@ activeTabIndexProp tabs =
                 |> List.head
                 |> Maybe.map Tuple.first
     in
-    Maybe.map (Html.Attributes.property "activeTabIndex" << Encode.int) activeTabIndex
+    Maybe.map (Html.Attributes.property "activeTabIndex" << Encode.int)
+        activeTabIndex
 
 
-viewTab : Config msg -> Tab msg -> Html msg
-viewTab ((Config { indicatorSpansContent }) as barConfig) ((Tab ((Tab.Config { additionalAttributes, content }) as tabConfig)) as tab) =
+viewTab : Int -> Config msg -> Tab msg -> Html msg
+viewTab index ((Config { indicatorSpansContent }) as barConfig) ((Tab ((Tab.Config { additionalAttributes, content }) as tabConfig)) as tab) =
     Html.node "mdc-tab"
         (List.filterMap identity
             [ tabCs
             , tabRoleAttr
             , tabStackedCs barConfig
             , tabMinWidthCs barConfig
-            , tabClickHandler tabConfig
             ]
             ++ additionalAttributes
         )
@@ -371,11 +396,6 @@ tabMinWidthCs (Config { minWidth }) =
 tabRoleAttr : Maybe (Html.Attribute msg)
 tabRoleAttr =
     Just (Html.Attributes.attribute "role" "tab")
-
-
-tabClickHandler : Tab.Config msg -> Maybe (Html.Attribute msg)
-tabClickHandler (Tab.Config { onClick }) =
-    Maybe.map (Html.Events.on "MDCTab:interacted" << Decode.succeed) onClick
 
 
 tabContentElt : Config msg -> Tab.Config msg -> Tab.Content -> Maybe (Html msg)
@@ -485,4 +505,4 @@ tabScrollerScrollAreaElt barConfig tabs =
 tabScrollerScrollContentElt : Config msg -> List (Tab msg) -> Html msg
 tabScrollerScrollContentElt barConfig tabs =
     Html.div [ class "mdc-tab-scroller__scroll-content" ]
-        (List.map (viewTab barConfig) tabs)
+        (List.indexedMap (\index -> viewTab index barConfig) tabs)

@@ -309,13 +309,13 @@ list ((Config { additionalAttributes }) as config_) firstListItem remainingListI
 
 rootCs : Maybe (Html.Attribute msg)
 rootCs =
-    Just (class "mdc-list")
+    Just (class "mdc-deprecated-list")
 
 
 nonInteractiveCs : Config msg -> Maybe (Html.Attribute msg)
 nonInteractiveCs (Config { nonInteractive }) =
     if nonInteractive then
-        Just (class "mdc-list--non-interactive")
+        Just (class "mdc-deprecated-list--non-interactive")
 
     else
         Nothing
@@ -324,7 +324,7 @@ nonInteractiveCs (Config { nonInteractive }) =
 denseCs : Config msg -> Maybe (Html.Attribute msg)
 denseCs (Config { dense }) =
     if dense then
-        Just (class "mdc-list--dense")
+        Just (class "mdc-deprecated-list--dense")
 
     else
         Nothing
@@ -333,7 +333,7 @@ denseCs (Config { dense }) =
 avatarListCs : Config msg -> Maybe (Html.Attribute msg)
 avatarListCs (Config { avatarList }) =
     if avatarList then
-        Just (class "mdc-list--avatar-list")
+        Just (class "mdc-deprecated-list--avatar-list")
 
     else
         Nothing
@@ -342,7 +342,7 @@ avatarListCs (Config { avatarList }) =
 twoLineCs : Config msg -> Maybe (Html.Attribute msg)
 twoLineCs (Config { twoLine }) =
     if twoLine then
-        Just (class "mdc-list--two-line")
+        Just (class "mdc-deprecated-list--two-line")
 
     else
         Nothing
@@ -432,7 +432,7 @@ group additionalAttributes nodes =
 
 listGroupCs : Html.Attribute msg
 listGroupCs =
-    class "mdc-list-group"
+    class "mdc-deprecated-list-group"
 
 
 {-| List group subheader view function
@@ -444,7 +444,7 @@ subheader additionalAttributes nodes =
 
 listGroupSubheaderCs : Html.Attribute msg
 listGroupSubheaderCs =
-    class "mdc-list-group__subheader"
+    class "mdc-deprecated-list-group__subheader"
 
 
 wrapFocusProp : Config msg -> Maybe (Html.Attribute msg)

@@ -14,7 +14,6 @@ build-npm: node_modules
 	cp material-components-web/build/material-components-web-elm.min.css dist/
 	cp material-components-web/build/material-components-web-elm.min.css.map dist/
 	cp material-components-web/build/material-components-web-elm.min.js dist/
-	cp material-components-web/build/material-components-web-elm.min.js.map dist/
 
 
 build-pages: build-npm build-demo

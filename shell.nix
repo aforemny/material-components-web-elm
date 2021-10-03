@@ -5,6 +5,7 @@ mkShell {
     chromium
     elmPackages.elm
     elmPackages.elm-format
+    elmPackages.elm-json
     (ghc.withPackages(pkgs: [ pkgs.pandoc ]))
     nodejs
     python3

@@ -2,6 +2,456 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 8.0.0 (2021-10-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* The configuration options `TextField.setFullWith`
+(`TextArea.setFullWidth`) have been removed because they are not in the
+Material Design specification. To archieve a similar effect, set the CSS
+property `width: 100%` on the text field/ text area.
+
+Before:
+```
+TextField.config
+    |> TextField.setFullWidth True
+```
+
+After:
+```
+TextField.config
+    |> TextField.setAttributes [ Html.Attributes.style "width" "100%" ]
+```
+* The function `SelectItem.selectItem` is restricted to
+have only `String` content.
+
+Before:
+
+```elm
+SelectItem.selectItem SelectItem.config [ text "Option" ]
+```
+
+After:
+
+```elm
+SelectItem.selectItem SelectItem.config "Option"
+```
+* The function `Menu.menu` has been constrained to list
+items to more closely match the intended use-case, as well as to align
+with similar functions in the library (ie. `Select.select`).
+
+Before:
+
+```elm
+Menu.menu Menu.config
+    (List.list
+        (List.config
+            |> List.setRipples False
+            |> List.setWrapFocus True
+        )
+        (ListItem.listItem ListItem.config [ text "Option 1" ])
+        [ ListItem.listItem ListItem.config [ text "Option 2" ] ]
+    )
+```
+
+After:
+
+```elm
+Menu.menu Menu.config
+    (ListItem.listItem ListItem.config [ text "Option 1" ])
+    [ ListItem.listItem ListItem.config [ text "Option 2" ] ]
+```
+* The function `List.setNonInteractive` has been replaced
+by `List.setInteractive`. Non-interactive lists do not receive keyboard
+focus and feature no interaction with pointing devices.
+* The function `Dialog.dialog` has been removed, and
+instead has been replaced by more specialized `Dialog.simple`,
+`Dialog.alert` and `Dialog.confirmation` variants.
+* The function `LinearProgress.setReverse` has been
+removed as the direction of text is now automatically determined.
+
+Refer to the documentation for ways to manually set the direction in
+case this fails or is not desired.
+* The signature of `TabBar.tabBar` has changed. It now takes the first tab
+as an extra argument to guarantee that the list of tabs passed to it is
+non-empty.
+
+Before:
+```elm
+TabBar.tabBar TabBar.config
+    [ Tab.tab Tab.config { … }
+    , Tab.tab Tab.config { … }
+    ]
+```
+
+After:
+```elm
+TabBar.tabBar TabBar.config
+    (Tab.tab Tab.config { … })
+    [ Tab.tab Tab.config { … } ]
+```
+* The type signature of `chipSet` changed from
+
+```
+chipSet : List (Html.Attribute msg) -> List (Chip msg) -> Html msg
+```
+
+to
+
+```
+chipSet : List (Html.Attribute msg) -> Chip msg -> List (Chip msg) -> Html msg
+```
+* Generally, how icons are specified in this library changed. When before
+we just wrote the Material Icon's /icon name/ as a String, say,
+`"favorite"`, now we write `Button.icon "favorite"` for the Material
+Icon (for a button). There are functions `Button.customIcon` and
+`Button.svgIcon` to support custom icons.
+
+The following modules have been updated to support custom icons:
+
+- ActionChip
+- Button
+- ChoiceChip
+- Fab
+- Fab.Extended
+- FilterChip
+- IconButton
+- IconToggle
+- InputChip
+- Select
+- Snackbar
+- Tab
+- TextField
+* Native Select and Enhanced Select have been replaced by
+a unified Select component. The API changed as follows:
+
+Before:
+```elm
+import Material.Select as Select
+import Material.Select.Option as SelectOption
+
+Select.filled
+    (Select.config
+        |> Select.setLabel (Just "Fruit")
+        |> Select.setValue (Just "")
+        |> Select.setOnChange ValueChanged
+    )
+    [ SelectOption.selectOption
+        (SelectOption.config
+            |> SelectOption.setValue (Just "")
+        )
+        [ text "" ]
+    , SelectOption.selectOption
+        (SelectOption.config
+            |> SelectOption.setValue (Just "Apple")
+        )
+        [ text "Apple" ]
+    ]
+
+```
+
+After:
+```elm
+import Material.Select as Select
+import Material.Select.Item as SelectItem
+
+Select.filled
+    (Select.config
+        |> Select.setSelected (Just "")
+        |> Select.setOnChange ValueChanged
+    )
+    (SelectItem.selectItem
+        (SelectItem.config { value = "" })
+        [ text "" ]
+    )
+    [ SelectItem.selectItem
+        (SelectItem.config { value = "Apple" })
+        [ text "Apple" ]
+    ]
+```
+* Snackbar messages now require you to set a label.
+
+Before:
+```elm
+Snackbar.message
+    |> Snackbar.setLabel "Something happened"
+```
+
+After:
+```elm
+Snackbar.message "Something happened"
+```
+* Snackbar now offers a simpler interface.
+
+Before:
+```elm
+type Msg
+    = SnackbarMsg (Snackbar.Msg Msg)
+    | SomethingHappened
+
+update msg model =
+   case msg of
+       SnackbarMsg msg_ ->
+           let
+               ( newQueue, cmd) =
+                   Snackbar.update SnackbarMsg msg_ model.queue
+           in
+           ( { model | queue = newQueue }, cmd )
+
+       SomethingHappened ->
+           ( model, Snackbar.addMessage SnackbarMsg Snackbar.message )
+
+view model =
+    Snackbar.snackbar SnackbarMsg Snackbar.config model.queue
+```
+
+After:
+```elm
+type Msg
+    = SnackbarClosed Snackbar.MessageId
+    | SomethingHappened
+
+update msg model =
+   case msg of
+       SnackbarClosed messageId ->
+           { model | queue = Snackbar.close messageId model.queue }
+
+       SomethingHappened ->
+           { model | queue = Snackbar.addMessage Snackbar.message model.queue }
+
+view model =
+    Snackbar.snackbar (Snackbar.config { onClosed = SnackbarClosed }) model.queue
+```
+* `List.list` type signature changed.
+
+Before:
+```elm
+List.list List.config
+    [ ListItem.listItem ListItem.config [ text "List Item" ]
+    , ListItem.listItem ListItem.config [ text "List Item" ]
+    ]
+```
+
+After:
+```elm
+List.list List.config
+    (ListItem.listItem ListItem.config [ text "List Item" ])
+    [ ListItem.listItem ListItem.config [ text "List Item" ] ]
+```
+* `Material.Choice.set` was renamed to
+`Material.ChipSet.Choice.chipSet`. The same is true for filter and input
+chips.
+* Choice chip API changed.
+
+Before:
+
+```elm
+import Material.Chip.Choice as ChoiceChip
+
+ChoiceChip.set []
+    [ ChoiceChip.chip
+          (ChoiceChip.config
+              |> ChoiceChip.setSelected (Just True)
+              |> ChoiceChip.setOnClick (Clicked "Chip")
+          )
+          "Chip"
+    ]
+```
+
+After:
+
+```elm
+import Material.Chip.Choice as ChoiceChip
+improt Material.ChipSet.Choice as ChoiceChipSet
+
+ChoiceChipSet.chipSet
+    (ChoiceChipSet.config { toLabel = identity }
+        |> ChoiceChipSet.setSelected (Just "Chip")
+        |> ChoiceChipSet.setOnChange Clicked
+    )
+    [ ChoiceChip.chip ChoiceChip.config "Chip" ]
+```
+* Snackbar's `setTimeout` function now takes a `Maybe
+Int` instead of a `Int`.
+
+Before:
+
+```elm
+Snackbar.message
+    |> Snackbar.setTimeout 4000
+```
+
+After:
+
+```elm
+Snackbar.message
+    |> Snackbar.setTimeout (Just 4000)
+```
+* Removes `Slider.setOnChange`. Update your sliders to
+use `setOnInput` instead.
+
+Before:
+```elm
+Slider.slider (Slider.config |> Slider.setOnChange Changed)
+```
+
+After:
+```elm
+Slider.slider (Slider.config |> Slider.setOnInput Changed)
+```
+* This commit implements the _builder pattern_ for
+configuration types, replacing record based configuration. In most
+cases, migration should be straight-forward. For example,
+
+```elm
+import Material.Button exposing (raisedButton, buttonConfig)
+
+main =
+    textButton
+        { buttonConfig | icon = Just "favorite" }
+        "Add to favorites"
+```
+
+becomes
+
+```elm
+import Material.Button as Button
+
+main =
+    Button.text
+        (Button.config |> Button.setIcon "favorite")
+        "Add to favorites"
+```
+
+If you have trouble migrating some code, please leave a message on
+GitHub issues!
+* Card.actionIcon now takes a IconButtonConfig instead of
+a IconConfig as first argument
+* SwitchConfig.onClick has been renamed to
+SwitchConfig.onChange
+* TextFieldConfig.invalid has been replaced by
+TextFieldConfig.valid (default to True). The same is true for
+TextAreaConfig
+* SnackbarConfig has been extended by a field
+`closesOnEscape : Bool`. Additionally, Snackbar.Message's configuration
+field timeoutMs has been changed from Float to Int
+* SliderConfig.step has been changed from taking a `Maybe
+Float` to taking a `Float` only
+* SelectConfig has been extended by the following boolean
+fields: disabled, required and valid
+* The function ripple has been renamed to boundedRipple.
+RippleConfig does not contain the field `unbounded` anymore
+* Functions listItem, listItemDivider and
+listGroupSubheader now return `ListItem msg` instead of `Html msg`. The
+function list has been changed accordingly.
+* IconToggleConfig.onClick has been renamed to
+IconToggleConfig.onChange
+* DismissibleDrawerConfig has been extended by a field
+`onClose : Maybe msg`. This facilitates the dismissible drawer closing
+on pressing the Escape key.
+* CheckboxConfig.onClick has been renamed to
+CheckboxConfig.onChange
+
+### Features
+
+* Add Button.setMenu and IconButton.setMenu ([43ae4f1](https://github.com/aforemny/material-components-web-elm/commit/43ae4f1a09bd3c01d5c4750545034266f6c76bc7))
+* Add component CircularProgress ([19717c2](https://github.com/aforemny/material-components-web-elm/commit/19717c2189dff1e33ae03ae7a97cea79d5f262de))
+* Add Data Table ([4ffdfa4](https://github.com/aforemny/material-components-web-elm/commit/4ffdfa4a6dc5dbecfd4a7680d6f7c70153bbc101))
+* Add Dialog variant ([4f1b047](https://github.com/aforemny/material-components-web-elm/commit/4f1b0478ca3535d0f69ec5033da1aeda78687f14))
+* Add Dialog variants `simple`, `alert` and `confirmation` ([1b938ee](https://github.com/aforemny/material-components-web-elm/commit/1b938ee0f524a5dabd69a1122a200d26717bda88))
+* Add Dialog.defaultAction ([58b4f7d](https://github.com/aforemny/material-components-web-elm/commit/58b4f7d51c6403ba62b1cb94cff7671e7072b6e5))
+* Add Dialog.initialFocus ([2488f8e](https://github.com/aforemny/material-components-web-elm/commit/2488f8e895214becc16f1afdf727cda1d42e495d))
+* Add Dialog.setScrimCloses ([fefa520](https://github.com/aforemny/material-components-web-elm/commit/fefa520cc172eb497c89c1ba0bbb32aabee4ba3d))
+* Add fields href, target to ButtonConfig ([3c60856](https://github.com/aforemny/material-components-web-elm/commit/3c60856d469a8afac2ada735c6093159978783fc))
+* Add focus support to ChipSet ([da373a1](https://github.com/aforemny/material-components-web-elm/commit/da373a1daa443018c14ee3b99ba5810d6f647c51))
+* Add HelperText.setValidation ([20b5d4f](https://github.com/aforemny/material-components-web-elm/commit/20b5d4fc41e2b02e9517c4cdc7905b5e82c60310))
+* Add href to ListItemConfig ([6773780](https://github.com/aforemny/material-components-web-elm/commit/6773780bd065b05e9ca8e71079b117eb58fae076))
+* Add List.setRipples ([196925e](https://github.com/aforemny/material-components-web-elm/commit/196925ecd1e8daa69e1827d9608558db126c4729))
+* Add Select.setLeadingIcon ([d3aa83f](https://github.com/aforemny/material-components-web-elm/commit/d3aa83fced054b88d1e8ec1ed6f24e5b0c4d6c12))
+* Add setHref and setTarget to IconButton ([e6969cb](https://github.com/aforemny/material-components-web-elm/commit/e6969cb36693a7729a5fa833527fb8ac19818878))
+* Add support for Browser.Dom.focus ([fae5d07](https://github.com/aforemny/material-components-web-elm/commit/fae5d07cb1fde3dcc0e53091b67cf340add49346))
+* Add support for custom icons. ([110f89e](https://github.com/aforemny/material-components-web-elm/commit/110f89e017022a9497b663076794c78ae3ac150b))
+* Add support for incrased touch target size ([b281c23](https://github.com/aforemny/material-components-web-elm/commit/b281c233d9b13fe8e4cc3c0cd85c00abf68e7259))
+* Add support for persistent snackbar messages ([e6cbc50](https://github.com/aforemny/material-components-web-elm/commit/e6cbc50c1c97ac94ea2c3e929d529b2821f0d534))
+* Add TextField.setEndAligned ([dd6d0bf](https://github.com/aforemny/material-components-web-elm/commit/dd6d0bf5cc244747e89c89f0a7f313428399b43e))
+* Add TextField.setPrefix, TextField.setSuffix ([96d6ca8](https://github.com/aforemny/material-components-web-elm/commit/96d6ca8cc17703071eb13f74002aa4dc876a990a))
+* Add Theme.error and Theme.onError to provide CSS error classes ([ff5b9c9](https://github.com/aforemny/material-components-web-elm/commit/ff5b9c95ed0503625393c3bfb13cbc2e9be0b0fb))
+* Card.actionIcon is now based on IconButton ([0a4a5c0](https://github.com/aforemny/material-components-web-elm/commit/0a4a5c0935b2f5a0858355a8204cb213f51b6acf))
+* Constrain `Menu.menu` to list items ([b0ea773](https://github.com/aforemny/material-components-web-elm/commit/b0ea773f59b2681ad0e8cb9ce5c7781d889ae123))
+* Disallow empty chip sets ([9c514dc](https://github.com/aforemny/material-components-web-elm/commit/9c514dcfc9183da3d49c1b0ae17d3d8f5ea4fd1c))
+* Implement builder pattern for configuration ([96ee3e7](https://github.com/aforemny/material-components-web-elm/commit/96ee3e7ba5f8a208fb4500e32efc0ce7b807220b))
+* Link buttons can be disabled ([dd513f6](https://github.com/aforemny/material-components-web-elm/commit/dd513f6a66f70d424a9c4f7eb2bf3736c084096e))
+* List items are guaranteed to have at least one item ([6f7521f](https://github.com/aforemny/material-components-web-elm/commit/6f7521f173692c7615c42d627387faf963cd8604))
+* Make Text Field compatible with Browser.Dom.focus ([bd04282](https://github.com/aforemny/material-components-web-elm/commit/bd042829538ca6ccebf0a06d0ab75617674508e3))
+* Refactor Select ([57e5a02](https://github.com/aforemny/material-components-web-elm/commit/57e5a022c913650d32d10e542ea85119c6d2e098))
+* Remove LinearProgress.setReverse ([b4c3b0c](https://github.com/aforemny/material-components-web-elm/commit/b4c3b0c9940b2fe7c40bd0b083e4b552e749c1ee))
+* Remove Snackbar.Msg ([05ac366](https://github.com/aforemny/material-components-web-elm/commit/05ac366143795b6d6d79250bc9cd39ffe675773c))
+* Remove Snackbar.setLabel ([e45553d](https://github.com/aforemny/material-components-web-elm/commit/e45553da8471277fa4405ede445c661a570d68b7))
+* Remove TextField.setFullWidth, TextArea.setFullWidth ([2ed5e01](https://github.com/aforemny/material-components-web-elm/commit/2ed5e0148a3a65a1ae44e2ab3fc2bb235b0d0aca))
+* Restrict select items to String content ([d542a03](https://github.com/aforemny/material-components-web-elm/commit/d542a0340f9f9af59f376b37ae2939206d4c847c))
+* Ripple.unbounded sets cursor to pointer ([1bd0c08](https://github.com/aforemny/material-components-web-elm/commit/1bd0c08ce43bfc687267ab930dda2b13e59961eb))
+* Support MDC Web version 5.1.0 ([963e8e9](https://github.com/aforemny/material-components-web-elm/commit/963e8e9bc1d6ce7ef2c3c210aa3ba122902dcb08))
+* Update to MDC 6.0.0 ([a65b371](https://github.com/aforemny/material-components-web-elm/commit/a65b3710795018e8f632316e6a74c1509f24f786))
+* Update to MDC Web 11.0.0 ([849bb6f](https://github.com/aforemny/material-components-web-elm/commit/849bb6fc62a3cb2a9c386e3d5cd47f5a10234651))
+* **docs:** Add Text area with character counter demo ([a066421](https://github.com/aforemny/material-components-web-elm/commit/a066421331a51d07a1c2dc50ed375576755f9fc8))
+* Update to MDC Web 3.2.0 ([c01ce82](https://github.com/aforemny/material-components-web-elm/commit/c01ce82da33c8207bd9fcb0d5494a7a1ae1aa861))
+* Update to MDC Web 4.0.0 ([915cdbd](https://github.com/aforemny/material-components-web-elm/commit/915cdbd0e156e6ccfd0498a62bb9a3bff0df80cc))
+* Update to MDC Web v2.3.1 ([7468981](https://github.com/aforemny/material-components-web-elm/commit/746898135eee6f6b714b3959dc74f4a45d33fde1))
+
+
+### Bug Fixes
+
+* (Empty) List throws when dynamically adding first item ([9f7142a](https://github.com/aforemny/material-components-web-elm/commit/9f7142a31a837d703b7df1ae1cfd2ae45f2f9cc0))
+* Add List.setInteractive ([f5da1c6](https://github.com/aforemny/material-components-web-elm/commit/f5da1c6aa49a28ec4f59aadd5a41f04e25eb02d0))
+* Add ripple to image list items ([1e81d39](https://github.com/aforemny/material-components-web-elm/commit/1e81d392b10cae65c09f5831b2174a11808d682a))
+* Add Slider.setOnInput ([1470dfc](https://github.com/aforemny/material-components-web-elm/commit/1470dfcffb8174e19bef5bf565127ae9b7e6c742))
+* Add support for Elm 0.19.1 ([94d1137](https://github.com/aforemny/material-components-web-elm/commit/94d113733a35fd2a921f42f6fb81d3e1f8a4b977))
+* Character counters for TextAreas were throwing due to missing maxLength prop ([9902c0e](https://github.com/aforemny/material-components-web-elm/commit/9902c0e4b65e4f08ffb82012ce4d7a581da39d13))
+* Checkbox no longer plays animation when initially rendered as checked or indeterminate ([0b8f623](https://github.com/aforemny/material-components-web-elm/commit/0b8f6237020053a15d21614f91275c92bbe8690a))
+* Data table rows were being marked as header rows ([639b6f1](https://github.com/aforemny/material-components-web-elm/commit/639b6f1c2263a08374253673cc4709836ef1545b))
+* Data Table throws error upon destruction ([eaf1649](https://github.com/aforemny/material-components-web-elm/commit/eaf1649680d366d20e260f6cb5019fc98bd71c8a))
+* Dialog applies additionalAttributes ([02fae12](https://github.com/aforemny/material-components-web-elm/commit/02fae12186c22de3a21c1f87be5ee02d3671d064))
+* Disabled buttons now work ([97a66f4](https://github.com/aforemny/material-components-web-elm/commit/97a66f4a1db82efa3fd345f95a0b6010899ffecf))
+* Distribute non-minified and source map assets via npm ([432b262](https://github.com/aforemny/material-components-web-elm/commit/432b2626002d97c8c6750beb54ea05708f33e92f))
+* Fix determinate linear progress variants ([e9c3c8c](https://github.com/aforemny/material-components-web-elm/commit/e9c3c8c21b91e113ca93d64e762eca49cbf598d9))
+* Fix floating label lowering incorrectly ([acd7c88](https://github.com/aforemny/material-components-web-elm/commit/acd7c8823345238efcb6689a9947c2746ad64b10))
+* Fix input chip set incorrectly removing chip on trailing icon interaction ([a7a2d98](https://github.com/aforemny/material-components-web-elm/commit/a7a2d98629c3a048965992aebb575a4342347e03))
+* Fix List.subheader type ([4a25c10](https://github.com/aforemny/material-components-web-elm/commit/4a25c103007798f8da482a31a32f053a68de6f57))
+* Fix ripple for buttons ([8d59940](https://github.com/aforemny/material-components-web-elm/commit/8d59940d5cefaf78da6689ab6a5d68a29967943c))
+* Fix snackbar crashing when messages cycled very quickly ([c816c5b](https://github.com/aforemny/material-components-web-elm/commit/c816c5bf80ca536366c86353354583a0212f5803))
+* Fix source map locations in assets ([3d29b9e](https://github.com/aforemny/material-components-web-elm/commit/3d29b9eacd89d79b7fb6109cc0722e0754f5ca20))
+* Guarantee that precisely one tab within a tab bar is active ([540113c](https://github.com/aforemny/material-components-web-elm/commit/540113cc00a3a2f2e3ed2be513c0b6e20a246560))
+* IconButtons and IconToggles cannot be disabled ([66d0967](https://github.com/aforemny/material-components-web-elm/commit/66d0967669770c4a74a48f92fcc802ba26b2a0f8))
+* Make card's primary action accessible to keyboard navigation ([d0a095a](https://github.com/aforemny/material-components-web-elm/commit/d0a095a11762d028ed3b69c6a9a048ce6e383539))
+* Make FABs accessible to keyboard navigation ([cf4e641](https://github.com/aforemny/material-components-web-elm/commit/cf4e64176eab2bc282ed902c5901dab4d7b488fc))
+* Permanent drawer destroys foundation ([e7c8bef](https://github.com/aforemny/material-components-web-elm/commit/e7c8bef5fa587a928e820915318f19d8503cd035))
+* Refactor list selection ([25c0929](https://github.com/aforemny/material-components-web-elm/commit/25c09293326ee5c14cc3b0de2e81d2ecfeafe237))
+* Remove inline-flex display from mdc-button element ([082f059](https://github.com/aforemny/material-components-web-elm/commit/082f0595e61d0bb91b1705640e58527f2a855e80))
+* Remove non-existent .mdc-chip-set--action class ([d482328](https://github.com/aforemny/material-components-web-elm/commit/d482328a24a838fd44be1a583fdb71d474fbc926))
+* Remove unused dependency elm/url ([984d8e4](https://github.com/aforemny/material-components-web-elm/commit/984d8e4edf32c2eeea85f59eca564e47c7f06668))
+* Snackbar is always empty. Close [#106](https://github.com/aforemny/material-components-web-elm/issues/106) ([6e50300](https://github.com/aforemny/material-components-web-elm/commit/6e50300a7cef8a5c7cd5e0953e17f4a2cc887ca2))
+* Support dynamic tabs ([9878e53](https://github.com/aforemny/material-components-web-elm/commit/9878e539a88f5cf322889d6762cb333bf67ef749))
+* Support select without label ([c11afd0](https://github.com/aforemny/material-components-web-elm/commit/c11afd0ff478b8314ce0f1075206361021b82e77))
+* SvgIcon was not handled by Snackbar ([d179f4a](https://github.com/aforemny/material-components-web-elm/commit/d179f4a44a3db030d69c7704ceb8b9ac01f9a567))
+* TextField's pattern property incorrectly defaulted to the empty pattern ([c2bab28](https://github.com/aforemny/material-components-web-elm/commit/c2bab283951291f4d9eada56bb23cf2524734a17))
+* Unregister body click handler when menu surface is destroyed ([83c997f](https://github.com/aforemny/material-components-web-elm/commit/83c997f34110eece64e3bf1e1a1cb37efa85aac6))
+* **docs:** Fix broken demo links in documentation ([7a0ed82](https://github.com/aforemny/material-components-web-elm/commit/7a0ed82bf02e3214875ea6e36307c2f56b5eed58))
+* **docs:** Use CDN links in README and examples ([a3859d2](https://github.com/aforemny/material-components-web-elm/commit/a3859d2ba115198dff64148c85bf591aac133705))
+
+
+* Refactor chips ([2ff6a46](https://github.com/aforemny/material-components-web-elm/commit/2ff6a463b562436b13ac8a0cd614256607e8f38d))
+* Update checkbox implementation ([78f99d4](https://github.com/aforemny/material-components-web-elm/commit/78f99d4e66c15c91f0db4a9131383cf6533b6f6d))
+* Update drawer implementation ([83aa9d8](https://github.com/aforemny/material-components-web-elm/commit/83aa9d8d185761557cd7903a5ab200c18ec17acf))
+* Update icon button implementation ([7fde683](https://github.com/aforemny/material-components-web-elm/commit/7fde6838c8bac6b55250f090c3bce349198353b5))
+* Update image list item implementation ([22d3a7d](https://github.com/aforemny/material-components-web-elm/commit/22d3a7d169b1e53d49ee6f5934d347ab1f35fb99))
+* Update ripple implementation ([704f9e8](https://github.com/aforemny/material-components-web-elm/commit/704f9e8691ba93b60257c4f9fbd63d936d5e7f35))
+* Update select implementation ([94e7a0c](https://github.com/aforemny/material-components-web-elm/commit/94e7a0c31ac957916121ae539d7de3be34f2e283))
+* Update slider implementation ([bf7ad91](https://github.com/aforemny/material-components-web-elm/commit/bf7ad9182eb5a8cb43d48edfcafc94e1a0fae9b0))
+* Update snackbar implementation ([278ea96](https://github.com/aforemny/material-components-web-elm/commit/278ea96805a21583b9f2f5a2c8d030f7fec76da2))
+* Update switch implementation ([11d10a8](https://github.com/aforemny/material-components-web-elm/commit/11d10a8b7835e723eb0328007d69c1089d9469b0))
+* Update text field implementation ([b4a73ca](https://github.com/aforemny/material-components-web-elm/commit/b4a73cab6d987664fd79bfef184ec174f3ae8327))
+
 ## [7.0.0](https://github.com/aforemny/material-components-web-elm/compare/6.0.0...7.0.0) (2021-03-26)
 
 

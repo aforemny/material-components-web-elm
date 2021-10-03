@@ -226,12 +226,11 @@ setOnChange onChange (Config config_) =
 -}
 iconToggle : Config msg -> { onIcon : Icon, offIcon : Icon } -> Html msg
 iconToggle ((Config { additionalAttributes }) as config_) { onIcon, offIcon } =
-    Html.node "mdc-icon-button"
+    Html.node "mdc-icon-toggle"
         [ onProp config_ ]
         [ Html.button
             (List.filterMap identity
                 [ iconButtonCs
-                , tabIndexProp
                 , ariaHiddenAttr
                 , ariaPressedAttr config_
                 , ariaLabelAttr config_
@@ -265,11 +264,6 @@ iconButtonCs =
 onProp : Config msg -> Html.Attribute msg
 onProp (Config { on }) =
     Html.Attributes.property "on" (Encode.bool on)
-
-
-tabIndexProp : Maybe (Html.Attribute msg)
-tabIndexProp =
-    Just (Html.Attributes.tabindex 0)
 
 
 ariaHiddenAttr : Maybe (Html.Attribute msg)

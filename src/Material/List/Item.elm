@@ -318,12 +318,12 @@ listItem (Config ({ additionalAttributes, href } as config_)) nodes =
 
 listItemView : Config msg -> List (Html msg) -> Html msg
 listItemView ((Config { additionalAttributes, href }) as config_) nodes =
-    (\attributes ->
+    (\attributes nodes_ ->
         if href /= Nothing then
-            Html.node "mdc-list-item" [] [ Html.a attributes nodes ]
+            Html.node "mdc-list-item" [] [ Html.a attributes nodes_ ]
 
         else
-            Html.node "mdc-list-item" attributes nodes
+            Html.node "mdc-list-item" attributes nodes_
     )
         (List.filterMap identity
             [ listItemCs
@@ -336,17 +336,18 @@ listItemView ((Config { additionalAttributes, href }) as config_) nodes =
             ]
             ++ additionalAttributes
         )
+        (rippleElt :: nodes)
 
 
 listItemCs : Maybe (Html.Attribute msg)
 listItemCs =
-    Just (class "mdc-list-item")
+    Just (class "mdc-deprecated-list-item")
 
 
 disabledCs : Config msg -> Maybe (Html.Attribute msg)
 disabledCs (Config { disabled }) =
     if disabled then
-        Just (class "mdc-list-item--disabled")
+        Just (class "mdc-deprecated-list-item--disabled")
 
     else
         Nothing
@@ -355,7 +356,7 @@ disabledCs (Config { disabled }) =
 selectedCs : Config msg -> Maybe (Html.Attribute msg)
 selectedCs (Config { selection }) =
     if selection == Just Selected then
-        Just (class "mdc-list-item--selected")
+        Just (class "mdc-deprecated-list-item--selected")
 
     else
         Nothing
@@ -364,7 +365,7 @@ selectedCs (Config { selection }) =
 activatedCs : Config msg -> Maybe (Html.Attribute msg)
 activatedCs (Config { selection }) =
     if selection == Just Activated then
-        Just (class "mdc-list-item--activated")
+        Just (class "mdc-deprecated-list-item--activated")
 
     else
         Nothing
@@ -393,6 +394,11 @@ targetAttr (Config { href, target }) =
         Nothing
 
 
+rippleElt : Html msg
+rippleElt =
+    Html.span [ class "mdc-deprecated-list-item__ripple" ] []
+
+
 {-| Two-line list item's text
 -}
 text :
@@ -403,31 +409,35 @@ text :
         }
     -> Html msg
 text additionalAttributes { primary, secondary } =
-    Html.div (class "mdc-list-item__text" :: additionalAttributes)
-        [ primaryText [] primary
-        , secondaryText [] secondary
+    Html.div (class "mdc-deprecated-list-item__text" :: additionalAttributes)
+        [ primaryTextElt [] primary
+        , secondaryTextElt [] secondary
         ]
 
 
-primaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-primaryText additionalAttributes nodes =
-    Html.div (class "mdc-list-item__primary-text" :: additionalAttributes) nodes
+primaryTextElt : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+primaryTextElt additionalAttributes nodes =
+    Html.div (class "mdc-deprecated-list-item__primary-text" :: additionalAttributes)
+        nodes
 
 
-secondaryText : List (Html.Attribute msg) -> List (Html msg) -> Html msg
-secondaryText additionalAttributes nodes =
-    Html.div (class "mdc-list-item__secondary-text" :: additionalAttributes) nodes
+secondaryTextElt : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+secondaryTextElt additionalAttributes nodes =
+    Html.div
+        (class "mdc-deprecated-list-item__secondary-text" :: additionalAttributes)
+        nodes
 
 
 {-| A list item's graphic tile
 -}
 graphic : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 graphic additionalAttributes nodes =
-    Html.div (class "mdc-list-item__graphic" :: additionalAttributes) nodes
+    Html.div (class "mdc-deprecated-list-item__graphic" :: additionalAttributes)
+        nodes
 
 
 {-| A list item's meta tile
 -}
 meta : List (Html.Attribute msg) -> List (Html msg) -> Html msg
 meta additionalAttributes nodes =
-    Html.div (class "mdc-list-item__meta" :: additionalAttributes) nodes
+    Html.div (class "mdc-deprecated-list-item__meta" :: additionalAttributes) nodes

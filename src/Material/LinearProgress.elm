@@ -216,7 +216,10 @@ variantCs variant =
 
 determinateProp : Variant -> Maybe (Html.Attribute msg)
 determinateProp variant =
-    Just (Html.Attributes.property "determinate" (Encode.bool (variant /= Indeterminate)))
+    Just
+        (Html.Attributes.property "determinate"
+            (Encode.bool (variant /= Indeterminate))
+        )
 
 
 progressProp : Variant -> Maybe (Html.Attribute msg)
@@ -248,7 +251,7 @@ bufferProp variant =
                         buffer
 
                     _ ->
-                        0
+                        1
                 )
             )
         )

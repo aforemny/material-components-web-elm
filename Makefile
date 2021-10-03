@@ -8,12 +8,13 @@ build-npm: node_modules
 	mkdir -p dist
 	(cd material-components-web && make)
 	cp material-components-web/build/material-components-web-elm.css dist/
-	cp material-components-web/build/material-components-web-elm.min.css dist/
 	cp material-components-web/build/material-components-web-elm.css.map dist/
-	cp material-components-web/build/material-components-web-elm.min.css.map dist/
 	cp material-components-web/build/material-components-web-elm.js dist/
-	cp material-components-web/build/material-components-web-elm.min.js dist/
 	cp material-components-web/build/material-components-web-elm.js.map dist/
+	cp material-components-web/build/material-components-web-elm.min.css dist/
+	cp material-components-web/build/material-components-web-elm.min.css.map dist/
+	cp material-components-web/build/material-components-web-elm.min.js dist/
+	cp material-components-web/build/material-components-web-elm.min.js.map dist/
 
 
 build-pages: build-npm build-demo

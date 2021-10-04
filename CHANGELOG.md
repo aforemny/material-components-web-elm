@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.0.1](https://github.com/aforemny/material-components-web-elm/compare/8.0.0...8.0.1) (2021-10-04)
+
+
+### Bug Fixes
+
+* CHANGELOG.md ([b27f508](https://github.com/aforemny/material-components-web-elm/commit/b27f508b80d8c5ebf9612c29ff776e8359b2d881))
+
 ## [8.0.0](https://github.com/aforemny/material-components-web-elm/compare/7.0.0...8.0.0) (2021-10-04)
 
 

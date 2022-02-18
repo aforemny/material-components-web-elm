@@ -488,7 +488,7 @@ outlined config_ =
 
 
 textField : Bool -> Config msg -> Html msg
-textField outlined_ ((Config { additionalAttributes, fullwidth }) as config_) =
+textField outlined_ ((Config { additionalAttributes }) as config_) =
     Html.node "mdc-text-field"
         (List.filterMap identity
             [ rootCs
@@ -862,7 +862,7 @@ typeAttr (Config { type_ }) =
 
 
 ariaLabelAttr : Config msg -> Maybe (Html.Attribute msg)
-ariaLabelAttr (Config { fullwidth, placeholder, label }) =
+ariaLabelAttr (Config { fullwidth, label }) =
     if fullwidth then
         Maybe.map (Html.Attributes.attribute "aria-label") label
 

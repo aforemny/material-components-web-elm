@@ -1,4 +1,8 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import
+    (builtins.fetchTarball
+      "https://github.com/NixOS/nixpkgs/archive/refs/heads/nixos-21.11.tar.gz")
+    { }
+}:
 with pkgs;
 mkShell {
   buildInputs = [
@@ -6,7 +10,7 @@ mkShell {
     elmPackages.elm
     elmPackages.elm-format
     elmPackages.elm-json
-    (ghc.withPackages(pkgs: [ pkgs.pandoc ]))
+    (ghc.withPackages (pkgs: [ pkgs.pandoc ]))
     nodejs
     python3
   ];

@@ -60,13 +60,13 @@ heroCard =
     [ Card.card
         (Card.config
             |> Card.setAttributes [ style "width" "350px" ]
+            |> Card.setHref (Just "#cards")
         )
         { blocks =
-            Card.primaryAction []
-                [ demoMedia
-                , demoTitle
-                , demoBody
-                ]
+            [ demoMedia
+            , demoTitle
+            , demoBody
+            ]
         , actions = Just demoActions
         }
     ]
@@ -82,11 +82,10 @@ exampleCard1 =
                 ]
         )
         { blocks =
-            Card.primaryAction []
-                [ demoMedia
-                , demoTitle
-                , demoBody
-                ]
+            [ demoMedia
+            , demoTitle
+            , demoBody
+            ]
         , actions = Nothing
         }
 
@@ -101,10 +100,9 @@ exampleCard2 =
                 ]
         )
         { blocks =
-            Card.primaryAction []
-                [ demoTitle
-                , demoBody
-                ]
+            [ demoTitle
+            , demoBody
+            ]
         , actions = Just demoActions
         }
 
@@ -120,10 +118,9 @@ exampleCard3 =
                 ]
         )
         { blocks =
-            Card.primaryAction []
-                [ demoTitle
-                , demoBody
-                ]
+            [ demoTitle
+            , demoBody
+            ]
         , actions = Just demoActions
         }
 
@@ -140,10 +137,9 @@ focusCard =
                     ]
             )
             { blocks =
-                Card.primaryAction []
-                    [ demoTitle
-                    , demoBody
-                    ]
+                [ demoTitle
+                , demoBody
+                ]
             , actions = Just demoActions
             }
         , text "\u{00A0}"

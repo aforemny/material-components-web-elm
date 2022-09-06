@@ -1,12 +1,13 @@
 module Material.Card exposing
     ( Config, config
     , setOutlined
+    , setOnClick
+    , setHref, setTarget
     , setAttributes
     , card, Content
     , Block
     , block
     , squareMedia, sixteenToNineMedia, media
-    , primaryAction
     , Actions, actions
     , Button, button
     , Icon, icon
@@ -30,6 +31,7 @@ module Material.Card exposing
       - [Primary Action Block](#primary-action-block)
   - [Card Actions](#card-actions)
       - [Full Bleed Actions](#full-bleed-actions)
+  - [Link Card](#link-card)
   - [Focus a Card](#focus-a-card)
 
 
@@ -81,6 +83,8 @@ module Material.Card exposing
 ## Configuration Options
 
 @docs setOutlined
+@docs setOnClick
+@docs setHref, setTarget
 @docs setAttributes
 
 
@@ -107,9 +111,7 @@ to `True`.
 # Card Blocks
 
 A card's primary content is comprised of _blocks_. Blocks may be comprised of
-arbitrary HTML or a media element. Optionally, a group of card blocks can be
-marked as the card's primary action which makes that group of blocks
-interactable.
+arbitrary HTML or a media element.
 
 @docs Block
 
@@ -136,23 +138,6 @@ will be displayed using a background image, and you may chose from square or a
 16 to 9 aspect ratio.
 
 @docs squareMedia, sixteenToNineMedia, media
-
-
-## Primary Action Block
-
-A group of card blocks can be marked as the primary action of the card. A
-primary action block may be clicked upon and displays a visual interaction
-effect.
-
-    Card.primaryAction
-        [ Html.Events.onClick CardClicked ]
-        [ Card.block <|
-            Html.h2 [] [ text "Title" ]
-        , Card.block <|
-            Html.p [] [ text "Lorem ipsum…" ]
-        ]
-
-@docs primaryAction
 
 
 # Card Actions
@@ -182,6 +167,22 @@ when there is only a single button as card action.
 @docs fullBleedActions
 
 
+# Link Card
+
+To make a button essentially behave like a HTML anchor element, use its
+`setHref` configuration option. You may use its `setTarget` configuration
+option to specify a target.
+
+    Card.card
+        (Card.config
+            |> Card.setHref (Just "#")
+            |> Card.setTarget (Just "_blank")
+        )
+        { blocks = []
+        , actions = Nothing
+        }
+
+
 # Focus a Card
 
 You may programatically focus a card by assigning an id attribute to it and use
@@ -194,7 +195,7 @@ Note that cards must have a primary action element to be focusable.
             |> Card.setAttributes
                 [ Html.Attributes.id "my-card" ]
         )
-        { blocks = Card.primaryAction [] []
+        { blocks = []
         , actions = Nothing
         }
 
@@ -202,6 +203,7 @@ Note that cards must have a primary action element to be focusable.
 
 import Html exposing (Html)
 import Html.Attributes exposing (class, style)
+import Html.Events
 import Json.Encode as Encode
 import Material.Button as Button
 import Material.Button.Internal
@@ -215,6 +217,9 @@ type Config msg
     = Config
         { outlined : Bool
         , additionalAttributes : List (Html.Attribute msg)
+        , href : Maybe String
+        , target : Maybe String
+        , onClick : Maybe msg
         }
 
 
@@ -225,6 +230,9 @@ config =
     Config
         { outlined = False
         , additionalAttributes = []
+        , href = Nothing
+        , target = Nothing
+        , onClick = Nothing
         }
 
 
@@ -233,6 +241,34 @@ config =
 setOutlined : Bool -> Config msg -> Config msg
 setOutlined outlined (Config config_) =
     Config { config_ | outlined = outlined }
+
+
+{-| Specify a message when the user clicks a card
+-}
+setOnClick : msg -> Config msg -> Config msg
+setOnClick onClick (Config config_) =
+    Config { config_ | onClick = Just onClick }
+
+
+{-| Specify whether a card is a _link card_.
+
+Link cards' primary action behave like normal HTML5 anchor tags
+
+-}
+setHref : Maybe String -> Config msg -> Config msg
+setHref href (Config config_) =
+    Config { config_ | href = href }
+
+
+{-| Specify the target for a link card.
+
+Note that this configuration option will be ignored by cards that do not also
+set `setHref`.
+
+-}
+setTarget : Maybe String -> Config msg -> Config msg
+setTarget target (Config config_) =
+    Config { config_ | target = target }
 
 
 {-| Specify additional attributes
@@ -254,15 +290,38 @@ card ((Config { additionalAttributes }) as config_) content =
             ++ additionalAttributes
         )
         (List.concat
-            [ blocksElt content
+            [ blocksElt config_ content
             , actionsElt content
             ]
         )
 
 
-blocksElt : Content msg -> List (Html msg)
-blocksElt { blocks } =
-    List.map (\(Block html) -> html) blocks
+blocksElt : Config msg -> Content msg -> List (Html msg)
+blocksElt ((Config { onClick, href }) as config_) { blocks } =
+    List.map (\(Block html) -> html)
+        ((if onClick /= Nothing || href /= Nothing then
+            primaryAction config_
+
+          else
+            identity
+         )
+            blocks
+        )
+
+
+clickHandler : Config msg -> Maybe (Html.Attribute msg)
+clickHandler (Config { onClick }) =
+    Maybe.map Html.Events.onClick onClick
+
+
+hrefAttr : Config msg -> Maybe (Html.Attribute msg)
+hrefAttr (Config { href }) =
+    Maybe.map Html.Attributes.href href
+
+
+targetAttr : Config msg -> Maybe (Html.Attribute msg)
+targetAttr (Config { target }) =
+    Maybe.map Html.Attributes.target target
 
 
 actionsElt : Content msg -> List (Html msg)
@@ -406,27 +465,35 @@ aspectCs aspect =
 
 {-| A card's primary action block
 -}
-primaryAction : List (Html.Attribute msg) -> List (Block msg) -> List (Block msg)
-primaryAction additionalAttributes blocks =
+primaryAction : Config msg -> List (Block msg) -> List (Block msg)
+primaryAction ((Config { href }) as config_) blocks =
     [ Block <|
-        Html.div
-            ([ primaryActionCs
-             , tabIndexProp 0
-             ]
-                ++ additionalAttributes
+        (if href /= Nothing then
+            Html.a
+
+         else
+            Html.div
+        )
+            (List.filterMap identity
+                [ primaryActionCs
+                , tabIndexProp 0
+                , clickHandler config_
+                , hrefAttr config_
+                , targetAttr config_
+                ]
             )
             (List.map (\(Block html) -> html) blocks)
     ]
 
 
-primaryActionCs : Html.Attribute msg
+primaryActionCs : Maybe (Html.Attribute msg)
 primaryActionCs =
-    class "mdc-card__primary-action"
+    Just (class "mdc-card__primary-action")
 
 
-tabIndexProp : Int -> Html.Attribute msg
+tabIndexProp : Int -> Maybe (Html.Attribute msg)
 tabIndexProp tabIndex =
-    Html.Attributes.property "tabIndex" (Encode.int tabIndex)
+    Just (Html.Attributes.property "tabIndex" (Encode.int tabIndex))
 
 
 {-| Card actions type

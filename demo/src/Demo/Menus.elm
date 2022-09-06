@@ -120,32 +120,31 @@ iconButtonWithinCardExample model =
     in
     Card.card (Card.config |> Card.setAttributes [ style "width" "350px" ])
         { blocks =
-            Card.primaryAction []
-                [ Card.block <|
-                    Html.div
-                        [ style "padding" "1rem" ]
-                        [ Html.h2
-                            [ Typography.headline6
-                            , style "margin" "0"
-                            ]
-                            [ text "Our Changing Planet" ]
-                        , Html.h3
-                            [ Typography.subtitle2
-                            , Theme.textSecondaryOnBackground
-                            , style "margin" "0"
-                            ]
-                            [ text "by Kurt Wagner" ]
+            [ Card.block <|
+                Html.div
+                    [ style "padding" "1rem" ]
+                    [ Html.h2
+                        [ Typography.headline6
+                        , style "margin" "0"
                         ]
-                , Card.block <|
-                    Html.div
-                        [ Typography.body2
+                        [ text "Our Changing Planet" ]
+                    , Html.h3
+                        [ Typography.subtitle2
                         , Theme.textSecondaryOnBackground
-                        , style "padding" "0 1rem 0.5rem 1rem"
+                        , style "margin" "0"
                         ]
-                        [ text
-                            "Visit ten places on our planet that are undergoing the biggest changes today."
-                        ]
-                ]
+                        [ text "by Kurt Wagner" ]
+                    ]
+            , Card.block <|
+                Html.div
+                    [ Typography.body2
+                    , Theme.textSecondaryOnBackground
+                    , style "padding" "0 1rem 0.5rem 1rem"
+                    ]
+                    [ text
+                        "Visit ten places on our planet that are undergoing the biggest changes today."
+                    ]
+            ]
         , actions =
             Just <|
                 Card.actions

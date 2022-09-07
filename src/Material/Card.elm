@@ -53,15 +53,16 @@ module Material.Card exposing
     main =
         Card.card Card.config
             { blocks =
-                [ Card.block <|
+                ( Card.block <|
                     Html.div []
                         [ Html.h2 [] [ text "Title" ]
                         , Html.h3 [] [ text "Subtitle" ]
                         ]
-                , Card.block <|
-                    Html.div []
-                        [ Html.p [] [ text "Lorem ipsum…" ] ]
-                ]
+                , [ Card.block <|
+                        Html.div []
+                            [ Html.p [] [ text "Lorem ipsum…" ] ]
+                  ]
+                )
             , actions =
                 Just <|
                     Card.actions
@@ -101,9 +102,10 @@ to `True`.
     Card.card
         (Card.config |> Card.setOutlined True)
         { blocks =
-            [ Card.block <|
+            ( Card.block <|
                 Html.div [] [ Html.h1 [] [ text "Card" ] ]
-            ]
+            , []
+            )
         , actions = Nothing
         }
 
@@ -178,7 +180,11 @@ option to specify a target.
             |> Card.setHref (Just "#")
             |> Card.setTarget (Just "_blank")
         )
-        { blocks = []
+        { blocks =
+            ( Card.block <|
+                Html.div [] [ Html.h1 [] [ text "Card" ] ]
+            , []
+            )
         , actions = Nothing
         }
 
@@ -195,7 +201,11 @@ Note that cards must have a primary action element to be focusable.
             |> Card.setAttributes
                 [ Html.Attributes.id "my-card" ]
         )
-        { blocks = []
+        { blocks =
+            ( Card.block <|
+                Html.div [] [ Html.h1 [] [ text "Card" ] ]
+            , []
+            )
         , actions = Nothing
         }
 
@@ -305,7 +315,7 @@ blocksElt ((Config { onClick, href }) as config_) { blocks } =
           else
             identity
          )
-            blocks
+            (Tuple.first blocks :: Tuple.second blocks)
         )
 
 
@@ -378,7 +388,7 @@ outlinedCs (Config { outlined }) =
 {-| The content of a card is comprised of _blocks_ and _actions_.
 -}
 type alias Content msg =
-    { blocks : List (Block msg)
+    { blocks : ( Block msg, List (Block msg) )
     , actions : Maybe (Actions msg)
     }
 

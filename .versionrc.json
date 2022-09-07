@@ -1,5 +1,23 @@
 {
-  "skip": {
-    "tag": true
-  }
+  "bumpFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    },
+    {
+      "filename": "package-lock.json",
+      "type": "json"
+    },
+    {
+      "filename": "elm.json",
+      "type": "json"
+    }
+  ],
+  "packageFiles": [
+    {
+      "filename": "elm.json",
+      "type": "json"
+    }
+  ],
+  "tagPrefix": ""
 }

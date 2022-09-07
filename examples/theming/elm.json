@@ -6,7 +6,7 @@
     "elm-version": "0.19.1",
     "dependencies": {
         "direct": {
-            "aforemny/material-components-web-elm": "8.0.1",
+            "aforemny/material-components-web-elm": "9.0.0",
             "elm/browser": "1.0.2",
             "elm/core": "1.0.5",
             "elm/html": "1.0.0"

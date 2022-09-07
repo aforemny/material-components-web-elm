@@ -30,12 +30,12 @@ it in a custom HTML document. From that HTML document, you have to include the
 following assets to use this library.
 
 Please make sure that the last two assets match this library's version (ie.
-8.0.1) exactly.
+9.0.0) exactly.
 
 ```html
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/material-components-web-elm@8.0.1/dist/material-components-web-elm.min.css">
-<script src="https://unpkg.com/material-components-web-elm@8.0.1/dist/material-components-web-elm.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/material-components-web-elm@9.0.0/dist/material-components-web-elm.min.css">
+<script src="https://unpkg.com/material-components-web-elm@9.0.0/dist/material-components-web-elm.min.js"></script>
 ```
 
 Refer to the [simple counter
@@ -51,7 +51,7 @@ and
 Install the JavaScript and CSS assets via npm:
 
 ```sh
-$ npm install --save material-components-web-elm@8.0.1
+$ npm install --save material-components-web-elm@9.0.0
 ```
 
 Then in your `index.js` add the following imports:

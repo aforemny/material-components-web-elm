@@ -2,6 +2,70 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.0.0](https://github.com/aforemny/material-components-web-elm/compare/8.0.1...9.0.0) (2022-09-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* Card's content blocks have been changed from a list of
+blocks to a non-empty list of blocks. This guarantees that a card has at
+least one block.
+
+Before:
+```
+Card.card
+    Card.config
+    { blocks = [ block1 ]
+    , actions = Nothing
+    }
+```
+
+After:
+```
+Card.card
+    Card.config
+    { blocks = ( block1, [] )
+    , actions = Nothing
+    }
+```
+* The block `Card.primaryAction` has been removed.
+Instead, a configuration option `Card.setOnClick` has been added.
+
+Before:
+```
+Card.card Card.config
+    { blocks =
+        Card.primaryAction [ Html.Events.onClick Clicked ]
+            [ block1
+            , block2
+            ]
+    , actions = Nothing
+    }
+```
+
+After:
+```
+Card.card
+    (Card.config
+        |> Card.setOnClick Clicked
+    )
+    { blocks =
+        [ block1
+        , block2
+        ]
+    , actions = Nothing
+    }
+```
+
+Additionally, configuration options `Card.setHref`, `Card.setTarget`
+have been added to facilitate link actions.
+
+### Features
+
+* Add TextField.setOnBlur ([585f340](https://github.com/aforemny/material-components-web-elm/commit/585f340780918de9f70abd72df62c68285f24407))
+* Disallow cards without blocks ([245dbd9](https://github.com/aforemny/material-components-web-elm/commit/245dbd9daf4b9928c4969af74684242a5c321e03))
+* Remove Card.primaryAction ([470aaab](https://github.com/aforemny/material-components-web-elm/commit/470aaab2fce1d49a4c9b3822669a3541a2020ccc))
+
 ### [8.0.1](https://github.com/aforemny/material-components-web-elm/compare/8.0.0...8.0.1) (2021-10-04)
 
 

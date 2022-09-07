@@ -120,7 +120,7 @@ iconButtonWithinCardExample model =
     in
     Card.card (Card.config |> Card.setAttributes [ style "width" "350px" ])
         { blocks =
-            [ Card.block <|
+            ( Card.block <|
                 Html.div
                     [ style "padding" "1rem" ]
                     [ Html.h2
@@ -135,16 +135,17 @@ iconButtonWithinCardExample model =
                         ]
                         [ text "by Kurt Wagner" ]
                     ]
-            , Card.block <|
-                Html.div
-                    [ Typography.body2
-                    , Theme.textSecondaryOnBackground
-                    , style "padding" "0 1rem 0.5rem 1rem"
-                    ]
-                    [ text
-                        "Visit ten places on our planet that are undergoing the biggest changes today."
-                    ]
-            ]
+            , [ Card.block <|
+                    Html.div
+                        [ Typography.body2
+                        , Theme.textSecondaryOnBackground
+                        , style "padding" "0 1rem 0.5rem 1rem"
+                        ]
+                        [ text
+                            "Visit ten places on our planet that are undergoing the biggest changes today."
+                        ]
+              ]
+            )
         , actions =
             Just <|
                 Card.actions

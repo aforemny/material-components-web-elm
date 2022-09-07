@@ -63,10 +63,11 @@ heroCard =
             |> Card.setHref (Just "#cards")
         )
         { blocks =
-            [ demoMedia
-            , demoTitle
-            , demoBody
-            ]
+            ( demoMedia
+            , [ demoTitle
+              , demoBody
+              ]
+            )
         , actions = Just demoActions
         }
     ]
@@ -82,10 +83,11 @@ exampleCard1 =
                 ]
         )
         { blocks =
-            [ demoMedia
-            , demoTitle
-            , demoBody
-            ]
+            ( demoMedia
+            , [ demoTitle
+              , demoBody
+              ]
+            )
         , actions = Nothing
         }
 
@@ -100,9 +102,10 @@ exampleCard2 =
                 ]
         )
         { blocks =
-            [ demoTitle
-            , demoBody
-            ]
+            ( demoTitle
+            , [ demoBody
+              ]
+            )
         , actions = Just demoActions
         }
 
@@ -118,9 +121,10 @@ exampleCard3 =
                 ]
         )
         { blocks =
-            [ demoTitle
-            , demoBody
-            ]
+            ( demoTitle
+            , [ demoBody
+              ]
+            )
         , actions = Just demoActions
         }
 
@@ -137,9 +141,10 @@ focusCard =
                     ]
             )
             { blocks =
-                [ demoTitle
-                , demoBody
-                ]
+                ( demoTitle
+                , [ demoBody
+                  ]
+                )
             , actions = Just demoActions
             }
         , text "\u{00A0}"

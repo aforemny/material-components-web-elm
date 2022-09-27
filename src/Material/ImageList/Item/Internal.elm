@@ -9,6 +9,7 @@ type Config msg
         , href : Maybe String
         , additionalAttributes : List (Html.Attribute msg)
         , image : String
+        , imageNode : Maybe (List (Html.Attribute msg))
         }
 
 

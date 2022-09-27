@@ -2,6 +2,7 @@ module Material.ImageList.Item exposing
     ( Config, config
     , setLabel
     , setHref
+    , setImageNode
     , setAttributes
     , ImageListItem, imageListItem
     )
@@ -21,6 +22,7 @@ about the image list contianer, refer to
       - [Configuration Options](#configuration-options)
   - [Basic Usage](#basic-usage)
   - [Image List Item](#image-list-item)
+  - [Image List Item with `Html.img`](#image-list-item)
 
 
 # Resources
@@ -62,12 +64,29 @@ yourself, preferably through SASS or through inline CSS.
 
 @docs setLabel
 @docs setHref
+@docs setImageNode
 @docs setAttributes
 
 
 # Image list Item
 
 @docs ImageListItem, imageListItem
+
+
+# Image list Item with `Html.img`
+
+By default, image list items display the given image as a background image. If you prefer to display the image using a `Html.img` element, set the configuration option `setImageNode`. You may specify additional attributes that go on the `Html.img` element, such as [srcset](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/srcset) or [sizes](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/sizes).
+
+Note that in order to retain default behavior, you should specify the CSS rule
+`object-fit: cover`.
+
+        ImageListItem.imageListItem
+            (ImageList.itemConfig
+                |> ImageList.setImageNode (Just [
+                  Html.Attribute.style "object-fit" "cover"
+                  ])
+            )
+            "images/photos/3x2/1.jpg"
 
 -}
 
@@ -90,6 +109,7 @@ config =
         , href = Nothing
         , additionalAttributes = []
         , image = ""
+        , imageNode = Nothing
         }
 
 
@@ -108,6 +128,18 @@ A link image list items behaves essentially like a HTML5 anchor element.
 setHref : Maybe String -> Config msg -> Config msg
 setHref href (Config config_) =
     Config { config_ | href = href }
+
+
+{-| Specify whether an image list item should render a `Html.img` element instead of a background image.
+
+You may pass additional attributes to the `Html.img` element.
+
+Note that in order to retain expected behavior, you may want to specify the CSS rule `object-fit: cover`.
+
+-}
+setImageNode : Maybe (List (Html.Attribute msg)) -> Config msg -> Config msg
+setImageNode imageNode (Config config_) =
+    Config { config_ | imageNode = imageNode }
 
 
 {-| Specify additional attributes

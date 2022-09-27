@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.1.0](https://github.com/aforemny/material-components-web-elm/compare/9.0.0...9.1.0) (2022-09-27)
+
+
+### Features
+
+* Add `ImageList.Item.setImageNode` ([d4c20e0](https://github.com/aforemny/material-components-web-elm/commit/d4c20e05cf6e2a89776ce053eb252e101f071a64))
+
+
+### Bug Fixes
+
+* Avoid column break inside masonry image list item ([5f1c8a5](https://github.com/aforemny/material-components-web-elm/commit/5f1c8a5a2f87eaba05f618da2f7c21b215b0bb29))
+
 ## [9.0.0](https://github.com/aforemny/material-components-web-elm/compare/8.0.1...9.0.0) (2022-09-07)
 
 

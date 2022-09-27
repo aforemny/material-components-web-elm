@@ -228,13 +228,21 @@ imageAspectContainerElt masonry ((ImageListItem.ImageListItem (ImageListItem.Con
 
 
 imageElt : Bool -> ImageListItem msg -> Html msg
-imageElt masonry (ImageListItem.ImageListItem (ImageListItem.Config { href, image })) =
+imageElt masonry (ImageListItem.ImageListItem (ImageListItem.Config { href, image, imageNode })) =
     let
         img =
             Html.img
-                [ class "mdc-image-list__image"
-                , Html.Attributes.src image
-                ]
+                ([ class "mdc-image-list__image"
+                 , Html.Attributes.src image
+                 ]
+                    ++ (case imageNode of
+                            Just attrs ->
+                                attrs
+
+                            Nothing ->
+                                []
+                       )
+                )
                 []
     in
     if masonry then
@@ -245,11 +253,16 @@ imageElt masonry (ImageListItem.ImageListItem (ImageListItem.Config { href, imag
             img
 
     else
-        Html.div
-            [ class "mdc-image-list__image"
-            , style "background-image" ("url('" ++ image ++ "')")
-            ]
-            []
+        case imageNode of
+            Just _ ->
+                img
+
+            Nothing ->
+                Html.div
+                    [ class "mdc-image-list__image"
+                    , style "background-image" ("url('" ++ image ++ "')")
+                    ]
+                    []
 
 
 supportingElt : ImageListItem msg -> Html msg

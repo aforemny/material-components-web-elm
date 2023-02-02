@@ -10,7 +10,7 @@
   ],
   "devDependencies": {
     "connect": "^3.7.0",
-    "elm-doc-preview": "^3.0.4",
+    "elm-doc-preview": "^5.0.5",
     "elm-json": "^0.2.10",
     "elm-review": "^2.6.1",
     "puppeteer-core": "^8.0.0",

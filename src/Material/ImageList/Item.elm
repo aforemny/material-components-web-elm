@@ -45,8 +45,8 @@ yourself, preferably through SASS or through inline CSS.
     main =
         ImageList.imageList ImageList.config
             [ ImageListItem.imageListItem
-                (ImageList.itemConfig
-                    |> ImageList.setAttributes
+                (ImageListItem.config
+                    |> ImageListItem.setAttributes
                         [ style "width" "calc(100% / 5 - 4px)"
                         , style "margin" "2px"
                         ]
@@ -80,13 +80,15 @@ By default, image list items display the given image as a background image. If y
 Note that in order to retain default behavior, you should specify the CSS rule
 `object-fit: cover`.
 
-        ImageListItem.imageListItem
-            (ImageList.itemConfig
-                |> ImageList.setImageNode (Just [
-                  Html.Attribute.style "object-fit" "cover"
-                  ])
-            )
-            "images/photos/3x2/1.jpg"
+    ImageListItem.imageListItem
+        (ImageListItem.config
+            |> ImageListItem.setImageNode
+                (Just
+                    [ Html.Attributes.style "object-fit" "cover"
+                    ]
+                )
+        )
+        "images/photos/3x2/1.jpg"
 
 -}
 

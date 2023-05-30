@@ -28,16 +28,18 @@ appear persistently and consistently.
     import Material.ChipSet.Action as ActionChipSet
 
     type Msg
-        = Clicked String
+        = ChipClicked String
 
     main =
         ActionChipSet.chipSet []
-            [ ActionChip.chip
+            (ActionChip.chip
                 (ActionChip.config
-                    |> ActionChip.setOnClick Clicked "Chip One"
+                    |> ActionChip.setOnClick
+                        (ChipClicked "Chip One")
                 )
                 "Chip One"
-            , ActionChip.chip ActionChip.config "Chip Two"
+            )
+            [ ActionChip.chip ActionChip.config "Chip Two"
             ]
 
 

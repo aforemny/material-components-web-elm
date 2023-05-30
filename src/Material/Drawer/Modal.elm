@@ -49,9 +49,10 @@ screen's layout grid.
             [ ModalDrawer.drawer ModalDrawer.config
                 [ ModalDrawer.content []
                     [ List.list List.config
-                        [ ListItem.listItem ListItem.config
+                        (ListItem.listItem ListItem.config
                             [ text "Home" ]
-                        , ListItem.listItem ListItem.config
+                        )
+                        [ ListItem.listItem ListItem.config
                             [ text "Log out" ]
                         ]
                     ]

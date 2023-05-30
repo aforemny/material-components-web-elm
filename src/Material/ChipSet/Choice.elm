@@ -55,10 +55,10 @@ options.
                                 "Blue"
                 }
                 |> ChoiceChipSet.setSelected (Just Red)
-                |> ChocieChipSet.setOnChange ColorChanged
+                |> ChoiceChipSet.setOnChange ColorChanged
             )
-            [ ChoiceChip.chip ChoiceChip.config Red
-            , ChoiceChip.chip ChoiceChip.config Blue
+            (ChoiceChip.chip ChoiceChip.config Red)
+            [ ChoiceChip.chip ChoiceChip.config Blue
             ]
 
 

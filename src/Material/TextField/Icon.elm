@@ -43,9 +43,11 @@ cosmetic or can be interacted with.
                 |> TextField.setLeadingIcon
                     (Just (TextFieldIcon.icon "favorite"))
                 |> TextField.setTrailingIcon
-                    (Just (TextFieldIcon.icon "favorite")
-                        |> TextFieldIcon.setOnInteraction
-                            Interacted
+                    (Just
+                        (TextFieldIcon.icon "favorite"
+                            |> TextFieldIcon.setOnInteraction
+                                Interacted
+                        )
                     )
             )
 
@@ -101,7 +103,7 @@ type alias Icon msg =
     TextField.filled
         (TextField.config
             |> TextField.setLeadingIcon
-                (Just (TextField.icon "favorite"))
+                (Just (TextFieldIcon.icon "favorite"))
         )
 
 -}
@@ -112,11 +114,11 @@ icon iconName =
 
 {-| Custom icon
 
-    TextField.raised
+    TextField.filled
         (TextField.config
             |> TextField.setLeadingIcon
                 (Just
-                    (TextField.customIcon Html.i
+                    (TextFieldIcon.customIcon Html.i
                         [ class "fab fa-font-awesome" ]
                         []
                     )
@@ -141,11 +143,11 @@ customIcon node attributes nodes =
 
 {-| SVG icon
 
-    TextField.raised
+    TextField.filled
         (TextField.config
             |> TextField.setLeadingIcon
                 (Just
-                    (TextField.svgIcon
+                    (TextFieldIcon.svgIcon
                         [ Svg.Attributes.viewBox "…" ]
                         [-- …
                         ]

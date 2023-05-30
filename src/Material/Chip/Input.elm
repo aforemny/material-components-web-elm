@@ -40,13 +40,10 @@ into chips.
     import Material.Chip.Input as InputChip
     import Material.ChipSet.Input as InputChipSet
 
-    type Msg
-        = ChipSelected String
-
     main =
         InputChipSet.chipSet []
-            [ InputChip.chip InputChip.config "Chip One"
-            , InputChip.chip InputChip.config "Chip Two"
+            ( "Chip One", InputChip.chip InputChip.config "Chip One" )
+            [ ( "Chip Two", InputChip.chip InputChip.config "Chip Two" )
             ]
 
 
@@ -161,9 +158,10 @@ type alias Icon =
 
 {-| Material Icon
 
-    ActionChip.chip
-        (ActionChip.config
-            |> ActionChip.setIcon (ActionChip.icon "favorite")
+    InputChip.chip
+        (InputChip.config
+            |> InputChip.setLeadingIcon
+                (Just (InputChip.icon "favorite"))
         )
         "Add to favorites"
 
@@ -175,12 +173,14 @@ icon iconName =
 
 {-| Custom icon
 
-    ActionChip.chip
-        (ActionChip.config
-            |> ActionChip.setIcon
-                (ActionChip.customIcon Html.i
-                    [ class "fab fa-font-awesome" ]
-                    []
+    InputChip.chip
+        (InputChip.config
+            |> InputChip.setLeadingIcon
+                (Just
+                    (InputChip.customIcon Html.i
+                        [ class "fab fa-font-awesome" ]
+                        []
+                    )
                 )
         )
         "Font awesome"
@@ -197,13 +197,15 @@ customIcon node attributes nodes =
 
 {-| SVG icon
 
-    ActionChip.chip
-        (ActionChip.config
-            |> ActionChip.setIcon
-                (ActionChip.svgIcon
-                    [ Svg.Attributes.viewBox "…" ]
-                    [-- …
-                    ]
+    InputChip.chip
+        (InputChip.config
+            |> InputChip.setLeadingIcon
+                (Just
+                    (InputChip.svgIcon
+                        [ Svg.Attributes.viewBox "…" ]
+                        [-- …
+                        ]
+                    )
                 )
         )
         "Font awesome"

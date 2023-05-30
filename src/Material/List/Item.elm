@@ -52,9 +52,10 @@ refer to [Material.List](Material-List).
 
     main =
         List.list List.config
-            [ ListItem.listItem ListItem.config
+            (ListItem.listItem ListItem.config
                 [ text "Line item" ]
-            ]
+            )
+            []
 
 
 # Configuration
@@ -86,7 +87,7 @@ Common examples for graphics are icons and images, avatar images and selection
 controls such as checkboxes.
 
     ListItem.listItem ListItem.config
-        [ ListItem.graphic [] [ Icon.icon Icon.config "star" ]
+        [ ListItem.graphic [] [ Icon.icon [] "star" ]
         , text "List item"
         ]
 
@@ -102,7 +103,7 @@ Common examples for metas are text, icons and images and selection controls.
 
     ListItem.listItem ListItem.config
         [ text "List item"
-        , ListItem.meta [] [ Icon.icon Icon.config "star" ]
+        , ListItem.meta [] [ Icon.icon [] "star" ]
         ]
 
 @docs meta

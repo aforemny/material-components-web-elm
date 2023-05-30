@@ -46,11 +46,11 @@ refer to [Material.Select](Material-Select).
             )
             (SelectItem.selectItem
                 (SelectItem.config { value = "" })
-                [ text "" ]
+                ""
             )
             [ SelectItem.selectItem
                 (SelectItem.config { value = "Apple" })
-                [ text "Apple" ]
+                "Apple"
             ]
 
 

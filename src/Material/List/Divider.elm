@@ -40,9 +40,10 @@ the list item, refer to [Material.List.Item](Material-List-Item).
 
     main =
         List.list List.config
-            [ ListItem.listItem ListItem.config
+            (ListItem.listItem ListItem.config
                 [ text "Line item" ]
-            , ListDivider.listItem ListDivider.config
+            )
+            [ ListDivider.listItem ListDivider.config
             , ListItem.listItem ListItem.config
                 [ text "Line item" ]
             ]
@@ -67,9 +68,10 @@ so that it does not intersect the list item's graphic, or _padded_ so that it
 does not intersect the list item's meta.
 
     List.list List.config
-        [ ListItem.listItem ListItem.config
+        (ListItem.listItem ListItem.config
             [ text "List item" ]
-        , ListDivider.listItem ListDivider.config
+        )
+        [ ListDivider.listItem ListDivider.config
         , ListItem.listItem ListItem.config
             [ text "List item" ]
         ]
@@ -83,13 +85,13 @@ Multiple lists within a group may be visually seperated by a list group divider.
 
     List.group []
         [ List.list List.config
+            (ListItem.listItem ListItem.config [ text "Folder" ])
             [ ListItem.listItem ListItem.config [ text "Folder" ]
-            , ListItem.listItem ListItem.config [ text "Folder" ]
             ]
         , ListDivider.group []
         , List.list List.config
+            (ListItem.listItem ListItem.config [ text "File" ])
             [ ListItem.listItem ListItem.config [ text "File" ]
-            , ListItem.listItem ListItem.config [ text "File" ]
             ]
         ]
 

@@ -43,9 +43,10 @@ other functionality on an app.
             [ PermanentDrawer.drawer PermanentDrawer.config
                 [ PermanentDrawer.content []
                     [ List.list List.config
-                        [ ListItem.listItem ListItem.config
+                        (ListItem.listItem ListItem.config
                             [ text "Home" ]
-                        , ListItem.listItem ListItem.config
+                        )
+                        [ ListItem.listItem ListItem.config
                             [ text "Log out" ]
                         ]
                     ]

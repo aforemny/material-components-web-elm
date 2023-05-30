@@ -35,16 +35,17 @@ icon. If the chip already has a leading icon, the checkmark replaces it.
 
     main =
         FilterChipSet.chipSet []
-            [ FilterChip.chip
+            (FilterChip.chip
                 (FilterChip.config
                     |> FilterChip.setSelected True
-                    |> FilterChip.setOnClick
-                        (ChipClicked "Tops")
+                    |> FilterChip.setOnChange
+                        (ChipClicked "Shoes")
                 )
                 "Tops"
-            , FilterChip.chip
+            )
+            [ FilterChip.chip
                 (FilterChip.config
-                    |> FilterChip.setOnClick
+                    |> FilterChip.setOnChange
                         (ChipClicked "Shoes")
                 )
                 "Shoes"

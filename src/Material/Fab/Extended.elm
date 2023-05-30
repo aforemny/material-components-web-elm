@@ -50,7 +50,7 @@ their page layout, for instance by setting a fixed position via CSS.
     import Material.Fab.Extended as ExtendedFab
 
     type Msg
-        = Clicked
+        = FabClicked
 
     main =
         ExtendedFab.fab
@@ -328,7 +328,7 @@ type Icon
 {-| Material Icon
 
     ExtendedFab.fab
-        (Extended.Fab.config
+        (ExtendedFab.config
             |> ExtendedFab.setIcon
                 (Just (ExtendedFab.icon "favorite"))
         )
@@ -346,7 +346,7 @@ icon iconName =
         (ExtendedFab.config
             |> ExtendedFab.setIcon
                 (Just
-                    (Fab.customIcon Html.i
+                    (ExtendedFab.customIcon Html.i
                         [ class "fab fa-font-awesome" ]
                         []
                     )

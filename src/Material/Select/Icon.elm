@@ -33,6 +33,7 @@ cosmetic or can be interacted with.
 
     import Material.Select as Select
     import Material.Select.Icon as SelectIcon
+    import Material.Select.Item as SelectItem
 
     type Msg
         = Interacted
@@ -43,6 +44,11 @@ cosmetic or can be interacted with.
                 |> Select.setLeadingIcon
                     (Just (SelectIcon.icon "favorite"))
             )
+            (SelectItem.selectItem
+                (SelectItem.config { value = "" })
+                ""
+            )
+            []
 
 
 # Icon
@@ -96,7 +102,7 @@ type alias Icon msg =
     Select.filled
         (Select.config
             |> Select.setLeadingIcon
-                (Just (Select.icon "favorite"))
+                (Just (SelectIcon.icon "favorite"))
         )
 
 -}
@@ -107,11 +113,11 @@ icon iconName =
 
 {-| Custom icon
 
-    Select.raised
+    Select.filled
         (Select.config
             |> Select.setLeadingIcon
                 (Just
-                    (Select.customIcon Html.i
+                    (SelectIcon.customIcon Html.i
                         [ class "fab fa-font-awesome" ]
                         []
                     )
@@ -136,11 +142,11 @@ customIcon node attributes nodes =
 
 {-| SVG icon
 
-    Select.raised
+    Select.filled
         (Select.config
             |> Select.setLeadingIcon
                 (Just
-                    (Select.svgIcon
+                    (SelectIcon.svgIcon
                         [ Svg.Attributes.viewBox "…" ]
                         [-- …
                         ]

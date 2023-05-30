@@ -46,14 +46,15 @@ icon. If the chip already has a leading icon, the checkmark replaces it.
 
     main =
         FilterChipSet.chipSet []
-            [ FilterChip.chip
+            (FilterChip.chip
                 (FilterChip.config
                     |> FilterChip.setSelected True
                     |> FilterChip.setOnChange
-                        (ChipClicked "Tops")
+                        (ChipClicked "Shoes")
                 )
                 "Tops"
-            , FilterChip.chip
+            )
+            [ FilterChip.chip
                 (FilterChip.config
                     |> FilterChip.setOnChange
                         (ChipClicked "Shoes")
@@ -166,7 +167,8 @@ type alias Icon =
 
     FilterChip.chip
         (FilterChip.config
-            |> FilterChip.setIcon (FilterChip.icon "favorite")
+            |> FilterChip.setIcon
+                (Just (FilterChip.icon "favorite"))
         )
         "Add to favorites"
 
@@ -181,9 +183,11 @@ icon iconName =
     FilterChip.chip
         (FilterChip.config
             |> FilterChip.setIcon
-                (FilterChip.customIcon Html.i
-                    [ class "fab fa-font-awesome" ]
-                    []
+                (Just
+                    (FilterChip.customIcon Html.i
+                        [ class "fab fa-font-awesome" ]
+                        []
+                    )
                 )
         )
         "Font awesome"
@@ -200,16 +204,18 @@ customIcon node attributes nodes =
 
 {-| SVG icon
 
-    FilterChp.chip
-        (ActonChip.config
-            > FilterChip.setIcon
-                (FilterChip.svgIcon
-                    [ Svg.Attributes.viewBox "…" ]
-                    [-- …
-                    ]
+    FilterChip.chip
+        (FilterChip.config
+            |> FilterChip.setIcon
+                (Just
+                    (FilterChip.svgIcon
+                        [ Svg.Attributes.viewBox "…" ]
+                        [-- …
+                        ]
+                    )
                 )
         )
-        "Fon awesome"
+        "Font awesome"
 
 -}
 svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon

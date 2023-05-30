@@ -27,13 +27,10 @@ into chips.
     import Material.Chip.Input as InputChip
     import Material.ChipSet.Input as InputChipSet
 
-    type Msg
-        = ChipSelected String
-
     main =
         InputChipSet.chipSet []
-            [ InputChip.chip InputChip.config "Chip One"
-            , InputChip.chip InputChip.config "Chip Two"
+            ( "Chip One", InputChip.chip InputChip.config "Chip One" )
+            [ ( "Chip Two", InputChip.chip InputChip.config "Chip Two" )
             ]
 
 

@@ -40,16 +40,18 @@ appear persistently and consistently.
     import Material.ChipSet.Action as ActionChipSet
 
     type Msg
-        = Clicked String
+        = ChipClicked String
 
     main =
         ActionChipSet.chipSet []
-            [ ActionChip.chip
+            (ActionChip.chip
                 (ActionChip.config
-                    |> ActionChip.setOnClick Clicked "Chip One"
+                    |> ActionChip.setOnClick
+                        (ChipClicked "Chip One")
                 )
                 "Chip One"
-            , ActionChip.chip ActionChip.config "Chip Two"
+            )
+            [ ActionChip.chip ActionChip.config "Chip Two"
             ]
 
 
@@ -148,7 +150,8 @@ type alias Icon =
 
     ActionChip.chip
         (ActionChip.config
-            |> ActionChip.setIcon (ActionChip.icon "favorite")
+            |> ActionChip.setIcon
+                (Just (ActionChip.icon "favorite"))
         )
         "Add to favorites"
 
@@ -163,9 +166,11 @@ icon iconName =
     ActionChip.chip
         (ActionChip.config
             |> ActionChip.setIcon
-                (ActionChip.customIcon Html.i
-                    [ class "fab fa-font-awesome" ]
-                    []
+                (Just
+                    (ActionChip.customIcon Html.i
+                        [ class "fab fa-font-awesome" ]
+                        []
+                    )
                 )
         )
         "Font awesome"
@@ -185,10 +190,12 @@ customIcon node attributes nodes =
     ActionChip.chip
         (ActionChip.config
             |> ActionChip.setIcon
-                (ActionChip.svgIcon
-                    [ Svg.Attributes.viewBox "…" ]
-                    [-- …
-                    ]
+                (Just
+                    (ActionChip.svgIcon
+                        [ Svg.Attributes.viewBox "…" ]
+                        [-- …
+                        ]
+                    )
                 )
         )
         "Font awesome"

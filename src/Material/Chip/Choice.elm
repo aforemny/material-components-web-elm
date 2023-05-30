@@ -58,10 +58,10 @@ options.
                                 "Blue"
                 }
                 |> ChoiceChipSet.setSelected (Just Red)
-                |> ChocieChipSet.setOnClick ColorChanged
+                |> ChoiceChipSet.setOnChange ColorChanged
             )
-            [ ChoiceChip.chip ChoiceChip.config Red
-            , ChoiceChip.chip ChoiceChip.config Blue
+            (ChoiceChip.chip ChoiceChip.config Red)
+            [ ChoiceChip.chip ChoiceChip.config Blue
             ]
 
 
@@ -151,7 +151,8 @@ type alias Icon =
 
     ChoiceChip.chip
         (ChoiceChip.config
-            |> ChoiceChip.setIcon (ChoiceChip.icon "favorite")
+            |> ChoiceChip.setIcon
+                (Just (ChoiceChip.icon "favorite"))
         )
         "Add to favorites"
 
@@ -166,9 +167,11 @@ icon iconName =
     ChoiceChip.chip
         (ChoiceChip.config
             |> ChoiceChip.setIcon
-                (ChoiceChip.customIcon Html.i
-                    [ class "fab fa-font-awesome" ]
-                    []
+                (Just
+                    (ChoiceChip.customIcon Html.i
+                        [ class "fab fa-font-awesome" ]
+                        []
+                    )
                 )
         )
         "Font awesome"
@@ -185,16 +188,18 @@ customIcon node attributes nodes =
 
 {-| SVG icon
 
-    ChoiceChp.chip
-        (ActonChip.config
-            > ChoiceChip.setIcon
-                (ChoiceChip.svgIcon
-                    [ Svg.Attributes.viewBox "…" ]
-                    [-- …
-                    ]
+    ChoiceChip.chip
+        (ChoiceChip.config
+            |> ChoiceChip.setIcon
+                (Just
+                    (ChoiceChip.svgIcon
+                        [ Svg.Attributes.viewBox "…" ]
+                        [-- …
+                        ]
+                    )
                 )
         )
-        "Fon awesome"
+        "Font awesome"
 
 -}
 svgIcon : List (Svg.Attribute Never) -> List (Svg Never) -> Icon

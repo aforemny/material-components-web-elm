@@ -170,6 +170,8 @@ To mark a text field as valid, set its `setValid` configuration option to
 To have a text field display a leading icon, use its `setLeadingIcon`
 configuration option to specify a value of `Icon`.
 
+    import Material.TextField.Icon as TextFieldIcon
+
     TextField.filled
         (TextField.config
             |> TextField.setLeadingIcon
@@ -181,6 +183,8 @@ configuration option to specify a value of `Icon`.
 
 To have a text field display a trailing icon, use its `setTrailingIcon`
 configuration option to specify a value of `Icon`.
+
+    import Material.TextField.Icon as TextFieldIcon
 
     TextField.filled
         (TextField.config

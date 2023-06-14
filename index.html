@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Material Components for Elm</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="material-components-web-elm.css">
+  <script src="material-components-web-elm.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <style type="text/css">
+    body { margin: 0; }
+  </style>
+  <script>
+    var _paq = window._paq || [];
+    _paq.push(["disableCookies"]);
+    _paq.push(["trackPageView"]);
+    _paq.push(["enableLinkTracking"]);
+    (function() {
+      var u="//a.foremny.me/";
+      _paq.push(["setTrackerUrl", u+"matomo.php"]);
+      _paq.push(["setSiteId", "2"]);
+      var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0];
+      g.type="text/javascript"; g.async=true; g.defer=true; g.src=u+"matomo.js"; s.parentNode.insertBefore(g,s);
+    })();
+    var currentUrl = location.href;
+    window.addEventListener("hashchange", function() {
+      _paq.push(["setReferrerUrl", currentUrl]);
+      currentUrl = "/" + window.location.hash.substr(1);
+      _paq.push(["setCustomUrl", currentUrl]);
+      _paq.push(["setDocumentTitle", document.title]);
+      _paq.push(["setGenerationTimeMs", 0]);
+      _paq.push(["trackPageView"]);
+      _paq.push(["enableLinkTracking"]);
+    });
+  </script>
+</head>
+<body>
+  <script src="demo.js"></script>
+  <script>Elm.Main.init();</script>
+</body>
+</html>

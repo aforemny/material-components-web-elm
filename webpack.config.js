@@ -41,7 +41,9 @@ module.exports =
     devtool: "source-map",
     output: {
       path: path.resolve(__dirname, "dist"),
-      filename: name === "material-components-web-elm" ? `[name].js` : `mdc-[name].js`
+      filename: name === "material-components-web-elm" ? `[name].js` : `mdc-[name].js`,
+      library: name,
+      libraryTarget: "umd"
     },
     module: {
       rules: [
